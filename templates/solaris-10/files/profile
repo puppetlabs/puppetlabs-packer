@@ -1,0 +1,57 @@
+#
+# Sample profile for an x86 machine. Installation will
+# provide default partitioning on a standalone system
+# with the end-user cluster.
+#
+#	"@(#)x86-class 1.2 94/01/25"
+#
+install_type	initial_install
+system_type	  standalone
+
+# Packer only attaches a single hard disk, but may do it in different orders
+# or using different adapters. Thus, we use the "any" target rather than trying
+# to predict what Solaris device will end up attached to the disk.
+partitioning	explicit
+filesys       any 4000 /
+filesys       any 1024 swap
+filesys       any free /export/home
+
+# Base Solaris system
+cluster		    SUNWCreq
+
+# Additional packages to allow vagrant installation (SSH) or convenient (bash, man)
+package      SUNWsshcu add
+package      SUNWsshdr add
+package      SUNWsshdu add
+package      SUNWsshr add
+package      SUNWsshu add
+package      SUNWbash add
+package      SUNWman add
+package      SUNWdoc add
+
+# For GCC (partially from https://wiki.chipp.ch/twiki/bin/view/CmsTier3/InstallationSolaris)
+package      SUNWarc add
+package      SUNWsfwhea add
+package      SUNWhea add
+package      SUNWtoo add
+package      SUNWlibm add
+package      SUNWgccruntime add
+
+# Zone Support
+package  SUNWpool   add
+package  SUNWpoolr  add
+package  SUNWlur    add
+package  SUNWluu    add
+package  SUNWlucfg  add
+package  SUNWluzone add
+package  SUNWzoner  add
+package  SUNWzoneu  add
+
+# BSD compatibility
+package      SUNWscpu add
+
+# Centinel (adds /usr/xpg4/bin/id)
+package      SUNWxcu4 add
+
+# "Iconv modules for UTF-8 Locale" (required for Guest additions)
+package      SUNWuiu8 add
