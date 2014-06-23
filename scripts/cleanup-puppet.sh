@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Unmount NFS share
-umount /opt/puppet
+umount -l /opt/puppet
 
 # Remove Puppet-related files and directories
 rm -rf /etc/puppetlabs
