@@ -1,0 +1,113 @@
+{
+
+  "variables":
+    {
+      "template_name": "ubuntu-12.04-i386",
+      "template_os": "Ubuntu",
+
+      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.04-server-i386.iso",
+      "iso_checksum": "0081e57fb8c7e4094fb9767384f087c6",
+      "iso_checksum_type": "md5",
+
+      "memory_size": "512",
+      "cpu_count": "1",
+
+      "provisioner": "virtualbox",
+      "required_modules": "puppetlabs-stdlib saz-ssh",
+      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz auto <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-setup/layoutcode=us <wait>",
+        "console-setup/modelcode=pc105 <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "debian-installer=en_US <wait>",
+        "fb=false <wait>",
+        "initrd=/install/initrd.gz <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/layout=USA <wait>",
+        "keyboard-configuration/variant=USA <wait>",
+        "locale=en_US <wait>",
+        "netcfg/get_domain=vm <wait>",
+        "netcfg/get_hostname=localhost <wait>",
+        "noapic <wait>" ,
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "-- <wait>",
+        "<enter>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "guest_os_type": "{{user `template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "root",
+      "ssh_password": "puppet",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "/sbin/halt -h -p",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_NFS={{user `puppet_nfs`}}"
+      ],
+      "scripts": [
+        "../../scripts/bootstrap-puppet.sh"
+      ]
+    },
+
+    {
+      "type": "puppet-masterless",
+      "execute_command": "{{.FacterVars}} /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter": {
+        "provisioner": "{{user `provisioner`}}"
+      },
+      "manifest_dir": "../../manifests",
+      "manifest_file": "../../manifests/base.pp"
+    },
+
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}"
+      ],
+      "scripts": [
+        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-packer.sh",
+        "../../scripts/cleanup-scrub.sh"
+      ]
+    }
+  ]
+
+}
