@@ -5,7 +5,7 @@
       "template_name": "ubuntu-12.04-x86_64",
       "template_os": "Ubuntu_64",
 
-      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.04-server-amd64.iso",
+      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.4-server-amd64.iso",
       "iso_checksum": "e83adb9af4ec0a039e6a5c6e145a34de",
       "iso_checksum_type": "md5",
 

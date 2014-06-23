@@ -5,7 +5,7 @@
       "template_name": "ubuntu-12.04-i386",
       "template_os": "Ubuntu",
 
-      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.04-server-i386.iso",
+      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.4-server-i386.iso",
       "iso_checksum": "0081e57fb8c7e4094fb9767384f087c6",
       "iso_checksum_type": "md5",
 
