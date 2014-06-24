@@ -1,6 +1,6 @@
 install
 
-url --url=http://mirror.centos.org/centos-6/6/os/i386/
+url --url=http://ftp.scientificlinux.org/linux/scientific/6.5/i386/os/
 lang en_US.UTF-8
 keyboard us
 network --bootproto=dhcp
