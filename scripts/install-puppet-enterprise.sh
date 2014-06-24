@@ -47,6 +47,11 @@ case ${OPERATINGSYSTEM} in
     PE_TAR="puppet-enterprise-${PEVER}-el-${RELEASEVERMAJ}-${ARCHITECTURE}"
     ;;
 
+  scientific)
+    RELEASEVERMAJ=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release) | sed -e 's/\.[0-9]*$//g')
+    PE_TAR="puppet-enterprise-${PEVER}-el-${RELEASEVERMAJ}-${ARCHITECTURE}"
+    ;;
+
   ubuntu)
     RELEASEVERMAJ=$(lsb_release -r -s)
 
