@@ -42,6 +42,11 @@ case ${OPERATINGSYSTEM} in
     PE_TAR="puppet-enterprise-${PEVER}-${OPERATINGSYSTEM}-${RELEASEVERMAJ}-${ARCHITECTURE}"
     ;;
 
+  oracle)
+    RELEASEVERMAJ=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release) | sed -e 's/Server//g')
+    PE_TAR="puppet-enterprise-${PEVER}-el-${RELEASEVERMAJ}-${ARCHITECTURE}"
+    ;;
+
   redhat)
     RELEASEVERMAJ=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release))
     PE_TAR="puppet-enterprise-${PEVER}-el-${RELEASEVERMAJ}-${ARCHITECTURE}"
