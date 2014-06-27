@@ -21,8 +21,9 @@ class packer::puppet {
       class { 'puppetlabs_yum': }
 
       package { 'puppet':
-        ensure  => present,
-        require => Class[ 'puppetlabs_yum' ],
+        ensure   => present,
+        provider => 'yum',
+        require  => Class[ 'puppetlabs_yum' ],
       }
     }
 
