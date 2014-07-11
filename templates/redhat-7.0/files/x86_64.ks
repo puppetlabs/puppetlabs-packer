@@ -32,6 +32,7 @@ make
 perl
 curl
 wget
+net-tools
 nfs-utils
 -ipw2100-firmware
 -ipw2200-firmware
