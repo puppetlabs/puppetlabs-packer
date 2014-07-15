@@ -34,6 +34,8 @@ curl
 wget
 net-tools
 nfs-utils
+git
+patch
 -aic94xx-firmware
 -atmel-firmware
 -b43-openfwwf
