@@ -1,18 +1,25 @@
 class packer::vsphere inherits packer::vsphere::params {
 
-  package { 'ruby-dev':
+  package { $ruby_package:
     ensure => present,
   }
 
   package { 'facter':
     ensure   => present,
     provider => 'gem',
+    require  => Package[ $ruby_package ],
+  }
+
+  package { 'nokogiri':
+    ensure   => '1.5.9',
+    provider => 'gem',
+    require  => Package[ $ruby_package ],
   }
 
   package { 'rbvmomi':
     ensure   => '1.6.0',
     provider => 'gem',
-    require  => Package[ 'ruby-dev' ],
+    require  => Package[ 'nokogiri' ],
   }
 
   file { $bootstrap_file:
