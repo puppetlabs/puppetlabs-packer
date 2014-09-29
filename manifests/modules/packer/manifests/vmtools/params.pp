@@ -16,7 +16,7 @@ class packer::vmtools::params {
 
   case $::provisioner {
     virtualbox: {
-      $tools_iso   = 'VBoxGuestAdditions_4.3.12.iso'
+      $tools_iso   = 'VBoxGuestAdditions_4.3.16.iso'
       $install_cmd = 'sh /tmp/vmtools/VBoxLinuxAdditions.run --nox11 ; true'
     }
 
