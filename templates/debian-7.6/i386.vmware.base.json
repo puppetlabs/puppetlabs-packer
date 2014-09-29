@@ -6,7 +6,7 @@
       "template_os": "debian7",
 
       "iso_url": "http://cdimage.debian.org/debian-cd/7.6.0/i386/iso-cd/debian-7.6.0-i386-netinst.iso",
-      "iso_checksum": "0e6eaacb5a5828473afe90f6df9c8f16",
+      "iso_checksum": "528e1a7315da1bbf50bd4d187880a519",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
