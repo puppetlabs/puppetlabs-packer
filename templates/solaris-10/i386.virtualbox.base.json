@@ -57,8 +57,7 @@
         "scripts/base.sh",
         "scripts/update-terminfo.sh",
         "scripts/virtualbox.sh",
-        "scripts/cleanup.sh",
-        "scripts/zerodisk.sh"
+        "scripts/cleanup.sh"
       ]
     }
   ]
