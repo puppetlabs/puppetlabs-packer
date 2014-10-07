@@ -12,9 +12,9 @@ system_type	  standalone
 # or using different adapters. Thus, we use the "any" target rather than trying
 # to predict what Solaris device will end up attached to the disk.
 partitioning	explicit
-filesys       any 4000 /
-filesys       any 1024 swap
-filesys       any free /export/home
+filesys       any 30000 /
+filesys       any 1024  swap
+filesys       any free  /export/home
 
 # Base Solaris system
 cluster		    SUNWCreq
