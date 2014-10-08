@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "template_name": "debian-7.6-x86_64",
+    "note": "the url below must be fetched without a cert check as of 10/6/2014",
+    "pe_url": "https://pm.puppetlabs.com/cgi-bin/download.cgi?ver=latest&dist=debian&arch=amd64&rel=7",
+    "provisioner": "ec2",
+    "source_ami": "ami-f1c5bcc1",
+    "ami_description": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
+    "ami_name": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
+    "required_modules": "puppetlabs-stdlib saz-ssh",
+    "user_data": "#cloud-config\ndisable_root: 0"
+  },
+
+  "builders": [
+    {
+      "name": "amazon-ebs-us-west-2",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "type": "amazon-ebs",
+      "region": "us-west-2",
+      "instance_type": "c3.large",
+      "ssh_username": "root",
+      "ami_description": "{{user `ami_description`}}",
+      "ami_name": "{{user `ami_name`}}",
+      "source_ami": "{{user `source_ami`}}",
+      "region": "us-west-2",
+      "ami_regions": ["us-west-2"],
+      "ssh_timeout": "10000s",
+      "user_data": "{{user `user_data`}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../../../puppetlabs-packer/",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "inline": ["wget --no-check-certificate \"{{user `pe_url`}}\" -O pe.tar.gz"]
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh {{.Path}} {{user `required_modules`}}",
+      "scripts": ["../../scripts/bootstrap-ec2.sh"]
+    }
+  ]
+}
