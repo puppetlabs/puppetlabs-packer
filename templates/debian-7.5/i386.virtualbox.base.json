@@ -95,8 +95,7 @@
       ],
       "scripts": [
         "../../scripts/cleanup-puppet.sh",
-        "../../scripts/cleanup-packer.sh",
-        "../../scripts/cleanup-scrub.sh"
+        "../../scripts/cleanup-packer.sh"
       ]
     }
   ]
