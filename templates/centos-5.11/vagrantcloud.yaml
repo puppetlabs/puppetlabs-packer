@@ -1,6 +1,6 @@
 ---
-name: 'centos-5.10'
-description: 'CentOS 5.10'
+name: 'centos-5.11'
+description: 'CentOS 5.11'
 version: '1.0.0'
 
 arches:

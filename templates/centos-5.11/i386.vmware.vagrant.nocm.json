@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-x86_64",
+      "template_name": "centos-5.11-i386",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-sudo",

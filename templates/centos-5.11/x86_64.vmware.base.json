@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-i386",
-      "template_os": "rhel6",
+      "template_name": "centos-5.11-x86_64",
+      "template_os": "rhel6-64",
 
-      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.10/isos/i386/CentOS-5.10-i386-netinstall.iso",
-      "iso_checksum": "8d19b12cb5f65a4b5c2bc61a98abf80c",
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.11/isos/x86_64/CentOS-5.11-x86_64-netinstall.iso",
+      "iso_checksum": "f2087f9af0d50df05144a1f0d1c5b404",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -24,7 +24,7 @@
       "boot_command": [
         "<tab> <wait>",
         "text <wait>",
-        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/i386.ks <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/x86_64.ks <wait>",
         "<enter>"
       ],
       "boot_wait": "10s",

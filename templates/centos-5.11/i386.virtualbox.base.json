@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-x86_64",
-      "template_os": "RedHat_64",
+      "template_name": "centos-5.11-i386",
+      "template_os": "RedHat",
 
-      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.10/isos/x86_64/CentOS-5.10-x86_64-netinstall.iso",
-      "iso_checksum": "e09e44f04f0a4b97b04935e0ba88833f",
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.11/isos/i386/CentOS-5.11-i386-netinstall.iso",
+      "iso_checksum": "3f43eb9f3e2d45425baf691c0142f79d",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -24,7 +24,7 @@
       "boot_command": [
         "<tab> <wait>",
         "text <wait>",
-        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/x86_64.ks <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/i386.ks <wait>",
         "<enter>"
       ],
       "boot_wait": "10s",

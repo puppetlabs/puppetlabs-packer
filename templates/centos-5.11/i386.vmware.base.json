@@ -2,17 +2,17 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-i386",
-      "template_os": "RedHat",
+      "template_name": "centos-5.11-i386",
+      "template_os": "rhel6",
 
-      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.10/isos/i386/CentOS-5.10-i386-netinstall.iso",
-      "iso_checksum": "8d19b12cb5f65a4b5c2bc61a98abf80c",
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/5.11/isos/i386/CentOS-5.11-i386-netinstall.iso",
+      "iso_checksum": "3f43eb9f3e2d45425baf691c0142f79d",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
       "cpu_count": "1",
 
-      "provisioner": "virtualbox",
+      "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
@@ -20,7 +20,7 @@
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "type": "virtualbox-iso",
+      "type": "vmware-iso",
       "boot_command": [
         "<tab> <wait>",
         "text <wait>",
@@ -39,22 +39,12 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-      "virtualbox_version_file": ".vbox_version",
-      "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "{{user `memory_size`}}"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "{{user `cpu_count`}}"
-        ]
-      ]
+      "tools_upload_flavor": "linux",
+      "vmx_data": {
+        "memsize": "{{user `memory_size`}}",
+        "numvcpus": "{{user `cpu_count`}}",
+        "cpuid.coresPerSocket": "1"
+      }
     }
   ],
 
