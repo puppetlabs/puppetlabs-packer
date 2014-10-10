@@ -2,18 +2,18 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-i386",
+      "template_name": "centos-5.11-i386",
 
-      "provisioner": "vmware",
-      "required_modules": "puppetlabs-stdlib saz-sudo",
+      "provisioner": "virtualbox",
+      "required_modules": "puppetlabs-stdlib saz-sudo stahnma-puppetlabs_yum",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-nocm",
-      "type": "vmware-vmx",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-puppet",
+      "type": "virtualbox-ovf",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,
@@ -42,7 +42,7 @@
         "provisioner": "{{user `provisioner`}}"
       },
       "manifest_dir": "../../manifests",
-      "manifest_file": "../../manifests/vagrant/nocm.pp"
+      "manifest_file": "../../manifests/vagrant/puppet.pp"
     },
 
     {
@@ -62,7 +62,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
+      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box"
     }
   ]
 

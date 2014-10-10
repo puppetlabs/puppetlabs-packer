@@ -2,16 +2,15 @@
 
   "variables":
     {
-      "template_name": "centos-5.10-x86_64",
+      "template_name": "centos-5.11-i386",
 
       "provisioner": "vmware",
-      "required_modules": "puppetlabs-stdlib saz-sudo stahnma-puppetlabs_yum",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+      "required_modules": "puppetlabs-stdlib saz-sudo"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-puppet",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-pe",
       "type": "vmware-vmx",
       "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
@@ -28,10 +27,11 @@
       "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "OPERATINGSYSTEM=redhat",
+        "ARCHITECTURE=i386"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/install-puppet-enterprise.sh"
       ]
     },
 
@@ -42,7 +42,7 @@
         "provisioner": "{{user `provisioner`}}"
       },
       "manifest_dir": "../../manifests",
-      "manifest_file": "../../manifests/vagrant/puppet.pp"
+      "manifest_file": "../../manifests/vagrant/nocm.pp"
     },
 
     {
@@ -52,7 +52,6 @@
         "TEMPLATE={{user `template_name`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
         "../../scripts/cleanup-packer.sh",
         "../../scripts/cleanup-scrub.sh"
       ]
@@ -62,7 +61,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box"
+      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-pe.box"
     }
   ]
 
