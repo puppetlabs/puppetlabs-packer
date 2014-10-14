@@ -1,6 +1,6 @@
 install
 
-url --url=http://mirrors.cat.pdx.edu/centos/5.10/os/x86_64/
+url --url=http://mirrors.cat.pdx.edu/centos/5.11/os/x86_64/
 lang en_US.UTF-8
 keyboard us
 network --bootproto=dhcp
