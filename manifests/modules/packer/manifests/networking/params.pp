@@ -8,7 +8,7 @@ class packer::networking::params {
 
     redhat: {
       case $::operatingsystemrelease {
-        5.10: {
+        5.10, 5.11: {
           $interface_script = '/etc/sysconfig/network-scripts/ifcfg-eth0'
           $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
         }
