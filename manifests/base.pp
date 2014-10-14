@@ -1,3 +1,6 @@
-include packer::networking
 include packer::sshd
-include packer::vmtools
+include packer::networking
+
+unless $::provisioner == 'ec2' {
+  include packer::vmtools
+}

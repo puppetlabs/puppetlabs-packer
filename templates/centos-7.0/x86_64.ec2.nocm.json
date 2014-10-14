@@ -2,11 +2,11 @@
   "variables": {
     "aws_access_key": "",
     "aws_secret_key": "",
-    "pe_url": "'https://pm.puppetlabs.com/cgi-bin/download.cgi?ver=latest&dist=debian&arch=amd64&rel=7'",
+    "pe_url": "'https://pm.puppetlabs.com/cgi-bin/download.cgi?ver=latest&dist=el&arch=x86_64&rel=7'",
     "provisioner": "ec2",
-    "source_ami": "ami-f1c5bcc1",
-    "ami_description": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
-    "ami_name": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
+    "source_ami": "ami-c7d092f7",
+    "ami_description": "puppetlabs-centos-7.0-x86_64 {{timestamp}}",
+    "ami_name": "puppetlabs-centos-7.0-x86_64 {{timestamp}}",
     "required_modules": "puppetlabs-stdlib saz-ssh",
     "user_data": "#cloud-config\ndisable_root: 0\n"
   },
@@ -25,6 +25,7 @@
       "source_ami": "{{user `source_ami`}}",
       "region": "us-west-2",
       "ssh_timeout": "10000s",
+      "user_data": "{{user `user_data`}}",
       "run_tags": {
         "created_by": "puppetlabs-packer",
         "department": "ESO",
@@ -34,8 +35,7 @@
         "created_by": "puppetlabs-packer",
         "department": "ESO",
         "project": "puppetlabs-packer"
-      },
-      "user_data": "{{user `user_data`}}"
+      }
     }
   ],
 
