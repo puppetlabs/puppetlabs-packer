@@ -100,7 +100,8 @@
       "type": "shell",
       "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
-        "TEMPLATE={{user `template_name`}}"
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
         "../../scripts/cleanup-puppet.sh",
