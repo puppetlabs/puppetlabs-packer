@@ -2,7 +2,7 @@
 
 if [ -n "${PUPPET_NFS}" ]; then
   # Mount NFS share if PUPPET_NFS set
-  echo "Installing PE via NFS"
+  echo "Mounting PE via NFS..."
 
   # Create mount point and required directories
   mkdir -p /opt/puppet
@@ -12,7 +12,7 @@ if [ -n "${PUPPET_NFS}" ]; then
   mount -o ro -t nfs ${PUPPET_NFS}/${TEMPLATE} /opt/puppet
 elif [ -n "${PE_URL}" ]; then
   # Install PE via tarball download if PE_URL set
-  echo "Installing PE via tarball"
+  echo "Installing PE via tarball..."
 
   yum install -y wget
 
