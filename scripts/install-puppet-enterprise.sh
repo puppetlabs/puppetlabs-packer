@@ -49,6 +49,13 @@ case ${OPERATINGSYSTEM} in
 
   redhat)
     RELEASEVERMAJ=$(rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release))
+
+    case ${RELEASEVERMAJ} in
+      7.0)
+        RELEASEVERMAJ='7'
+      ;;
+    esac
+
     PE_TAR="puppet-enterprise-${PEVER}-el-${RELEASEVERMAJ}-${ARCHITECTURE}"
     ;;
 

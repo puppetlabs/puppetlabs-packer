@@ -22,6 +22,7 @@ class packer::vmtools inherits packer::vmtools::params {
   exec { 'install vmtools':
     command => $install_cmd,
     path    => [ '/bin', '/usr/bin', ],
+    timeout => 1800,
     require => Mount[ '/tmp/vmtools' ],
   }
 
