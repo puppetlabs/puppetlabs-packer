@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Set host name
+echo "packer-solaris10.dev" > /a/etc/nodename
+
+# Allow root SSH
+cat /a/etc/ssh/sshd_config | sed -e 's/PermitRootLogin\ .*$/PermitRootLogin yes/g' > /tmp/sshd_config.$$
+cat /tmp/sshd_config.$$ > /a/etc/ssh/sshd_config
+
+# Install 'Primary Administrator' profile
+cat /cdrom/Solaris_10/Product/SUNWwbcor/reloc/etc/security/auth_attr >> /a/etc/security/auth_attr
+cat /cdrom/Solaris_10/Product/SUNWwbcor/reloc/etc/security/exec_attr >> /a/etc/security/exec_attr
+cat /cdrom/Solaris_10/Product/SUNWwbcor/reloc/etc/security/prof_attr >> /a/etc/security/prof_attr
