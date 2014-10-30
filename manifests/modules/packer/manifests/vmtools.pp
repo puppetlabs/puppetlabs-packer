@@ -32,9 +32,15 @@ class packer::vmtools inherits packer::vmtools::params {
     require => Exec[ 'install vmtools' ],
   }
 
-  file { "${root_home}/${tools_iso}":
-    ensure  => absent,
-    require => Exec[ 'remove /tmp/vmtools' ],
+  case $::operatingsystemrelease {
+    '7.0.1406': { }
+
+    default: {
+      file { "${root_home}/${tools_iso}":
+        ensure  => absent,
+        require => Exec[ 'remove /tmp/vmtools' ],
+      }
+    }
   }
 
   file_line { "remove /etc/fstab /tmp/vmtools":
