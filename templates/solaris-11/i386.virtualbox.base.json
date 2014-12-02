@@ -54,6 +54,7 @@
       ],
       "http_directory": "files",
       "guest_os_type": "{{user `template_os`}}",
+      "hard_drive_interface": "sata",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
