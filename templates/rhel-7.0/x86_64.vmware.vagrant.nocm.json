@@ -1,0 +1,43 @@
+{
+  "provisioners": [{
+    "type": "shell",
+    "scripts": [
+      "scripts/base.sh",
+      "scripts/vagrant.sh",
+      "scripts/epel.sh",
+      "scripts/cleanup.sh",
+      "scripts/zerodisk.sh",
+      "scripts/vmware_tools.sh"
+    ],
+    "only": ["rhel-70-vmware"]
+  } ],
+  "builders": [{
+      "name": "rhel-70-vmware",
+      "type": "vmware-iso",
+      "iso_checksum": "85a9fedc2bf0fc825cc7817056aa00b3ea87d7e111e0cf8de77d3ba643f8646c",
+      "iso_checksum_type": "sha256",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/rhel-server-7.0-x86_64-dvd.iso",
+      "output_directory": "img_rhel_70_vmware",
+      "ssh_wait_timeout": "30s",
+      "shutdown_command": "shutdown -P now",
+      "tools_upload_flavor": "linux",
+      "headless": false,
+      "http_directory": "files",
+      "http_port_min": 10082,
+      "http_port_max": 10089,
+      "ssh_username": "root",
+      "ssh_password": "changeme",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "90m",
+      "vm_name": "rhel70_vmware",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ]
+    }],
+  "post-processors": [{
+    "type": "vagrant",
+    "compression_level": 1,
+    "keep_input_artifact": true,
+    "only": ["rhel-70-vmware"]
+  }]
+}
