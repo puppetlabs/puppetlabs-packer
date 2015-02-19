@@ -2,15 +2,16 @@
 
   "variables":
     {
-      "template_name": "centos-6.5-i386",
+      "template_name": "centos-6.6-x86_64",
 
       "provisioner": "vmware",
-      "required_modules": "puppetlabs-stdlib saz-sudo"
+      "required_modules": "puppetlabs-stdlib saz-sudo stahnma-puppetlabs_yum",
+      "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-pe",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-puppet",
       "type": "vmware-vmx",
       "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
@@ -27,11 +28,10 @@
       "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "OPERATINGSYSTEM=redhat",
-        "ARCHITECTURE=i386"
+        "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
-        "../../scripts/install-puppet-enterprise.sh"
+        "../../scripts/bootstrap-puppet.sh"
       ]
     },
 
@@ -42,16 +42,18 @@
         "provisioner": "{{user `provisioner`}}"
       },
       "manifest_dir": "../../manifests",
-      "manifest_file": "../../manifests/vagrant/nocm.pp"
+      "manifest_file": "../../manifests/vagrant/puppet.pp"
     },
 
     {
       "type": "shell",
       "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
-        "TEMPLATE={{user `template_name`}}"
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
+        "../../scripts/cleanup-puppet.sh",
         "../../scripts/cleanup-packer.sh",
         "../../scripts/cleanup-scrub.sh"
       ]
@@ -61,7 +63,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-pe.box"
+      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box"
     }
   ]
 

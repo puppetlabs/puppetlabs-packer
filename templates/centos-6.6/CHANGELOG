@@ -1,6 +1,6 @@
 ### 1.0.1
 
-* Base image update 
+* Bump version to CentOS 6.6 
 * Fixups for Virtualbox Guest Additions
 * Bump version for Puppet and PE
 

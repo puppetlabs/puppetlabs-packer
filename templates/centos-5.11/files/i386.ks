@@ -22,6 +22,7 @@ auth  --useshadow  --enablemd5
 firstboot --disabled
 reboot --eject
 
+repo --name=updates --baseurl=http://mirrors.cat.pdx.edu/centos/5.11/updates/i386/
 repo --name=epel --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-5&arch=i386
 repo --name=puppetlabs --baseurl=http://yum.puppetlabs.com/el/5/products/i386/
 repo --name=puppetdeps --baseurl=http://yum.puppetlabs.com/el/5/dependencies/i386/

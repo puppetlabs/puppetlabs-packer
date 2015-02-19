@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "centos-6.5-i386",
+      "template_name": "centos-6.6-x86_64",
 
       "provisioner": "virtualbox",
       "required_modules": "puppetlabs-stdlib saz-sudo"
@@ -28,7 +28,7 @@
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
         "OPERATINGSYSTEM=redhat",
-        "ARCHITECTURE=i386"
+        "ARCHITECTURE=x86_64"
       ],
       "scripts": [
         "../../scripts/install-puppet-enterprise.sh"

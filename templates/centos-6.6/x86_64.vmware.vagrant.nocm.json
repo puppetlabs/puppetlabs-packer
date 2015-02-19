@@ -2,9 +2,9 @@
 
   "variables":
     {
-      "template_name": "centos-6.5-x86_64",
+      "template_name": "centos-6.6-x86_64",
 
-      "provisioner": "virtualbox",
+      "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-sudo",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
@@ -12,8 +12,8 @@
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-nocm",
-      "type": "virtualbox-ovf",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "type": "vmware-vmx",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,

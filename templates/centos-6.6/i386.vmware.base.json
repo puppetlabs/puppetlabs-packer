@@ -2,23 +2,49 @@
 
   "variables":
     {
-      "template_name": "centos-6.5-i386",
+      "template_name": "centos-6.6-i386",
+      "template_os": "rhel6",
+
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/6.5/isos/i386/CentOS-6.5-i386-minimal.iso",
+      "iso_checksum": "a4f27ab51d0d2c9d36b68c56b39f752b",
+      "iso_checksum_type": "md5",
+
+      "memory_size": "512",
+      "cpu_count": "1",
 
       "provisioner": "vmware",
-      "required_modules": "puppetlabs-stdlib saz-sudo",
+      "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-nocm",
-      "type": "vmware-vmx",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/i386.ks <wait>",
+        "<enter>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "guest_os_type": "{{user `template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
-      "shutdown_command": "/sbin/halt -h -p"
+      "shutdown_command": "/sbin/halt -h -p",
+      "tools_upload_flavor": "linux",
+      "vmx_data": {
+        "memsize": "{{user `memory_size`}}",
+        "numvcpus": "{{user `cpu_count`}}",
+        "cpuid.coresPerSocket": "1"
+      }
     }
   ],
 
@@ -42,7 +68,7 @@
         "provisioner": "{{user `provisioner`}}"
       },
       "manifest_dir": "../../manifests",
-      "manifest_file": "../../manifests/vagrant/nocm.pp"
+      "manifest_file": "../../manifests/base.pp"
     },
 
     {
@@ -54,16 +80,8 @@
       ],
       "scripts": [
         "../../scripts/cleanup-puppet.sh",
-        "../../scripts/cleanup-packer.sh",
-        "../../scripts/cleanup-scrub.sh"
+        "../../scripts/cleanup-packer.sh"
       ]
-    }
-  ],
-
-  "post-processors": [
-    {
-      "type": "vagrant",
-      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
     }
   ]
 
