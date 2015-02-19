@@ -2,7 +2,7 @@
 
 # PE can't be installed with PE, so we'll need to use bash for this step
 
-PEVER='3.3.2'
+PEVER='3.7.2'
 HOSTNAME=$(hostname -f)
 
 cat > /tmp/answers <<EOF
@@ -71,7 +71,7 @@ case ${OPERATINGSYSTEM} in
 esac
 
 
-PE_URL="http://pe-releases.puppetlabs.lan/${PEVER}/${PE_TAR}.tar.gz"
+PE_URL="http://pe-releases.puppetlabs.net/${PEVER}/${PE_TAR}.tar.gz"
 
 tarball_path=$(mktemp)
 wget --output-document="${tarball_path}" "${PE_URL}"
