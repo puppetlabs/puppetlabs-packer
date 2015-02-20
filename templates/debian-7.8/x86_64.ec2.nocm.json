@@ -5,8 +5,8 @@
     "pe_url": "'https://pm.puppetlabs.com/cgi-bin/download.cgi?ver=latest&dist=debian&arch=amd64&rel=7'",
     "provisioner": "ec2",
     "source_ami": "ami-f1c5bcc1",
-    "ami_description": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
-    "ami_name": "puppetlabs-debian-7.6-x86_64 {{timestamp}}",
+    "ami_description": "puppetlabs-debian-7.8-x86_64 {{timestamp}}",
+    "ami_name": "puppetlabs-debian-7.8-x86_64 {{timestamp}}",
     "required_modules": "puppetlabs-stdlib saz-ssh",
     "user_data": "#cloud-config\ndisable_root: 0\n"
   },

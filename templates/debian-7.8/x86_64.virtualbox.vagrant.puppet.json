@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "debian-7.6-i386",
+      "template_name": "debian-7.8-x86_64",
 
       "provisioner": "virtualbox",
       "required_modules": "puppetlabs-apt puppetlabs-stdlib saz-sudo",

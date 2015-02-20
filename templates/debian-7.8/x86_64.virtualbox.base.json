@@ -2,17 +2,17 @@
 
   "variables":
     {
-      "template_name": "debian-7.6-x86_64",
-      "template_os": "debian7-64",
+      "template_name": "debian-7.8-x86_64",
+      "template_os": "Debian_64",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/7.6.0/amd64/iso-cd/debian-7.6.0-amd64-netinst.iso",
-      "iso_checksum": "8a3c2ad7fd7a9c4c7e9bcb5cae38c135",
+      "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso",
+      "iso_checksum": "a91fba5001cf0fbccb44a7ae38c63b6e",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
       "cpu_count": "1",
 
-      "provisioner": "vmware",
+      "provisioner": "virtualbox",
       "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
@@ -20,7 +20,7 @@
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "type": "vmware-iso",
+      "type": "virtualbox-iso",
       "boot_command": [
         "<esc><wait>",
         "install <wait>",
@@ -45,12 +45,27 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
-      "tools_upload_flavor": "linux",
-      "vmx_data": {
-        "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "cpuid.coresPerSocket": "1"
-      }
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--ioapic",
+          "off"
+        ]
+      ]
     }
   ],
 

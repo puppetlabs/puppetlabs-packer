@@ -1,15 +1,17 @@
 class packer::vmtools::params {
 
   case $::osfamily {
-    debian, redhat: {
+    'Redhat' : {
       $root_home = '/root'
-    }
-
-    redhat: {
       $required_packages = [ 'kernel-devel' ]
     }
 
-    default: {
+    'Debian' : {
+      $root_home = '/root'
+      $required_packages = [ "linux-headers-${::kernelrelease}" ]
+    }
+
+    default : {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
   }
