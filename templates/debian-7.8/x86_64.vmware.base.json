@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "debian-7.6-i386",
-      "template_os": "debian7",
+      "template_name": "debian-7.8-x86_64",
+      "template_os": "debian7-64",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/7.6.0/i386/iso-cd/debian-7.6.0-i386-netinst.iso",
-      "iso_checksum": "528e1a7315da1bbf50bd4d187880a519",
+      "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso",
+      "iso_checksum": "a91fba5001cf0fbccb44a7ae38c63b6e",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",

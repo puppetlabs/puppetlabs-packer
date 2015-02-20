@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "debian-7.6-x86_64",
-      "template_os": "Debian_64",
+      "template_name": "debian-7.8-i386",
+      "template_os": "Debian",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/7.6.0/amd64/iso-cd/debian-7.6.0-amd64-netinst.iso",
-      "iso_checksum": "8a3c2ad7fd7a9c4c7e9bcb5cae38c135",
+      "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/i386/iso-cd/debian-7.8.0-i386-netinst.iso",
+      "iso_checksum": "0d2f88d23a9d5945f5bc0276830c7d2c",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -45,7 +45,6 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "virtualbox_version_file": ".vbox_version",
       "vboxmanage": [
         [
@@ -59,12 +58,6 @@
           "{{.Name}}",
           "--cpus",
           "{{user `cpu_count`}}"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--ioapic",
-          "off"
         ]
       ]
     }
