@@ -1,0 +1,9 @@
+### 1.0.1
+
+* Bump version to CentOS 6.6 
+* Fixups for Virtualbox Guest Additions
+* Bump version for Puppet and PE
+
+### 1.0.0
+
+* Initial release

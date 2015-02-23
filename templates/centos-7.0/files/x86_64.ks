@@ -1,6 +1,6 @@
 install
 
-url --url=http://mirror.centos.org/centos-7/7/os/x86_64/
+url --url=http://mirrors.cat.pdx.edu/centos/7/os/x86_64/
 lang en_US.UTF-8
 keyboard us
 network --bootproto=dhcp
@@ -22,6 +22,7 @@ auth  --useshadow  --enablemd5
 firstboot --disabled
 reboot --eject
 
+repo --name=updates --baseurl=http://mirrors.cat.pdx.edu/centos/7/updates/x86_64/
 repo --name=epel --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-7&arch=x86_64
 repo --name=puppetlabs --baseurl=http://yum.puppetlabs.com/el/7/products/x86_64/
 repo --name=puppetdeps --baseurl=http://yum.puppetlabs.com/el/7/dependencies/x86_64/

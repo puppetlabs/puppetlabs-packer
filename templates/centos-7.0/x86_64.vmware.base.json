@@ -82,7 +82,6 @@
         "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
-        "scripts/vmtools.sh",
         "../../scripts/cleanup-puppet.sh",
         "../../scripts/cleanup-packer.sh"
       ]

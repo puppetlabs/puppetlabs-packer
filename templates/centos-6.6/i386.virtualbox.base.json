@@ -1,0 +1,97 @@
+{
+
+  "variables":
+    {
+      "template_name": "centos-6.6-i386",
+      "template_os": "RedHat",
+
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/6.6/isos/i386/CentOS-6.6-i386-netinstall.iso",
+      "iso_checksum": "d1d5017e14ac5d323fe2d0891bb2203a",
+      "iso_checksum_type": "md5",
+
+      "memory_size": "512",
+      "cpu_count": "1",
+
+      "provisioner": "virtualbox",
+      "required_modules": "puppetlabs-stdlib saz-ssh",
+      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/i386.ks <wait>",
+        "<enter>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "guest_os_type": "{{user `template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "root",
+      "ssh_password": "puppet",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "/sbin/halt -h -p",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_NFS={{user `puppet_nfs`}}"
+      ],
+      "scripts": [
+        "../../scripts/bootstrap-puppet.sh"
+      ]
+    },
+
+    {
+      "type": "puppet-masterless",
+      "execute_command": "{{.FacterVars}} /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter": {
+        "provisioner": "{{user `provisioner`}}"
+      },
+      "manifest_dir": "../../manifests",
+      "manifest_file": "../../manifests/base.pp"
+    },
+
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_NFS={{user `puppet_nfs`}}"
+      ],
+      "scripts": [
+        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-packer.sh"
+      ]
+    }
+  ]
+
+}

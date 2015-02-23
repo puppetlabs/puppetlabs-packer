@@ -33,7 +33,6 @@ class packer::vmtools inherits packer::vmtools::params {
   }
 
   case $::operatingsystemrelease {
-    '7.0.1406': { }
 
     default: {
       file { "${root_home}/${tools_iso}":
