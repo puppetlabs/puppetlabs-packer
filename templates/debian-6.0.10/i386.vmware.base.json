@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "debian-6.0.9-x86_64",
-      "template_os": "debian6-64",
+      "template_name": "debian-6.0.10-i386",
+      "template_os": "debian6",
 
-      "iso_url": "http://cdimage.debian.org/cdimage/archive/6.0.9/amd64/iso-cd/debian-6.0.9-amd64-netinst.iso",
-      "iso_checksum": "9b08117cc235f3084948ab75a0f48861",
+      "iso_url": "http://cdimage.debian.org/cdimage/archive/6.0.10/i386/iso-cd/debian-6.0.10-i386-netinst.iso",
+      "iso_checksum": "574fad7c19d6522b2892c79781e3457a",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",

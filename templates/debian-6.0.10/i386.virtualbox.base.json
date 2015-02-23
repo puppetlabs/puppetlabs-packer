@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "debian-6.0.9-i386",
+      "template_name": "debian-6.0.10-i386",
       "template_os": "Debian",
 
-      "iso_url": "http://cdimage.debian.org/cdimage/archive/6.0.9/i386/iso-cd/debian-6.0.9-i386-netinst.iso",
-      "iso_checksum": "6d727c067d45d232f231bd56b2667d0b",
+      "iso_url": "http://cdimage.debian.org/cdimage/archive/6.0.10/i386/iso-cd/debian-6.0.10-i386-netinst.iso",
+      "iso_checksum": "574fad7c19d6522b2892c79781e3457a",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -53,7 +53,6 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "virtualbox_version_file": ".vbox_version",
       "vboxmanage": [
         [

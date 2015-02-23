@@ -2,17 +2,17 @@
 
   "variables":
     {
-      "template_name": "debian-6.0.9-i386",
+      "template_name": "debian-6.0.10-i386",
 
-      "provisioner": "virtualbox",
+      "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-sudo"
     },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-pe",
-      "type": "virtualbox-ovf",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "type": "vmware-vmx",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,

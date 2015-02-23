@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "debian-6.0.9-x86_64",
+      "template_name": "debian-6.0.10-i386",
 
       "provisioner": "virtualbox",
       "required_modules": "puppetlabs-stdlib saz-sudo"
@@ -28,7 +28,7 @@
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
         "OPERATINGSYSTEM=debian",
-        "ARCHITECTURE=x86_64"
+        "ARCHITECTURE=i386"
       ],
       "scripts": [
         "../../scripts/install-puppet-enterprise.sh"
