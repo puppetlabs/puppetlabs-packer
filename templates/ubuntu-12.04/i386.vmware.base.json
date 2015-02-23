@@ -5,8 +5,8 @@
       "template_name": "ubuntu-12.04-i386",
       "template_os": "ubuntu",
 
-      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.4-server-i386.iso",
-      "iso_checksum": "0081e57fb8c7e4094fb9767384f087c6",
+      "iso_url": "http://releases.ubuntu.com/precise/ubuntu-12.04.5-server-i386.iso",
+      "iso_checksum": "1214cd22448338b60bb24f583dd8741a",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
