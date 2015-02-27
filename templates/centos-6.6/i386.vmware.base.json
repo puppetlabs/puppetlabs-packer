@@ -5,8 +5,8 @@
       "template_name": "centos-6.6-i386",
       "template_os": "rhel6",
 
-      "iso_url": "http://mirrors.cat.pdx.edu/centos/6.5/isos/i386/CentOS-6.5-i386-minimal.iso",
-      "iso_checksum": "a4f27ab51d0d2c9d36b68c56b39f752b",
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/6.6/isos/i386/CentOS-6.6-i386-netinstall.iso",
+      "iso_checksum": "d1d5017e14ac5d323fe2d0891bb2203a",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
