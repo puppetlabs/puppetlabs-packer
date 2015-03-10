@@ -1,3 +1,7 @@
+### 1.0.2
+
+* inode.c d_alias patch required to successfully compile the vmhgfs module
+
 ### 1.0.1
 
 * Bump to Debian 7.8
