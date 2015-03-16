@@ -6,14 +6,14 @@
     "username": "root",
     "password": "root",
 
-    "provisioner": "virtualbox"
+    "provisioner": "vmware"
   },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-nocm",
-      "type": "virtualbox-ovf",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "type": "vmware-vmx",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
 
       "ssh_username": "{{user `username`}}",
       "ssh_password": "{{user `password`}}",
@@ -35,7 +35,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
+      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
     }
   ]
 
