@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set host name
-echo "packer-solaris10.dev" > /a/etc/nodename
+echo "vagrant" > /a/etc/nodename
 
 # Allow root SSH
 cat /a/etc/ssh/sshd_config | sed -e 's/PermitRootLogin\ .*$/PermitRootLogin yes/g' > /tmp/sshd_config.$$

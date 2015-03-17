@@ -36,7 +36,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
+      "output": "/opt/output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-nocm.box"
     }
   ]
 
