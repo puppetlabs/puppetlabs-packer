@@ -6,7 +6,8 @@ if [ -n "${PUPPET_NFS}" ]; then
 fi
 
 # Remove Puppet-related files and directories
-rm -rf /etc/puppetlabs
+#rm -rf /etc/puppetlabs
 rm -rf /opt/puppet
 rm -rf /var/cache/yum/puppetdeps
 rm -rf /var/opt/lib/pe-puppet
+rm -rf /var/opt/puppetlabs/puppet
