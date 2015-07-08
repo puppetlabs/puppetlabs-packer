@@ -5,8 +5,8 @@
       "template_name": "centos-7.0-x86_64",
       "template_os": "RedHat_64",
 
-      "iso_url": "http://centos.weepeetelecom.be/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
-      "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7.0-1406-x86_64-DVD.iso",
+      "iso_checksum": "713ea7847adcdd1700e92429f212721a",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",

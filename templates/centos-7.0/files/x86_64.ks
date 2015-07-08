@@ -1,6 +1,5 @@
 install
-
-url --url=http://mirrors.cat.pdx.edu/centos/7/os/x86_64/
+cdrom
 lang en_US.UTF-8
 keyboard us
 network --bootproto=dhcp
