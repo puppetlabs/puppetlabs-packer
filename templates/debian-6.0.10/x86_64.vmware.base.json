@@ -5,8 +5,8 @@
       "template_name": "debian-6.0.10-x86_64",
       "template_os": "debian6-64",
 
-      "iso_url": "http://cdimage.debian.org/cdimage/archive/6.0.10/amd64/iso-cd/debian-6.0.10-amd64-netinst.iso",
-      "iso_checksum": "7f82d341561035f65933da43f94d5b52",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-6.0.10-amd64-DVD-1.iso",
+      "iso_checksum": "146eeebe6535fb2432ba65f1ad0c7989",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
