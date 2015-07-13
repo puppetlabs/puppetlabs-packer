@@ -7,7 +7,7 @@ if [ -n "${PUPPET_NFS}" ]; then
   # Create mount point and required directories
   mkdir -p /opt/puppet
   mkdir -p /etc/puppetlabs
-  mkdir -p /var/opt/lib/pe-puppet
+  mkdir -p /var/opt/puppetlabs/puppet
 
   mount -o ro -t nfs ${PUPPET_NFS}/${TEMPLATE} /opt/puppet
 elif [ -n "${PE_URL}" ]; then

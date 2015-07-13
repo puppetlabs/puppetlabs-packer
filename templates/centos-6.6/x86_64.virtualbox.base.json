@@ -4,9 +4,9 @@
     {
       "template_name": "centos-6.6-x86_64",
       "template_os": "RedHat_64",
-
-      "iso_url": "http://mirrors.cat.pdx.edu/centos/6.6/isos/x86_64/CentOS-6.6-x86_64-netinstall.iso",
-      "iso_checksum": "2342bc5ea72fc028972aa0f21cee28b4",
+      
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-6.6-x86_64-bin-DVD1.iso",
+      "iso_checksum": "7b1fb1a11499b31271ded79da6af8584",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -78,7 +78,7 @@
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },

@@ -1,6 +1,5 @@
 install
-
-url --url=http://mirror.centos.org/centos-6/6/os/x86_64/
+cdrom
 lang en_US.UTF-8
 keyboard us
 network --bootproto=dhcp
@@ -21,11 +20,6 @@ autopart
 auth  --useshadow  --enablemd5
 firstboot --disabled
 reboot --eject
-
-repo --name=updates --baseurl=http://mirror.centos.org/centos-6/6/updates/x86_64/
-repo --name=epel --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=x86_64
-repo --name=puppetlabs --baseurl=http://yum.puppetlabs.com/el/6/products/x86_64/
-repo --name=puppetdeps --baseurl=http://yum.puppetlabs.com/el/6/dependencies/x86_64/
 
 %packages --ignoremissing
 @core

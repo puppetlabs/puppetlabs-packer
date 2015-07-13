@@ -1,7 +1,7 @@
 ---
 name: 'ubuntu-12.04'
 description: 'Ubuntu 12.04 (precise)'
-version: '1.0.1'
+version: '1.0.2'
 
 arches:
   - name: '32'
@@ -13,6 +13,6 @@ configs:
   - name: 'nocm'
     description: 'no configuration management software'
   - name: 'puppet'
-    description: 'Puppet 3.7.4'
+    description: 'Puppet 4.2.0'
   - name: 'puppet-enterprise'
-    description: 'Puppet Enterprise 3.7.2 (agent-only)'
+    description: 'Puppet Enterprise 3.8.1 (agent-only)'

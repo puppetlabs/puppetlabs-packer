@@ -5,7 +5,7 @@
       "template_name": "debian-7.8-i386",
       "template_os": "Debian",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/i386/iso-cd/debian-7.8.0-i386-netinst.iso",
+      "iso_url": "http://cdimage.debian.org/cdimage/archive/7.8.0/i386/iso-cd/debian-7.8.0-i386-netinst.iso",
       "iso_checksum": "0d2f88d23a9d5945f5bc0276830c7d2c",
       "iso_checksum_type": "md5",
 
@@ -78,7 +78,7 @@
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },

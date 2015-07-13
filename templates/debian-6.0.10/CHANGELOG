@@ -1,3 +1,8 @@
+### 1.0.2
+
+* Switch to puppet-agent packaging
+* Bump version for Puppet and PE
+
 ### 1.0.1
 
 * Bump to Debian 6.0.10
