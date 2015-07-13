@@ -2,8 +2,8 @@ class packer::vmtools inherits packer::vmtools::params {
 
   if ( $required_packages != undef ) {
     package { $required_packages:
-      ensure     => installed,
-      before     => File[ '/tmp/vmtools' ],
+      ensure => installed,
+      before => File[ '/tmp/vmtools' ],
     }
   }
 
