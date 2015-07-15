@@ -18,9 +18,21 @@ class packer::puppet {
     }
 
     redhat: {
+
+        if $operatingsystem == "Fedora" {
+             $ostype="fedora"
+             $prefix="f"
+        } elsif $repo_osfamily == "RedHat" {
+             $ostype="el"
+             $prefix=""
+        }
+        else {
+          err("Unable to determine operating system information to assign yum repo.")
+        }
+
       yumrepo { 'puppetlabs-pc1':
-        baseurl  => 'http://yum.puppetlabs.com/el/$releasever/PC1/$basearch',
-        descr    => 'Puppet Labs PC1 Repository el $releasever - $basearch',
+        baseurl  => "http://yum.puppetlabs.com/${ostype}/${prefix}\$releasever/PC1/\$basearch",
+        descr    => "Puppet Labs PC1 Repository ${ostype} $releasever - \$basearch",
         gpgkey   => 'http://yum.puppetlabs.com/RPM-GPG-KEY-puppetlabs',
         enabled  => '1',
         gpgcheck => '1',
