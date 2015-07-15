@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [[ "${TEMPLATE}" == "fedora-22"* ]]; then
+  echo "Updating rpcbind..."
+  dnf -y upgrade rpcbind
+  systemctl enable rpcbind.socket
+  systemctl restart rpcbind.service
+fi
+
+
 if [ -n "${PUPPET_NFS}" ]; then
   # Mount NFS share if PUPPET_NFS set
   echo "Mounting PE via NFS..."
