@@ -20,11 +20,11 @@ class packer::puppet {
     redhat: {
 
         if $operatingsystem == "Fedora" {
-             $ostype="fedora"
-             $prefix="f"
-        } elsif $repo_osfamily == "RedHat" {
-             $ostype="el"
-             $prefix=""
+          $ostype = 'fedora'
+          $prefix = 'f'
+        } elsif $osfamily == "RedHat" {
+          $ostype = 'el'
+          $prefix = ''
         }
         else {
           err("Unable to determine operating system information to assign yum repo.")
