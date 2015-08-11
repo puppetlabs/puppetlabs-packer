@@ -16,7 +16,7 @@ $config = YAML.load_file(config_file)
 $url_base = 'https://vagrantcloud.com/api/v1'
 
 # The 'long description' template
-def get_template()
+def long_template()
   %{
 ### About this VM
 
@@ -37,6 +37,12 @@ It has **<%= @t_config %>** pre-installed.
 
 Please open any issues on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/servicedesk/customer/vspt).
   }
+end
+
+def version_template()
+  %{
+* version <%= @t_version %>, see the [changelog](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj   %>/CHANGELOG) for details
+ }
 end
 
 client = HTTPClient.new
@@ -62,7 +68,7 @@ $config['arches'].each do |arch|
       body = {
         'box[name]'              => box_name,
         'box[short_description]' => @t_name + ' ' + @t_arch + ', ' + @t_config,
-        'box[description]'       => ERB.new(get_template).result(),
+        'box[description]'       => ERB.new(long_template).result(),
         'access_token'           => ENV['MD_VAGRANTCLOUD_TOKEN']
       }
 
@@ -70,7 +76,7 @@ $config['arches'].each do |arch|
     end
 
     if (box) then
-      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + '1' \
+      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version \
            + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
       begin
         version = client.get_content(path)
@@ -78,8 +84,9 @@ $config['arches'].each do |arch|
         path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'versions'
 
         body = {
-          'version[version]' => @t_version,
-          'access_token'     => ENV['MD_VAGRANTCLOUD_TOKEN']
+          'version[version]'     => @t_version,
+          'version[description]' => ERB.new(version_template).result(),
+          'access_token'         => ENV['MD_VAGRANTCLOUD_TOKEN']
         }
 
         version = client.post(path, body)
@@ -103,13 +110,13 @@ $config['arches'].each do |arch|
               hyperlink = 'vmware'
           end
 
-          path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + '1' + '/' + 'provider' + '/' + hyper \
+          path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'provider' + '/' + hyper \
                + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
 
           begin
             provider = client.get_content(path)
           rescue
-            path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + '1' + '/' + 'providers'
+            path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'providers'
 
             body = {
               'provider[name]' => hyper,
@@ -125,7 +132,7 @@ $config['arches'].each do |arch|
 
       end
 
-      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + '1' + '/' + 'release'
+      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'release'
 
       body = {
         'access_token'   => ENV['MD_VAGRANTCLOUD_TOKEN']
