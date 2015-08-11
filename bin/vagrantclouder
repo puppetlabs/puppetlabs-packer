@@ -59,36 +59,42 @@ $config['arches'].each do |arch|
     @t_name     = $config['description']
     @t_version  = $config['version']
 
-    path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name
+    body = {
+      'box[name]'              => box_name,
+      'box[short_description]' => @t_name + ' ' + @t_arch + ', ' + @t_config,
+      'box[description]'       => ERB.new(long_template).result(),
+      'access_token'           => ENV['MD_VAGRANTCLOUD_TOKEN']
+    }
+
+    path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name \
+         + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
     begin
-      box = client.get_content(path)
+      result = client.get_content(path)
+      puts "Found #{box_name}.  Updating."
+      box = client.put(path, body)
     rescue
+      puts "#{box_name} not found.  Creating."
       path = $url_base + '/' + 'boxes'
-
-      body = {
-        'box[name]'              => box_name,
-        'box[short_description]' => @t_name + ' ' + @t_arch + ', ' + @t_config,
-        'box[description]'       => ERB.new(long_template).result(),
-        'access_token'           => ENV['MD_VAGRANTCLOUD_TOKEN']
-      }
-
       box = client.post(path, body)
     end
 
     if (box) then
+
+      body = {
+        'version[version]'     => @t_version,
+        'version[description]' => ERB.new(version_template).result(),
+        'access_token'         => ENV['MD_VAGRANTCLOUD_TOKEN']
+      }
+
       path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version \
            + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
       begin
-        version = client.get_content(path)
+        result = client.get_content(path)
+        puts "Found #{box_name} version #@t_version.  Updating."
+        version = client.put(path, body) 
       rescue
+        puts "#{box_name} version #@t_version not found.  Creating."
         path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'versions'
-
-        body = {
-          'version[version]'     => @t_version,
-          'version[description]' => ERB.new(version_template).result(),
-          'access_token'         => ENV['MD_VAGRANTCLOUD_TOKEN']
-        }
-
         version = client.post(path, body)
       end
 
@@ -98,6 +104,15 @@ $config['arches'].each do |arch|
             arch['s3'] = 'i386'
           when '64'
             arch['s3'] = 'x86_64'
+        end
+
+        case config['name']
+          when 'puppet-enterprise'
+            config['s3'] = 'pe'
+          when 'puppet'
+            config['s3'] = 'puppet'
+          when 'nocm'
+            config['s3'] = 'nocm'
         end
 
         ['virtualbox', 'vmware_desktop', 'vmware_fusion'].each do |hyper|
@@ -110,21 +125,23 @@ $config['arches'].each do |arch|
               hyperlink = 'vmware'
           end
 
+        body = {
+          'provider[name]' => hyper,
+          'provider[url]'  => ENV['MD_VAGRANTCLOUD_S3_URL'] \
+                              + $config['name'] + '-' + arch['s3'] + '-' + hyperlink + '-' + config['s3'] + '-' + @t_version + '.box',
+          'access_token'   => ENV['MD_VAGRANTCLOUD_TOKEN']
+        }
+
           path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'provider' + '/' + hyper \
                + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
 
           begin
-            provider = client.get_content(path)
+            result = client.get_content(path)
+            puts "Found #{box_name} version #@t_version #{hyper} provider.  Updating."
+            provider = client.put(path, body) 
           rescue
+            puts "#{box_name} version #@t_version #{hyper} provider not found.  Creating."
             path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'providers'
-
-            body = {
-              'provider[name]' => hyper,
-              'provider[url]'  => 'https://s3.amazonaws.com/puppetlabs-vagrantcloud/' \
-                                + $config['name'] + '-' + arch['s3'] + '-' + hyperlink + '-' + config['name'] + '-' + @t_version + '.box',
-              'access_token'   => ENV['MD_VAGRANTCLOUD_TOKEN']
-            }
-
             provider = client.post(path, body)
           end
 
