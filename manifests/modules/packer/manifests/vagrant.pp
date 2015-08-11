@@ -29,11 +29,6 @@ class packer::vagrant inherits packer::vagrant::params {
     type    => 'ssh-rsa',
   }
 
-  file { '/etc/profile.d/append-puppetlabs-path.sh':
-    mode    => '0644',
-    content => 'PATH=$PATH:/opt/puppetlabs/bin',
-  }
-
   class { 'sudo': }
 
   sudo::conf { 'vagrant':
