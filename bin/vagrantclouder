@@ -1,0 +1,164 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.dirname(__FILE__))
+
+require 'rubygems' unless defined?(Gem)
+
+require 'erb'
+require 'httpclient'
+require 'yaml'
+
+# Load the configuration file
+config_file = File.expand_path('vagrantcloud.yaml')
+$config = YAML.load_file(config_file)
+
+# Some (overridable) defaults
+$url_base = 'https://vagrantcloud.com/api/v1'
+
+# The 'long description' template
+def long_template()
+  %{
+### About this VM
+
+This is a clean, minimal **<%= @t_arch %>** installation of **<%= @t_name %>** built and packaged by [Puppet Labs](http://puppetlabs.com/).
+
+It has **<%= @t_config %>** pre-installed.
+
+### VM settings
+
+* `root` password is set to `puppet`
+* `vagrant` account uses the [Vagrant project's insecure public key](https://github.com/mitchellh/vagrant/tree/master/keys)
+* a primary interface is configured, which maps to the default virtualized NAT network
+
+### Notes
+
+* version <%= @t_version %>, see the [changelog](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj %>/CHANGELOG) for details
+* built with [Packer](http://packer.io/) using the [Puppet Labs Packer Git repository](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj %>)
+
+Please open any issues on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/servicedesk/customer/vspt).
+  }
+end
+
+def version_template()
+  %{
+* version <%= @t_version %>, see the [changelog](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj   %>/CHANGELOG) for details
+ }
+end
+
+client = HTTPClient.new
+
+# Walk through box permutations
+$config['arches'].each do |arch|
+  $config['configs'].each do |config|
+    box_name = $config['name'] + '-' + arch['name'] + '-' + config['name']
+
+    @t_box_maj  = $config['name']
+    @t_box_name = box_name
+    @t_arch     = arch['description']
+    @t_config   = config['description']
+    @t_name     = $config['description']
+    @t_version  = $config['version']
+
+    body = {
+      'box[name]'              => box_name,
+      'box[short_description]' => @t_name + ' ' + @t_arch + ', ' + @t_config,
+      'box[description]'       => ERB.new(long_template).result(),
+      'access_token'           => ENV['MD_VAGRANTCLOUD_TOKEN']
+    }
+
+    path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name \
+         + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
+    begin
+      result = client.get_content(path)
+      puts "Found #{box_name}.  Updating."
+      box = client.put(path, body)
+    rescue
+      puts "#{box_name} not found.  Creating."
+      path = $url_base + '/' + 'boxes'
+      box = client.post(path, body)
+    end
+
+    if (box) then
+
+      body = {
+        'version[version]'     => @t_version,
+        'version[description]' => ERB.new(version_template).result(),
+        'access_token'         => ENV['MD_VAGRANTCLOUD_TOKEN']
+      }
+
+      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version \
+           + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
+      begin
+        result = client.get_content(path)
+        puts "Found #{box_name} version #@t_version.  Updating."
+        version = client.put(path, body) 
+      rescue
+        puts "#{box_name} version #@t_version not found.  Creating."
+        path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'versions'
+        version = client.post(path, body)
+      end
+
+      if (version) then
+        case arch['name']
+          when '32'
+            arch['s3'] = 'i386'
+          when '64'
+            arch['s3'] = 'x86_64'
+        end
+
+        case config['name']
+          when 'puppet-enterprise'
+            config['s3'] = 'pe'
+          when 'puppet'
+            config['s3'] = 'puppet'
+          when 'nocm'
+            config['s3'] = 'nocm'
+        end
+
+        ['virtualbox', 'vmware_desktop', 'vmware_fusion'].each do |hyper|
+          case hyper
+            when 'virtualbox'
+              hyperlink = 'virtualbox'
+            when 'vmware_desktop'
+              hyperlink = 'vmware'
+            when 'vmware_fusion'
+              hyperlink = 'vmware'
+          end
+
+        body = {
+          'provider[name]' => hyper,
+          'provider[url]'  => ENV['MD_VAGRANTCLOUD_S3_URL'] \
+                              + $config['name'] + '-' + arch['s3'] + '-' + hyperlink + '-' + config['s3'] + '-' + @t_version + '.box',
+          'access_token'   => ENV['MD_VAGRANTCLOUD_TOKEN']
+        }
+
+          path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'provider' + '/' + hyper \
+               + '?' + 'access_token' + '=' + ENV['MD_VAGRANTCLOUD_TOKEN']
+
+          begin
+            result = client.get_content(path)
+            puts "Found #{box_name} version #@t_version #{hyper} provider.  Updating."
+            provider = client.put(path, body) 
+          rescue
+            puts "#{box_name} version #@t_version #{hyper} provider not found.  Creating."
+            path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'providers'
+            provider = client.post(path, body)
+          end
+
+        end
+
+      end
+
+      path = $url_base + '/' + 'box' + '/' + ENV['MD_VAGRANTCLOUD_USERNAME'] + '/' + box_name + '/' + 'version' + '/' + @t_version + '/' + 'release'
+
+      body = {
+        'access_token'   => ENV['MD_VAGRANTCLOUD_TOKEN']
+      }
+
+      res = client.put(path, body)
+
+      puts '✓ ' + box_name
+    end
+  end
+end
+
