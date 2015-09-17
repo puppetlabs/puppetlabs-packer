@@ -20,6 +20,7 @@
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
       "boot_command": [
         "e<wait>",
