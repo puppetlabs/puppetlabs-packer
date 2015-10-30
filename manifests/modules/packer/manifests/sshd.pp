@@ -6,6 +6,7 @@ class packer::sshd {
       'PermitRootLogin'      => 'yes',
       'UseDNS'               => 'no',
       'GSSAPIAuthentication' => 'no',
+      'Subsystem'            => 'sftp /usr/libexec/openssh/sftp-server',
     },
   }
 
