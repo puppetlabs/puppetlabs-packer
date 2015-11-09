@@ -3,7 +3,7 @@ class packer::vmtools::params {
   case $::osfamily {
     'Redhat' : {
       $root_home = '/root'
-      $required_packages = [ 'kernel-devel' ]
+      $required_packages = [ 'kernel-devel', 'gcc' ]
     }
 
     'Debian' : {
