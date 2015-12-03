@@ -1,0 +1,41 @@
+#!/usr/bin/ruby
+ 
+hostname = `vmtoolsd --cmd "info-get guestinfo.hostname"`
+
+hostname = hostname.chomp
+
+puts "Nice to meet you, my VM name is '#{hostname}'."
+ 
+puts "\n"
+ 
+puts '- Setting local hostname...'
+ 
+File.open('/etc/hostname', 'w') do |f|
+  f.write(hostname)
+end
+ 
+Kernel.system('hostname -F /etc/hostname')
+ 
+dhc = File.read('/etc/dhcp/dhclient.conf')
+ 
+File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
+  dhc.gsub!(/^(#send host-name.*)/, "send host-name \"#{hostname}\";")
+  f.write(dhc)
+end
+ 
+puts '- Re-obtaining DHCP lease...'
+ 
+#Kernel.system('pkill dhclient')
+#Kernel.system('dhclient -r')
+#Kernel.system('rm /var/lib/dhcp/dhclient*')
+Kernel.system('/etc/init.d/networking restart')
+Kernel.system('dhclient eth0')
+ 
+puts '- Cleaning up...'
+ 
+Kernel.system('rm /etc/vsphere-bootstrap.rb')
+Kernel.system('echo "exit 0" > /etc/rc.local')
+ 
+puts "\n"
+ 
+puts 'Done!'

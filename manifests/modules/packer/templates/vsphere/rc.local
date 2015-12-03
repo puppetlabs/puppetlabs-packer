@@ -1,0 +1,5 @@
+#!/bin/sh -e
+ 
+( /etc/vsphere-bootstrap.rb ) 2>&1 | /usr/bin/tee /tmp/vsphere-bootstrap.log
+ 
+exit 0

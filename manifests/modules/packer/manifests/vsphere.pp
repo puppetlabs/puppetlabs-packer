@@ -1,39 +1,44 @@
 class packer::vsphere inherits packer::vsphere::params {
 
+  include packer::vsphere::repos
+  include packer::vsphere::networking
+
+  user { root:
+    ensure   => present,
+    password => "$qa_root_passwd"
+  }
+
   package { $ruby_package:
     ensure => present,
-  }
-
-  package { 'facter':
-    ensure   => present,
-    provider => 'gem',
-    require  => Package[ $ruby_package ],
-  }
-
-  package { 'nokogiri':
-    ensure   => '1.5.9',
-    provider => 'gem',
-    require  => Package[ $ruby_package ],
-  }
-
-  package { 'rbvmomi':
-    ensure   => '1.6.0',
-    provider => 'gem',
-    require  => Package[ 'nokogiri' ],
   }
 
   file { $bootstrap_file:
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
-    source => "puppet:///modules/packer/vsphere/${bootstrap_file_source}",
+    content => template("packer/vsphere/${bootstrap_file_source}"),
   }
 
   file { $startup_file:
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    source => "puppet:///modules/packer/vsphere/${startup_file_source}",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    content => template("packer/vsphere/${startup_file_source}"),
   }
 
+  file { '/root/.ssh':
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    ensure => directory,
+  }
+
+  file { '/root/.ssh/authorized_keys':
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    source  => 'puppet:///modules/packer/vsphere/authorized_keys',
+    require => File[ '/root/.ssh' ]
+  }
+ 
 }
