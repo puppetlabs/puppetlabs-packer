@@ -1,48 +1,82 @@
 class packer::vsphere::repos inherits packer::vsphere::params {
- 
-  exec { "apt-update":
-    command => "/usr/bin/apt-get update"
-  }
 
-  Apt::Key <| |> -> Exec["apt-update"]
-  Apt::Source <| |> -> Exec["apt-update"]
+  case $::osfamily {
 
-  Exec["apt-update"] -> Package <| |>
+    debian: {
 
-  class { 'apt':
-    purge => {
-      'sources.list'   => true,
-      'sources.list.d' => true,
-    },
-  }
+      exec { "apt-update":
+        command => "/usr/bin/apt-get update"
+      }
 
-  apt::source { "$lsbdistcodename":
-    release  => $lsbdistcodename,
-    location => "$repo_mirror/$repo_name",
-    repos    => "$repo_list",
-    include  => {
-      'src' => true,
-      'deb' => true,
-    },
-  }
+      Apt::Key <| |> -> Exec["apt-update"]
+      Apt::Source <| |> -> Exec["apt-update"]
 
-  apt::source { "${lsbdistcodename}-updates":
-    release  => "$updates_release",
-    location => "${repo_mirror}/${repo_name}",
-    repos    => "$repo_list",
-    include  => {
-      'src' => true,
-      'deb' => true,
-    },
-  }
+      Exec["apt-update"] -> Package <| |>
 
-  apt::source { "${lsbdistcodename}-security":
-    release  => "$security_release",
-    location => "${repo_mirror}/${security_repo_name}",
-    repos    => "$repo_list",
-    include  => {
-      'src' => true,
-      'deb' => true,
-    },
+      class { 'apt':
+        purge => {
+          'sources.list'   => true,
+          'sources.list.d' => true,
+        },
+      }
+
+      apt::source { "$lsbdistcodename":
+        release  => $lsbdistcodename,
+        location => "$repo_mirror/$repo_name",
+        repos    => "$repo_list",
+        include  => {
+          'src' => true,
+          'deb' => true,
+        },
+      }
+
+      apt::source { "${lsbdistcodename}-updates":
+        release  => "$updates_release",
+        location => "${repo_mirror}/${repo_name}",
+        repos    => "$repo_list",
+        include  => {
+          'src' => true,
+          'deb' => true,
+        },
+      }
+
+      apt::source { "${lsbdistcodename}-security":
+        release  => "$security_release",
+        location => "${repo_mirror}/${security_repo_name}",
+        repos    => "$repo_list",
+        include  => {
+          'src' => true,
+          'deb' => true,
+        },
+      }
+    }
+
+    redhat: {
+
+      resources { 'yumrepo':
+        purge => true,
+      }
+
+      case $::operatingsystem {
+        centos,fedora: {
+          yumrepo { "localmirror-os":
+            descr    => "localmirror-os",
+            baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.os",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+          yumrepo { "localmirror-updates":
+            descr    => "localmirror-updates",
+            baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.updates",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+        } 
+      }
+   }  
+
+    default: {
+      fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
+    }
   }
 }

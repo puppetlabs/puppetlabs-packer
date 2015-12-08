@@ -1,6 +1,7 @@
 class packer::vsphere::params {
 
-  $repo_mirror    = 'http://osmirror.delivery.puppetlabs.net'
+  $repo_mirror = 'http://osmirror.delivery.puppetlabs.net'
+  $loweros     = downcase($::operatingsystem)
 
   case $::operatingsystem {
     'Ubuntu': {
@@ -29,12 +30,22 @@ class packer::vsphere::params {
       $updates_release       = "${lsbdistcodename}-updates"
     }
 
-    'CentOS', 'Fedora', 'Redhat': {
+    'CentOS', 'Redhat': {
       $startup_file          = '/etc/rc.d/rc.local'
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'redhat.rb.erb'
       $ruby_package          = [ 'ruby' ]
+      $gpgkey                = "RPM-GPG-KEY-${::operatingsystem}-${::operatingsystemmajrelease}"
+    }
+
+    'Fedora': {
+      $startup_file          = '/etc/rc.d/rc.local'
+      $startup_file_source   = 'rc.local'
+      $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
+      $bootstrap_file_source = 'redhat.rb.erb'
+      $ruby_package          = [ 'ruby' ]
+      $gpgkey                = "RPM-GPG-KEY-${::operatingsystemmajrelease}-${loweros}"
     }
 
     default: {
