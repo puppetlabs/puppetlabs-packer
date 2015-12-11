@@ -17,13 +17,43 @@ end
 
 Kernel.system('hostname -F /etc/hostname')
 
-File.open('/var/lib/NetworkManager/dhclient-ens32.conf', 'a') do |f|
-  f << "send host-name #{hostname}"
-end
-
 puts '- Re-obtaining DHCP lease...'
 
-Kernel.system('/sbin/service NetworkManager restart')
+<% if @operatingsystem == 'CentOS' -%>
+  <% if @operatingsystemmajrelease == '7' -%>
+    File.open('/var/lib/NetworkManager/dhclient-ens32.conf', 'a') do |f|
+      f << "send host-name #{hostname}"
+    end
+    Kernel.system('/sbin/service NetworkManager restart')
+    Kernel.system('/usr/bin/nmcli con down id ens32')
+    Kernel.system('/usr/bin/nmcli con up id ens32')
+  <% end -%>
+  <% if @operatingsystemmajrelease == '6' -%>
+    File.open('/etc/dhcp/dhclient-eth0.conf', 'a') do |f|
+  <% end -%>
+  <% if @operatingsystemmajrelease == '5' -%>
+    File.open('/etc/dhclient-eth0.conf', 'a') do |f|
+  <% end -%>
+  <% if (@operatingsystemmajrelease == '6') or (@operatingsystemmajrelease == '5') -%>
+      f << "\nsend host-name #{hostname};"
+    end
+    network = File.read('/etc/sysconfig/network')
+    File.open('/etc/sysconfig/network', 'w') do |f|
+      network.gsub!(/localhost.localdomain/, "#{hostname}")
+      f.write(network)
+    end
+    Kernel.system('/etc/init.d/network restart')
+  <% end -%>
+<% end -%>
+
+<% if @operatingsystem == 'Fedora' -%>
+  File.open('/var/lib/NetworkManager/dhclient-ens32.conf', 'a') do |f|
+    f << "send host-name #{hostname}"
+  end
+  Kernel.system('/sbin/service NetworkManager restart')
+  Kernel.system('/usr/bin/nmcli con down id ens32')
+  Kernel.system('/usr/bin/nmcli con up id ens32')
+<% end -%>
 
 puts '- Cleaning up...'
 
