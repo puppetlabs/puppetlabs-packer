@@ -35,7 +35,7 @@ It has **<%= @t_config %>** pre-installed.
 * version <%= @t_version %>, see the [changelog](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj %>/CHANGELOG) for details
 * built with [Packer](http://packer.io/) using the [Puppet Labs Packer Git repository](https://github.com/puppetlabs/puppetlabs-packer/tree/master/templates/<%= @t_box_maj %>)
 
-Please open any issues on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/servicedesk/customer/vspt).
+Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/browse/CPR).
   }
 end
 
