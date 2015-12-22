@@ -57,26 +57,31 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         purge => true,
       }
 
-      case $::operatingsystem {
-        centos,fedora: {
-          yumrepo { "localmirror-os":
-            descr    => "localmirror-os",
-            baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.os",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-          yumrepo { "localmirror-updates":
-            descr    => "localmirror-updates",
-            baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.updates",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-        } 
+      yumrepo { "localmirror-os":
+        descr    => "localmirror-os",
+        baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.os",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+      yumrepo { "localmirror-updates":
+        descr    => "localmirror-updates",
+        baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.updates",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+      
+      if $::operatingsystem == 'Fedora' {
+        yumrepo { "localmirror-everything":
+          descr    => "localmirror-everything",
+          baseurl  => "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.everything",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
       }
    }  
 
-    default: {
-      fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
-    }
+   default: {
+     fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
+   }
   }
 }
