@@ -3,7 +3,7 @@
   "variables":
     {
       "template_name": "fedora-21-x86_64",
-      "version": "0.0.1",
+      "version": "0.0.2",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib",
