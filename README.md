@@ -11,4 +11,4 @@ This repository contains the [Packer](http://packer.io) and [Puppet](http://pupp
 
 ### Issues
 
-Please open any issues on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/servicedesk/customer/vspt).
+Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/browse/CPR).
