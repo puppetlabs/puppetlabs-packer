@@ -19,7 +19,7 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
-      "memory_size": "2048",
+      "memory_size": "4096",
       "cpu_count": "2"
 
     },
