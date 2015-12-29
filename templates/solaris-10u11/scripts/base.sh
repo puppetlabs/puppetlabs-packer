@@ -4,6 +4,7 @@
 yes | /usr/sbin/pkgadd -d http://mirror.opencsw.org/opencsw/pkgutil-`uname -p`.pkg all
 /opt/csw/bin/pkgutil -U
 
+/opt/csw/bin/pkgutil -y -i CSWcurl
 /opt/csw/bin/pkgutil -y -i CSWwget
 /opt/csw/bin/pkgutil -y -i CSWgtar
 /opt/csw/bin/pkgutil -y -i CSWgsed
