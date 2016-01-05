@@ -1,0 +1,71 @@
+{
+  "variables": {
+    "source_vmx_template": "win-2012r2-x86_64-base",
+    "headless": "false",
+    
+    "this_templatedir": "templates/win-2012r2-x86_64/std",
+    "this_template": "win-2012r2-x86_64-std"
+  },
+
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
+  
+  "builders": [
+    {
+      "name": "{{user `this_template`}}",
+      "type": "vmware-vmx",
+      "source_path": "zip/output-{{user `source_vmx_template`}}/packer-{{user `source_vmx_template`}}.vmx",
+      "headless": "{{user `headless`}}",
+
+      "communicator": "winrm",
+      "winrm_username": "packer",
+      "winrm_password": "packer",
+      "winrm_timeout": "8h",
+      
+      "shutdown_command": "A:\\generalize-packer.bat",
+      "shutdown_timeout": "1h",
+
+      "floppy_files": [
+        "drivers/winx64/*",
+        "zip/puppet.zip",
+
+        "scripts/bootstrap-base.bat",
+        "scripts/start-boxstarter.ps1",
+        "scripts/SetupComplete.cmd",
+        "scripts/generalize-packer.bat",
+        "scripts/generalize-packer.autounattend.xml",
+        "{{user `this_templatedir`}}/{{user `this_template`}}.package.ps1",
+        "{{user `this_templatedir`}}/*.pp"
+      ],
+            
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+        
+        "firmware": "efi",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "scsi0.virtualdev": "lsisas1068",
+        "virtualHW.version": "10",
+
+        "vcpu.hotadd": "TRUE",
+        "mem.hotadd": "TRUE",
+        
+        "tools.syncTime": "0",
+        "time.synchronize.continue": "1",
+        "time.synchronize.restore": "1",
+        "time.synchronize.resume.disk": "1",
+        "time.synchronize.shrink": "1",
+        "time.synchronize.tools.startup": "1",
+        "time.synchronize.tools.enable": "1",
+        "time.synchronize.resume.host": "1"        
+      }
+    }
+  ],
+  "post-processors": [
+    {
+        "type": "compress",
+        "keep_input_artifact": true,
+        "output": "zip/{{user `this_template`}}.zip"
+    }
+  ]
+}
