@@ -23,7 +23,7 @@ class packer::networking::params {
           $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
         }
 
-        21, 22: {
+        21, 22, 23: {
           case $::provisioner {
             'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
             'vmware':     { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens33' }
