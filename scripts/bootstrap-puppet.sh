@@ -63,4 +63,11 @@ do
   /opt/puppet/bin/puppet module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules >/dev/null 2>&1
 done
 
+if [[ "${TEMPLATE}" == "fedora-23"* ]]; then
+  dnf -y install git
+  git clone https://github.com/nibalizer/puppet-dnf /tmp/packer-puppet-masterless/manifests/modules/puppet-dnf
+  dnf -y remove git
+fi
+
+
 printf 'Modules installed in ' ; /opt/puppet/bin/puppet module list --modulepath=/tmp/packer-puppet-masterless/manifests/modules
