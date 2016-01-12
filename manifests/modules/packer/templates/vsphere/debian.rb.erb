@@ -24,12 +24,16 @@ File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
 end
  
 puts '- Re-obtaining DHCP lease...'
- 
-#Kernel.system('pkill dhclient')
-#Kernel.system('dhclient -r')
-#Kernel.system('rm /var/lib/dhcp/dhclient*')
+
+<% if @operatingsystemmajrelease == '6' -%>
+Kernel.system('pkill dhclient')
+Kernel.system('dhclient -r')
+Kernel.system('rm /var/lib/dhcp/dhclient*')
+Kernel.system('dhclient eth0')
+<% else -%>
 Kernel.system('/etc/init.d/networking restart')
 Kernel.system('dhclient eth0')
+<% end -%>
  
 puts '- Cleaning up...'
  
