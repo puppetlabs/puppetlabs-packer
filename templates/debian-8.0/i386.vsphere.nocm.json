@@ -2,8 +2,8 @@
 
   "variables":
     {
-      "template_name": "debian-6.0.10-i386",
-      "version": "0.0.3",
+      "template_name": "debian-8.0-i386",
+      "version": "0.0.1",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib trepasi-debnet puppetlabs-apt",
