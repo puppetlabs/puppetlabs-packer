@@ -10,14 +10,13 @@ if [ -n "${PUPPET_NFS}" ]; then
 fi
 
 # Only remove /etc/puppetlabs on -nocm boxes
-if [[ "${PACKER_BUILD_NAME}" =~ .*-nocm ]]; then
+if [[ ${PACKER_BUILD_NAME} =~ .*-nocm ]]; then
   rm -rf /etc/puppetlabs
 fi
 
-# Run the PE uninstaller on Amazon builders 
-if [[ "${PACKER_BUILDER_TYPE}" =~ amazon-.* ]]; then
-  cd `ls -d puppet*`
-  ./puppet-enterprise-uninstaller -d -p -y 
+# Cleanup if installed from PE tar ball
+if [[ -n ${PE_URL} ]]; then
+  rm pe.tar.gz
 fi
 
 # Remove other Puppet-related files and directories
