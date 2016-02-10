@@ -3,6 +3,7 @@
     "aws_access_key": "",
     "aws_secret_key": "",
     "pe_url": "{{env `PE_URL`}}",
+    "pe_agent": "debian-7-amd64",
     "provisioner": "ec2",
     "source_ami": "ami-431a4273",
     "ami_description": "puppetlabs-debian-7.8-x86_64 {{timestamp}}",
@@ -47,6 +48,7 @@
       "execute_command": "chmod +x {{ .Path }} && {{ .Vars }} {{ .Path }} {{user `required_modules`}}",
       "environment_vars": [
         "PE_URL={{user `pe_url`}}"
+        "PE_AGENT={{user `pe_agent`}}"
       ],
       "scripts": [
         "../../scripts/bootstrap-puppet.sh"

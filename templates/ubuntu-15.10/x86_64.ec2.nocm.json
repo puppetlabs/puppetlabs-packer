@@ -3,15 +3,14 @@
     "aws_access_key": "",
     "aws_secret_key": "",
     "pe_url": "{{env `PE_URL`}}",
-    "pe_agent": "el-7-x86_64",
+    "pe_agent": "ubuntu-14.04-amd64",
     "provisioner": "ec2",
-    "source_ami": "ami-d440a6e7",
-    "ami_description": "puppetlabs-centos-7.1-x86_64 {{timestamp}}",
-    "ami_name": "puppetlabs-centos-7.1-x86_64 {{timestamp}}",
+    "source_ami": "ami-9eda3efe",
+    "ami_description": "puppetlabs-ubuntu-15.10-x86_64 {{timestamp}}",
+    "ami_name": "puppetlabs-ubuntu-15.10-x86_64 {{timestamp}}",
     "required_modules": "puppetlabs-stdlib saz-ssh",
     "user_data": "I2Nsb3VkLWNvbmZpZwpkaXNhYmxlX3Jvb3Q6IDAK",
     "_comment": "#cloud-config\ndisable_root: 0\n"
-
   },
 
   "builders": [
@@ -49,7 +48,7 @@
       "execute_command": "chmod +x {{ .Path }} && {{ .Vars }} {{ .Path }} {{user `required_modules`}}",
       "environment_vars": [
         "PE_URL={{user `pe_url`}}",
-        "PE_AGENT={{user `pe_agent`}}",
+        "PE_AGENT={{user `pe_agent`}}"
       ],
       "scripts": [
         "../../scripts/bootstrap-puppet.sh"
