@@ -3,6 +3,7 @@
     "aws_access_key": "",
     "aws_secret_key": "",
     "pe_url": "{{env `PE_URL`}}",
+    "pe_agent": "el-7-x86_64",
     "provisioner": "ec2",
     "source_ami": "ami-d440a6e7",
     "ami_description": "puppetlabs-centos-7.1-x86_64 {{timestamp}}",
@@ -47,7 +48,8 @@
       "type": "shell",
       "execute_command": "chmod +x {{ .Path }} && {{ .Vars }} {{ .Path }} {{user `required_modules`}}",
       "environment_vars": [
-        "PE_URL={{user `pe_url`}}"
+        "PE_URL={{user `pe_url`}}",
+        "PE_AGENT={{user `pe_agent`}}",
       ],
       "scripts": [
         "../../scripts/bootstrap-puppet.sh"
