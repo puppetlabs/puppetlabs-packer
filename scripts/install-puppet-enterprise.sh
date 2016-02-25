@@ -2,7 +2,7 @@
 
 # PE can't be installed with PE, so we'll need to use bash for this step
 
-PEVER='3.8.1'
+PEVER='3.8.4'
 HOSTNAME=$(hostname -f)
 
 cat > /tmp/answers <<EOF
