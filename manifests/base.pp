@@ -1,3 +1,4 @@
+include packer::updates
 include packer::sshd
 include packer::networking
 
