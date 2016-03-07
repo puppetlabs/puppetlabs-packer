@@ -5,8 +5,8 @@
       "template_name": "debian-7.8-i386",
       "template_os": "Debian",
 
-      "iso_url": "http://cdimage.debian.org/cdimage/archive/7.8.0/i386/iso-cd/debian-7.8.0-i386-netinst.iso",
-      "iso_checksum": "0d2f88d23a9d5945f5bc0276830c7d2c",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-7.8.0-i386-CD-1.iso",
+      "iso_checksum": "3bc593912773795dce735dfbbecd3cb2",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",

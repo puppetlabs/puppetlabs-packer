@@ -5,8 +5,8 @@
       "template_name": "debian-7.8-x86_64",
       "template_os": "debian7-64",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso",
-      "iso_checksum": "a91fba5001cf0fbccb44a7ae38c63b6e",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-7.8.0-amd64-CD-1.iso",
+      "iso_checksum": "0e3d2e7bc3cd7c97f76a4ee8fb335e43",
       "iso_checksum_type": "md5",
 
       "memory_size": "512",
@@ -33,7 +33,7 @@
         "netcfg/get_hostname=localhost <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
@@ -90,7 +90,6 @@
         "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
-        "scripts/patch-tools.sh",
         "../../scripts/cleanup-puppet.sh",
         "../../scripts/cleanup-packer.sh"
       ]
