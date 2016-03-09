@@ -5,9 +5,9 @@
       "template_name": "ubuntu-12.04-x86_64",
       "template_os": "ubuntu-64",
 
-      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.5-server-amd64.iso",
-      "iso_checksum": "769474248a3897f4865817446f9a4a53",
-      "iso_checksum_type": "md5",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-12.04.5-server-amd64.iso",
+      "iso_checksum": "af224223de99e2a730b67d7785b657f549be0d63221188e105445f75fb8305c9",
+      "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
@@ -42,7 +42,7 @@
         "-- <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",

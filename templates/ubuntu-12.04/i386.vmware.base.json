@@ -5,9 +5,9 @@
       "template_name": "ubuntu-12.04-i386",
       "template_os": "ubuntu",
 
-      "iso_url": "http://releases.ubuntu.com/precise/ubuntu-12.04.5-server-i386.iso",
-      "iso_checksum": "1214cd22448338b60bb24f583dd8741a",
-      "iso_checksum_type": "md5",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-12.04.5-server-i386.iso",
+      "iso_checksum": "bec39e79664aa189dea338993f636e54c5eda2f84c27def7b06bd6373ab87628",
+      "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
@@ -42,7 +42,7 @@
         "-- <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",

@@ -5,9 +5,9 @@
       "template_name": "ubuntu-14.04-x86_64",
       "template_os": "ubuntu-64",
 
-      "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.2-server-amd64.iso",
-      "iso_checksum": "83aabd8dcf1e8f469f3c72fff2375195",
-      "iso_checksum_type": "md5",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.4-server-amd64.iso",
+      "iso_checksum": "07e4bb5569814eab41fafac882ba127893e3ff0bdb7ec931c9b2d040e3e94e7a",
+      "iso_checksum_type": "sha256",      
 
       "memory_size": "512",
       "cpu_count": "1",
@@ -42,7 +42,7 @@
         "-- <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
