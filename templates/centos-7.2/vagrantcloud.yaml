@@ -11,6 +11,6 @@ configs:
   - name: 'nocm'
     description: 'no configuration management software'
   - name: 'puppet'
-    description: 'Puppet 4.3.2'
+    description: 'Puppet 4.3.2 / Puppet Enterprise 2015.3.2 (agent)'
   - name: 'puppet-enterprise'
-    description: 'Puppet Enterprise 3.8.4 (agent-only)'
+    description: 'Puppet Enterprise 3.8.4 (agent)'
