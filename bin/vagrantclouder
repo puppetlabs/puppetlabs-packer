@@ -115,13 +115,11 @@ $config['arches'].each do |arch|
             config['s3'] = 'nocm'
         end
 
-        ['virtualbox', 'vmware_desktop', 'vmware_fusion'].each do |hyper|
+        ['virtualbox', 'vmware_desktop'].each do |hyper|
           case hyper
             when 'virtualbox'
               hyperlink = 'virtualbox'
             when 'vmware_desktop'
-              hyperlink = 'vmware'
-            when 'vmware_fusion'
               hyperlink = 'vmware'
           end
 
