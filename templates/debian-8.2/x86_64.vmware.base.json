@@ -5,7 +5,7 @@
       "template_name": "debian-8.2-x86_64",
       "template_os": "debian8-64",
 
-      "iso_url": "http://cdimage.debian.org/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-CD-1.iso",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-8.2.0-amd64-CD-1.iso",
       "iso_checksum": "d3ac88ec064f9e941ee5d9cbfaa87ac48929b81471f96073305ccd7bd71ff521",
       "iso_checksum_type": "sha256",
 
@@ -33,7 +33,7 @@
         "netcfg/get_hostname=localhost <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",

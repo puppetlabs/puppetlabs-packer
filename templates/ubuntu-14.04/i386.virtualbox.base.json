@@ -5,9 +5,9 @@
       "template_name": "ubuntu-14.04-i386",
       "template_os": "Ubuntu",
 
-      "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.2-server-i386.iso",
-      "iso_checksum": "6478187442f331631b65f886cdd229ce",
-      "iso_checksum_type": "md5",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.4-server-i386.iso",
+      "iso_checksum": "e20cf9e0812b52287ca22ac1815bc933c0cfef2be88191110b697d8943bef19e",
+      "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
