@@ -30,7 +30,7 @@ class packer::vsphere::params {
       $updates_release       = "${lsbdistcodename}-updates"
     }
 
-    'CentOS', 'Redhat': {
+    'CentOS', 'Redhat', 'Scientific': {
       $startup_file          = '/etc/rc.d/rc.local'
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
