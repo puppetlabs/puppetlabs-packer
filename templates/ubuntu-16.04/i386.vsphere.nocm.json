@@ -3,10 +3,10 @@
   "variables":
     {
       "template_name": "ubuntu-16.04-i386",
-      "version": "0.0.1",
+      "version": "0.0.2",
 
       "provisioner": "vmware",
-      "required_modules": "puppetlabs-stdlib trepasi-debnet puppetlabs-apt",
+      "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
       "puppet_nfs": "{{env `PUPPET_NFS`}}",
       "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
       "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
@@ -35,6 +35,9 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
+      "vmx_data": {
+        "annotation": "{{user `template_name`}}-{{user `version`}} built {{isotime}}"
+      },
       "vmx_data_post": {
         "memsize": "{{user `memory_size`}}",
         "numvcpus": "{{user `cpu_count`}}",
