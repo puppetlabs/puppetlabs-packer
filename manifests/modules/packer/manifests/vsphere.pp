@@ -2,6 +2,7 @@ class packer::vsphere inherits packer::vsphere::params {
 
   include packer::vsphere::repos
   include packer::vsphere::networking
+  include packer::vsphere::fw
 
   user { root:
     ensure   => present,
@@ -40,5 +41,5 @@ class packer::vsphere inherits packer::vsphere::params {
     source  => 'puppet:///modules/packer/vsphere/authorized_keys',
     require => File[ '/root/.ssh' ]
   }
- 
+
 }

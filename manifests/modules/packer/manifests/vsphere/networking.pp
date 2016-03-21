@@ -14,7 +14,7 @@ class packer::vsphere::networking inherits packer::networking::params {
   }
 
     redhat: {
-      if ($::operatingsystem == 'Scientific') and ($::operatingsystemmajrelease == '7') {
+      if ($::operatingsystemmajrelease == '7') {
         if ( $interface_script != undef ) {
           file { $interface_script:
             ensure => absent,
