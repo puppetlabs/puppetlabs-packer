@@ -3,7 +3,7 @@
   "variables":
     {
       "template_name": "ubuntu-16.04-i386",
-      "version": "0.0.2",
+      "version": "0.0.3",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
@@ -29,6 +29,7 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-nocm",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
+      "headless": true,
       "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
       "ssh_password": "puppet",
