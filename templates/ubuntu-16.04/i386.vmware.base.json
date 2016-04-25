@@ -5,8 +5,8 @@
       "template_name": "ubuntu-16.04-i386",
       "template_os": "ubuntu",
 
-      "iso_url": "http://cdimage.ubuntu.com/ubuntu-server/daily/current/xenial-server-i386.iso",
-      "iso_checksum": "c3892e5e3f634ef42c454bfbfb20fb891d2c2215a738582828aed84d9c67a7d1",
+      "iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04-server-i386.iso",
+      "iso_checksum": "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
@@ -50,6 +50,7 @@
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
+      "headless": true,
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_url": "{{user `iso_url`}}",
