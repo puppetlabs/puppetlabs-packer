@@ -5,7 +5,7 @@
     "pe_url": "{{env `PE_URL`}}",
     "pe_agent": "ubuntu-14.04-amd64",
     "provisioner": "ec2",
-    "source_ami": "ami-9eda3efe",
+    "source_ami": "ami-fa82739a",
     "ami_description": "puppetlabs-ubuntu-16.04-x86_64 {{timestamp}}",
     "ami_name": "puppetlabs-ubuntu-16.04-x86_64 {{timestamp}}",
     "required_modules": "puppetlabs-stdlib saz-ssh",
