@@ -20,7 +20,7 @@ elif [ -n "${PE_URL}" ]; then
   # Install PE via tarball download if PE_URL set
   echo "Installing PE via tarball..."
   yum install -y wget
-  wget "${PE_URL}/${PE_AGENT}.tar.gz" -O pe.tar.gz
+  wget --quiet "${PE_URL}/${PE_AGENT}.tar.gz" -O pe.tar.gz
   tar zxvf pe.tar.gz --strip-components=1 -C /opt/puppet
 else
   echo "The environment variables PUPPET_NFS or PE_URL must be provided to provision PE." >&2
