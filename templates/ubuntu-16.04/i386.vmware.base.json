@@ -5,12 +5,13 @@
       "template_name": "ubuntu-16.04-i386",
       "template_os": "ubuntu",
 
-      "iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04-server-i386.iso",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-i386.iso",
       "iso_checksum": "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
+      "headless": "",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
@@ -49,8 +50,8 @@
       "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
+      "headless": "{{user `headless`}}",
       "http_directory": "files",
-      "headless": true,
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_url": "{{user `iso_url`}}",
@@ -61,9 +62,10 @@
       "shutdown_command": "/sbin/halt -h -p",
       "tools_upload_flavor": "linux",
       "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "ethernet0.pciSlotNumber": "32",
         "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "cpuid.coresPerSocket": "1"
+        "numvcpus": "{{user `cpu_count`}}"
       }
     }
   ],

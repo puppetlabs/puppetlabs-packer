@@ -19,6 +19,7 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
+      "headless": "",
       "memory_size": "4096",
       "cpu_count": "2"
 
@@ -29,8 +30,8 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-nocm",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "headless": true,
       "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "headless": "{{user `headless`}}",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,

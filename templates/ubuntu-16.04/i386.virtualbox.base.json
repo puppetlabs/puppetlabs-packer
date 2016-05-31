@@ -2,18 +2,18 @@
 
   "variables":
     {
-      "template_name": "ubuntu-16.04-x86_64",
-      "template_os": "ubuntu-64",
+      "template_name": "ubuntu-16.04-i386",
+      "template_os": "Ubuntu",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-amd64.iso",
-      "iso_checksum": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-i386.iso",
+      "iso_checksum": "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
       "headless": "",
 
-      "provisioner": "vmware",
+      "provisioner": "virtualbox",
       "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_nfs": "{{env `PUPPET_NFS`}}"
     },
@@ -21,7 +21,7 @@
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "type": "vmware-iso",
+      "type": "virtualbox-iso",
       "boot_command": [
         "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -47,11 +47,11 @@
         " -- <wait>",
         "<enter>"
       ],
-      "boot_wait": "45s",
+      "boot_wait": "10s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
-      "http_directory": "files",
       "headless": "{{user `headless`}}",
+      "http_directory": "files",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_url": "{{user `iso_url`}}",
@@ -60,13 +60,21 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
-      "tools_upload_flavor": "linux",
-      "vmx_data": {
-        "cpuid.coresPerSocket": "1",
-        "ethernet0.pciSlotNumber": "32",
-        "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}"
-      }
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ]
     }
   ],
 
