@@ -5,7 +5,7 @@
       "template_name": "ubuntu-16.04-x86_64",
       "template_os": "Ubuntu_64",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/16.04/ubuntu-16.04-server-amd64.iso",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-amd64.iso",
       "iso_checksum": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
       "iso_checksum_type": "sha256",
 
