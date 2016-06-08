@@ -1,6 +1,6 @@
 ---
 name: 'ubuntu-16.04'
-description: 'Ubuntu 14.04 (xenial)'
+description: 'Ubuntu 16.04 (xenial)'
 version: '1.0.0'
 
 arches:
@@ -13,4 +13,4 @@ configs:
   - name: 'nocm'
     description: 'no configuration management software'
   - name: 'puppet'
-    description: 'Puppet 4.5.0'
+    description: 'Puppet 4.5.1'
