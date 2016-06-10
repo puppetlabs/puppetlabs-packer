@@ -1,12 +1,11 @@
 {
   "variables": {
-    "iso_url": "iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "false",
 
-    "this_templatedir": "templates/win-2012r2-x86_64/base",
-    "this_template": "win-2012r2-x86_64-base"
+    "template_name": "x86_64.vsphere.base"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -16,7 +15,7 @@
   ],
   "builders": [
     {
-      "name": "{{user `this_template`}}",
+      "name": "{{user `template_name`}}",
       "type": "vmware-iso",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -33,16 +32,16 @@
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
       "floppy_files": [
-        "{{user `this_templatedir`}}/autounattend.xml",
+        "files/autounattend.xml",
 
-        "drivers/winx64/*",
+        "../../drivers/winx64/*",
 
-        "scripts/windows/bootstrap-base.bat",
-        "scripts/windows/start-boxstarter.ps1",
-        "scripts/windows/SetupComplete.cmd",
-        "scripts/windows/generalize-packer.bat",
-        "scripts/windows/generalize-packer.autounattend.xml",
-        "{{user `this_templatedir`}}/{{user `this_template`}}.package.ps1"
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/SetupComplete.cmd",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/generalize-packer.autounattend.xml",
+        "files/{{user `template_name`}}.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
@@ -70,13 +69,6 @@
         "time.synchronize.tools.enable": "1",
         "time.synchronize.resume.host": "1"
       }
-    }
-  ],
-  "post-processors": [
-    {
-        "type": "compress",
-        "keep_input_artifact": true,
-        "output": "zip/{{user `this_template`}}.zip"
     }
   ]
 }

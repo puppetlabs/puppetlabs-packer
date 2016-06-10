@@ -3,15 +3,14 @@
     "source_vmx_template": "win-2012r2-x86_64-base",
     "headless": "false",
 
-    "this_templatedir": "templates/win-2012r2-x86_64/std",
-    "this_template": "win-2012r2-x86_64-std"
+    "template_name": "x86_64.vsphere.base"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
 
   "builders": [
     {
-      "name": "{{user `this_template`}}",
+      "name": "{{user `template_name`}}",
       "type": "vmware-vmx",
       "source_path": "zip/output-{{user `source_vmx_template`}}/packer-{{user `source_vmx_template`}}.vmx",
       "headless": "{{user `headless`}}",
@@ -25,16 +24,16 @@
       "shutdown_timeout": "1h",
 
       "floppy_files": [
-        "drivers/winx64/*",
-        "zip/puppet.zip",
+        "../../drivers/winx64/*",
+        "../../zip/puppet.zip",
 
-        "scripts/windows/bootstrap-base.bat",
-        "scripts/windows/start-boxstarter.ps1",
-        "scripts/windows/SetupComplete.cmd",
-        "scripts/windows/generalize-packer.bat",
-        "scripts/windows/generalize-packer.autounattend.xml",
-        "{{user `this_templatedir`}}/{{user `this_template`}}.package.ps1",
-        "{{user `this_templatedir`}}/*.pp"
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/SetupComplete.cmd",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/generalize-packer.autounattend.xml",
+        "files/{{user `template_name`}}.package.ps1",
+        "files/*.pp"
       ],
 
       "vmx_data": {
@@ -59,13 +58,6 @@
         "time.synchronize.tools.enable": "1",
         "time.synchronize.resume.host": "1"
       }
-    }
-  ],
-  "post-processors": [
-    {
-        "type": "compress",
-        "keep_input_artifact": true,
-        "output": "zip/{{user `this_template`}}.zip"
     }
   ]
 }
