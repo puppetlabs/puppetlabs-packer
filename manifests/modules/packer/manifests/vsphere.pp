@@ -9,6 +9,23 @@ class packer::vsphere inherits packer::vsphere::params {
     password => "$qa_root_passwd"
   }
 
+  case $::osfamily {
+    redhat: {
+      if $::operatingsystemrelease in ['24', '25'] {
+        Package {
+          provider => 'dnf',
+        }
+
+        file { '/etc/dhclient.conf':
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          source  => 'puppet:///modules/packer/vsphere/dhclient.conf',
+        }
+      }
+    }
+  }
+
   package { $ruby_package:
     ensure => present,
   }

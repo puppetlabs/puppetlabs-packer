@@ -5,8 +5,8 @@
       "template_name": "fedora-24-x86_64",
       "template_os": "fedora-64",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/Fedora-Server-dvd-x86_64-24_Beta-1.6.iso",
-      "iso_checksum": "0af2aaa17f26cb03c4644f5983045e7eb969d91e7135d435568989109214edcb",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/Fedora-Server-dvd-x86_64-24-1.2.iso",
+      "iso_checksum": "1c0971d4c1a37bb06ec603ed3ded0af79e22069499443bb2d47e501c9ef42ae8",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
@@ -21,13 +21,16 @@
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
       "type": "vmware-iso",
+      "headless": true,
       "boot_command": [
         "<tab> <wait>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "quiet <wait>",
         "text <wait>",
         "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
         "<enter>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
@@ -57,13 +60,13 @@
         "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --vardir='/var/cache/puppet' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },
@@ -79,7 +82,7 @@
         "PUPPET_NFS={{user `puppet_nfs`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh"
       ]
     }
