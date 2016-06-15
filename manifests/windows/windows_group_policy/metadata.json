@@ -1,0 +1,36 @@
+{
+  "name":         "glennsarti-windows_group_policy",
+  "version":      "1.0.0",
+  "author":       "glennsarti",
+  "license":      "Apache-2.0  Update this!",
+  "summary":      "Module that will modify local group policy",
+  "source":       "https://github.com/glennsarti/glennsarti.git",
+  "project_page": "https://github.com/glennsarti/glennsarti",
+  "issues_url":   "https://github.com/glennsarti/glennsarti/issues",
+  "operatingsystem_support": [
+      {
+        "operatingsystem": "windows",
+        "operatingsystemrelease": [ "2012R2" ]
+      }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.x"
+    },
+    {
+		  "name": "puppet",
+			"version_requirement": "3.x"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.0.0 < 5.0.0"
+    },
+    {
+      "name": "puppetlabs/powershell",
+      "version_requirement": ">= 1.0.1"
+    }
+  ]
+}

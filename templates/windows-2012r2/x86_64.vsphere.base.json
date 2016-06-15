@@ -1,0 +1,74 @@
+{
+  "variables": {
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum": "78bff6565f178ed08ab534397fe44845",
+    "headless": "false",
+
+    "template_name": "x86_64.vsphere.base"
+  },
+
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
+
+  "_comment": [
+      "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
+  ],
+  "builders": [
+    {
+      "name": "{{user `template_name`}}",
+      "type": "vmware-iso",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "headless": "{{user `headless`}}",
+
+      "communicator": "winrm",
+      "winrm_username": "packer",
+      "winrm_password": "packer",
+      "winrm_timeout": "8h",
+
+      "shutdown_command": "A:\\generalize-packer.bat",
+      "shutdown_timeout": "1h",
+      "guest_os_type": "windows8srv-64",
+      "disk_size": 61440,
+      "floppy_files": [
+        "files/autounattend.xml",
+
+        "../../drivers/winx64/*",
+
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/SetupComplete.cmd",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/generalize-packer.autounattend.xml",
+        "files/{{user `template_name`}}.package.ps1"
+      ],
+
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
+      "boot_wait": "1s",
+
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+
+        "firmware": "efi",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "scsi0.virtualdev": "lsisas1068",
+        "virtualHW.version": "10",
+
+        "vcpu.hotadd": "TRUE",
+        "mem.hotadd": "TRUE",
+
+        "tools.syncTime": "0",
+        "time.synchronize.continue": "1",
+        "time.synchronize.restore": "1",
+        "time.synchronize.resume.disk": "1",
+        "time.synchronize.shrink": "1",
+        "time.synchronize.tools.startup": "1",
+        "time.synchronize.tools.enable": "1",
+        "time.synchronize.resume.host": "1"
+      }
+    }
+  ]
+}

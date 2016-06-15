@@ -1,0 +1,8 @@
+# These modules are downloaded from the forge during a packer build
+# Like most files, anything to the right of a hash (#) is ignored and is considered a comment by the parser
+# Only the latest module is used from the public Forge
+# TODO Support version pinning and custom forge URLs
+
+puppetlabs-powershell
+puppetlabs-registry
+puppetlabs-stdlib
