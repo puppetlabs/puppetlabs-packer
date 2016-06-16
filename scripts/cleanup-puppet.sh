@@ -9,6 +9,15 @@ if [ -n "${PUPPET_NFS}" ]; then
   umount -l /opt/puppet
 fi
 
+# perform an uninstall 
+if [ -n "${PE_URL}" ]; then
+  cd `ls -d puppet*`
+  ./puppet-enterprise-uninstaller -a /tmp/answers -y -p -d
+  rm /tmp/answers
+  rm -rf ~/puppet-enterprise*
+  rm ~/pe.tar.gz
+fi
+
 # Only remove /etc/puppetlabs on -nocm boxes
 if [[ ${PACKER_BUILD_NAME} =~ .*-nocm ]]; then
   rm -rf /etc/puppetlabs

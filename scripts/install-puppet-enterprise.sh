@@ -71,7 +71,7 @@ case ${OPERATINGSYSTEM} in
 esac
 
 
-PE_URL="http://pe-releases.puppetlabs.net/${PEVER}/${PE_TAR}.tar.gz"
+PE_URL=${PE_URL:-"http://pe-releases.puppetlabs.net/${PEVER}/${PE_TAR}.tar.gz"}
 
 tarball_path=$(mktemp)
 wget --output-document="${tarball_path}" "${PE_URL}"
