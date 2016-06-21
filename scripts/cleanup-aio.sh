@@ -4,11 +4,15 @@
 # This script cleans up directories that may be left around
 # as part of that process.
 
-# Unmount NFS share if PUPPET_NFS provided
-if [ -n "${PUPPET_NFS}" ]; then
-  umount -l /opt/puppetlabs
+# Uninstall the AIO
+if [[ ${PUPPET_AIO} == *".rpm"* ]] ; then
+  rpm -e puppet-agent
+elif [[ ${PUPPET_AIO} == *".deb"* ]] ; then
+  dpkg -P puppet-agent
+else
+  echo "Unsupported AIO package format" >&2
+  exit 1
 fi
-
-# Remove other Puppet-related files and directories
+# Remove any Puppet-related files and directories
+rm -rf /etc/puppetlabs
 rm -rf /opt/puppetlabs
-rm -rf /var/cache/puppet
