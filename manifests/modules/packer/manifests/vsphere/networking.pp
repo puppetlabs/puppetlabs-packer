@@ -24,6 +24,13 @@ class packer::vsphere::networking inherits packer::networking::params {
           enable_dhcp   => true,
         }
       }
+      if ($::operatingsystem == 'Fedora') {
+        if ( $interface_script != undef ) {
+          file { $interface_script:
+            ensure => absent,
+          }
+        }
+      }
     }
   }
 }

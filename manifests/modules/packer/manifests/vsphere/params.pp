@@ -44,7 +44,7 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'redhat.rb.erb'
-      $ruby_package          = [ 'ruby' ]
+      $ruby_package          = [ 'ruby', 'rubygems' ]
       $gpgkey                = "RPM-GPG-KEY-${::operatingsystemmajrelease}-${loweros}"
     }
 

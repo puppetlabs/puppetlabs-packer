@@ -47,12 +47,7 @@ puts '- Re-obtaining DHCP lease...'
 <% end -%>
 
 <% if @operatingsystem == 'Fedora' -%>
-  File.open('/var/lib/NetworkManager/dhclient-ens32.conf', 'a') do |f|
-    f << "send host-name #{hostname}"
-  end
   Kernel.system('/sbin/service NetworkManager restart')
-  Kernel.system('/usr/bin/nmcli con down id ens32')
-  Kernel.system('/usr/bin/nmcli con up id ens32')
 <% end -%>
 
 puts '- Cleaning up...'
