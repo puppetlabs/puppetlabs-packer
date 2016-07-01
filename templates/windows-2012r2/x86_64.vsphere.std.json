@@ -29,7 +29,6 @@
 
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
-        "../../scripts/windows/SetupComplete.cmd",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generalize-packer.autounattend.xml",
         "files/{{user `template_name`}}.package.ps1",

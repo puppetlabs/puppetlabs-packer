@@ -28,7 +28,7 @@
       "winrm_password": "puppet",
       "winrm_timeout": "8h",
 
-      "shutdown_command": "A:\\generalize-packer.bat",
+      "shutdown_command": "A:\\shutdown-packer.bat",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
@@ -36,7 +36,7 @@
         "files/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
-        "../../scripts/windows/SetupComplete.cmd",
+        "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generalize-packer.autounattend.xml",
         "files/{{user `template_name`}}.package.ps1"

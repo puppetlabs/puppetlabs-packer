@@ -11,6 +11,6 @@ ECHO Disabling the WinRM via service...  >> %LOGFILE%
 sc config winrm start= disabled >> %LOGFILE%
 
 ECHO Initiating sysprep...  >> %LOGFILE%
-C:/windows/system32/sysprep/SYSPREP.exe /generalize /oobe /unattend:A:\generalize-packer.autounattend.xml /quiet /shutdown
+C:/windows/system32/sysprep/SYSPREP.exe /generalize /oobe /unattend:A:\generalize-packer.autounattend.xml /quiet /reboot
 
 EXIT /B %ERRRORLEVEL%

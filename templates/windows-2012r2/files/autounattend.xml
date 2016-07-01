@@ -44,7 +44,6 @@
                             <Label>System</Label>
                             <Format>FAT32</Format>
                         </ModifyPartition>
-                        <!-- MSR partition does not need to be modified -->
                         <!-- Windows partition -->
                         <ModifyPartition wcm:action="add">
                             <Order>2</Order>
@@ -93,6 +92,16 @@
             <ComputerName>*</ComputerName>
             <TimeZone>Grenich Mean Time</TimeZone>
             <RegisteredOwner />
+            <AutoLogon>
+                <Password>
+                    <Value>cAB1AHAAcABlAHQAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                    <PlainText>false</PlainText>
+                </Password>
+                <Enabled>true</Enabled>
+                <Username>puppet</Username>
+                <Domain>.</Domain>
+                <LogonCount>999</LogonCount>
+            </AutoLogon>
         </component>
         <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
@@ -107,16 +116,24 @@
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <AutoLogon>
-                <Password>
-                    <Value>puppet</Value>
-                    <PlainText>true</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <Username>puppet</Username>
-                <Domain>.</Domain>
-                <LogonCount>999</LogonCount>
-            </AutoLogon>
+            <UserAccounts>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>cAB1AHAAcABlAHQAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                            <PlainText>false</PlainText>
+                        </Password>
+                        <Group>administrators</Group>
+                        <DisplayName>Puppet</DisplayName>
+                        <Name>puppet</Name>
+                        <Description>Puppet Build User</Description>
+                    </LocalAccount>
+                </LocalAccounts>
+                <AdministratorPassword>
+                    <Value>UQB1AEAAbABpAHQAeQAhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                    <PlainText>false</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
@@ -129,8 +146,8 @@
                     <Order>2</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-boxstarter.ps1</CommandLine>
-                    <Description>Start BoxStarter</Description>
+                    <CommandLine>cmd.exe /c A:\generalize-packer.bat</CommandLine>
+                    <Description>Sysprep generalize</Description>
                     <Order>3</Order>
                 </SynchronousCommand>
             </FirstLogonCommands>
@@ -143,24 +160,6 @@
                 <NetworkLocation>Home</NetworkLocation>
                 <ProtectYourPC>1</ProtectYourPC>
             </OOBE>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <Value>dgBhAGcAcgBhAG4AdABBAGQAbQBpAG4AaQBzAHQAcgBhAHQAbwByAFAAYQBzAHMAdwBvAHIAZAA=</Value>
-                    <PlainText>false</PlainText>
-                </AdministratorPassword>
-                <LocalAccounts>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>puppet</Value>
-                            <PlainText>True</PlainText>
-                        </Password>
-                        <Group>administrators</Group>
-                        <DisplayName>Puppet</DisplayName>
-                        <Name>puppet</Name>
-                        <Description>Puppet Build User</Description>
-                    </LocalAccount>
-                </LocalAccounts>
-            </UserAccounts>
             <RegisteredOwner />
         </component>
     </settings>
@@ -177,5 +176,5 @@
             </DriverPaths>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="catalog:c:/dev/iso/en_windows_server_2012_r2_x64_dvd_2707946-install_windows server 2012 r2 serverstandard.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/15bcc9dfbc0eebf6f640cf0419b697269c84eece8486f4531beb4ad606410664/sources/install.wim#Windows Server 2012 R2 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
