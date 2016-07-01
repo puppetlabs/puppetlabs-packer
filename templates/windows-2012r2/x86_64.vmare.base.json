@@ -24,8 +24,8 @@
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
-      "winrm_username": "packer",
-      "winrm_password": "packer",
+      "winrm_username": "puppet",
+      "winrm_password": "puppet",
       "winrm_timeout": "8h",
 
       "shutdown_command": "A:\\generalize-packer.bat",
