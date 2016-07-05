@@ -4,8 +4,9 @@
     "iso_checksum_type": "md5",
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "false",
+    "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
 
-    "template_name": "x86_64.vsphere.base"
+    "template_name": "x86_64.vmware.base"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -23,22 +24,19 @@
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
-      "winrm_username": "packer",
-      "winrm_password": "packer",
+      "winrm_username": "puppet",
+      "winrm_password": "puppet",
       "winrm_timeout": "8h",
 
-      "shutdown_command": "A:\\generalize-packer.bat",
+      "shutdown_command": "A:\\shutdown-packer.bat",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
       "floppy_files": [
         "files/autounattend.xml",
-
-        "../../drivers/winx64/*",
-
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
-        "../../scripts/windows/SetupComplete.cmd",
+        "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generalize-packer.autounattend.xml",
         "files/{{user `template_name`}}.package.ps1"
@@ -67,7 +65,16 @@
         "time.synchronize.shrink": "1",
         "time.synchronize.tools.startup": "1",
         "time.synchronize.tools.enable": "1",
-        "time.synchronize.resume.host": "1"
+        "time.synchronize.resume.host": "1",
+        "sata0.present": "TRUE",
+        "sata0:0.present": "TRUE",
+        "sata0:0.autodetect": "TRUE",
+        "sata0:0.deviceType": "cdrom-image",
+        "sata0:0.fileName": "{{user `tools_iso`}}"
+      },
+      "vmx_data_post": {
+        "sata0.present": "FALSE",
+        "sata0:0.present": "FALSE"
       }
     }
   ]
