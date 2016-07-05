@@ -11,7 +11,8 @@ class packer::vsphere::params {
       $bootstrap_file_source = 'ubuntu.rb.erb'
       if $::operatingsystemrelease in ['10.04', '12.04'] {
         $ruby_package          = [ 'ruby', 'rubygems' ]
-      else
+      }
+      else {
         $ruby_package          = [ 'ruby', 'rubygems-integration' ]
       }
       $repo_name             = 'ubuntu'
