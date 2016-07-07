@@ -1,7 +1,7 @@
 @ECHO OFF
 SETLOCAL
 
-SET LOGFILE=%SYSTEMROOT%\TEMP\shutdown-packer.bat.log
+SET LOGFILE=C:\Packer\Logs\shutdown-packer.bat.log
 
 ECHO shutdown-packer.bat started %date% %time% >> %LOGFILE%
 
