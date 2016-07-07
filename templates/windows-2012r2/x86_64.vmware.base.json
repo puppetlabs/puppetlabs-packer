@@ -28,7 +28,7 @@
       "winrm_password": "puppet",
       "winrm_timeout": "8h",
 
-      "shutdown_command": "A:\\shutdown-packer.bat",
+      "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
@@ -36,6 +36,7 @@
         "files/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generalize-packer.autounattend.xml",
@@ -74,7 +75,10 @@
       },
       "vmx_data_post": {
         "sata0.present": "FALSE",
-        "sata0:0.present": "FALSE"
+        "sata0:0.present": "FALSE",
+        "sata0:0.autodetect": "FALSE",
+        "sata0:0.devicetype":  "",
+        "sata0:0.filename": ""
       }
     }
   ]
