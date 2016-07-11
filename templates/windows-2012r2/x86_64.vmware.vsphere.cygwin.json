@@ -25,7 +25,6 @@
       "shutdown_command": "A:\\shutdown-packer.bat",
       "shutdown_timeout": "1h",
 
-      "skip_compaction": true,
 
       "floppy_files": [
         "../../scripts/windows/bootstrap-base.bat",

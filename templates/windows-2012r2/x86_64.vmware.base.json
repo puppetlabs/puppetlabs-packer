@@ -67,18 +67,16 @@
         "time.synchronize.tools.startup": "1",
         "time.synchronize.tools.enable": "1",
         "time.synchronize.resume.host": "1",
-        "sata0.present": "TRUE",
-        "sata0:0.present": "TRUE",
-        "sata0:0.autodetect": "TRUE",
-        "sata0:0.deviceType": "cdrom-image",
-        "sata0:0.fileName": "{{user `tools_iso`}}"
+        "scsi0:1.present": "TRUE",
+        "scsi0:1.autodetect": "TRUE",
+        "scsi0:1.deviceType": "cdrom-image",
+        "scsi0:1.fileName": "{{user `tools_iso`}}"
       },
       "vmx_data_post": {
-        "sata0.present": "FALSE",
-        "sata0:0.present": "FALSE",
-        "sata0:0.autodetect": "FALSE",
-        "sata0:0.devicetype":  "",
-        "sata0:0.filename": ""
+        "scsi0:1.present": "FALSE",
+        "scsi0:1.autodetect": "FALSE",
+        "scsi0:1.devicetype":  "",
+        "scsi0:1.filename": ""
       }
     }
   ]
