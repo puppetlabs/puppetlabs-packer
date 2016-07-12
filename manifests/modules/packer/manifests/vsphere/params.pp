@@ -9,7 +9,12 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
-      $ruby_package          = [ 'ruby' ]
+      if $::operatingsystemrelease in ['10.04', '12.04'] {
+        $ruby_package          = [ 'ruby', 'rubygems' ]
+      }
+      else {
+        $ruby_package          = [ 'ruby', 'rubygems-integration' ]
+      }
       $repo_name             = 'ubuntu'
       $repo_list             = 'main restricted universe multiverse'
       $security_repo_name    = 'ubuntu'
