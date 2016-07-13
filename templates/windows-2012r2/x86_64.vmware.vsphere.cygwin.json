@@ -1,19 +1,20 @@
 {
   "variables": {
-    "source_vmx_template": "x86_64.vmware.base",
-    "headless": "false",
-    "template_name": "x86_64.vmware.vsphere.cygwin"
+    "template_name": "windows-2012r2-x86_64",
+    "version": "0.0.1",
+
+    "provisioner": "vmware",
+    "headless": "false"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
 
   "builders": [
     {
-      "name": "{{user `template_name`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-cygwin",
+      "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "source_path": "output-{{user `source_vmx_template`}}/packer-{{user `source_vmx_template`}}.vmx",
-      "vm_name": "packer-{{user `template_name`}}",
-      "output_directory" : "output-{{user `template_name`}}",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
 
       "headless": "{{user `headless`}}",
 
@@ -33,7 +34,7 @@
         "../../scripts/windows/cleanup-host.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
-        "files/{{user `template_name`}}.package.ps1"
+        "files/{{build_name}}.package.ps1"
       ],
 
       "vmx_data": {
