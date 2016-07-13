@@ -1,12 +1,14 @@
 {
   "variables": {
+    "template_name": "windows-2012r2-x86_64",
+
+    "provisioner": "vmware",
     "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "false",
-    "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
+    "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso"
 
-    "template_name": "x86_64.vmware.base"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -16,7 +18,8 @@
   ],
   "builders": [
     {
-      "name": "{{user `template_name`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -28,7 +31,7 @@
       "winrm_password": "puppet",
       "winrm_timeout": "8h",
 
-      "shutdown_command": "A:\\shutdown-packer.bat",
+      "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
@@ -36,10 +39,11 @@
         "files/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generalize-packer.autounattend.xml",
-        "files/{{user `template_name`}}.package.ps1"
+        "files/{{build_name}}.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
@@ -66,15 +70,16 @@
         "time.synchronize.tools.startup": "1",
         "time.synchronize.tools.enable": "1",
         "time.synchronize.resume.host": "1",
-        "sata0.present": "TRUE",
-        "sata0:0.present": "TRUE",
-        "sata0:0.autodetect": "TRUE",
-        "sata0:0.deviceType": "cdrom-image",
-        "sata0:0.fileName": "{{user `tools_iso`}}"
+        "scsi0:1.present": "TRUE",
+        "scsi0:1.autodetect": "TRUE",
+        "scsi0:1.deviceType": "cdrom-image",
+        "scsi0:1.fileName": "{{user `tools_iso`}}"
       },
       "vmx_data_post": {
-        "sata0.present": "FALSE",
-        "sata0:0.present": "FALSE"
+        "scsi0:1.present": "FALSE",
+        "scsi0:1.autodetect": "FALSE",
+        "scsi0:1.devicetype":  "",
+        "scsi0:1.filename": ""
       }
     }
   ]

@@ -1,0 +1,95 @@
+{
+  "variables": {
+    "template_name": "windows-2012r2-x86_64",
+    "version": "0.0.1",
+
+    "provisioner": "vmware",
+    "headless": "false"
+  },
+
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-cygwin",
+      "vm_name": "packer-{{build_name}}",
+      "type": "vmware-vmx",
+      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+
+      "headless": "{{user `headless`}}",
+
+      "communicator": "winrm",
+      "winrm_username": "puppet",
+      "winrm_password": "puppet",
+      "winrm_timeout": "8h",
+
+      "shutdown_command": "A:\\shutdown-packer.bat",
+      "shutdown_timeout": "1h",
+
+
+      "floppy_files": [
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/install-win-packages.ps1",
+        "../../scripts/windows/cleanup-host.ps1",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "files/{{build_name}}.package.ps1"
+      ],
+
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+
+        "firmware": "efi",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "scsi0.virtualdev": "lsisas1068",
+        "virtualHW.version": "10",
+
+        "vcpu.hotadd": "TRUE",
+        "mem.hotadd": "TRUE",
+
+        "tools.syncTime": "0",
+        "time.synchronize.continue": "1",
+        "time.synchronize.restore": "1",
+        "time.synchronize.resume.disk": "1",
+        "time.synchronize.shrink": "1",
+        "time.synchronize.tools.startup": "1",
+        "time.synchronize.tools.enable": "1",
+        "time.synchronize.resume.host": "1"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "md -Path C:\\Packer\\puppet\\modules",
+        "md -Path C:\\Packer\\Downloads",
+        "md -Path C:\\Packer\\Logs",
+        "A:\\install-win-packages.ps1"
+      ],
+      "valid_exit_codes": [0,1]
+    },
+    {
+      "type": "file",
+      "source": "../../manifests/windows",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "files/win-2012r2-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2012r2-x86_64-std.pp"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\start-boxstarter.ps1",
+        "A:\\cleanup-host.ps1"
+      ],
+      "valid_exit_codes": [0,1]
+    }
+  ]
+
+}
