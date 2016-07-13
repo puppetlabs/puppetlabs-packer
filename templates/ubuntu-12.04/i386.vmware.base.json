@@ -14,13 +14,14 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+      "puppet_aio": "http://apt.puppetlabs.com/pool/precise/PC1/p/puppet-agent/puppet-agent_1.5.2-1precise_i386.deb"
     },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
       "type": "vmware-iso",
+      "headless": true,
       "boot_command": [
         "<esc><esc><enter><wait>",
         "/install/vmlinuz auto <wait>",
@@ -66,19 +67,19 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },
@@ -90,10 +91,10 @@
       "type": "shell",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh"
       ]
     }

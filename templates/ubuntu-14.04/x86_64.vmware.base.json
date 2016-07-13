@@ -7,20 +7,21 @@
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.2-server-amd64.iso",
       "iso_checksum": "8acd2f56bfcba2f7ac74a7e4a5e565ce68c024c38525c0285573e41c86ae90c0",
-      "iso_checksum_type": "sha256",      
+      "iso_checksum_type": "sha256",
 
       "memory_size": "512",
       "cpu_count": "1",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+      "puppet_aio": "http://apt.puppetlabs.com/pool/trusty/PC1/p/puppet-agent/puppet-agent_1.5.2-1trusty_amd64.deb"
     },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
       "type": "vmware-iso",
+      "headless": true,
       "boot_command": [
         "<esc><esc><enter><wait>",
         "/install/vmlinuz auto <wait>",
@@ -66,19 +67,19 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },
@@ -90,10 +91,10 @@
       "type": "shell",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh"
       ]
     }

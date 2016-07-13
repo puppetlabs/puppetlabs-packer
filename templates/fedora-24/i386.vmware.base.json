@@ -2,11 +2,11 @@
 
   "variables":
     {
-      "template_name": "ubuntu-12.04-x86_64",
-      "template_os": "ubuntu-64",
+      "template_name": "fedora-24-i386",
+      "template_os": "fedora",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-12.04.5-server-amd64.iso",
-      "iso_checksum": "af224223de99e2a730b67d7785b657f549be0d63221188e105445f75fb8305c9",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/Fedora-Server-dvd-i386-24-1.2.iso",
+      "iso_checksum": "93c0bfe6e6bf23ca22cc1a85636ed15834336ee40a57bfe374f0044ad2d864b0",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
@@ -14,7 +14,7 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_aio": "http://apt.puppetlabs.com/pool/precise/PC1/p/puppet-agent/puppet-agent_1.5.2-1precise_amd64.deb"
+      "puppet_aio": "http://yum.puppetlabs.com/fedora/f23/PC1/i386/puppet-agent-1.5.2-1.fedoraf23.i386.rpm"
     },
 
   "builders": [
@@ -23,24 +23,11 @@
       "type": "vmware-iso",
       "headless": true,
       "boot_command": [
-        "<esc><esc><enter><wait>",
-        "/install/vmlinuz auto <wait>",
-        "console-setup/ask_detect=false <wait>",
-        "console-setup/layoutcode=us <wait>",
-        "console-setup/modelcode=pc105 <wait>",
-        "debconf/frontend=noninteractive <wait>",
-        "debian-installer=en_US <wait>",
-        "fb=false <wait>",
-        "initrd=/install/initrd.gz <wait>",
-        "kbd-chooser/method=us <wait>",
-        "keyboard-configuration/layout=USA <wait>",
-        "keyboard-configuration/variant=USA <wait>",
-        "locale=en_US <wait>",
-        "netcfg/get_domain=vm <wait>",
-        "netcfg/get_hostname=localhost <wait>",
-        "noapic <wait>" ,
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
-        "-- <wait>",
+        "<tab> <wait>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "quiet <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
         "<enter>"
       ],
       "boot_wait": "45s",
@@ -67,7 +54,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
         "PUPPET_AIO={{user `puppet_aio`}}"
@@ -89,6 +76,7 @@
 
     {
       "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
         "PUPPET_AIO={{user `puppet_aio`}}"
