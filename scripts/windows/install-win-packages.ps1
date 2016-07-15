@@ -4,13 +4,22 @@
 
 $ErrorActionPreference = 'Stop'
 
-$scriptDirectory = (Split-Path -parent $MyInvocation.MyCommand.Definition);
 . A:\windows-env.ps1
 
-
 Write-Host "Installing Puppet Agent..."
-
-(new-object net.webclient).DownloadFile('https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi',"C:\Packer\Downloads\puppet-agent.msi")
-
-Start-Process -Wait "msiexec" -ArgumentList "/i C:\Packer\Downloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
+chocolatey install puppet-agent --yes --force
 Write-Host "Installed Puppet Agent..."
+
+# Install Chrome
+Write-Host "Installing Google Chrome Browser"
+chocolatey install googlechrome --yes --force
+
+# Install Notepad++
+Write-Host "Installing Notepad++"
+chocolatey install notepadplusplus --yes --force
+
+# Install Sysinternals.
+Write-Host "Installing Sysinternal Tools"
+chocolatey install procexp --yes --force
+chocolatey install procmon --yes --force
+chocolatey install pstools --yes --force

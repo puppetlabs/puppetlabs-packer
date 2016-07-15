@@ -1,5 +1,7 @@
 $ErrorActionPreference = "Stop"
 
+. A:\windows-env.ps1
+
 # Boxstarter options
 $Boxstarter.RebootOk=$true # Allow reboots?
 $Boxstarter.NoPassword=$true # Is this a machine with no login password?
