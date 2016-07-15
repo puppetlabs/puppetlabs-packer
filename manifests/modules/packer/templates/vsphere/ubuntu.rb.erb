@@ -44,7 +44,9 @@ puts '- Re-obtaining DHCP lease...'
 Kernel.system('/usr/sbin/service networking restart')
 <% elsif ['10.04'].include? @operatingsystemrelease -%>
 Kernel.system('/sbin/ifdown eth0')
-sleep 15
+Kernel.system('/usr/bin/pkill dhclient3')
+Kernel.system('rm -f /var/lib/dhcp3/*.leases')
+sleep 5
 Kernel.system('/sbin/ifup eth0')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
