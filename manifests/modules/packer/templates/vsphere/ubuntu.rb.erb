@@ -16,10 +16,16 @@ end
  
 Kernel.system('hostname -F /etc/hostname')
  
-dhc = File.read('/etc/dhcp/dhclient.conf')
+<% if ['10.04'].include? @operatingsystemrelease -%>
+dhf = '/etc/dhcp3/dhclient.conf'
+<% else -%>
+dhf = '/etc/dhcp/dhclient.conf'
+<% end -%>
+
+dhc = File.read(dhf)
  
-File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
-  <% if ['15.10', '16.04'].include? @operatingsystemrelease -%>
+File.open(dhf, 'w') do |f|
+  <% if ['10.04', '15.10', '16.04'].include? @operatingsystemrelease -%>
   dhc.gsub!(/^(send host-name.*)/, "send host-name \"#{hostname}\";")
   <% else -%>
   dhc.gsub!(/^(#send host-name.*)/, "send host-name \"#{hostname}\";")
@@ -36,6 +42,12 @@ puts '- Re-obtaining DHCP lease...'
  
 <% if ['15.10', '16.04'].include? @operatingsystemrelease -%>
 Kernel.system('/usr/sbin/service networking restart')
+<% elsif ['10.04'].include? @operatingsystemrelease -%>
+Kernel.system('/sbin/ifdown eth0')
+Kernel.system('/usr/bin/pkill dhclient3')
+Kernel.system('rm -f /var/lib/dhcp3/*.leases')
+sleep 5
+Kernel.system('/sbin/ifup eth0')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
 <% end -%>
