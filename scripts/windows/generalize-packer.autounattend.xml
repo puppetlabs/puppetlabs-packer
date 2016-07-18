@@ -37,11 +37,6 @@
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
-                    <Credentials>
-                        <Domain>.</Domain>
-                        <Password>Qu@lity!</Password>
-                        <Username>Administrator</Username>
-                    </Credentials>
                     <Path>net user administrator /active:yes</Path>
                     <Order>1</Order>
                 </RunSynchronousCommand>
@@ -73,13 +68,11 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
-                    <RequiresUserInput>false</RequiresUserInput>
                     <Order>2</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
                     <Order>3</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
@@ -104,6 +97,16 @@
                         <Group>Administrators</Group>
                         <Name>Administrator</Name>
                     </LocalAccount>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>cAB1AHAAcABlAHQAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                            <PlainText>false</PlainText>
+                        </Password>
+                        <DisplayName>puppet</DisplayName>
+                        <Description>Puppet User</Description>
+                        <Group>Administrators</Group>
+                        <Name>puppet</Name>
+                    </LocalAccount>
                 </LocalAccounts>
                 <AdministratorPassword>
                     <Value>UQB1AEAAbABpAHQAeQAhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==</Value>
@@ -117,7 +120,7 @@
                 </Password>
                 <Domain>.</Domain>
                 <Enabled>true</Enabled>
-                <LogonCount>999</LogonCount>
+                <LogonCount>99999</LogonCount>
                 <Username>Administrator</Username>
             </AutoLogon>
         </component>

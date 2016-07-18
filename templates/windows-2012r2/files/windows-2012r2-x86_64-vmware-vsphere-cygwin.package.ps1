@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 # Boxstarter options
 $Boxstarter.RebootOk=$true # Allow reboots?
-$Boxstarter.NoPassword=$false # Is this a machine with no login password?
+$Boxstarter.NoPassword=$true # Is this a machine with no login password?
 $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a reboot
 
 if (Test-PendingReboot){ Invoke-Reboot }
@@ -105,9 +105,6 @@ Write-BoxStarterMessage "Unloading Default User hive from HKLM\DEFUSER..."
 Write-BoxStarterMessage "Test for Reboot....."
 if (Test-PendingReboot) { Invoke-Reboot }
 
-# TODO Set Local Administrators password!
-
-# TODO Apparently I need to setup autologon for Administrator.  I don't like this.  Need to figure out why
 Write-BoxStarterMessage "Other Stuff......."
 
 # TODO May need to add some ps-remote/winrm configuration here
