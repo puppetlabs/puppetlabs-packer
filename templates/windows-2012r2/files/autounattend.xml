@@ -129,10 +129,6 @@
                         <Description>Puppet Build User</Description>
                     </LocalAccount>
                 </LocalAccounts>
-                <AdministratorPassword>
-                    <Value>UQB1AEAAbABpAHQAeQAhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==</Value>
-                    <PlainText>false</PlainText>
-                </AdministratorPassword>
             </UserAccounts>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
@@ -146,9 +142,14 @@
                     <Order>2</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c wmic useraccount where "name='Administrator'" set PasswordExpires=FALSE</CommandLine>
+                    <Description>Disable Administrator Password reset</Description>
+                    <Order>3</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c A:\generalize-packer.bat</CommandLine>
                     <Description>Sysprep generalize</Description>
-                    <Order>3</Order>
+                    <Order>4</Order>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
@@ -174,6 +175,26 @@
                     <Path>A:\</Path>
                 </PathAndCredentials>
             </DriverPaths>
+        </component>
+    </settings>
+    <settings pass="auditSystem">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <UserAccounts>
+                <AdministratorPassword>
+                    <Value>UQB1AEAAbABpAHQAeQAhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==</Value>
+                    <PlainText>false</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
+            <AutoLogon>
+                <Password>
+                    <Value>UQB1AEAAbABpAHQAeQAhAFAAYQBzAHMAdwBvAHIAZAA=</Value>
+                    <PlainText>false</PlainText>
+                </Password>
+                <Domain>.</Domain>
+                <Enabled>true</Enabled>
+                <LogonCount>999</LogonCount>
+                <Username>Administrator</Username>
+            </AutoLogon>
         </component>
     </settings>
     <cpi:offlineImage cpi:source="wim:c:/15bcc9dfbc0eebf6f640cf0419b697269c84eece8486f4531beb4ad606410664/sources/install.wim#Windows Server 2012 R2 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
