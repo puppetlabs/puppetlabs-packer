@@ -4,7 +4,12 @@
     "version": "0.0.1",
 
     "provisioner": "vmware",
-    "headless": "false"
+    "headless": "false",
+
+    "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
+    "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
+    "packer_vcenter_username": "{{env `PACKER_VCENTER_USERNAME`}}",
+    "packer_vcenter_password": "{{env `PACKER_VCENTER_PASSWORD`}}"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -19,8 +24,8 @@
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
-      "winrm_username": "puppet",
-      "winrm_password": "puppet",
+      "winrm_username": "Administrator",
+      "winrm_password": "{{user `qa_root_passwd`}}",
       "winrm_timeout": "8h",
 
       "shutdown_command": "A:\\shutdown-packer.bat",
