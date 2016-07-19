@@ -106,5 +106,12 @@ Write-BoxStarterMessage "Test for Reboot....."
 if (Test-PendingReboot) { Invoke-Reboot }
 
 Write-BoxStarterMessage "Other Stuff......."
+# Some other quick win settings provided by Boxstarter
+
+#Disable UAC for Windows-2012
+Disable-UAC
+
+# Enable Remote Desktop (with reduce authentication resetting here again)
+Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
 
 # TODO May need to add some ps-remote/winrm configuration here
