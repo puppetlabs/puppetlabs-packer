@@ -52,6 +52,11 @@ else {
   Write-Host "No modules were required to be downloaded from the forge $ForgeMods"
 }
 
+# TODO Pause for debugging
+#Write-Host Staring CMD.exe
+#& cmd.exe /c Start cmd.exe
+#Read-Host "Press enter"
+
 # TODO What about custom facts?
 
 Write-Host "Loading Default User hive to HKLM\DEFUSER..."
