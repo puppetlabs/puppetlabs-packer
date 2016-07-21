@@ -7,7 +7,7 @@ $PolicyValue = '<%= @data %>'
 $PolicyValueType = '<%= @type %>'
 
 #Write-Host "PolicyType = $PolicyType"
-#Write-Host "PolicyKeyName = $PolicyType"
+#Write-Host "PolicyKeyName = $PolicyKeyName"
 #Write-Host "PolicyValueName = $PolicyValueName"
 #Write-Host "PolicyValue = $PolicyValue"
 #Write-Host "PolicyValueType = $PolicyValueType"
@@ -55,15 +55,38 @@ function Set-PolicySetting($objPolicy)
   # Increment the gpt.ini version number
   Write-Verbose "Incrementing the version count"
   $gptIniPath = "$($env:systemroot)\system32\GroupPolicy\gpt.ini"
+  # Default if gpt.ini does not exist
+  $gptContents = @('[General]','Version=0') 
   if (Test-Path -Path $gptIniPath) {
     $gptContents = Get-Content $gptIniPath
-  } else {
-    $gptContents = @('[General]','Version=0')
   }
+
+  # Get the current gpt.ini version
   $gptContents |
   ForEach-Object {
     if ($_ -match "Version=(\d+)$") {
-      Write-Output "Version=$( ([int]$matches[1]) + 1 )"
+      $currentGPVersion = [long]$matches[1]
+    }
+  }
+  Write-Verbose "Current GP version is $currentGPVersion"
+
+  Write-Verbose "Incrementing $PolicyType version by one"
+  # Ref: https://blogs.technet.microsoft.com/grouppolicy/2007/12/14/understanding-the-gpo-version-number/
+  # Ref: https://technet.microsoft.com/en-us/library/cc978247.aspx
+  # User policy is upper 16bits
+  # Machine policy is lower 16bits
+  if ($PolicyType.ToUpper() -eq 'USER') {
+    $currentGPVersion += 0x00010000
+  } else {
+    $currentGPVersion += 0x00000001
+  }
+  Write-Verbose "New GP version is $currentGPVersion"
+
+  Write-Verbose "Writing out $($gptIniPath)..."
+  $gptContents |
+  ForEach-Object {
+    if ($_ -match "Version=(\d+)$") {
+      Write-Output "Version=$($currentGPVersion)"
     } else { Write-Output $_ }
   } | Set-Content $gptIniPath | Out-Null
   return $true
