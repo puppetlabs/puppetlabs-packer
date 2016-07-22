@@ -26,8 +26,8 @@ chocolatey install pstools --yes --force
 
 # Put in registry keys to suppress the EULA popup on first use.
 # (since puppet modules don't support HKCU)
-# First a helper function
 
+# First a helper function
 function AcceptSysInternalsEULA {
 param (
   [string]$regkeyroot
@@ -58,9 +58,3 @@ AcceptSysInternalsEULA HKCU
 reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
 AcceptSysInternalsEULA HKLM\DEFUSER
 reg.exe unload HKLM\DEFUSER
-
-# Same for puppet User as profile already exists
-# Note - Realise this is not ideal, so will be tidied once we figure out how remove profiles.
-reg.exe load HKLM\PUPPET c:\users\puppet\ntuser.dat
-AcceptSysInternalsEULA HKLM\PUPPET
-reg.exe unload HKLM\PUPPET
