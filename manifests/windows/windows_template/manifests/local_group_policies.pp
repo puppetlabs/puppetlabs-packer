@@ -6,6 +6,12 @@ class windows_template::local_group_policies ()
     windows_group_policy::gpupdate { 'GPUpdate':
     }
 
+    windows_group_policy::local::machine_client_side_extensions { "MachineGCE":
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user_client_side_extensions { "UserGCE":
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
 
     registry::value { 'DebugPolicies':
         key   => 'HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon',
