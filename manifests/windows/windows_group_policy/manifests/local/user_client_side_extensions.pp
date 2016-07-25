@@ -54,7 +54,7 @@ define windows_group_policy::local::user_client_side_extensions(
 )
 {
   # Add default GPEEDIT Tool Extensions GUIDs
-  $defaultextensionlist = "{D02B1F73-3407-48AE-BA88-E8213C6761F1}{0F6B957E-509E-11D1-A7CC-0000F87571E3}"  
+  $defaultextensionlist = "{D02B1F73-3407-48AE-BA88-E8213C6761F1}"  
 
   if ($ieee802_3_group_policy) { $ieee802_3_group_policy_guid = "{B587E2B1-4D59-4E7E-AED9-22B9DF11D053}" } else { $ieee802_3_group_policy_guid = ""}
   if ($application_management) { $application_management_guid = "{C6DC5466-785A-11D2-84D0-00C04FB169F7}" } else { $application_management_guid = ""}
