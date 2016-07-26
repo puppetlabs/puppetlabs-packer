@@ -89,34 +89,24 @@
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>UQB1AEAAbABpAHQAeQAhAFAAYQBzAHMAdwBvAHIAZAA=</Value>
-                            <PlainText>false</PlainText>
+                            <Value>PackerAdmin</Value>
+                            <PlainText>true</PlainText>
                         </Password>
                         <Description>Local Administrator</Description>
                         <DisplayName>Administrator</DisplayName>
                         <Group>Administrators</Group>
                         <Name>Administrator</Name>
                     </LocalAccount>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>cAB1AHAAcABlAHQAUABhAHMAcwB3AG8AcgBkAA==</Value>
-                            <PlainText>false</PlainText>
-                        </Password>
-                        <DisplayName>puppet</DisplayName>
-                        <Description>Puppet User</Description>
-                        <Group>Administrators</Group>
-                        <Name>puppet</Name>
-                    </LocalAccount>
                 </LocalAccounts>
                 <AdministratorPassword>
-                    <Value>UQB1AEAAbABpAHQAeQAhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==</Value>
-                    <PlainText>false</PlainText>
+                    <Value>PackerAdmin</Value>
+                    <PlainText>true</PlainText>
                 </AdministratorPassword>
             </UserAccounts>
             <AutoLogon>
                 <Password>
-                    <Value>UQB1AEAAbABpAHQAeQAhAFAAYQBzAHMAdwBvAHIAZAA=</Value>
-                    <PlainText>false</PlainText>
+                    <Value>PackerAdmin</Value>
+                    <PlainText>true</PlainText>
                 </Password>
                 <Domain>.</Domain>
                 <Enabled>true</Enabled>

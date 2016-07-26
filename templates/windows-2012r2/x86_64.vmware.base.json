@@ -29,7 +29,7 @@
 
       "communicator": "winrm",
       "winrm_username": "Administrator",
-      "winrm_password": "{{user `qa_root_passwd`}}",
+      "winrm_password": "PackerAdmin",
       "winrm_timeout": "8h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",

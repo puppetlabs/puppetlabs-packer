@@ -6,18 +6,21 @@ $ErrorActionPreference = 'Stop'
 
 
 Write-Host "Uninstalling Puppet Agent..."
-Start-Process -Wait "msiexec" -ArgumentList "/x C:\Packer\Downloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
+choco uninstall puppet-agent --yes
 
-# TODO Remove Boxstarter?
-# TODO Remove Chocolatey?
+# Remove Boxstarter
+Write-Host "Uninstalling boxstarter..."
+choco uninstall boxstarter --yes
 
+# TODO Remove Chocolatey - probably not as it will poleaxe Sysinternals?
+# Need to discuss with Rob - suspect ok to leave on machine.
 
 # Remove Directories
 
 cmd.exe /C RD C:\ProgramData\PuppetLabs /s /q
 
 # Remove the pagefile
-Write-BoxstarterMessage "Removing page file.  Recreates on next boot"
+Write-Host "Removing page file.  Recreates on next boot"
 $pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
 Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
 

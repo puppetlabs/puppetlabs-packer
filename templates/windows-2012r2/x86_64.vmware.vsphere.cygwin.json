@@ -25,7 +25,7 @@
 
       "communicator": "winrm",
       "winrm_username": "Administrator",
-      "winrm_password": "{{user `qa_root_passwd`}}",
+      "winrm_password": "PackerAdmin",
       "winrm_timeout": "8h",
 
       "shutdown_command": "A:\\shutdown-packer.bat",
@@ -39,7 +39,7 @@
         "../../scripts/windows/cleanup-host.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
-        "files/{{build_name}}.package.ps1"
+        "files/config-vmware-vsphere-cygwin.ps1"
       ],
 
       "vmx_data": {
@@ -72,10 +72,13 @@
       "inline": [
         "md -Path C:\\Packer\\puppet\\modules",
         "md -Path C:\\Packer\\Downloads",
-        "md -Path C:\\Packer\\Logs",
+        "md -Path C:\\Packer\\Initialisation",
         "A:\\install-win-packages.ps1"
       ],
       "valid_exit_codes": [0,1]
+    },
+    {
+      "type": "windows-restart"
     },
     {
       "type": "file",
@@ -90,7 +93,16 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\start-boxstarter.ps1",
+        "A:\\config-vmware-vsphere-cygwin.ps1"
+      ],
+      "valid_exit_codes": [0,1]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
         "A:\\cleanup-host.ps1"
       ],
       "valid_exit_codes": [0,1]

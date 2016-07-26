@@ -1,8 +1,10 @@
 $ErrorActionPreference = "Stop"
 
+. A:\windows-env.ps1
+
 # Boxstarter options
 $Boxstarter.RebootOk=$true # Allow reboots?
-$Boxstarter.NoPassword=$true # Is this a machine with no login password?
+$Boxstarter.NoPassword=$false # Is this a machine with no login password?
 $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a reboot
 
 if (Test-PendingReboot){ Invoke-Reboot }
