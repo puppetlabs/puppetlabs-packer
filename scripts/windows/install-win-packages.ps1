@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 . A:\windows-env.ps1
 
 Write-Host "Installing Puppet Agent..."
-chocolatey install puppet-agent --yes --force
+chocolatey install puppet-agent --yes --force -installArgs '"PUPPET_AGENT_STARTUP_MODE=manual"'
 Write-Host "Installed Puppet Agent..."
 
 # Install Chrome
@@ -18,7 +18,7 @@ chocolatey install googlechrome --yes --force
 Write-Host "Installing Notepad++"
 chocolatey install notepadplusplus --yes --force
 
-# Install Sysinternals.
+# Install Sysinternals - to special tools directory as we may want to remove chocolatey
 Write-Host "Installing Sysinternal Tools"
 chocolatey install procexp --yes --force
 chocolatey install procmon --yes --force
