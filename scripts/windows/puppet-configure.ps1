@@ -35,16 +35,31 @@ If ((Test-Path -path $ForgeMods) -and ($ModulesPath -ne '')) {
     if ($modulename -ne '') {
       Write-Host "Installing the $modulename module from the Forge..."
 
-      & $PuppetPath module install "$modulename" --verbose --target-dir $ModulesPath
-      $EC = $LASTEXITCODE
-      if ($EC -ne 0) {
-        Write-Host "Installing puppet module $modulename returned exit code $EC"
-        Throw "Installing puppet module $modulename returned exit code $EC"
-      }
-      else
-      {
+      # Using Loop here to improve resiliency.
+      # BITS (or other service) may not have started, so allow for module install error here.
+
+      $MaxAttempts = 20
+      $Attempt = 0
+      $ModuleLoaded = $false
+      do {
+        $Attempt++
+
+        try {
+          & $PuppetPath module install "$modulename" --verbose --target-dir $ModulesPath
+          $EC = $LASTEXITCODE
+          if ($EC -ne 0) {throw "Module install failure"}
+        } catch {
+          Write-Host "Installing puppet module $modulename failed at attempt $attempt - sleep and retry"
+          Start-Sleep -Seconds 10
+          continue
+        }
+
         Write-Host "Module $modulename installed"
-      }
+        $ModuleLoaded = $true
+        break
+
+      } while ($Attempt -lt $MaxAttempts)
+      if ( -not $ModuleLoaded ) {throw "Failed to download $modulename - aborting."}
     }
   }
 }
