@@ -7,7 +7,7 @@ $PolicyValue = '<%= @data %>'
 $PolicyValueType = '<%= @type %>'
 
 #Write-Host "PolicyType = $PolicyType"
-#Write-Host "PolicyKeyName = $PolicyType"
+#Write-Host "PolicyKeyName = $PolicyKeyName"
 #Write-Host "PolicyValueName = $PolicyValueName"
 #Write-Host "PolicyValue = $PolicyValue"
 #Write-Host "PolicyValueType = $PolicyValueType"
@@ -52,21 +52,7 @@ function Set-PolicySetting($objPolicy)
   Write-Verbose "Saving the registry pol file"
   $objPolicy.SaveFile() | Out-Null
 
-  # Increment the gpt.ini version number
-  Write-Verbose "Incrementing the version count"
-  $gptIniPath = "$($env:systemroot)\system32\GroupPolicy\gpt.ini"
-  if (Test-Path -Path $gptIniPath) {
-    $gptContents = Get-Content $gptIniPath
-  } else {
-    $gptContents = @('[General]','Version=0')
-  }
-  $gptContents |
-  ForEach-Object {
-    if ($_ -match "Version=(\d+)$") {
-      Write-Output "Version=$( ([int]$matches[1]) + 1 )"
-    } else { Write-Output $_ }
-  } | Set-Content $gptIniPath | Out-Null
-  return $true
+  return Invoke-IncrementGPTVersion 
 }
 
 function Open-PolicyFile([string]$policyFilePath = '', [bool]$createIfNotExist = $true)
