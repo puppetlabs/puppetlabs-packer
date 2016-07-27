@@ -9,6 +9,10 @@ $ErrorActionPreference = "Stop"
 # Although this is no longer run under boxstarter, we are still able to use it's cmdlets.
 Write-Host "Other Stuff......."
 
+# Enable Bootlog
+Write-Host "Enable Bootlog"
+cmd /c "bcdedit /set {current} bootlog yes"
+
 # Load Default User for registry to accomodate changes.
 reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
 
