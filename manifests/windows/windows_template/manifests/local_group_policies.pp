@@ -112,21 +112,6 @@ class windows_template::local_group_policies ()
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
-    # Disable ability to change home page.
-    windows_group_policy::local::user { 'DisableHomePagePrompt':
-        key   => 'Software\Policies\Microsoft\Internet Explorer\Control Panel',
-        value => 'HomePage',
-        data  => 1,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    windows_group_policy::local::user { 'EnterHomePagePrompt':
-        key   => 'Software\Policies\Microsoft\Internet Explorer\Main',
-        value => 'Start Page',
-        data  => 'about:blank',
-        type  => 'REG_SZ',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
 
     # TODO Update Start Menu 2008 only
 
