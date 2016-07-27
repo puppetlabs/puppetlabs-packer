@@ -8,7 +8,10 @@ $ErrorActionPreference = 'Stop'
 $PackerStaging = "C:\Packer"
 $PackerDownloads = "$PackerStaging\Downloads"
 $PackerPuppet = "$PackerStaging\puppet"
+$SysInternals = "$PackerStaging\SysInternals"
 
 # For Puppet modules configuration
 $ModulesPath = ''
 $PuppetPath = 'C:\Program Files\Puppet Labs\Puppet\bin\puppet.bat'
+
+$7zip = 'C:\Program Files\7-Zip\7z.exe'

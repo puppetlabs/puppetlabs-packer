@@ -73,7 +73,8 @@
       "inline": [
         "md -Path C:\\Packer\\puppet\\modules",
         "md -Path C:\\Packer\\Downloads",
-        "md -Path C:\\Packer\\Initialisation"
+        "md -Path C:\\Packer\\Init",
+        "md -Path C:\\Packer\\Sysinternals"
       ]
     },
     {
