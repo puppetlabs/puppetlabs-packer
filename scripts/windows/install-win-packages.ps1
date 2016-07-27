@@ -17,7 +17,25 @@ param (
   $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
 
   Write-Output "Downloading $url to $file"
-  $downloader.DownloadFile($url, $file)
+  $completed = $false
+  $retrycount = 0
+  $maxretries = 20
+  $delay = 10
+  while (-not $completed) {
+    try {
+      $downloader.DownloadFile($url, $file)
+      $completed = $true
+    } catch {
+      if ($retrycount -ge $maxretries) {
+        Write-Host "Max Attempts exceeded"
+        throw "Download aborting"
+      } else {
+        $retrycount++
+        Write-Host "Download Failed $retrycount of $maxretries - Sleeping $delay"
+        Start-Sleep -Seconds $delay
+      }
+    }
+  }
 }
 
 Write-Host "Installing Puppet Agent..."
