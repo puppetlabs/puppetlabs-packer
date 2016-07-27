@@ -80,8 +80,7 @@
       "type": "powershell",
       "inline": [
         "A:\\install-win-packages.ps1"
-      ],
-      "valid_exit_codes": [0,1]
+      ]
     },
     {
       "type": "windows-restart"
@@ -100,8 +99,7 @@
       "type": "powershell",
       "inline": [
         "A:\\puppet-configure.ps1"
-      ],
-      "valid_exit_codes": [0,1]
+      ]
     },
     {
       "type": "windows-restart"
@@ -110,8 +108,7 @@
       "type": "powershell",
       "inline": [
         "A:\\config-vmware-vsphere-cygwin.ps1"
-      ],
-      "valid_exit_codes": [0,1]
+      ]
     },
     {
       "type": "windows-restart"
@@ -120,8 +117,7 @@
       "type": "powershell",
       "inline": [
         "A:\\cleanup-host.ps1"
-      ],
-      "valid_exit_codes": [0,1]
+      ]
     }
   ]
 
