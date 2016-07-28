@@ -6,23 +6,81 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
+# Function to download the packages we need.
+
+function Download-File {
+param (
+  [string]$url,
+  [string]$file
+ )
+  $downloader = new-object System.Net.WebClient
+  $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
+
+  Write-Output "Downloading $url to $file"
+  $completed = $false
+  $retrycount = 0
+  $maxretries = 20
+  $delay = 10
+  while (-not $completed) {
+    try {
+      $downloader.DownloadFile($url, $file)
+      $completed = $true
+    } catch {
+      if ($retrycount -ge $maxretries) {
+        Write-Host "Max Attempts exceeded"
+        throw "Download aborting"
+      } else {
+        $retrycount++
+        Write-Host "Download Failed $retrycount of $maxretries - Sleeping $delay"
+        Start-Sleep -Seconds $delay
+      }
+    }
+  }
+}
+
 Write-Host "Installing Puppet Agent..."
-chocolatey install puppet-agent --yes --force -installArgs '"PUPPET_AGENT_STARTUP_MODE=manual"'
+Download-File https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi $PackerDownloads\puppet-agent.msi
+Start-Process -Wait "msiexec" -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
 Write-Host "Installed Puppet Agent..."
 
-# Install Chrome
 Write-Host "Installing Google Chrome Browser"
-chocolatey install googlechrome --yes --force
+Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup_x86_64.exe $PackerDownloads\ChromeSetup_x86_64.exe
+Start-Process -Wait "$PackerDownloads\ChromeSetup_x86_64.exe" -ArgumentList "/silent /install"
+Write-Host "Google Chrome Browser Installed"
 
 # Install Notepad++
 Write-Host "Installing Notepad++"
-chocolatey install notepadplusplus --yes --force
+Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.6.9.2.Installer.exe $PackerDownloads\npp.6.9.2.Installer.exe
+Start-Process -Wait "$PackerDownloads\npp.6.9.2.Installer.exe" -ArgumentList "/S"
+Write-Host "Notepad++ Installed"
+
+Write-Host "7zip"
+Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-x64.exe  $PackerDownloads\7z1602-x64.exe
+Start-Process -Wait "$PackerDownloads\7z1602-x64.exe" -ArgumentList "/S"
+Write-Host "7zip Installed"
 
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey
 Write-Host "Installing Sysinternal Tools"
-chocolatey install procexp --yes --force
-chocolatey install procmon --yes --force
-chocolatey install pstools --yes --force
+$ostring = "-o" + $SysInternals
+
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/procexp.zip $PackerDownloads\procexp.zip
+& $7zip x C:\Packer\Downloads\procexp.zip -y $ostring
+
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/procmon.zip $PackerDownloads\procmon.zip
+& $7zip x C:\Packer\Downloads\procmon.zip -y $ostring
+
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/pstools.zip $PackerDownloads\pstools.zip
+& $7zip x C:\Packer\Downloads\pstools.zip -y $ostring
+
+Write-Host "Updating path with $SysInternals"
+$RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+$OldPath = (Get-ItemProperty -Path $RegPath -Name PATH).Path
+$NewPath = $OldPath + ';' + $SysInternals
+Set-ItemProperty -Path $RegPath -Name PATH -Value $NewPath
+
+# Update PATH to include sysinternals
+
+Write-Host "Sysinternal Tools Installed"
 
 # Put in registry keys to suppress the EULA popup on first use.
 # (since puppet modules don't support HKCU)

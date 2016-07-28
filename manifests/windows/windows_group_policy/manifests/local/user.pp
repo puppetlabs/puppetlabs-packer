@@ -13,7 +13,7 @@ define windows_group_policy::local::user(
   $policy_type = 'User'
 
   if $ensure in ['present'] {
-    exec { "GPO-Local-Machine-$name":
+    exec { "GPO-Local-User-$name":
       command => template('windows_group_policy/script_header.ps1',
                           'windows_group_policy/PolFileEditor.ps1',
                           'windows_group_policy/local_gpo.ps1',
@@ -28,5 +28,5 @@ define windows_group_policy::local::user(
   } else {
     # Do stuff to remove it
     Notify{ '***** Removing GPOs is NOT IMPLEMENTED': }
-  }   
+  }
 }

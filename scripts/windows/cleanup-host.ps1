@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 
 
 Write-Host "Uninstalling Puppet Agent..."
-choco uninstall puppet-agent --yes
+Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.msi /qn /norestart"
 
 # Remove Boxstarter
 Write-Host "Uninstalling boxstarter..."
