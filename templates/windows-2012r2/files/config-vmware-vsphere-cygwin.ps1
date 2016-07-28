@@ -28,3 +28,11 @@ reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Internet Explorer\Main" /v "Start P
 
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
+
+# Configure WinRM - (Final configuration)
+Write-Host "Configuring WinRM"
+winrm quickconfig -force
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="512"}'
+winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
