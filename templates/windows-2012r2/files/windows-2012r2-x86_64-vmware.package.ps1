@@ -51,3 +51,11 @@ winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 Write-BoxstarterMessage "WinRM setup complete"
+
+# Re-Enable AutoAdminLogon
+$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "PackerAdmin" -ErrorAction SilentlyContinue
+
+# End

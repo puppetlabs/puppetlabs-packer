@@ -33,12 +33,13 @@
 
 
       "floppy_files": [
+        "../../scripts/windows/arm-host.ps1",
         "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/cleanup-host.ps1",
-        "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/puppet-configure.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/windows-env.ps1",
         "files/config-vmware-vsphere-cygwin.ps1"
       ],
 
@@ -114,14 +115,23 @@
       "type": "windows-restart"
     },
     {
+      "type": "powershell",
+      "inline": [
+        "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
       "type": "file",
-      "source": "../../scripts/windows/DisableNetworkAdapterPnPCapabilities.ps1",
-      "destination": "C:\\Packer\\Init\\DisableNetworkAdapterPnPCapabilities.ps1"
+      "source": "../../scripts/windows/Init",
+      "destination": "C:\\Packer\\Init"
     },
     {
       "type": "powershell",
       "inline": [
-        "A:\\cleanup-host.ps1"
+        "A:\\arm-host.ps1"
       ]
     }
   ]
