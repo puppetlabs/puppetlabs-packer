@@ -8,6 +8,15 @@ class windows_template::configure_services()
       enable => true,
     }
 
+    # Disable Netbios and relates services
+    service { 'lmhosts':
+      ensure => 'stopped',
+      enable => false,
+    }
+    service { 'netbt':
+      ensure => 'stopped',
+      enable => false,
+    }
     # Disable Windows Update service
     service { 'wuauserv':
       ensure => 'stopped',
