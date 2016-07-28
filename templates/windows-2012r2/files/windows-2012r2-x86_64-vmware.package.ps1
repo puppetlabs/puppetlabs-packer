@@ -21,10 +21,8 @@ netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 
 choco install dotnet4.5 -y
 if (Test-PendingReboot) { Invoke-Reboot }
 
-
-# Install Updates
-# TODO Reenable after debugging
-#Install-WindowsUpdate -AcceptEula
+# Install Updates and reboot until this is completed.
+Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
 
 # Remove the pagefile
