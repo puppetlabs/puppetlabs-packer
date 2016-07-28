@@ -34,7 +34,6 @@
 
       "floppy_files": [
         "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/cleanup-host.ps1",
         "../../scripts/windows/windows-env.ps1",
@@ -113,6 +112,11 @@
     },
     {
       "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/windows/DisableNetworkAdapterPnPCapabilities.ps1",
+      "destination": "C:\\Packer\\Init\\DisableNetworkAdapterPnPCapabilities.ps1"
     },
     {
       "type": "powershell",
