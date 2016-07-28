@@ -175,5 +175,13 @@ class windows_template::local_group_policies ()
         type  => 'dword'
     }
 
-    # TODO up to Set IE Home Page to "Blank"
+    # Disable Windows Update
+    windows_group_policy::local::machine { 'DisableWindowsUpdate':
+        key   => 'Software\Policies\Microsoft\Windows\WindowsUpdate\AU',
+        value => 'NoAutoUpdate',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+
 }
