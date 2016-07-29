@@ -8,15 +8,9 @@ class windows_template::configure_services()
       enable => true,
     }
 
-    # Disable Netbios and relates services
-    service { 'lmhosts':
-      ensure => 'stopped',
-      enable => false,
-    }
-    service { 'netbt':
-      ensure => 'stopped',
-      enable => false,
-    }
+    # Netbios and lmosts are handled in scripting as they
+    # need to be sequenced carefully during the post-clone-first-boot
+
     # Disable Windows Update service
     service { 'wuauserv':
       ensure => 'stopped',

@@ -14,9 +14,6 @@ Set-Service "lmhosts" -StartupType Disabled
 Set-Service "netbt" -StartupType Disabled
 Set-Service "VMUSBArbService" -StartupType Disabled  -ErrorAction SilentlyContinue
 
-# Enable Powershell Script execution
-cmd /c ftype Microsoft.PowerShellScript.1="C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe" "%1"
-
 # Re-Enable AutoAdminLogon
 $WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
 Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue

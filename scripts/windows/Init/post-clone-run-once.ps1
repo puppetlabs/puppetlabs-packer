@@ -27,7 +27,7 @@ function Restart-Host(){
 # Command is: vmtoolsd.exe --cmd "info-get guestinfo.hostname"'
 #
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
-$pinfo.FileName = "C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
+$pinfo.FileName = "$($env:ProgramFiles)\VMware\VMware Tools\vmtoolsd.exe"
 $pinfo.RedirectStandardError = $true
 $pinfo.RedirectStandardOutput = $true
 $pinfo.UseShellExecute = $false
@@ -55,9 +55,14 @@ Set-Service "netbt" -StartupType Automatic
 #Rename this machine to that of the VM name in vSphere
 Rename-Host($NewVMName)
 
-# NIC Power Management
+# NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Host "Disabling NIC Power Management"
-C:\Packer\Init\DisableNetworkAdapterPnPCapabilities.ps1
+try {
+	C:\Packer\Init\DisableNetworkAdapterPnPCapabilities.ps1
+} catch {
+	Write-Warning "Disable Power Management failed"
+}
+
 
 #Force restart machine.
 Restart-Host
