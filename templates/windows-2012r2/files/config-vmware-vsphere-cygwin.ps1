@@ -23,8 +23,35 @@ Disable-UAC
 Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
 
 # Set IE Home Page for this and Default User.
+Write-Host "Setting IE Home Page"
 reg.exe ADD "HKCU\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /t REG_SZ /d "about:blank" /f
 reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Internet Explorer\Main" /v "Start Page" /t REG_SZ /d "about:blank" /f
+
+# UI and desktop settings (note classic is enforced by Group policy")
+# Set Visual Effects for Best Performance
+Write-Host "Setting Visual Effects to Best Performance"
+reg.exe ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d 2 /f
+reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d 2 /f
+
+# Set solid color background - blueish
+Write-Host "Setting Solid background colour"
+reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
+reg.exe ADD "HKLM\DEFUSER\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
+reg.exe ADD "HKCU\Control Panel\Desktop" /v "Wallpaper" /t REG_SZ /d '""' /f
+reg.exe ADD "HKLM\DEFUSER\Control Panel\Desktop" /v "Wallpaper" /t REG_SZ /d '""' /f
+
+# Start Menu Options
+Write-Host "Setting Start Menu Options"
+# Control panel start-menu cascading doesn't appear to be available in W 2012
+reg.exe ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v "AllItemsIconView" /t REG_DWORD /d 1 /f
+reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v "AllItemsIconView" /t REG_DWORD /d 1 /f
+
+# Icon Notification Tray - enable all notifications for the moment.
+# Setting as per spec is tricky (see RE-7692)
+Write-Host "Enabling all notification icons"
+# Control panel start-menu cascading doesn't appear to be available in W 2012
+reg.exe ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
+reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
 
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
