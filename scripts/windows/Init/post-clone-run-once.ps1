@@ -2,51 +2,8 @@
 #
 $ErrorActionPreference = "Stop"
 
-Write-Host "Disabling NIC Power Management"
-C:\Packer\Init\DisableNetworkAdapterPnPCapabilities.ps1
-
-# Rename host using
-
-# Final Sysprep generalise
-
-Exit
-
-# end
-
-# #############################################################################
-# Puppet Labs - POWERSHELL
-#
-# NAME: VsphereHostRename.ps1
-# AUTHOR:  Ryan Gard
-# DATE:  09/10/2013
-# EMAIL: ryan.gard@puppetlabs.com
-#
-# #############################################################################
-
-#--- Script Params ---#
-#params ()
-
-#--- Help ---#
-<#
-.SYNOPSIS
-	Change the host name of the computer to that of the VMname on vSphere machines.
-.DESCRIPTION
-	Change the host name of the computer to that of the VMname on vSphere machines.
-.PARAMETER
-.INPUTS
-.OUTPUTS
-.EXAMPLE
-#>
-
 #--- Log Session ---#
-Start-Transcript -Path "c:\vsphere_host_rename.log"
-
-#--- Global ---#
-$VsphereServer = "vmware-vc2.ops.puppetlabs.net"
-$TemplateVMName = "win-2012r2-x86_64"
-
-#--- MODULE/SNAPIN/DOT SOURCING/REQUIREMENTS ---#
-if (-not(Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)){Add-PSSnapin VMware.VimAutomation.Core}
+Start-Transcript -Path "C:\Packer\Logs\post-clone-run-once.log"
 
 #--- FUNCTIONS ---#
 function ExitScript([int]$ExitCode){
@@ -65,49 +22,28 @@ function Restart-Host(){
 	$OS.Win32Shutdown(6) | Out-Null
 }
 
-function Get-IPV4Address(){
-	$ip = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled="TRUE" | Select-Object -First 1 -ExpandProperty "IPAddress" | Select-Object -First 1
-	return $ip
-}
+# Get VMPooler Guest name
+# This is a bit roundabout, but it allows us to detect of the guestinfo.hostname is available or not
+# Command is: vmtoolsd.exe --cmd "info-get guestinfo.hostname"'
+#
+$pinfo = New-Object System.Diagnostics.ProcessStartInfo
+$pinfo.FileName = "C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
+$pinfo.RedirectStandardError = $true
+$pinfo.RedirectStandardOutput = $true
+$pinfo.UseShellExecute = $false
+$pinfo.Arguments = "--cmd ""info-get guestinfo.hostname"""
+$p = New-Object System.Diagnostics.Process
+$p.StartInfo = $pinfo
+$p.Start() | Out-Null
+$p.WaitForExit()
+$NewVMName = $p.StandardOutput.ReadToEnd()
 
-function Get-MACAddress(){
-	$mac = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled="TRUE" | Select-Object -First 1 -ExpandProperty "MACAddress"
-	return $mac
-}
-
-function Get-VsphereVMname([string]$HostIP, [string]$HostMAC){
-	$VMName = ""
-
-
-	return $VMName
-}
-
-#--- SCRIPT ---#
-Start-Sleep -s 30
-
-
-#Gather machine info.
-$HostIP = Get-IPV4Address
-$HostMAC = Get-MACAddress
-
-Write-Host "Host IP Address: $HostIP`n"
-Write-Host "Host MAC Address: $HostMAC`n"
-
-#Determine name of VM in vSphere
-$NewVMName = Get-VsphereVMname $HostIP $HostMAC
-
-#Freak out if name not found.
-if ($NewVMName -eq ""){
-	Write-Error "Could not find VM name in vSphere!`n"
+# Exit with error code if name not found - likely to be the template machine.
+if ($p.ExitCode -ne 0){
+	Write-Warning "Could not find VM name in vSphere!`n"
+	Write-Warning "If this machine is the template VM, no rename necessary!!"
+	Write-Warning "Remember to reset the 'RunOnce' registry key by running C:\Packer\Init\vmpooler-arm-host.ps1"
 	ExitScript 1
-}
-elseif ($NewVMName -eq $TemplateVMName){
-	Write-Host "This machine is the template VM, no rename necessary!!"
-	Write-Host "Remember to reset the 'RunOnce' registry key with this script!"
-
-	sleep 5
-
-	ExitScript 0
 }
 
 Write-Host "vSphere VMname: $NewVMName`n"
@@ -118,6 +54,10 @@ Set-Service "netbt" -StartupType Automatic
 
 #Rename this machine to that of the VM name in vSphere
 Rename-Host($NewVMName)
+
+# NIC Power Management
+Write-Host "Disabling NIC Power Management"
+C:\Packer\Init\DisableNetworkAdapterPnPCapabilities.ps1
 
 #Force restart machine.
 Restart-Host

@@ -24,7 +24,7 @@
 #>
 
 #--- Log Session ---#
-Start-Transcript -Path "c:\bootstrap.log"
+Start-Transcript -Path "C:\Packer\Logs\vmpooler-clone-startup.log"
 
 #--- Global ---#
 $CygwinDir = "c:\cygwin"
@@ -33,9 +33,6 @@ $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
 $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
 $CygwinPasswdFile = "$CygwinDir\etc\passwd"
 $CygwinGroupFile = "$CygwinDir\etc\group"
-
-#--- MODULE/SNAPIN/DOT SOURCING/REQUIREMENTS ---#
-#if (-not(Get-PSSnapin VMware.VimAutomation.Core -ErrorAction SilentlyContinue)){Add-PSSnapin VMware.VimAutomation.Core}
 
 #--- FUNCTIONS ---#
 function ExitScript([int]$ExitCode){
