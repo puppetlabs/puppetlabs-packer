@@ -53,6 +53,12 @@ Write-Host "Enabling all notification icons"
 reg.exe ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
 reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
 
+# Disable Sounds
+# Write-Warning "Disable Sounds"
+# reg.exe ADD "HKCU\AppEvents\Schemes" /ve /t REG_SZ /d ".None" /f
+# reg.exe ADD "HKLM\DEFUSER\AppEvents\Schemes" /ve /t REG_SZ /d ".None" /f
+# reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
+
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
 
