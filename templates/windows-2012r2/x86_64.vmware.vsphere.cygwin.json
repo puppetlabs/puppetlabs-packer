@@ -34,12 +34,11 @@
 
       "floppy_files": [
         "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/start-boxstarter.ps1",
-        "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/cleanup-host.ps1",
-        "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/puppet-configure.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/windows-env.ps1",
         "files/config-vmware-vsphere-cygwin.ps1"
       ],
 
@@ -74,6 +73,7 @@
         "md -Path C:\\Packer\\puppet\\modules",
         "md -Path C:\\Packer\\Downloads",
         "md -Path C:\\Packer\\Init",
+        "md -Path C:\\Packer\\Logs",
         "md -Path C:\\Packer\\Sysinternals"
       ]
     },
@@ -118,6 +118,20 @@
       "type": "powershell",
       "inline": [
         "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/windows/Init",
+      "destination": "C:\\Packer\\Init"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
       ]
     }
   ]

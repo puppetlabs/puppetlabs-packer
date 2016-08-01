@@ -21,10 +21,8 @@ netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 
 choco install dotnet4.5 -y
 if (Test-PendingReboot) { Invoke-Reboot }
 
-
-# Install Updates
-# TODO Reenable after debugging
-#Install-WindowsUpdate -AcceptEula
+# Install Updates and reboot until this is completed.
+Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
 
 # Remove the pagefile
@@ -53,3 +51,11 @@ winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 Write-BoxstarterMessage "WinRM setup complete"
+
+# Re-Enable AutoAdminLogon
+$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "PackerAdmin" -ErrorAction SilentlyContinue
+
+# End

@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+"Host Rename Script"="c:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe -noprofile -sta -WindowStyle Hidden -file C:\\Packer\\Init\\post-clone-run-once.ps1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
+"VMware User Process"="\"C:\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe\" -n vmusr"
+"Bootstrap Script"="c:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe -noprofile -sta -WindowStyle Hidden -file C:\\Packer\\Init\\vmpooler-clone-startup.ps1"
