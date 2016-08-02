@@ -7,6 +7,11 @@ class windows_template::configure_services()
       ensure => 'running',
       enable => true,
     }
+    # Disable Audiosrv (Audio) service
+    service { 'Audiosrv':
+      ensure => 'stopped',
+      enable => false,
+    }
 
     # Netbios and lmosts are handled in scripting as they
     # need to be sequenced carefully during the post-clone-first-boot

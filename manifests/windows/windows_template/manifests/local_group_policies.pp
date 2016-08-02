@@ -112,6 +112,48 @@ class windows_template::local_group_policies ()
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
+    windows_group_policy::local::user { 'SetClassicDesktop':
+        key   => 'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
+        value => 'SetVisualStyle',
+        data  => '',
+        type  => 'REG_SZ',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'SetRunOnStartMenu':
+        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explore',
+        value => 'ForceRunOnStartMenu',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'SetNoMusic':
+        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value => 'NoStartMenuMyMusic',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'SetNoPictures':
+        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value => 'NoSMMyPictures',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'SetNoWindowsStore':
+        key   => 'Software\Policies\Microsoft\Windows\Explorer',
+        value => 'ShowWindowsStoreAppsOnTaskbar',
+        data  => 2,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'ControlPanelAllItems':
+        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value => 'ForceClassicControlPanel',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
 
     # TODO Update Start Menu 2008 only
 
