@@ -49,15 +49,8 @@ reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\Con
 # Icon Notification Tray - enable all notifications for the moment.
 # Setting as per spec is tricky (see RE-7692)
 Write-Host "Enabling all notification icons"
-# Control panel start-menu cascading doesn't appear to be available in W 2012
 reg.exe ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
 reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "EnableAutoTray" /t REG_DWORD /d 0 /f
-
-# Disable Sounds
-# Write-Warning "Disable Sounds"
-# reg.exe ADD "HKCU\AppEvents\Schemes" /ve /t REG_SZ /d ".None" /f
-# reg.exe ADD "HKLM\DEFUSER\AppEvents\Schemes" /ve /t REG_SZ /d ".None" /f
-# reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
 
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
@@ -69,3 +62,7 @@ winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="1024"}'
 winrm set winrm/config '@{MaxTimeoutms="1800000"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
+
+# Add permissive Firewall rules (RE-7516) - This is preferred to disabling the firewall
+netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
+netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any

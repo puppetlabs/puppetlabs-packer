@@ -9,8 +9,8 @@ class windows_template::configure_services()
     }
     # Disable Audiosrv (Audio) service
     service { 'Audiosrv':
-      ensure => 'running',
-      enable => true,
+      ensure => 'stopped',
+      enable => false,
     }
 
     # Netbios and lmosts are handled in scripting as they
