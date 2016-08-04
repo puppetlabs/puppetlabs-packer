@@ -19,6 +19,20 @@ class windows_template::local_group_policies ()
         data  => 196610,
         type  => 'dword'
     }
+    windows_group_policy::local::machine { 'PowerShellExecutionPolicyUnrestricted':
+        key   => 'Software\Policies\Microsoft\Windows\PowerShell',
+        value => 'ExecutionPolicy',
+        data  => 'Unrestricted',
+        type  => 'REG_SZ',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'PowerShellExecutionPolicyEnableScripts':
+        key   => 'Software\Policies\Microsoft\Windows\PowerShell',
+        value => 'EnableScripts',
+        data  => 1,
+        type  => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
 
     windows_group_policy::local::machine { 'DisableServerManagerAtLogon2012':
         key   => 'Software\Policies\Microsoft\Windows\Server\ServerManager',
