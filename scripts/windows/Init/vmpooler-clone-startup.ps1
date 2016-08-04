@@ -28,7 +28,6 @@ Start-Transcript -Path "C:\Packer\Logs\vmpooler-clone-startup.log"
 
 #--- Global ---#
 $CygwinDir = "c:\cygwin"
-
 $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
 $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
 $CygwinPasswdFile = "$CygwinDir\etc\passwd"

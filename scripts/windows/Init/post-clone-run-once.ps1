@@ -52,6 +52,10 @@ Write-Host "vSphere VMname: $NewVMName`n"
 Set-Service "lmhosts" -StartupType Automatic
 Set-Service "netbt" -StartupType Automatic
 
+# Set Startup script (starts sshd)
+Write-Host "Setting startup script"
+reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
+
 #Rename this machine to that of the VM name in vSphere
 Rename-Host($NewVMName)
 
