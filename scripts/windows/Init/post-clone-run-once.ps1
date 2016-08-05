@@ -11,17 +11,6 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
-function Rename-Host([string]$NewComputerName){
-	$ComputerInfo = Get-WmiObject -Class Win32_ComputerSystem
-	$ComputerInfo.Rename($NewComputerName) | Out-Null
-}
-
-function Restart-Host(){
-	$OS = Get-WmiObject Win32_OperatingSystem
-	$OS.PSBase.Scope.Options.EnablePrivileges = $true
-	$OS.Win32Shutdown(6) | Out-Null
-}
-
 # Get VMPooler Guest name
 # This is a bit roundabout, but it allows us to detect of the guestinfo.hostname is available or not
 # Command is: vmtoolsd.exe --cmd "info-get guestinfo.hostname"'
@@ -36,7 +25,7 @@ $p = New-Object System.Diagnostics.Process
 $p.StartInfo = $pinfo
 $p.Start() | Out-Null
 $p.WaitForExit()
-$NewVMName = $p.StandardOutput.ReadToEnd()
+$NewVMName = $p.StandardOutput.ReadToEnd().Trim()
 
 # Exit with error code if name not found - likely to be the template machine.
 if ($p.ExitCode -ne 0){
@@ -48,7 +37,30 @@ if ($p.ExitCode -ne 0){
 
 Write-Host "vSphere VMname: $NewVMName`n"
 
-#Re-enable NetBIOS services
+# Pickup Env Variables defined in "install-cygwin.ps1"
+$CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
+$CygwinDownloads = $ENV:CYGWINDOWNLOADS
+$AdministratorHome = "$ENV:CYGWINDIR\home\Administrator"
+
+# Set up cygserv Username
+$qa_root_passwd = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
+& $CygWinShell --login -c `'ssh-host-config -y --pwd $qa_root_passwd`'
+
+# Generate ssh keys.
+& $CygWinShell --login -c `'rm -rf /home/Administrator/.ssh/id_rsa*`'
+& $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/Administrator/.ssh/id_rsa`'
+
+# Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
+$CygpCygwinDownloads = $Cygwindownloads.replace("\","/").replace("C:","/cygdrive/c")
+& $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "$CygpCygwinDownloads/authorized_keys" `>`> /home/Administrator/.ssh/authorized_keys`'
+
+
+# Create sshd process and set to Manual startup
+& $CygWinShell --login -c `'cygrunsrv -S sshd`'
+Set-Service "sshd" -StartupType Manual
+
+# Re-enable NetBIOS services
 Set-Service "lmhosts" -StartupType Automatic
 Set-Service "netbt" -StartupType Automatic
 
@@ -56,8 +68,13 @@ Set-Service "netbt" -StartupType Automatic
 Write-Host "Setting startup script"
 reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
 
-#Rename this machine to that of the VM name in vSphere
-Rename-Host($NewVMName)
+# Update machine password (and reset autologin)
+Write-Host "Setting Administrator Password"
+net user Administrator "$qa_root_passwd"
+$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
+Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "$qa_root_passwd" -ErrorAction SilentlyContinue
 
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Host "Disabling NIC Power Management"
@@ -67,8 +84,8 @@ try {
 	Write-Warning "Disable Power Management failed"
 }
 
-
-#Force restart machine.
-Restart-Host
+# Rename this machine to that of the VM name in vSphere
+Write-Host "Renaming Host to $NewVMName"
+Rename-Computer -Newname $NewVMName -Restart
 
 ExitScript 0

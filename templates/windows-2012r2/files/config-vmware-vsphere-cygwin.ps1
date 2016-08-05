@@ -79,4 +79,4 @@ winrm set winrm/config/service/auth '@{Basic="true"}'
 netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 
-# Cygwin configuration (Cygwin packages only)
+# End

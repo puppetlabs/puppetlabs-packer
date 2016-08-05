@@ -16,6 +16,7 @@ if ($ARCH -eq 'x86') {
 }
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name CYGWINDIR -Value $CygWinDir
+Set-ItemProperty -Path $RegPath -Name CYGWINDOWNLOADS -Value $CygwinDownloads
 
 # Read list of packages to be installed.
 # This is a plain-text list of packages, where the first word on each line must be a single package name.
@@ -40,6 +41,11 @@ $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
 Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
 Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
 
+# Setup Authorised Keys and QA Password for later use
+Copy-Item -Path "A:\authorized_keys" -Destination "$CygwinDownloads\authorized_keys"
+if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
+$ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
+
 $ostring = "-o" + $CygwinDownloads
 & $7zip x "$CygwinDownloads\packages_$ARCH.zip" -y $ostring
 
@@ -54,22 +60,3 @@ $ostring = "-o" + $CygwinDownloads
 
 exit 0
 # end
-
-# Any code/comments are are for TODO actions.
-
-# Actual SSH configuration is done on the post-cloned machine.
-
-# Possibly execute these on the post-clone script.
-
-# SSH Configuration
-& C:\cygwin64\bin\sh.exe  --login -c 'ssh-host-config -y --pwd hello'
-& C:\cygwin64\bin\sh.exe  --login -c 'rm -rf /home/Administrator/.ssh/id_rsa'
-& C:\cygwin64\bin\sh.exe  --login -c 'ssh-keygen -t rsa -N \"\" -f /home/Administrator/.ssh/id_rsa'
-& C:\cygwin64\bin\sh.exe  --login -c 'cygrunsrv -S sshd'
-
-# Set sshd server to manual
-
-# Create/open the file "C:\%CYGWIN_DIR%\home\Administrator\.ssh\authorized_keys"
-# Add your desired public keys and save the file.
-
-# Packages to Install
