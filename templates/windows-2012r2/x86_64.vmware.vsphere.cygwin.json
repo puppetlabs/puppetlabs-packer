@@ -39,6 +39,7 @@
         "../../scripts/windows/puppet-configure.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
         "files/config-vmware-vsphere-cygwin.ps1"
       ],
 

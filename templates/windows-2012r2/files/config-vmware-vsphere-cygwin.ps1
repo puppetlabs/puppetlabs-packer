@@ -63,6 +63,10 @@ reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer" /v
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
 
+# Set the Security Policies
+Write-Host "Setting Low Security Password Policies"
+secedit /configure /db secedit.sdb /cfg A:\Low-SecurityPasswordPolicy.inf /quiet
+
 # Configure WinRM - (Final configuration)
 Write-Host "Configuring WinRM"
 winrm quickconfig -force
