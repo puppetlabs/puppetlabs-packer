@@ -14,16 +14,33 @@ Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
 
 # Enable RDP
+Write-BoxstarterMessage "Setting up winrm"
 Enable-RemoteDesktop
 netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
 # Install .Net Framework 4.5.2
+Write-BoxstarterMessage "Setting up winrm"
 choco install dotnet4.5 -y
 if (Test-PendingReboot) { Invoke-Reboot }
 
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
+
+# Cleanup Windows Update area after all that (may need reboot)
+Write-BoxstarterMessage "Cleaning up WinxSx updates"
+dism /online /Cleanup-Image /StartComponentCleanup /ResetBase
+if (Test-PendingReboot) { Invoke-Reboot }
+
+# Zeroing cleaned disk space
+Write-BoxstarterMessage "Zeroing cleaned disk space using sdelete"
+choco install sdelete --yes --force
+if ($ARCH -eq 'x86') {
+  $Sdelete = "sdelete"
+} else {
+  $Sdelete = "sdelete64"
+}
+& $Sdelete -z -accepteula c:
 
 # Remove the pagefile
 Write-BoxstarterMessage "Removing page file.  Recreates on next boot"
