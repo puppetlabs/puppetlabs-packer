@@ -72,6 +72,10 @@ else {
 Write-Host "Loading Default User hive to HKLM\DEFUSER..."
 & reg load HKLM\DEFUSER C:\Users\Default\NTUSER.DAT
 
+# Set "facts" that we need for the Puppet Run.
+$ENV:FACTER_chrome_root="$ENV:ProgramFiles `(x86`)\Google\Chrome"
+$ENV:FACTER_modules_path="$ModulesPath"
+
 # Loop through all Manifest Files in A:\ and process them
 # Keep reapplying until no resources are modified, or MaxAttempts is hit
 Write-Host "Puppet Manifest Processing Starting"

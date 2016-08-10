@@ -1,0 +1,21 @@
+{
+  "homepage_is_newtabpage" : false,
+  "browser": {
+    "show_home_button": true,
+     "check_default_browser" : false
+  },
+  "homepage": "about:blank",
+  "distribution": {
+    "skip_first_run_ui": true,
+    "show_welcome_page": false,
+    "make_chrome_default": false,
+    "suppress_first_run_default_browser_prompt": true
+  },
+  "sync_promo" : {
+    "user_skipped" : true,
+    "show_on_first_run_allowed" : false
+  },
+  "first_run_tabs" : [
+    "about:blank"
+  ]
+}
