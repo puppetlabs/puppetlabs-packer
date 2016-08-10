@@ -4,25 +4,70 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
-
 Write-Host "Uninstalling Puppet Agent..."
 Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.msi /qn /norestart"
 
 # Remove Boxstarter
-Write-Host "Uninstalling boxstarter..."
+Write-Host "Uninstalling boxstarter & sdelete..."
 choco uninstall boxstarter --yes
+choco uninstall sdelete --yes
 
-# TODO Remove Chocolatey - probably not as it will poleaxe Sysinternals?
-# Need to discuss with Rob - suspect ok to leave on machine.
+# Remove Chocolatey - using instructions at https://chocolatey.org/docs/uninstallation
+Write-Host "Uninstalling Chocolatey and all its bits..."
 
-# Remove Directories
+Remove-Item -Recurse -Force "$env:ChocolateyInstall"
+[System.Text.RegularExpressions.Regex]::Replace( `
+[Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment').GetValue('PATH', '',  `
+[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
+[System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
+[System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
+%{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'User')}
+[System.Text.RegularExpressions.Regex]::Replace( `
+[Microsoft.Win32.Registry]::LocalMachine.OpenSubKey('SYSTEM\CurrentControlSet\Control\Session Manager\Environment\').GetValue('PATH', '', `
+[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
+[System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
+[System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
+%{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'Machine')}
 
-cmd.exe /C RD C:\ProgramData\PuppetLabs /s /q
+if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyBinRoot" }
+if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyToolsRoot" }
+[System.Environment]::SetEnvironmentVariable("ChocolateyBinRoot", $null, 'User')
+[System.Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", $null, 'User')
+
+# Clean up files
+Write-Host "Clearing Files"
+@(
+    "$ENV:LOCALAPPDATA\Nuget",
+    "$ENV:LOCALAPPDATA\temp\*",
+    "$ENV:WINDIR\logs",
+    "$ENV:WINDIR\temp\*",
+    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportArchive",
+    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
+    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
+    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
+    "$ENV:WINDIR\winsxs\manifestcache",
+    "C:\ProgramData\PuppetLabs"
+) | % {
+        if(Test-Path $_) {
+            Write-Host "Removing $_"
+            Takeown /d Y /R /f $_
+            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+        }
+    }
 
 # Remove the pagefile
 Write-Host "Removing page file.  Recreates on next boot"
 $pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
 Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
 
+# Clearing Logs
+Write-Host "Clearing Logs"
+wevtutil clear-log Application
+wevtutil clear-log Security
+wevtutil clear-log Setup
+wevtutil clear-log System
 
-# Run Clean disk.
+# Sleep to let console log catch up (and get captured by packer)
+Start-Sleep -Seconds 20
+#End

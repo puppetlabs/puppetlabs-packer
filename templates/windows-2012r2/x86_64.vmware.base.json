@@ -43,7 +43,7 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "files/scripts/windows/generalize-packer.autounattend.xml",
+        "files/generalize-packer.autounattend.xml",
         "files/{{build_name}}.package.ps1"
       ],
 

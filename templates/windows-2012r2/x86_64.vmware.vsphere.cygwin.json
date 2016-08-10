@@ -36,9 +36,13 @@
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/cleanup-host.ps1",
         "../../scripts/windows/install-win-packages.ps1",
+        "../../scripts/windows/install-cygwin.ps1",
+        "../../scripts/windows/cygwin-packages",
+        "../../scripts/windows/authorized_keys",
         "../../scripts/windows/puppet-configure.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
         "files/config-vmware-vsphere-cygwin.ps1"
       ],
 
@@ -72,6 +76,7 @@
       "inline": [
         "md -Path C:\\Packer\\puppet\\modules",
         "md -Path C:\\Packer\\Downloads",
+        "md -Path C:\\Packer\\Downloads\\Cygwin",
         "md -Path C:\\Packer\\Init",
         "md -Path C:\\Packer\\Logs",
         "md -Path C:\\Packer\\Sysinternals"
@@ -81,6 +86,15 @@
       "type": "powershell",
       "inline": [
         "A:\\install-win-packages.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-cygwin.ps1"
+      ],
+      "environment_vars": [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
       ]
     },
     {

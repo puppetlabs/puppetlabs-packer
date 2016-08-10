@@ -13,14 +13,22 @@ Write-Host "Other Stuff......."
 Write-Host "Enable Bootlog"
 cmd /c "bcdedit /set {current} bootlog yes"
 
-# Load Default User for registry to accomodate changes.
-reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
-
 #Disable UAC for Windows-2012
 Disable-UAC
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
+
+#######################################################################################################################
+# Ideally these registry settings would be done through puppet.
+# Unfortunately there is a puppet registry module restriction on manipulating HKCU, so need to use
+# Powershell commands here instead.
+# TODO Migrate these to the puppet settings once the HKCU restriction is removed.
+#######################################################################################################################
+
+# Load Default User for registry to accomodate changes.
+# All HKCU changes are replicated for the default user.
+reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
 
 # Set IE Home Page for this and Default User.
 Write-Host "Setting IE Home Page"
@@ -55,6 +63,10 @@ reg.exe ADD "HKLM\DEFUSER\Software\Microsoft\Windows\CurrentVersion\Explorer" /v
 # Unload default user.
 reg.exe unload HKLM\DEFUSER
 
+# Set the Security Policies
+Write-Host "Setting Low Security Password Policies"
+secedit /configure /db secedit.sdb /cfg A:\Low-SecurityPasswordPolicy.inf /quiet
+
 # Configure WinRM - (Final configuration)
 Write-Host "Configuring WinRM"
 winrm quickconfig -force
@@ -66,3 +78,5 @@ winrm set winrm/config/service/auth '@{Basic="true"}'
 # Add permissive Firewall rules (RE-7516) - This is preferred to disabling the firewall
 netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
+
+# End
