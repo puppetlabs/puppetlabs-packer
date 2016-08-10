@@ -1,18 +1,18 @@
 {
   "variables": {
-    "template_name": "windows-2012r2-x86_64",
+    "template_name": "windows-2016tp5-x86_64",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/14300.1000.160324-1723.RS1_RELEASE_SVC_SERVER_OEMRET_X64FRE_EN-US.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "78bff6565f178ed08ab534397fe44845",
+    "iso_checksum": "6417ba460f95bd91ded05dfacd553783",
     "headless": "false",
     "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
 
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}"
   },
 
-  "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
+  "description": "Builds a Windows Server 2016 Technical Preview template VM for use in VMware",
 
   "_comment": [
       "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
@@ -43,11 +43,11 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "files/scripts/windows/generalize-packer.autounattend.xml",
+        "files/generalize-packer.autounattend.xml",
         "files/{{build_name}}.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><down><enter>"],
       "boot_wait": "1s",
 
       "vmx_data": {
