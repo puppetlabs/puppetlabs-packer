@@ -26,9 +26,8 @@
 #--- Log Session ---#
 Start-Transcript -Path "C:\Packer\Logs\vmpooler-clone-startup.log"
 
-#--- Global ---#
-$CygwinDir = "c:\cygwin"
-
+# CYGWINDIR is set in the environment when Cygwin is installed
+$CygwinDir = "$ENV:CYGWINDIR"
 $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
 $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
 $CygwinPasswdFile = "$CygwinDir\etc\passwd"

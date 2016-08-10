@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 
 # Arm machine using RunOnce Keys
 Write-Host "Arming machine for first-run"
-reg import C:\Packer\Init\vmpooler-clone-arm.reg
+reg import C:\Packer\Init\vmpooler-clone-arm-runonce.reg
 
 # Make sure NetBios is disabled on the host to avoid netbios name collision at first boot.
 # Also disable VMWare USB Arbitration service (ignore errors if it is not there)

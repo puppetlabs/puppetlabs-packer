@@ -6,38 +6,6 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
-# Function to download the packages we need.
-
-function Download-File {
-param (
-  [string]$url,
-  [string]$file
- )
-  $downloader = new-object System.Net.WebClient
-  $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
-
-  Write-Output "Downloading $url to $file"
-  $completed = $false
-  $retrycount = 0
-  $maxretries = 20
-  $delay = 10
-  while (-not $completed) {
-    try {
-      $downloader.DownloadFile($url, $file)
-      $completed = $true
-    } catch {
-      if ($retrycount -ge $maxretries) {
-        Write-Host "Max Attempts exceeded"
-        throw "Download aborting"
-      } else {
-        $retrycount++
-        Write-Host "Download Failed $retrycount of $maxretries - Sleeping $delay"
-        Start-Sleep -Seconds $delay
-      }
-    }
-  }
-}
-
 Write-Host "Installing Puppet Agent..."
 Download-File https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi $PackerDownloads\puppet-agent.msi
 Start-Process -Wait "msiexec" -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
