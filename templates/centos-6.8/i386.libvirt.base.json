@@ -1,0 +1,95 @@
+{
+
+  "variables":
+    {
+      "template_name": "centos-6.8-i386",
+      "template_os": "centos",
+
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-6.8-x86_64-bin-DVD1.iso",
+      "iso_checksum": "720d185fdf063383a4471657076b72fc162d3c3c3bca2e5e5ae13a25b3046519",
+      "iso_checksum_type": "sha256",
+
+      "memory_size": "512",
+      "cpu_count": "1",
+
+      "provisioner": "libvirt",
+      "required_modules": "puppetlabs-stdlib saz-ssh",
+      "puppet_aio": "http://yum.puppetlabs.com/el/6/PC1/i386/puppet-agent-1.6.0-1.el6.i386.rpm"
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "headless": true,
+      "net_device": "virtio-net-pci",
+      "disk_interface": "virtio-scsi",
+      "headless": "true",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
+        "<enter>"        
+      ],
+      "boot_wait": "45s",
+      "disk_size": 20480,
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "root",
+      "ssh_password": "puppet",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "/sbin/halt -h -p",
+      "qemuargs": [
+        [ "-m", "{{user `memory_size`}}" ],
+        [ "-smp",
+          "cpus={{user `cpu_count`}},",
+          "cores=1",
+          ""
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/bootstrap-aio.sh"
+      ]
+    },
+
+    {
+      "type": "puppet-masterless",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter": {
+        "provisioner": "{{user `provisioner`}}"
+      },
+      "manifest_dir": "../../manifests",
+      "manifest_file": "../../manifests/base.pp"
+    },
+
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/cleanup-aio.sh",
+        "../../scripts/cleanup-packer.sh"
+      ]
+    }
+  ]
+
+}
