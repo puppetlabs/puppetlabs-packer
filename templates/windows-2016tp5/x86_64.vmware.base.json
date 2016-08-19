@@ -36,6 +36,7 @@
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
+      "disk_type_id": "0",
       "floppy_files": [
         "files/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
