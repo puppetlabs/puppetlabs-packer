@@ -24,9 +24,21 @@ if (Test-PendingReboot) { Invoke-Reboot }
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
-# Write-Host Staring CMD.exe
-# & cmd.exe /c Start cmd.exe
-# Read-Host "Press enter"
+
+# Cleanup Windows Update area after all that (may need reboot)
+Write-BoxstarterMessage "Cleaning up WinxSx updates"
+dism /online /Cleanup-Image /StartComponentCleanup /ResetBase
+if (Test-PendingReboot) { Invoke-Reboot }
+
+# Zeroing cleaned disk space
+Write-BoxstarterMessage "Zeroing cleaned disk space using sdelete"
+choco install sdelete --yes --force
+if ($ARCH -eq 'x86') {
+  $Sdelete = "sdelete"
+} else {
+  $Sdelete = "sdelete64"
+}
+& $Sdelete -z -accepteula c:
 
 # Remove the pagefile
 Write-BoxstarterMessage "Removing page file.  Recreates on next boot"
