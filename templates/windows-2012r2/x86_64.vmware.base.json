@@ -8,8 +8,6 @@
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "false",
     "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
-
-    "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -30,7 +28,7 @@
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_password": "PackerAdmin",
-      "winrm_timeout": "8h",
+      "winrm_timeout": "16h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
