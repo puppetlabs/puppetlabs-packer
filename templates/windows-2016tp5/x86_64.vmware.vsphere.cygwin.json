@@ -4,7 +4,7 @@
     "version": "0.0.1",
 
     "provisioner": "vmware",
-    "headless": "false",
+    "headless": "true",
 
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
     "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",

@@ -6,7 +6,7 @@
     "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/14300.1000.160324-1723.RS1_RELEASE_SVC_SERVER_OEMRET_X64FRE_EN-US.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "6417ba460f95bd91ded05dfacd553783",
-    "headless": "false",
+    "headless": "true",
     "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
 
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}"
