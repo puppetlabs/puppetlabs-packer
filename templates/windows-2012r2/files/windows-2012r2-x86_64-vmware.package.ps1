@@ -27,21 +27,6 @@ if (Test-PendingReboot) { Invoke-Reboot }
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
 
-# Cleanup Windows Update area after all that (may need reboot)
-Write-BoxstarterMessage "Cleaning up WinxSx updates"
-dism /online /Cleanup-Image /StartComponentCleanup /ResetBase
-if (Test-PendingReboot) { Invoke-Reboot }
-
-# Zeroing cleaned disk space
-Write-BoxstarterMessage "Zeroing cleaned disk space using sdelete"
-choco install sdelete --yes --force
-if ($ARCH -eq 'x86') {
-  $Sdelete = "sdelete"
-} else {
-  $Sdelete = "sdelete64"
-}
-& $Sdelete -z -accepteula c:
-
 # Remove the pagefile
 Write-BoxstarterMessage "Removing page file.  Recreates on next boot"
 $pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
