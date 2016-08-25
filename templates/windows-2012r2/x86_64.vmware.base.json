@@ -7,7 +7,7 @@
     "iso_checksum_type": "md5",
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "true",
-    "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso"
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
