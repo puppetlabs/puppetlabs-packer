@@ -68,6 +68,16 @@ wevtutil clear-log Security
 wevtutil clear-log Setup
 wevtutil clear-log System
 
+# TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
+# extra space released by the delete commands above.
+
+# Extend C: partition to full extend - this is predicated on the
+$size = (Get-PartitionSupportedSize -DriveLetter C)
+$sizemax = $size.SizeMax
+Write-Host "Setting Drive C partition size to $sizemax"
+Resize-Partition -DriveLetter C -Size $sizemax
+
+
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
 #End
