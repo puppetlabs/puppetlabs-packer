@@ -25,6 +25,7 @@
       "format": "qcow2",
       "net_device": "virtio-net-pci",
       "disk_interface": "virtio-scsi",
+      "headless": "true",      
       "boot_command": [
         "<tab> <wait>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
