@@ -7,9 +7,7 @@
     "iso_checksum_type": "md5",
     "iso_checksum": "6417ba460f95bd91ded05dfacd553783",
     "headless": "true",
-    "tools_iso": "/Applications/VMware Fusion.app/Contents//Library/isoimages/windows.iso",
-
-    "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}"
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
   "description": "Builds a Windows Server 2016 Technical Preview template VM for use in VMware",
@@ -44,6 +42,7 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/clean-disk-dism.ps1",
         "files/generalize-packer.autounattend.xml",
         "files/{{build_name}}.package.ps1"
       ],
@@ -83,6 +82,14 @@
         "scsi0:1.devicetype":  "",
         "scsi0:1.filename": ""
       }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
     }
   ]
 }
