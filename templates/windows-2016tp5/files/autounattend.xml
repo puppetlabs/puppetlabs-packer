@@ -30,10 +30,12 @@
                             <Size>128</Size>
                         </CreatePartition>
                         <!-- Windows partition -->
+                        <!-- Only Allocate 20G initially - rest will be allocated near end of prep -->
                         <CreatePartition wcm:action="add">
                             <Order>3</Order>
                             <Type>Primary</Type>
-                            <Extend>true</Extend>
+                            <Extend>false</Extend>
+                            <Size>21475</Size>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
