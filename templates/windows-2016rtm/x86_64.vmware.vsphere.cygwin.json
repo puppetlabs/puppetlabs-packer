@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-2016tp5-x86_64",
+    "template_name": "windows-2016rtm-x86_64",
     "version": "0.0.1",
 
     "provisioner": "vmware",
