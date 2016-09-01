@@ -287,4 +287,28 @@ class windows_template::local_group_policies ()
         type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
+
+    # Set the following BGInfo Variables using facter provided variables from env
+    #VMPOOLER_Build_Date=Build-Date
+    #VMPOOLER_Packer_SHA=124214215215215235
+    #VMPOOLER_Packer_Template=Packer_Template_Name
+    registry::value { 'VMPOOLER_Build_Date':
+        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        value => 'VMPOOLER_Build_Date',
+        data  => "${build_date}",
+        type  => 'string'
+    }
+    registry::value { 'VMPOOLER_Packer_SHA':
+        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        value => 'VMPOOLER_Packer_SHA',
+        data  => "${packer_sha}",
+        type  => 'string'
+    }
+    registry::value { 'VMPOOLER_Packer_Template':
+        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        value => 'VMPOOLER_Packer_Template',
+        data  => "${packer_template}",
+        type  => 'string'
+    }
+
 }

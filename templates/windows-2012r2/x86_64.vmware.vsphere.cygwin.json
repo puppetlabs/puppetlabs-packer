@@ -15,7 +15,8 @@
     "packer_vcenter_datastore": "{{env `PACKER_VCENTER_DATASTORE`}}",
     "packer_vcenter_folder": "{{env `PACKER_VCENTER_FOLDER`}}",
     "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
-    "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}"
+    "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
+    "packer_sha": "{{env `PACKER_SHA`}}"
   },
 
   "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
@@ -120,7 +121,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\puppet-configure.ps1"
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
       ]
     },
     {
