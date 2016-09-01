@@ -47,7 +47,7 @@
         "files/{{build_name}}.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><down><enter>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
       "boot_wait": "1s",
 
       "vmx_data": {
