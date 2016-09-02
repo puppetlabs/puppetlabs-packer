@@ -29,11 +29,27 @@ else {
 $ForgeMods = "$ModulesPath\forge-modules.txt"
 If ((Test-Path -path $ForgeMods) -and ($ModulesPath -ne '')) {
   Get-Content -Path $ForgeMods | % {
-    $modulename = $_
-    if ($modulename.IndexOf('#') -gt -1) { $modulename = $modulename.Substring(0,$modulename.IndexOf('#')) }
-    $modulename = $modulename.Trim()
+    # Remove any comments first and trim line
+    $line = $_
+    if ($line.IndexOf('#') -gt -1) { $line = $line.Substring(0,$line.IndexOf('#')) }
+    $line = $line.Trim()
+    $splitUp = $line -split "\s+"
+    $modulename = $splitUp[0]
     if ($modulename -ne '') {
-      Write-Host "Installing the $modulename module from the Forge..."
+      # Check to see if Version is specified.
+      # NOTE - splatting would be preferable here, but doesn't work as puppet doesn't like the
+      # colons in the splatted output, so stuck with an inelegant way of specifying version options.
+      if ($splitUp.Count -eq 1) {
+        Write-Host "Installing the $modulename (latest version) module from the Forge..."
+        $moduleversion = ""
+        $modveropt = ""
+      } ElseIf ($splitUp.Count -eq 2) {
+        $moduleversion = $splitUp[1]
+        Write-Host "Installing the $modulename Version $moduleversion module from the Forge..."
+        $modveropt = "--version"
+      } else {
+        throw "Invalid Modules definition line: $_"
+      }
 
       # Using Loop here to improve resiliency.
       # BITS (or other service) may not have started, so allow for module install error here.
@@ -45,7 +61,7 @@ If ((Test-Path -path $ForgeMods) -and ($ModulesPath -ne '')) {
         $Attempt++
 
         try {
-          & $PuppetPath module install "$modulename" --verbose --target-dir $ModulesPath
+          & $PuppetPath module install $modveropt $moduleversion --verbose --target-dir $ModulesPath $modulename
           $EC = $LASTEXITCODE
           if ($EC -ne 0) {throw "Module install failure"}
         } catch {
