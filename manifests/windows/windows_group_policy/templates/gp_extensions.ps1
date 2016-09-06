@@ -15,9 +15,7 @@ Function Convert-GUIDListToHashTable($list) {
 
 Function Set-GPTExtensionGUIDs($guidList) {
   # Generate the setting string
-  $settingString = '[' + (
-    ($guidList.GetEnumerator() | ForEach-Object -Process { Write-Output "{$($_.Key.ToUpper())}" } | Sort-Object) -join ''
-  ) + ']'    
+  $settingString = '[' + ( ($guidList.GetEnumerator() | ForEach-Object -Process { Write-Output "{$($_.Key.ToUpper())}" } | Sort-Object) -join '' ) + ']'    
 
   if ($PolicyType.ToUpper() -eq 'USER') {
     $settingName = 'gPCUserExtensionNames'
@@ -28,8 +26,7 @@ Function Set-GPTExtensionGUIDs($guidList) {
   # Update the GPT.INI
   Write-Verbose "Updating $($settingName)=$($settingString)"
   $wasReplaced = $false
-  $newGPTContent = (Get-GPTIniContents |
-  ForEach-Object {
+  $newGPTContent = (Get-GPTIniContents | ForEach-Object {
     if ($_ -match "$($settingName)=") {
       Write-Output "$($settingName)=$($settingString)"
       $wasReplaced = $true
@@ -50,8 +47,7 @@ Function Get-GPExtensionListFromGPT {
   $UserExtensions = @{}
 
   if (Test-Path -Path $gptIniPath) {
-    Get-Content $gptIniPath |
-    ForEach-Object {
+    Get-Content $gptIniPath | ForEach-Object {
       if ($_ -match "gPCMachineExtensionNames=\[(.+)\]") {
         $MachineExtensions = (Convert-GUIDListToHashTable -List ([string]$matches[1].Trim()))
       }
