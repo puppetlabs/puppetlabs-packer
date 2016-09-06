@@ -46,8 +46,7 @@ Function Invoke-IncrementGPTVersion {
   Write-Verbose "New GP version is $currentGPVersion"
 
   Write-Verbose "Updating Version=$($currentGPVersion)"
-  $newGPTContent = (Get-GPTIniContents |
-  ForEach-Object {
+  $newGPTContent = (Get-GPTIniContents | ForEach-Object {
     if ($_ -match "Version=(\d+)$") {
       Write-Output "Version=$($currentGPVersion)"
     } else { Write-Output $_ }

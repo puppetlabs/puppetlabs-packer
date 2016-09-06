@@ -107,7 +107,7 @@ define windows_group_policy::local::machine_client_side_extensions(
   $policy_type = 'Machine'
 
   if $ensure in ['present'] {
-    exec { "GPO-Local-UserCSE-$name":
+    exec { "GPO-Local-MachineCSE-$name":
       command => template('windows_group_policy/script_header.ps1',
                           'windows_group_policy/gp_extensions.ps1',
                           'windows_group_policy/local_gpo_ext.ps1',

@@ -20,8 +20,7 @@ Add-Type -Language CSharp -TypeDefinition $PolFileEditorCS -ErrorAction Stop
 # Add-Type -Language CSharpVersion3 -TypeDefinition $PolFileEditorCS -ErrorAction Stop
 $VerbosePreference = $vp
 
-function Compare-PolicyValueIsSameAs($objPolicyEntry,$value)
-{
+function Compare-PolicyValueIsSameAs($objPolicyEntry,$value) {
   $isSame = $false
   switch ($objPolicyEntry.Type)
   {
@@ -32,8 +31,7 @@ function Compare-PolicyValueIsSameAs($objPolicyEntry,$value)
   Write-Output $isSame
 }
 
-function Set-PolicySetting($objPolicy)
-{
+function Set-PolicySetting($objPolicy) {
   # Set the policy setting
   switch ($PolicyValueType.ToUpper()) {
     "REG_DWORD" {
@@ -55,8 +53,7 @@ function Set-PolicySetting($objPolicy)
   return Invoke-IncrementGPTVersion 
 }
 
-function Open-PolicyFile([string]$policyFilePath = '', [bool]$createIfNotExist = $true)
-{
+function Open-PolicyFile([string]$policyFilePath = '', [bool]$createIfNotExist = $true) {
   if ($policyFilePath -eq '') { $policyFilePath = "$($env:systemroot)\system32\GroupPolicy\$PolicyType\registry.pol" }
 
   try
