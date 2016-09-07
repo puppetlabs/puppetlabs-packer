@@ -71,10 +71,7 @@ reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
 # Update machine password (and reset autologin)
 Write-Host "Setting Administrator Password"
 net user Administrator "$qa_root_passwd"
-$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
-Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "$qa_root_passwd" -ErrorAction SilentlyContinue
+autologon -AcceptEula Administrator . "$qa_root_passwd"
 
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Host "Disabling NIC Power Management"

@@ -40,6 +40,15 @@ Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/p
 Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/pstools.zip $PackerDownloads\pstools.zip
 & $7zip x C:\Packer\Downloads\pstools.zip -y $ostring
 
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/sdelete.zip $PackerDownloads\sdelete.zip
+& $7zip x C:\Packer\Downloads\sdelete.zip -y $ostring
+
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/bginfo.zip $PackerDownloads\bginfo.zip
+& $7zip x C:\Packer\Downloads\bginfo.zip -y $ostring
+
+Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/autologon.zip $PackerDownloads\autologon.zip
+& $7zip x C:\Packer\Downloads\autologon.zip -y $ostring
+
 Write-Host "Updating path with $SysInternals"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 $OldPath = (Get-ItemProperty -Path $RegPath -Name PATH).Path
