@@ -10,3 +10,4 @@ if ($objPolFile -ne $null) {
 }
 
 if ($isSet) { exit 0 } else { exit 1 }
+# Blank line at end is also REQUIRED

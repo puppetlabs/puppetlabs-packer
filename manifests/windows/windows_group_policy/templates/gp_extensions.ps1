@@ -15,14 +15,14 @@ Function Convert-GUIDListToHashTable($list) {
 
 Function Set-GPTExtensionGUIDs($guidList) {
   # Generate the setting string
-  $settingString = '[' + ( ($guidList.GetEnumerator() | ForEach-Object -Process { Write-Output "{$($_.Key.ToUpper())}" } | Sort-Object) -join '' ) + ']'    
+  $settingString = '[' + ( ($guidList.GetEnumerator() | ForEach-Object -Process { Write-Output "{$($_.Key.ToUpper())}" } | Sort-Object) -join '' ) + ']'
 
   if ($PolicyType.ToUpper() -eq 'USER') {
     $settingName = 'gPCUserExtensionNames'
   } else {
     $settingName = 'gPCMachineExtensionNames'
   }
-  
+
   # Update the GPT.INI
   Write-Verbose "Updating $($settingName)=$($settingString)"
   $wasReplaced = $false

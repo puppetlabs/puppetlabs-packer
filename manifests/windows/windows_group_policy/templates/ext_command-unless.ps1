@@ -16,3 +16,4 @@ $shouldList.GetEnumerator() | ForEach-Object -Process {
 }
 
 if ($isFound) { exit 0 } else { exit 1 }
+# Blank line at end is also REQUIRED
