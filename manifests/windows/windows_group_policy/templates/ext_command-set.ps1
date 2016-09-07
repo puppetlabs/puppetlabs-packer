@@ -20,3 +20,4 @@ $shouldList.GetEnumerator() | ForEach-Object -Process {
 $isSet = Set-GPTExtensionGUIDs -GUIDList $currentList
 
 if ($isSet) { exit 0 } else { exit 1 }
+# Blank line at end is also REQUIRED

@@ -9,9 +9,10 @@ if ($objPolFile -ne $null) {
   $isFound = $objPolFile.Contains($PolicyKeyName,$PolicyValueName)
   if ($isFound) {
     $polEntry = $objPolFile.GetValue($PolicyKeyName,$PolicyValueName)
-    
+
     $isFound = Compare-PolicyValueIsSameAs -objPolicyEntry $polEntry -Value $PolicyValue
   }
 }
 
 if ($isFound) { exit 0 } else { exit 1 }
+# Blank line at end is also REQUIRED

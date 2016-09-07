@@ -7,11 +7,11 @@ $VerbosePreference = 'Continue'
 Function Get-GPTIniContents {
   $gptIniPath = "$($env:systemroot)\system32\GroupPolicy\gpt.ini"
   # Default if gpt.ini does not exist
-  $gptContents = @('[General]','Version=0') 
+  $gptContents = @('[General]','Version=0')
   if (Test-Path -Path $gptIniPath) {
     $gptContents = Get-Content $gptIniPath
   } else { Write-Verbose "$gptIniPath did not exist.  Using default"}
-  return $gptContents   
+  return $gptContents
 }
 
 Function Set-GPTIniContents([string[]]$value) {
