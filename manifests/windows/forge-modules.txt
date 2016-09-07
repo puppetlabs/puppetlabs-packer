@@ -1,0 +1,9 @@
+# These modules are downloaded from the forge during a packer build
+# Like most files, anything to the right of a hash (#) is ignored and is considered a comment by the parser
+# Only the latest module is used from the public Forge
+# Specific versions are supported now (e.g. we need to stick to Powershell 1.0.6)
+# TODO Support custom forge URLs
+
+puppetlabs-powershell 1.0.6
+puppetlabs-registry
+puppetlabs-stdlib
