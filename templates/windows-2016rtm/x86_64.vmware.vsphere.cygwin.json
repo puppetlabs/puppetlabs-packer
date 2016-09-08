@@ -113,8 +113,8 @@
     },
     {
       "type": "file",
-      "source": "files/win-2016tp5-x86_64-std.pp",
-      "destination": "C:\\Packer\\puppet\\win-2016tp5-x86_64-std.pp"
+      "source": "files/win-2016rtm-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2016rtm-x86_64-std.pp"
     },
     {
       "type": "powershell",
