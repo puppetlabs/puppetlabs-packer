@@ -228,4 +228,63 @@ class windows_template::local_group_policies ()
         type  => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
+
+    # Configure NTP Time Synchronisation
+    # https://technet.microsoft.com/en-us/library/bb490845.aspx?f=255&MSPPError=-2147217396
+    windows_group_policy::local::machine { 'W32timeType':
+        key    => 'Software\Policies\Microsoft\W32time\Parameters',
+        value  => 'Type',
+        data   => 'NTP',
+        type   => 'REG_SZ',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPServerList':
+        key    => 'Software\Policies\Microsoft\W32time\Parameters',
+        value  => 'NtpServer',
+        data   => 'opdx-net01-prod.ops.puppetlabs.net pdx-net01-prod.ops.puppetlabs.net opdx-net02.service.puppetlabs.net pdx-net02-prod.ops.puppetlabs.net',
+        type   => 'REG_SZ',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientEnabled':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'Enabled',
+        data   => 1,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientCrossSiteSyncFlags':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'CrossSiteSyncFlags',
+        data   => 2, # All
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientResolvePeerBackoffMinutes':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'ResolvePeerBackoffMinutes',
+        data   => 15,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientResolvePeerBackoffMaxTimes':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'ResolvePeerBackoffMaxTimes',
+        data   => 7,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientSpecialPollInterval':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'SpecialPollInterval',
+        data   => 600, # Poll for time every 10minutes
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::machine { 'W32timeNTPClientEventLogFlags':
+        key    => 'Software\Policies\Microsoft\W32time\TimeProviders\NtpClient',
+        value  => 'EventLogFlags',
+        data   => 3, # Enable full debug log
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
 }
