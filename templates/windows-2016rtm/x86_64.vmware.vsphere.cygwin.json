@@ -65,14 +65,14 @@
         "vcpu.hotadd": "TRUE",
         "mem.hotadd": "TRUE",
 
-        "tools.syncTime": "0",
-        "time.synchronize.continue": "1",
-        "time.synchronize.restore": "1",
-        "time.synchronize.resume.disk": "1",
-        "time.synchronize.shrink": "1",
-        "time.synchronize.tools.startup": "1",
-        "time.synchronize.tools.enable": "1",
-        "time.synchronize.resume.host": "1"
+        "tools.syncTime": "FALSE",
+        "time.synchronize.continue": "FALSE",
+        "time.synchronize.restore": "FALSE",
+        "time.synchronize.resume.disk": "FALSE",
+        "time.synchronize.shrink": "FALSE",
+        "time.synchronize.tools.startup": "FALSE",
+        "time.synchronize.tools.enable": "FALSE",
+        "time.synchronize.resume.host": "FALSE"
       }
     }
   ],
