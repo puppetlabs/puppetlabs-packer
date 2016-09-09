@@ -98,16 +98,6 @@ class windows_template::local_group_policies ()
       group  => 'Administrators'
     }
 
-    # TODO Apply super-insecure password policy Security Template
-    #Set the policy "Enforce password history" to "0".
-    #Set the policy "Maximum password age" to "0".
-    #Set the policy "Minimum password age" to "0".
-    #Set the policy "Minimum password length" to "0".
-    #Disable the policy "Password must meet complexity requirements".
-    #Disable the policy "Store passwords using reversible encryption".
-
-    # TODO Apply High Performance Power Management
-
     windows_group_policy::local::machine { 'DisableSystemRestore':
         key   => 'SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore',
         value => 'DisableSR',
@@ -115,8 +105,6 @@ class windows_template::local_group_policies ()
         type  => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-
-    # TODO Change the Desktop Settings to "Classic" and Enable Best Performance <-- Use Boxstarter?
 
     windows_group_policy::local::user { 'DisableScreenSaver':
         key   => 'SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop',
@@ -171,8 +159,6 @@ class windows_template::local_group_policies ()
 
     # TODO Update Start Menu 2008 only
 
-    # TODO Modify Notification Icon Tray
-
     # Power plan and high performance.
     windows_group_policy::local::machine { 'HighPerformancePowerPlan':
         key   => 'Software\Policies\Microsoft\Power\PowerSettings',
@@ -197,7 +183,6 @@ class windows_template::local_group_policies ()
         type  => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-
 
     # Turn off hybrid sleep (on battery)
     windows_group_policy::local::machine { 'DisableHibernationOnBattery':
@@ -228,9 +213,13 @@ class windows_template::local_group_policies ()
         key   => 'HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}',
         value => 'IsInstalled',
         data  => 0,
-        type  => 'dword'
+        type  => 'dword',
     }
 
+    # Disable prompt for network search - key just has to exist
+    registry_key { 'HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff':
+        ensure => present,
+    }
     # Disable Windows Update
     windows_group_policy::local::machine { 'DisableWindowsUpdate':
         key   => 'Software\Policies\Microsoft\Windows\WindowsUpdate\AU',
@@ -239,5 +228,4 @@ class windows_template::local_group_policies ()
         type  => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-
 }
