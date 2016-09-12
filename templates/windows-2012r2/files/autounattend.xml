@@ -92,7 +92,7 @@
                 <HelpCustomized>false</HelpCustomized>
             </OEMInformation>
             <ComputerName>*</ComputerName>
-            <TimeZone>Grenich Mean Time</TimeZone>
+            <TimeZone>UTC</TimeZone>
             <RegisteredOwner />
             <AutoLogon>
                 <Password>
