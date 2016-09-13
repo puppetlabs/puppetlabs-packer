@@ -92,7 +92,7 @@
                 <HelpCustomized>false</HelpCustomized>
             </OEMInformation>
             <ComputerName>*</ComputerName>
-            <TimeZone>Greenwich Mean Time</TimeZone>
+            <TimeZone>UTC</TimeZone>
             <RegisteredOwner />
             <ProductKey>WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY</ProductKey>
             <AutoLogon>

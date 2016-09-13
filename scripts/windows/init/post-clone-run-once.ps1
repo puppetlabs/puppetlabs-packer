@@ -11,6 +11,12 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
+# First things first - resync time to make sure we aren't using ESX/VMware time (RE-8033)
+Write-Host "Resyncing Time"
+w32tm /resync
+w32tm /tz
+
+
 # Get VMPooler Guest name
 # This is a bit roundabout, but it allows us to detect of the guestinfo.hostname is available or not
 # Command is: vmtoolsd.exe --cmd "info-get guestinfo.hostname"'
