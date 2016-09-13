@@ -145,7 +145,7 @@
     },
     {
       "type": "file",
-      "source": "../../scripts/windows/Init",
+      "source": "../../scripts/windows/init",
       "destination": "C:\\Packer\\Init"
     },
     {
