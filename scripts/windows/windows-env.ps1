@@ -55,3 +55,12 @@ param (
     }
   }
 }
+
+# Helper function to set both User and Default User registry key.
+# This assumes the default user hive has been mounted as HKLM\DEFUSER
+# As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
+
+Function Set-UserKey($key,$valuename,$reg_type,$data) {
+  reg.exe ADD "HKCU\$key" /v "$valuename" /t $reg_type /d $data /f
+  reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
+}
