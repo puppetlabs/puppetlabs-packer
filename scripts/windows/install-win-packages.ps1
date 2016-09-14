@@ -62,34 +62,22 @@ Write-Host "Sysinternal Tools Installed"
 # Put in registry keys to suppress the EULA popup on first use.
 # (since puppet modules don't support HKCU)
 
-# First a helper function
-function AcceptSysInternalsEULA {
-param (
-  [string]$regkeyroot
- )
-   Write-Host "Setting Sysinternals Registry Keys for $regkeyroot"
-
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\Process Explorer" /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\Process Monitor"  /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsExec"           /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsFile"           /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsGetSid"         /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsInfo"           /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsKill"           /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsList"           /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsLoggedOn"       /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsLogList"        /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsPasswd"         /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsService"        /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsShutdown"       /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsSuspend"        /v EulaAccepted /t REG_DWORD /d 1 /f
-   reg.exe ADD "$regkeyroot\Software\Sysinternals\PsTools"          /v EulaAccepted /t REG_DWORD /d 1 /f
-}
-
-# Accept for current user.
-AcceptSysInternalsEULA HKCU
-
-# Same for the Default User
 reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
-AcceptSysInternalsEULA HKLM\DEFUSER
+
+Set-UserKey 'Software\Sysinternals\Process Explorer' 'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\Process Monitor'  'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsExec'           'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsFile'           'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsGetSid'         'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsInfo'           'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsKill'           'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsList'           'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsLoggedOn'       'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsLogList'        'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsPasswd'         'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsService'        'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsShutdown'       'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsSuspend'        'EulaAccepted'       'REG_DWORD' 1
+Set-UserKey 'Software\Sysinternals\PsTools'          'EulaAccepted'       'REG_DWORD' 1
+
 reg.exe unload HKLM\DEFUSER

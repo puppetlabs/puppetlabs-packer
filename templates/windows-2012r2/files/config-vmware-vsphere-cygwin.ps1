@@ -26,12 +26,6 @@ Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
 # TODO Migrate these to the puppet settings once the HKCU restriction is removed.
 #######################################################################################################################
 
-# Quick helper function
-Function Set-UserKey($key,$valuename,$reg_type,$data) {
-  reg.exe ADD "HKCU\$key" /v "$valuename" /t $reg_type /d $data /f
-  reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
-}
-
 # Load Default User for registry to accomodate changes.
 # All HKCU changes are replicated for the default user.
 reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
