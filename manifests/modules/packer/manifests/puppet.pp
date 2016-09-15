@@ -7,7 +7,7 @@ class packer::puppet {
       apt::source { 'puppetlabs-pc1':
         location   => 'http://apt.puppetlabs.com',
         repos      => 'PC1',
-        key        => '4BD6EC30',
+        key        => '7F438280EF8D349F',
         key_server => 'pgp.mit.edu',
       }
 
