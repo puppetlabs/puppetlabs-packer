@@ -41,8 +41,9 @@ Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' '
 
 # Set solid color background - blueish
 Write-Host "Setting Solid background colour"
-Set-UserKey 'Control Panel\Colors' 'Background' 'REG_SZ' '"10 59 118"'
-Set-UserKey 'Control Panel\Colors' 'Wallpaper' 'REG_SZ' '""'
+Set-UserKey 'Control Panel\Colors'  'Background' 'REG_SZ' '"10 59 118"'
+Set-UserKey 'Control Panel\Colors'  'Wallpaper' 'REG_SZ' '""'
+Set-UserKey 'Control Panel\Desktop' 'Wallpaper' 'REG_SZ' '""'
 
 # Start Menu Options
 Write-Host "Setting Start Menu Options"
