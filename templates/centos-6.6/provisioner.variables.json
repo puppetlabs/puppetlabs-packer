@@ -1,0 +1,4 @@
+
+  {
+    "required_modules": "puppetlabs-stdlib saz-ssh"
+  }
