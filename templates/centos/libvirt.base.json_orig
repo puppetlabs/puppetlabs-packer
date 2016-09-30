@@ -1,20 +1,32 @@
 {
 
   "variables":
-    {
+  {
+    "provisioner": "libvirt",
 
-      "provisioner": "virtualbox"
-    },
+    "boot_command": [],
+    "boot_wait": null,
+    "disk_size": 0,
+    "ssh_username": null,
+    "ssh_password": null,
+    "ssh_port": 0,
+    "ssh_wait_timeout": null,
+    "shutdown_command": null
+
+  },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "type": "virtualbox-iso",
-      "headless": "{{ user `headless`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "net_device": "virtio-net-pci",
+      "disk_interface": "virtio-scsi",
+      "headless": "{{ user `headless`}}", 
       "boot_command": "{{ user `boot_command`}}",
       "boot_wait": "{user `boot_wait`}}",
       "disk_size": "{{user `disk_size`}}",
-      "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -24,28 +36,15 @@
       "ssh_port": "{{user `ssh_port`}}",
       "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
       "shutdown_command": "{{user `shutdown_command`}}",
-      "virtualbox_version_file": ".vbox_version",
-      "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "{{user `memory_size`}}"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "{{user `cpu_count`}}"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--ioapic",
-          "off"
+      "qemuargs": [
+        [ "-m", "{{user `memory_size`}}" ],
+        [ "-smp",
+          "cpus={{user `cpu_count`}},",
+          "cores=1",
+          ""
         ]
       ]
-    }
+}
   ],
 
   "provisioners": [
@@ -83,6 +82,6 @@
         "../../scripts/cleanup-packer.sh"
       ]
     }
-
   ]
+
 }

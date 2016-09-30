@@ -1,0 +1,15 @@
+
+  {
+    "kickstart_file": "ks.cfg",
+    "boot_wait": "45s",
+    "disk_size": "20480",
+    "ssh_username": "root",
+    "ssh_password": "puppet",
+    "ssh_port": "22",
+    "ssh_wait_timeout": "10000s",
+    "shutdown_command": "/sbin/halt -h -p",
+    "net_device": "virtio-net-pci",
+    "disk_interface": "virtio-scsi",
+    "memory_size": "512",
+    "cpu_count": "1"
+  }
