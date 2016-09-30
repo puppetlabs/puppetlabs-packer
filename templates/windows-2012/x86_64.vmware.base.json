@@ -1,0 +1,95 @@
+{
+  "variables": {
+    "template_name": "windows-2012-x86_64",
+
+    "provisioner": "vmware",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_x64_dvd_915478.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum": "da91135483e24689bfdaf05d40301506",
+    "headless": "true",
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
+  },
+
+  "description": "Builds a Windows Server 2012 template VM for use in VMware",
+
+  "_comment": [
+      "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
+  ],
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name": "packer-{{build_name}}",
+      "type": "vmware-iso",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "headless": "{{user `headless`}}",
+
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "PackerAdmin",
+      "winrm_timeout": "16h",
+
+      "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout": "1h",
+      "guest_os_type": "windows8srv-64",
+      "disk_size": 61440,
+      "disk_type_id": "0",
+      "floppy_files": [
+        "files/autounattend.xml",
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/clean-disk-dism.ps1",
+        "files/generalize-packer.autounattend.xml",
+        "files/{{build_name}}.package.ps1"
+      ],
+
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
+      "boot_wait": "1s",
+
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+
+        "firmware": "efi",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "scsi0.virtualdev": "lsisas1068",
+        "virtualHW.version": "10",
+
+        "vcpu.hotadd": "TRUE",
+        "mem.hotadd": "TRUE",
+
+        "tools.syncTime": "FALSE",
+        "time.synchronize.continue": "FALSE",
+        "time.synchronize.restore": "FALSE",
+        "time.synchronize.resume.disk": "FALSE",
+        "time.synchronize.shrink": "FALSE",
+        "time.synchronize.tools.startup": "FALSE",
+        "time.synchronize.tools.enable": "FALSE",
+        "time.synchronize.resume.host": "FALSE",
+        "scsi0:1.present": "TRUE",
+        "scsi0:1.autodetect": "TRUE",
+        "scsi0:1.deviceType": "cdrom-image",
+        "scsi0:1.fileName": "{{user `tools_iso`}}"
+      },
+      "vmx_data_post": {
+        "scsi0:1.present": "FALSE",
+        "scsi0:1.autodetect": "FALSE",
+        "scsi0:1.devicetype":  "",
+        "scsi0:1.filename": ""
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
+    }
+  ]
+}
