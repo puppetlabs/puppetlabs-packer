@@ -1,0 +1,102 @@
+{
+
+  "variables":
+  {
+    "outputdir": "/opt/output",
+    "provisioner": "libvirt",
+    "headless": "true",
+
+    "template_name": null,
+    "puppet_aio": null,
+
+    "kickstart_file": null,
+    "boot_wait": null,
+    "disk_size": null,
+    "ssh_username": null,
+    "ssh_password": null,
+    "ssh_port": null,
+    "ssh_wait_timeout": null,
+    "shutdown_command": null,
+    "net_device": null,
+    "disk_interface": null,
+    "memory_size": null,
+    "cpu_count": null,
+
+    "required_modules": null
+  },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "net_device": "{{ user `net_device`}}",
+      "disk_interface": "{{user `disk_interface}}",
+      "headless": "{{ user `headless`}}", 
+      "boot_wait": "{{user `boot_wait`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "http_directory": "files",
+      "iso_checksum": "",
+      "iso_checksum_type": "none",
+      "disk_image": "true",
+      "iso_url": "./output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_port": "{{user `ssh_port`}}",
+      "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "qemuargs": [
+        [ "-m", "{{user `memory_size`}}" ],
+        [ "-smp",
+          "cpus={{user `cpu_count`}},",
+          "cores=1",
+          ""
+        ]
+      ]
+}
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/bootstrap-aio.sh"
+      ]
+    },
+
+    {
+      "type": "puppet-masterless",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter": {
+        "provisioner": "{{user `provisioner`}}"
+      },
+      "manifest_dir": "../../manifests",
+      "manifest_file": "../../manifests/vagrant/puppet.pp"
+    },
+
+    {
+      "type": "shell",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/cleanup-packer.sh",
+        "../../scripts/cleanup-scrub.sh"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "{{user `output_dir`}}/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box"
+    }
+  ]
+
+}

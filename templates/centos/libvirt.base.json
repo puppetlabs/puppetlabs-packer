@@ -2,18 +2,47 @@
 
   "variables":
   {
-    "provisioner": "vmware"
+    "provisioner": "libvirt",
+
+    "template_name": null,
+    "iso_url": null,
+    "iso_checksum": null,
+    "iso_checksum_type": null,
+    "puppet_aio": null,
+
+    "kickstart_file": null,
+    "boot_wait": null,
+    "disk_size": null,
+    "ssh_username": null,
+    "ssh_password": null,
+    "ssh_port": null,
+    "ssh_wait_timeout": null,
+    "shutdown_command": null,
+    "net_device": null,
+    "disk_interface": null,
+    "memory_size": null,
+    "cpu_count": null,
+
+    "required_modules": null
   },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "type": "vmware-iso",
-      "headless": "{{ user `headless`}}",
-      "boot_command": "{{ user `boot_command`}}",
-      "boot_wait": "{user `boot_wait`}}",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "format": "qcow2",
+      "net_device": "virtio-net-pci",
+      "disk_interface": "virtio-scsi",
+      "headless": "{{ user `headless`}}", 
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `kickstart_file`}} <wait>",
+        "<enter>"
+      ],
+      "boot_wait": "{{user `boot_wait`}}",
       "disk_size": "{{user `disk_size`}}",
-      "guest_os_type": "{{user `template_os`}}",
       "http_directory": "files",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -23,14 +52,17 @@
       "ssh_port": "{{user `ssh_port`}}",
       "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
       "shutdown_command": "{{user `shutdown_command`}}",
-      "tools_upload_flavor": "linux",
-      "vmx_data": {
-        "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "cpuid.coresPerSocket": "1"
-      }
-    }
+      "qemuargs": [
+        [ "-m", "{{user `memory_size`}}" ],
+        [ "-smp",
+          "cpus={{user `cpu_count`}},",
+          "cores=1",
+          ""
+        ]
+      ]
+}
   ],
+
   "provisioners": [
     {
       "type": "shell",
@@ -41,7 +73,7 @@
       ],
       "scripts": [
         "../../scripts/bootstrap-aio.sh"
-                                                                        ]
+      ]
     },
 
     {
@@ -67,4 +99,5 @@
       ]
     }
   ]
+
 }
