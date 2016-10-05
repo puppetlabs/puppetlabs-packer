@@ -34,7 +34,7 @@
       "format": "qcow2",
       "net_device": "virtio-net-pci",
       "disk_interface": "virtio-scsi",
-      "headless": "{{ user `headless`}}", 
+      "headless": "{{user `headless`}}", 
       "boot_command": [
         "<tab> <wait>",
         "text <wait>",
