@@ -2,7 +2,7 @@
 
   "variables":
   {
-    "outputdir": "/opt/output",
+    "output_dir": "/opt/output",
     "provisioner": "libvirt",
     "headless": "true",
 
@@ -27,13 +27,13 @@
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-vagrant-puppet",
       "type": "qemu",
       "accelerator": "kvm",
       "format": "qcow2",
-      "net_device": "{{ user `net_device`}}",
-      "disk_interface": "{{user `disk_interface}}",
-      "headless": "{{ user `headless`}}", 
+      "net_device": "{{user `net_device`}}",
+      "disk_interface": "{{user `disk_interface`}}",
+      "headless": "{{user `headless`}}", 
       "boot_wait": "{{user `boot_wait`}}",
       "disk_size": "{{user `disk_size`}}",
       "http_directory": "files",

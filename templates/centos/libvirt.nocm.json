@@ -33,7 +33,7 @@
       "format": "qcow2",
       "net_device": "{{user `net_device`}}",
       "disk_interface": "{{user `disk_interface`}}",
-      "headless": "{{ user `headless`}}", 
+      "headless": "{{user `headless`}}", 
       "boot_wait": "{{user `boot_wait`}}",
       "disk_size": "{{user `disk_size`}}",
       "http_directory": "files",
