@@ -11,6 +11,9 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
+# One off registry fix for background which isn't copied correctly from Default User profile
+reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
+
 # First things first - resync time to make sure we aren't using ESX/VMware time (RE-8033)
 Write-Host "Resyncing Time"
 w32tm /resync

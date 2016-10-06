@@ -151,6 +151,11 @@
       "destination": "C:\\Packer\\Init"
     },
     {
+      "type": "file",
+      "source": "./files/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
+    },
+    {
       "type": "powershell",
       "inline": [
         "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
