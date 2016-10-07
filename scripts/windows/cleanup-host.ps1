@@ -33,6 +33,9 @@ if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { Remov
 if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyToolsRoot" }
 [System.Environment]::SetEnvironmentVariable("ChocolateyBinRoot", $null, 'User')
 [System.Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", $null, 'User')
+# Stray key that also needs removed to clean Chocolatey
+reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "ChocolateyInstall" /f
+
 
 # Clean up files
 Write-Host "Clearing Files"
