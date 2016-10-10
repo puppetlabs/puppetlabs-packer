@@ -63,6 +63,7 @@
         "ethernet0.virtualdev" : "vmxnet3",
         "scsi0.virtualdev": "lsisas1068",
         "virtualHW.version": "10",
+        "devices.hotplug": "false",
 
         "vcpu.hotadd": "TRUE",
         "mem.hotadd": "TRUE",
@@ -149,6 +150,11 @@
       "type": "file",
       "source": "../../scripts/windows/init",
       "destination": "C:\\Packer\\Init"
+    },
+    {
+      "type": "file",
+      "source": "./files/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {
       "type": "powershell",

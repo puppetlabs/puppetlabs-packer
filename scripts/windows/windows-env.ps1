@@ -61,7 +61,6 @@ param (
 # As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
 
 Function Set-UserKey($key,$valuename,$reg_type,$data) {
-  Write-Host "Setting user registry entry: $key\$valuename"
-  reg.exe ADD "HKCU\$key" /v "$valuename" /t $reg_type /d $data /f
+  Write-Host "Setting Default User registry entry: $key\$valuename"
   reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
 }
