@@ -1,0 +1,132 @@
+{
+  "variables": {
+    "template_name" : "windows-2012r2-x86_64",
+    "provisioner"   : "virtualbox",
+    "headless"      : "true",
+    "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "packer_sha"    : "{{env `PACKER_SHA`}}"
+  },
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox with Vagrant",
+  "builders": [
+    {
+      "type"                : "virtualbox-ovf",
+      "name"                : "puppet",
+      "source_path"         : "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "headless"            : "{{user `headless`}}",
+      "communicator"        : "winrm",
+      "winrm_username"      : "Administrator",
+      "winrm_password"      : "PackerAdmin",
+      "winrm_timeout"       : "16h",
+      "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout"    : "1h",
+      "guest_additions_mode": "attach",
+      "floppy_files": [
+        "../../scripts/windows/cleanup-host.ps1",
+        "../../scripts/windows/install-win-packages.ps1",
+        "../../scripts/windows/install-cygwin.ps1",
+        "../../scripts/windows/cygwin-packages",
+        "../../scripts/windows/authorized_keys",
+        "../../scripts/windows/puppet-configure.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
+        "files/config-vmware-vsphere-cygwin.ps1"
+      ],
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","2048"],
+        ["modifyvm","{{.Name}}","--cpus","2"]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "md -Path C:\\Packer\\puppet\\modules",
+        "md -Path C:\\Packer\\Downloads",
+        "md -Path C:\\Packer\\Downloads\\Cygwin",
+        "md -Path C:\\Packer\\Init",
+        "md -Path C:\\Packer\\Logs",
+        "md -Path C:\\Packer\\Sysinternals"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-win-packages.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-cygwin.ps1"
+      ],
+      "environment_vars": [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../manifests/windows",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "files/win-2012r2-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2012r2-x86_64-std.pp"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\config-vmware-vsphere-cygwin.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/windows/init",
+      "destination": "C:\\Packer\\Init"
+    },
+    {
+      "type": "file",
+      "source": "./files/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
+      ]
+    }
+  ],
+  "post-processors": [{
+    "type"                : "vagrant",
+    "compression_level"   : 9,
+    "keep_input_artifact" : true,
+    "output"              : "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box",
+    "vagrantfile_template": "./files/vagrantfile-windows2012r2.template"
+  }]
+}
