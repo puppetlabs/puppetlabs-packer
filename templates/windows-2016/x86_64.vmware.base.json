@@ -1,11 +1,11 @@
 {
   "variables": {
-    "template_name": "windows-2016rtm-x86_64",
+    "template_name": "windows-2016-x86_64",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/win-2016-14393.0.160808-1702.RS1_Release_srvmedia_SERVER_OEMRET_X64FRE_EN-US.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2016_x64_dvd_9327751_Slip_01.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "66c61d1dfa0b09b2ffdd8c3638f06f11",
+    "iso_checksum": "0abed3337eb4773fa2a3efc6701e370b",
     "headless": "true",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
