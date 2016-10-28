@@ -18,6 +18,9 @@ Write-BoxstarterMessage "Enable Remote-Desktop"
 Enable-RemoteDesktop
 netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
+# Enable .Net 3.5 (needed for Puppet csc compiles)
+DISM /Online /Enable-Feature /FeatureName:NetFx3
+
 # Install .Net Framework 4.5.2
 Write-BoxstarterMessage "Installing .Net 4.5"
 choco install dotnet4.5 -y
@@ -64,6 +67,7 @@ Write-BoxstarterMessage "WinRM Settings"
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 Write-BoxstarterMessage "WinRM setup complete"
 
 # Re-Enable AutoAdminLogon

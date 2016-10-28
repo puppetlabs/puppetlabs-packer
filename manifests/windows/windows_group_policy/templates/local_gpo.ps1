@@ -14,10 +14,15 @@ $PolicyValueType = '<%= @type %>'
 
 $vp = $VerbosePreference
 $VerbosePreference = 'SilentlyContinue'
-# To import on PowerShell v3, you can use this command:
-Add-Type -Language CSharp -TypeDefinition $PolFileEditorCS -ErrorAction Stop
-# To make it work on PowerShell v2, use this command instead:
-# Add-Type -Language CSharpVersion3 -TypeDefinition $PolFileEditorCS -ErrorAction Stop
+
+if ($psversiontable.psversion.major -eq 2) {
+  # To make it work on PowerShell v2, use this command instead:
+  Add-Type -Language CSharpVersion3 -TypeDefinition $PolFileEditorCS -ErrorAction Stop
+}
+else {
+  # To import on PowerShell v3, you can use this command:
+  Add-Type -Language CSharp -TypeDefinition $PolFileEditorCS -ErrorAction Stop
+}
 $VerbosePreference = $vp
 
 function Compare-PolicyValueIsSameAs($objPolicyEntry,$value) {
@@ -50,7 +55,7 @@ function Set-PolicySetting($objPolicy) {
   Write-Verbose "Saving the registry pol file"
   $objPolicy.SaveFile() | Out-Null
 
-  return Invoke-IncrementGPTVersion 
+  return Invoke-IncrementGPTVersion
 }
 
 function Open-PolicyFile([string]$policyFilePath = '', [bool]$createIfNotExist = $true) {
