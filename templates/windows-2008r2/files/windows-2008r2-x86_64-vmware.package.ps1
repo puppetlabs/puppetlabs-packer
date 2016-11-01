@@ -18,13 +18,36 @@ Write-BoxstarterMessage "Enable Remote-Desktop"
 Enable-RemoteDesktop
 netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
-# Enable .Net 3.5 (needed for Puppet csc compiles)
-DISM /Online /Enable-Feature /FeatureName:NetFx3
 
-# Install .Net Framework 4.5.2
-Write-BoxstarterMessage "Installing .Net 4.5"
-choco install dotnet4.5 -y
-if (Test-PendingReboot) { Invoke-Reboot }
+if (-not (Test-Path "A:\NET35.installed"))
+{
+  # Enable .Net 3.5 (needed for Puppet csc compiles) and other features
+  Write-BoxstarterMessage "Enable .Net 3.5"
+  DISM /Online /Enable-Feature /FeatureName:NetFx3
+  Write-BoxstarterMessage "Enable Desktop-Experience"
+  dism /online /enable-feature /FeatureName:DesktopExperience /featurename:InkSupport /norestart
+  Touch-File "A:\NET35.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
+
+if (-not (Test-Path "A:\KB2852386.installed"))
+{
+  # Install the WinSxS cleanup patch
+  Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
+  Download-File http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu  $ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu
+  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu /quiet /norestart"
+  Touch-File "A:\KB2852386.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
+
+if (-not (Test-Path "A:\NET45.installed"))
+{
+  # Install .Net Framework 4.5.2
+  Write-BoxstarterMessage "Installing .Net 4.5"
+  choco install dotnet4.5 -y
+  Touch-File "A:\NET45.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
 
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
