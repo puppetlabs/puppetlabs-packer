@@ -81,3 +81,6 @@ Set-UserKey 'Software\Sysinternals\PsSuspend'        'EulaAccepted'       'REG_D
 Set-UserKey 'Software\Sysinternals\PsTools'          'EulaAccepted'       'REG_DWORD' 1
 
 reg.exe unload HKLM\DEFUSER
+
+# Sleep to let console log catch up (and get captured by packer)
+Start-Sleep -Seconds 20

@@ -36,8 +36,11 @@ if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { R
 # Stray key that also needs removed to clean Chocolatey
 reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "ChocolateyInstall" /f
 
+# Run Cleanmgr again.
+Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
+Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 
-# Clean up files
+# Clean up files (including those not addressed by cleanmgr)
 Write-Host "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\Nuget",
@@ -59,11 +62,6 @@ Write-Host "Clearing Files"
         }
     }
 
-# Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
-$pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
-Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
-
 # Clearing Logs
 Write-Host "Clearing Logs"
 wevtutil clear-log Application
@@ -80,6 +78,10 @@ $sizemax = $size.SizeMax
 Write-Host "Setting Drive C partition size to $sizemax"
 Resize-Partition -DriveLetter C -Size $sizemax
 
+
+# Remove the pagefile
+Write-Host "Removing page file.  Recreates on next boot"
+reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
