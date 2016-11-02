@@ -72,12 +72,29 @@ wevtutil clear-log System
 # TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
 # extra space released by the delete commands above.
 
-# Extend C: partition to full extend - this is predicated on the
-$size = (Get-PartitionSupportedSize -DriveLetter C)
-$sizemax = $size.SizeMax
-Write-Host "Setting Drive C partition size to $sizemax"
-Resize-Partition -DriveLetter C -Size $sizemax
+# Extend C: partition to full extend - this is predicated on the existance of PS call.
+# So Powershell Version 2 and earlier must resort to diskpart.
 
+if ($psversiontable.psversion.major -gt 2) {
+  $size = (Get-PartitionSupportedSize -DriveLetter C)
+  $sizemax = $size.SizeMax
+  Write-Host "Setting Drive C partition size to $sizemax"
+  Resize-Partition -DriveLetter C -Size $sizemax
+}
+else {
+  Write-Host "Using DiskPart to extend C: drive partition"
+  $diskpartcommands=@"
+list disk
+select disk 0
+list partition
+select partition 3
+extend
+list partition
+exit
+"@
+
+  $diskpartcommands | diskpart
+}
 
 # Remove the pagefile
 Write-Host "Removing page file.  Recreates on next boot"
