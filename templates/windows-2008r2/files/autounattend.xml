@@ -36,7 +36,7 @@
                             <Order>3</Order>
                             <Type>Primary</Type>
                             <Extend>false</Extend>
-                            <Size>32212</Size>
+                            <Size>21475</Size>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>

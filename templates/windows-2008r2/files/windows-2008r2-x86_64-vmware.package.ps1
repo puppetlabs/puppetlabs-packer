@@ -13,27 +13,45 @@ Write-BoxstarterMessage "Disabling Hiberation..."
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
 
-# Enable RDP
-Write-BoxstarterMessage "Enable Remote-Desktop"
-Enable-RemoteDesktop
-netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
+if (-not (Test-Path "A:\NET35.installed"))
+{
+  # Enable .Net 3.5 (needed for Puppet csc compiles)
+  Write-BoxstarterMessage "Enable .Net 3.5"
+  DISM /Online /Enable-Feature /FeatureName:NetFx3
+  # And add desktop experience for cleanmgr
+  Write-BoxstarterMessage "Enable Desktop-Experience"
+  dism /online /enable-feature /FeatureName:DesktopExperience /featurename:InkSupport /norestart
+  Touch-File "A:\NET35.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
 
-# Enable .Net 3.5 (needed for Puppet csc compiles)
-DISM /Online /Enable-Feature /FeatureName:NetFx3
+if (-not (Test-Path "A:\KB2852386.installed"))
+{
+  # Install the WinSxS cleanup patch
+  Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
+  Download-File http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu  $ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu
+  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu /quiet /norestart"
+  Touch-File "A:\KB2852386.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
 
-# Install .Net Framework 4.5.2
-Write-BoxstarterMessage "Installing .Net 4.5"
-choco install dotnet4.5 -y
-if (Test-PendingReboot) { Invoke-Reboot }
+if (-not (Test-Path "A:\NET45.installed"))
+{
+  # Install .Net Framework 4.5.2
+  Write-BoxstarterMessage "Installing .Net 4.5"
+  choco install dotnet4.5 -y
+  Touch-File "A:\NET45.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
 
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
 
-# Remove the pagefile
-Write-BoxstarterMessage "Removing page file.  Recreates on next boot"
-$pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
-Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
+# Enable RDP
+Write-BoxstarterMessage "Enable Remote Desktop"
+Enable-RemoteDesktop
+netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
 # Add WinRM Firewall Rule
 Write-BoxstarterMessage "Adding Firewall rules for win-rm"
@@ -69,11 +87,5 @@ winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 Write-BoxstarterMessage "WinRM setup complete"
-
-# Re-Enable AutoAdminLogon
-$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
-Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "PackerAdmin" -ErrorAction SilentlyContinue
 
 # End

@@ -14,10 +14,8 @@ Set-Service "lmhosts" -StartupType Disabled
 Set-Service "netbt" -StartupType Disabled
 Set-Service "VMUSBArbService" -StartupType Disabled  -ErrorAction SilentlyContinue
 
-# Re-Enable AutoAdminLogon
-$WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
-Set-ItemProperty -Path $WinlogonPath -Name AutoAdminLogon -Value "1" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultUserName -Value "Administrator" -ErrorAction SilentlyContinue
-Set-ItemProperty -Path $WinlogonPath -Name DefaultPassword -Value "PackerAdmin" -ErrorAction SilentlyContinue
+# Remove the pagefile
+Write-Host "Removing page file.  Recreates on next boot"
+reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # End

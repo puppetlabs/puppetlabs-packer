@@ -3,7 +3,7 @@
     "template_name": "windows-2012r2-x86_64",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "78bff6565f178ed08ab534397fe44845",
     "headless": "true",
@@ -43,6 +43,7 @@
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/clean-disk-dism.ps1",
+        "../../scripts/windows/clean-disk-sdelete.ps1",
         "files/generalize-packer.autounattend.xml",
         "files/{{build_name}}.package.ps1"
       ],
@@ -90,6 +91,15 @@
       "type": "powershell",
       "inline": [
         "A:\\clean-disk-dism.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\clean-disk-sdelete.ps1"
       ]
     }
   ]

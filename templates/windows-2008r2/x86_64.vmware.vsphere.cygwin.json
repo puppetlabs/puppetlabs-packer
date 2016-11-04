@@ -140,7 +140,7 @@
     {
       "type": "powershell",
       "inline": [
-        "exit 0"
+        "A:\\cleanup-host.ps1"
       ]
     },
     {
