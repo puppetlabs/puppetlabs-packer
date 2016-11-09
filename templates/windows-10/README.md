@@ -2,7 +2,7 @@
 
 ### About
 
-This is the Windows 2016 Packer Template
+This is the Windows 10 Packer Template
 
 ### VM settings
 

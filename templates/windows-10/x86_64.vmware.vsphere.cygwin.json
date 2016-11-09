@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-2016-x86_64",
+    "template_name": "windows-10-x86_64",
     "version": "0.0.1",
 
     "provisioner": "vmware",
@@ -19,7 +19,7 @@
     "packer_sha": "{{env `PACKER_SHA`}}"
   },
 
-  "description": "Builds a Windows Server 2016 Technical Preview 5 template VM for use in VMware",
+  "description": "Builds a Windows 10 (Anniversary Edition) template VM for use in VMware",
 
   "builders": [
     {
@@ -115,8 +115,8 @@
     },
     {
       "type": "file",
-      "source": "files/win-2016-x86_64-std.pp",
-      "destination": "C:\\Packer\\puppet\\win-2016-x86_64-std.pp"
+      "source": "files/win-10-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-10-x86_64-std.pp"
     },
     {
       "type": "powershell",
@@ -160,21 +160,6 @@
       "inline": [
         "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
       ]
-    }
-  ],
-  "post-processors": [
-    {
-      "type": "vsphere",
-      "host": "{{user `packer_vcenter_host`}}",
-      "username": "{{user `packer_vcenter_username`}}",
-      "password": "{{user `packer_vcenter_password`}}",
-      "datacenter": "{{user `packer_vcenter_dc`}}",
-      "cluster": "{{user `packer_vcenter_cluster`}}",
-      "datastore": "{{user `packer_vcenter_datastore`}}",
-      "vm_folder": "{{user `packer_vcenter_folder`}}",
-      "vm_name": "{{user `template_name`}}-{{user `version`}}",
-      "vm_network": "{{user `packer_vcenter_net`}}",
-      "insecure" : "{{user `packer_vcenter_insecure`}}"
     }
   ]
 }
