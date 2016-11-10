@@ -7,7 +7,8 @@
     "iso_checksum_type": "md5",
     "iso_checksum": "ce996fb7136d55314747c5cef2602b27",
     "headless": "true",
-    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
+    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
 
   "description": "Builds a Windows Server 8.1 Enterprise template VM for use in VMware",
@@ -23,6 +24,8 @@
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
+      "output_directory": "{{user `vmware_output_dir`}}/output-{{build_name}}",
+
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
