@@ -54,25 +54,6 @@ reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCache
 Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
 Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 
-# Delete temp files etc not dealt with by cleanmgr
-Write-Host "Clearing Files"
-@(
-    "$ENV:LOCALAPPDATA\temp\*",
-    "$ENV:WINDIR\logs",
-    "$ENV:WINDIR\temp\*",
-    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportArchive",
-    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
-    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
-    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue"
-) | % {
-        if(Test-Path $_) {
-            Write-Host "Removing $_"
-            Takeown /d Y /R /f $_
-            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
-            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-        }
-    }
-
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 $SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
 
@@ -80,12 +61,6 @@ Write-Host "Cleaning Complete"
 Write-Host "Starting Free Space $SpaceAtStart GB"
 Write-Host "Current Free Space $SpaceAtEnd GB"
 Write-Host "Reclaimed $SpaceReclaimed GB"
-
-
-
-# Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
-reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20

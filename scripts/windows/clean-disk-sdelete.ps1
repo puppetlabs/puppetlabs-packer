@@ -2,16 +2,38 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
+# This is using a revised Disk Zero script instead of sdelete.
+# Script obtained and modified from: http://www.hurryupandwait.io/blog/how-can-we-most-optimally-shrink-a-windows-base-image
 
-# Zeroing cleaned disk space
-Write-Host "Zeroing cleaned disk space using sdelete"
-choco install sdelete --yes --force
-if ($ARCH -eq 'x86') {
-  $Sdelete = "sdelete"
-} else {
-  $Sdelete = "sdelete64"
+Write-Host "Cleaning Temp Files"
+try {
+  Takeown /d Y /R /f "C:\Windows\Temp\*"
+  Icacls "C:\Windows\Temp\*" /GRANT:r administrators:F /T /c /q  2>&1
+  Remove-Item "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+} catch { }
+
+Write-Host "Wiping empty space on disk..."
+$FilePath="c:\zero.tmp"
+$Volume = Get-WmiObject win32_logicaldisk -filter "DeviceID='C:'"
+$ArraySize= 64kb
+$SpaceToLeave= $Volume.Size * 0.02
+$FileSize= $Volume.FreeSpace - $SpacetoLeave
+$ZeroArray= new-object byte[]($ArraySize)
+
+$Stream= [io.File]::OpenWrite($FilePath)
+try {
+   $CurFileSize = 0
+    while($CurFileSize -lt $FileSize) {
+        $Stream.Write($ZeroArray,0, $ZeroArray.Length)
+        $CurFileSize +=$ZeroArray.Length
+    }
 }
-& $Sdelete -z -accepteula c:
+finally {
+    if($Stream) {
+        $Stream.Close()
+    }
+}
+Remove-Item $FilePath -Force -ErrorAction SilentlyContinue
 
 # Remove the pagefile
 Write-Host "Removing page file.  Recreates on next boot"
