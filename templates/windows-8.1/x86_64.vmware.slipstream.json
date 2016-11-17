@@ -1,17 +1,17 @@
 {
   "variables": {
-    "template_name": "windows-2008r2-x86_64",
+    "template_name": "windows-8.1-x86_64",
+    "os_name" : "Win-8.1",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_01.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_8.1_enterprise_with_update_x64_dvd_6054382.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "1d1941c6d90389ba28c2068ac0d5b6ba",
-    "headless": "true",
-    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
-    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+    "iso_checksum": "115d7c4203417e52c09d16b50043b10d",
+    "headless": "false",
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
-  "description": "Builds a Windows Server 2008R2 template VM for use in VMware",
+  "description": "Customised Win-8.1 build to prepare slipstream ISO",
 
   "_comment": [
       "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
@@ -24,8 +24,6 @@
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
-      "output_directory": "{{user `vmware_output_dir`}}/output-{{build_name}}",
-
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
@@ -36,7 +34,7 @@
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
-      "disk_size": 61440,
+      "disk_size": 30720,
       "disk_type_id": "0",
       "floppy_files": [
         "files/autounattend.xml",
@@ -45,13 +43,13 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "../../scripts/windows/clean-disk-dism.ps1",
-        "../../scripts/windows/clean-disk-sdelete.ps1",
+        "../../scripts/windows/generate-slipstream.ps1",
+        "files/slipstream-filter",
         "files/generalize-packer.autounattend.xml",
-        "files/{{build_name}}.package.ps1"
+        "../../scripts/windows/slipstream.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
       "boot_wait": "1s",
 
       "vmx_data": {
@@ -93,17 +91,9 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\clean-disk-dism.ps1"
-      ]
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "inline": [
-        "A:\\clean-disk-sdelete.ps1"
-      ]
+        "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `os_name`}} -ImageIndex 1"
+      ],
+      "valid_exit_codes": [0,1]
     }
   ]
 }

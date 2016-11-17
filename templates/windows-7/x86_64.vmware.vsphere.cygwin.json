@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-2008r2-x86_64",
+    "template_name": "windows-7-x86_64",
     "version": "0.0.1",
 
     "provisioner": "vmware",
@@ -20,7 +20,7 @@
     "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
 
-  "description": "Builds a Windows Server 2012 template VM for use in VMware",
+  "description": "Builds a Windows 7 template VM for use in VMware",
 
   "builders": [
     {
@@ -57,7 +57,6 @@
 
       "vmx_data": {
         "gui.fitguestusingnativedisplayresolution": "FALSE",
-        "annotation": "{{user `template_name`}}-{{user `version`}} built {{isotime}}",
 
         "firmware": "efi",
         "memsize": "4096",
@@ -118,8 +117,8 @@
     },
     {
       "type": "file",
-      "source": "files/win-2008r2-x86_64-std.pp",
-      "destination": "C:\\Packer\\puppet\\win-2008r2-x86_64-std.pp"
+      "source": "files/win-7-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-7-x86_64-std.pp"
     },
     {
       "type": "powershell",

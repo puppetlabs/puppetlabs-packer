@@ -1,17 +1,17 @@
 {
   "variables": {
-    "template_name": "windows-2008r2-x86_64",
+    "template_name": "windows-8.1-x86_64",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_01.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_8.1_enterprise_with_update_x64_dvd_6054382_SlipStream_01.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "1d1941c6d90389ba28c2068ac0d5b6ba",
+    "iso_checksum": "ce996fb7136d55314747c5cef2602b27",
     "headless": "true",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
 
-  "description": "Builds a Windows Server 2008R2 template VM for use in VMware",
+  "description": "Builds a Windows Server 8.1 Enterprise template VM for use in VMware",
 
   "_comment": [
       "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
@@ -51,7 +51,7 @@
         "files/{{build_name}}.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
       "boot_wait": "1s",
 
       "vmx_data": {
