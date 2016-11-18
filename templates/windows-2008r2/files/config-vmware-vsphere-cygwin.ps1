@@ -112,4 +112,7 @@ secedit /configure /db secedit.sdb /cfg A:\Low-SecurityPasswordPolicy.inf /quiet
 netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 
+# Re-Enable AutoAdminLogon
+autologon -AcceptEula Administrator . PackerAdmin
+
 # End
