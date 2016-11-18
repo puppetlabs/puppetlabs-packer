@@ -118,3 +118,8 @@ netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow ena
 
 # Re-Enable AutoAdminLogon
 autologon -AcceptEula Administrator . PackerAdmin
+
+# Re-Enable AutoAdminLogon
+autologon -AcceptEula Administrator . PackerAdmin
+
+# End
