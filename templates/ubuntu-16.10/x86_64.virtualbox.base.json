@@ -6,7 +6,7 @@
       "template_os": "Ubuntu_64",
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.10-server-amd64.iso",
-      "iso_checksum": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
+      "iso_checksum": "72b0d421da77f1e0c549b4efe6fc6c184e9909d6792f0d1e59b56d63e9705659",
       "iso_checksum_type": "sha256",
 
       "headless": "",

@@ -6,7 +6,7 @@
       "template_os": "Ubuntu",
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.10-server-i386.iso",
-      "iso_checksum": "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
+      "iso_checksum": "0e52cc7c7c4cc9e91f4e984c1232192394c6caf8e7170c1aeefb37bdef1f0625",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
