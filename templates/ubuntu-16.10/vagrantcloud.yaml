@@ -1,0 +1,16 @@
+---
+name: 'ubuntu-16.10'
+description: 'Ubuntu 16.10 (yakkety)'
+version: '1.0.0'
+
+arches:
+  - name: '32'
+    description: '32-bit (i386)'
+  - name: '64'
+    description: '64-bit (amd64/x86_64)'
+
+configs:
+  - name: 'nocm'
+    description: 'no configuration management software'
+  - name: 'puppet'
+    description: 'Puppet 4.5.1'
