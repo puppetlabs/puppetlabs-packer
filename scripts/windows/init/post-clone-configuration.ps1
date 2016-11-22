@@ -90,8 +90,16 @@ try {
 	Write-Warning "Disable Power Management failed"
 }
 
-# Rename this machine to that of the VM name in vSphere
-Write-Host "Renaming Host to $NewVMName"
-Rename-Computer -Newname $NewVMName -Restart
 
+# Rename this machine to that of the VM name in vSphere
+# Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
+Write-Host "Renaming Host to $NewVMName"
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+if ($WindowsVersion -eq '6.1.7601' -or $WindowsVersion -eq '6.0.6002') {
+	$(gwmi win32_computersystem).Rename("$NewVMName")
+	shutdown /t 0 /r /f
+}
+else {
+	Rename-Computer -Newname $NewVMName -Restart
+}
 ExitScript 0
