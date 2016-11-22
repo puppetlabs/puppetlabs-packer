@@ -3,11 +3,11 @@
   "variables":
     {
       "template_name": "ubuntu-16.10-i386",
-      "version": "0.0.3",
+      "version": "1.1.0",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}",
+      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.8.0-1xenial_i386.deb",
       "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
       "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
       "packer_vcenter_username": "{{env `PACKER_VCENTER_USERNAME`}}",
@@ -19,7 +19,6 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
-      "headless": "",
       "memory_size": "2048",
       "cpu_count": "2"
 
@@ -30,7 +29,7 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-nocm",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "headless": "{{user `headless`}}",
+      "headless": true,
       "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
       "ssh_password": "puppet",
@@ -43,7 +42,8 @@
       "vmx_data_post": {
         "memsize": "{{user `memory_size`}}",
         "numvcpus": "{{user `cpu_count`}}",
-        "cpuid.coresPerSocket": "1"
+        "cpuid.coresPerSocket": "1",
+        "ethernet0.virtualDev": "vmxnet3"
       }
     }
   ],
@@ -51,13 +51,13 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
@@ -69,7 +69,7 @@
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}",
         "qa_root_passwd": "{{user `qa_root_passwd`}}"
@@ -82,10 +82,10 @@
       "type": "shell",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh",
         "../../scripts/cleanup-scrub.sh"
       ]
