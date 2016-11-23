@@ -1,12 +1,13 @@
 {
   "variables": {
     "template_name": "windows-10-x86_64",
+    "os_name" : "Win-10",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_10_enterprise_version_1607_updated_jul_2016_x64_dvd_9054264_SlipStream_02.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_10_enterprise_version_1607_updated_jul_2016_x64_dvd_9054264.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "14cf73d5070bc2fa8c75c636ea69a47e",
-    "headless": "true",
+    "iso_checksum": "06fc1188353f10b007c1e4a8f08b36b6",
+    "headless": "false",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
@@ -45,10 +46,10 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "../../scripts/windows/clean-disk-dism.ps1",
-        "../../scripts/windows/clean-disk-sdelete.ps1",
+        "../../scripts/windows/generate-slipstream.ps1",
+        "files/slipstream-filter",
         "files/generalize-packer.autounattend.xml",
-        "files/{{build_name}}.package.ps1"
+        "files/windows-10-slipstream.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
@@ -93,8 +94,9 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\clean-disk-sdelete.ps1"
-      ]
+        "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `os_name`}} -ImageIndex 1 -PatchSearch *.msu"
+      ],
+      "valid_exit_codes": [0,1]
     }
   ]
 }
