@@ -33,8 +33,14 @@ if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { Remov
 if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyToolsRoot" }
 [System.Environment]::SetEnvironmentVariable("ChocolateyBinRoot", $null, 'User')
 [System.Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", $null, 'User')
+# Stray key that also needs removed to clean Chocolatey
+reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "ChocolateyInstall" /f
 
-# Clean up files
+# Run Cleanmgr again.
+Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
+Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
+
+# Clean up files (including those not addressed by cleanmgr)
 Write-Host "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\Nuget",
@@ -56,11 +62,6 @@ Write-Host "Clearing Files"
         }
     }
 
-# Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
-$pageFileMemoryKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
-Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
-
 # Clearing Logs
 Write-Host "Clearing Logs"
 wevtutil clear-log Application
@@ -71,12 +72,33 @@ wevtutil clear-log System
 # TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
 # extra space released by the delete commands above.
 
-# Extend C: partition to full extend - this is predicated on the
-$size = (Get-PartitionSupportedSize -DriveLetter C)
-$sizemax = $size.SizeMax
-Write-Host "Setting Drive C partition size to $sizemax"
-Resize-Partition -DriveLetter C -Size $sizemax
+# Extend C: partition to full extend - this is predicated on the existance of PS call.
+# So Powershell Version 2 and earlier must resort to diskpart.
 
+if ($psversiontable.psversion.major -gt 2) {
+  $size = (Get-PartitionSupportedSize -DriveLetter C)
+  $sizemax = $size.SizeMax
+  Write-Host "Setting Drive C partition size to $sizemax"
+  Resize-Partition -DriveLetter C -Size $sizemax
+}
+else {
+  Write-Host "Using DiskPart to extend C: drive partition"
+  $diskpartcommands=@"
+list disk
+select disk 0
+list partition
+select partition 3
+extend
+list partition
+exit
+"@
+
+  $diskpartcommands | diskpart
+}
+
+# Remove the pagefile
+Write-Host "Removing page file.  Recreates on next boot"
+reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20

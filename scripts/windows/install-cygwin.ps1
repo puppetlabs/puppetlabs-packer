@@ -61,5 +61,8 @@ $ostring = "-o" + $CygwinDownloads
                --local-package-dir $CygwinDownloads\packages
 
 
+# Sleep to let console log catch up (and get captured by packer)
+Start-Sleep -Seconds 20
+
 exit 0
 # end

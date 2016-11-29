@@ -4,3 +4,4 @@ output-*
 hiera/*
 drivers/
 *serial.out
+packer
