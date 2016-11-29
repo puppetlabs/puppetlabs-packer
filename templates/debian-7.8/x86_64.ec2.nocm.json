@@ -47,7 +47,7 @@
       "type": "shell",
       "execute_command": "chmod +x {{ .Path }} && {{ .Vars }} {{ .Path }} {{user `required_modules`}}",
       "environment_vars": [
-        "PE_URL={{user `pe_url`}}"
+        "PE_URL={{user `pe_url`}}",
         "PE_AGENT={{user `pe_agent`}}"
       ],
       "scripts": [

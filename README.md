@@ -13,6 +13,13 @@ This repository contains the [Packer](http://packer.io) and [Puppet](http://pupp
 
 Confluence Documentation is available for the [Windows/Packer Imaging Process](https://confluence.puppetlabs.com/display/QE/Packer+Generation+of+Windows+Templates+for+VMPooler)
 
+## Tests
+
+Some very basic linting has been added to ensure files parse properly through packer. To run these tests do:
+
+  `make test`
+
 ### Issues
 
 Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/browse/CPR).
+
