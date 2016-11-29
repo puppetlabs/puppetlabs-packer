@@ -24,6 +24,12 @@ if ($ENV:PROCESSOR_ARCHITECTURE -eq 'x86') {
   $ARCH = 'x86_64'
 }
 
+# Cleanmgr Registry "SageSet" Value - setting this to "random" value and associated constants
+$CleanMgrSageSet = "5462"
+Set-Variable -Name CleanMgrStateFlags -Value "StateFlags$CleanMgrSageSet" -Option Constant
+Set-Variable -Name CleanMgrStateFlagClean -Value 2 -Option Constant
+Set-Variable -Name CleanMgrStateFlagNoAction -Value 0 -Option Constant
+
 # Function to download the packages we need - used in several scripts.
 
 function Download-File {
@@ -61,7 +67,24 @@ param (
 # As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
 
 Function Set-UserKey($key,$valuename,$reg_type,$data) {
-  Write-Host "Setting user registry entry: $key\$valuename"
-  reg.exe ADD "HKCU\$key" /v "$valuename" /t $reg_type /d $data /f
+  Write-Host "Setting Default User registry entry: $key\$valuename"
   reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
+}
+
+# Copy of Unix Touch command - useful for checkpointing w.r.t. Boxstarter
+Function Touch-File
+{
+    $file = $args[0]
+    if($file -eq $null) {
+        throw "No filename supplied"
+    }
+
+    if(Test-Path $file)
+    {
+        (Get-ChildItem $file).LastWriteTime = Get-Date
+    }
+    else
+    {
+        echo $null > $file
+    }
 }

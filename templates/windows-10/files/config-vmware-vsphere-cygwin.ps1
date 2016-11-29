@@ -13,12 +13,6 @@ Write-Host "Other Stuff......."
 Write-Host "Enable Bootlog"
 cmd /c "bcdedit /set {current} bootlog yes"
 
-# Disable UAC for Windows-2016
-Disable-UAC
-
-# Enable Remote Desktop (with reduce authentication resetting here again)
-Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
-
 #######################################################################################################################
 # Ideally these registry settings would be done through puppet.
 # Unfortunately there is a puppet registry module restriction on manipulating HKCU, so need to use
@@ -124,3 +118,8 @@ netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow ena
 
 # Re-Enable AutoAdminLogon
 autologon -AcceptEula Administrator . PackerAdmin
+
+# Re-Enable AutoAdminLogon
+autologon -AcceptEula Administrator . PackerAdmin
+
+# End

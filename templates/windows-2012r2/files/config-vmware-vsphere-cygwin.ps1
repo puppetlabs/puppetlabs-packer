@@ -13,12 +13,6 @@ Write-Host "Other Stuff......."
 Write-Host "Enable Bootlog"
 cmd /c "bcdedit /set {current} bootlog yes"
 
-#Disable UAC for Windows-2012
-Disable-UAC
-
-# Enable Remote Desktop (with reduce authentication resetting here again)
-Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
-
 #######################################################################################################################
 # Ideally these registry settings would be done through puppet.
 # Unfortunately there is a puppet registry module restriction on manipulating HKCU, so need to use
@@ -119,5 +113,8 @@ winrm set winrm/config/service/auth '@{Basic="true"}'
 # Add permissive Firewall rules (RE-7516) - This is preferred to disabling the firewall
 netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
+
+# Re-Enable AutoAdminLogon
+autologon -AcceptEula Administrator . PackerAdmin
 
 # End
