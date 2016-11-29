@@ -6,3 +6,4 @@ hiera/*
 drivers/
 packer
 .DS_Store
+serial.out
