@@ -3,3 +3,4 @@ output-*
 *.bak
 hiera/*
 drivers/
+*serial.out
