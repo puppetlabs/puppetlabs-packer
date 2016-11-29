@@ -19,7 +19,6 @@ Write-Host "Resyncing Time"
 w32tm /resync
 w32tm /tz
 
-
 # Get VMPooler Guest name
 # This is a bit roundabout, but it allows us to detect of the guestinfo.hostname is available or not
 # Command is: vmtoolsd.exe --cmd "info-get guestinfo.hostname"'
@@ -52,24 +51,26 @@ $CygwinDownloads = $ENV:CYGWINDOWNLOADS
 $AdministratorHome = "$ENV:CYGWINDIR\home\Administrator"
 
 # Set up cygserv Username
+Write-Host "Setting SSH Host Configuration"
 $qa_root_passwd = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
-& $CygWinShell --login -c `'ssh-host-config -y --pwd $qa_root_passwd`'
+& $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd $qa_root_passwd`'
 
 # Generate ssh keys.
+Write-Host "Generate SSH Keys"
 & $CygWinShell --login -c `'rm -rf /home/Administrator/.ssh/id_rsa*`'
 & $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/Administrator/.ssh/id_rsa`'
 
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
+Write-Host "Setup Authorised Keys"
 $CygpCygwinDownloads = $Cygwindownloads.replace("\","/").replace("C:","/cygdrive/c")
 & $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
 & $CygWinShell --login -c `'cat "$CygpCygwinDownloads/authorized_keys" `>`> /home/Administrator/.ssh/authorized_keys`'
 
-
-# Create sshd process and set to Manual startup
+Write-Host "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
 Set-Service "sshd" -StartupType Manual
 
-# Re-enable NetBIOS services
+Write-Host "Re-enable NETBios Services"
 Set-Service "lmhosts" -StartupType Automatic
 Set-Service "netbt" -StartupType Automatic
 
