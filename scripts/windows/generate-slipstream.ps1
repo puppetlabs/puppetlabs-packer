@@ -1,7 +1,8 @@
 # Generates Slipstream ISO from image
 param (
   [string]$OSName = "UNKNOWN",
-  [string]$ImageIndex = "1"
+  [string]$ImageIndex = "1",
+  [string]$PatchSearch = "*.cab"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -61,7 +62,7 @@ foreach ($CabName in $Content)
 
 # Search for all CAB Files in Date Order - exclude express cab files if present as they can't be applied in a DISM command
 
-$Cabs = Get-ChildItem -Path $UpdateDirectory -Recurse -Include *.cab -Exclude *Express*.cab | Sort LastWriteTime
+$Cabs = Get-ChildItem -Path $UpdateDirectory -Recurse -Include "$PatchSearch" -Exclude *Express*.cab | Sort LastWriteTime
 
 Write-Host "Mounting $WinImageFile"
 Set-ItemProperty $WinImageFile -name IsReadOnly -value $false
@@ -86,6 +87,18 @@ ForEach ($Cab in $Cabs) {
 		  Write-Host "***** Update $Cab FAILED *******"
       $Cab.Name | Out-File -FilePath $DismBase\Updates-Failed.log -Append
     }
+}
+
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+if ($WindowsVersion -eq '6.1.7601' ) {
+  # Windows 2008R2/Win-7 - just set registry keys for cleanmgr utility
+  Write-Host "Skipping Cleanup"
+}
+ElseIf ($WindowsVersion -eq '6.2.9200' -or $WindowsVersion -eq '6.0.6002') {
+  # Note /ResetBase option is not available on Windows-2012, so need to screen for this.
+  dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup
+} else {
+  dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup /ResetBase
 }
 
 dism /unmount-wim /mountdir:$MountPoint /commit
