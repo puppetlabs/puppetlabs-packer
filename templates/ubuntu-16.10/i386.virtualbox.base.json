@@ -10,6 +10,7 @@
       "iso_checksum": "0e52cc7c7c4cc9e91f4e984c1232192394c6caf8e7170c1aeefb37bdef1f0625",
       "iso_checksum_type": "sha256",
 
+      "headless": "true",
       "memory_size": "512",
       "cpu_count": "1",
 
