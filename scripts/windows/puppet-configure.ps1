@@ -3,7 +3,8 @@
 #
 param (
   [string]$PackerSHA = "UNKNOWN",
-  [string]$PackerTemplateName = "Windows-UNKNOWN"
+  [string]$PackerTemplateName = "UNKNOWN",
+  [string]$PackerTemplateType = "UNKNOWN"
 )
 
 $ErrorActionPreference = "Stop"
@@ -94,11 +95,12 @@ Write-Host "Loading Default User hive to HKLM\DEFUSER..."
 & reg load HKLM\DEFUSER C:\Users\Default\NTUSER.DAT
 
 # Set "facts" that we need for the Puppet Run.
-$ENV:FACTER_chrome_root     = "$ENV:ProgramFiles `(x86`)\Google\Chrome"
-$ENV:FACTER_modules_path    = "$ModulesPath"
-$ENV:FACTER_build_date      = get-date -format "yyyy-MM-dd HH:mm zzz"
-$ENV:FACTER_packer_sha      = $PackerSHA
-$ENV:FACTER_packer_template = $PackerTemplateName
+$ENV:FACTER_chrome_root          = "$ENV:ProgramFiles `(x86`)\Google\Chrome"
+$ENV:FACTER_modules_path         = "$ModulesPath"
+$ENV:FACTER_build_date           = get-date -format "yyyy-MM-dd HH:mm zzz"
+$ENV:FACTER_packer_sha           = $PackerSHA
+$ENV:FACTER_packer_template_name = $PackerTemplateName
+$ENV:FACTER_packer_template_type = $PackerTemplateType
 
 # Loop through all Manifest Files in A:\ and process them
 # Keep reapplying until no resources are modified, or MaxAttempts is hit

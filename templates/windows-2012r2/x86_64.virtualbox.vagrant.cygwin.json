@@ -4,13 +4,14 @@
     "provisioner"   : "virtualbox",
     "headless"      : "true",
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
-    "packer_sha"    : "{{env `PACKER_SHA`}}"
+    "packer_sha"    : "{{env `PACKER_SHA`}}",
+    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
   "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox with Vagrant",
   "builders": [
     {
       "type"                : "virtualbox-ovf",
-      "name"                : "puppet",
+      "name"                : "{{user `template_name`}}-{{user `provisioner`}}-vagrant-cygwin",
       "source_path"         : "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
       "headless"            : "{{user `headless`}}",
       "communicator"        : "winrm",
@@ -30,7 +31,7 @@
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
-        "files/config-vmware-vsphere-cygwin.ps1"
+        "./files/config-winsettings.ps1"
       ],
       "vboxmanage": [
         ["modifyvm","{{.Name}}","--memory","2048"],
@@ -81,7 +82,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vagrant'"
       ]
     },
     {
@@ -90,7 +91,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\config-vmware-vsphere-cygwin.ps1"
+        "A:\\config-winsettings.ps1"
       ]
     },
     {
@@ -101,9 +102,6 @@
       "inline": [
         "A:\\cleanup-host.ps1"
       ]
-    },
-    {
-      "type": "windows-restart"
     },
     {
       "type": "file",
@@ -118,15 +116,13 @@
     {
       "type": "powershell",
       "inline": [
-        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
+        "C:\\Packer\\Init\\vagrant-arm-host.ps1"
       ]
     }
   ],
-  "post-processors": [{
+    "post-processors": [{
     "type"                : "vagrant",
-    "compression_level"   : 9,
-    "keep_input_artifact" : true,
-    "output"              : "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-puppet.box",
-    "vagrantfile_template": "./files/vagrantfile-windows2012r2.template"
+    "output"              : "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-cygwin.box",
+    "vagrantfile_template": "./files/virtualbox/vagrantfile-windows2012r2.template"
   }]
 }

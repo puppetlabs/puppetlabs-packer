@@ -1,5 +1,6 @@
 packer_cache
 output-*
+output/
 *.bak
 hiera/*
 drivers/

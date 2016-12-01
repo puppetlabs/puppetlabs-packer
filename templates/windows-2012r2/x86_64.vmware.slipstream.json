@@ -37,15 +37,15 @@
       "disk_size": 30720,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/autounattend.xml",
+        "files/vmware/autounattend.xml",
+        "files/vmware/generalize-packer.autounattend.xml",
+        "files/slipstream-filter",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generate-slipstream.ps1",
-        "files/slipstream-filter",
-        "files/generalize-packer.autounattend.xml",
         "../../scripts/windows/slipstream.package.ps1"
       ],
 

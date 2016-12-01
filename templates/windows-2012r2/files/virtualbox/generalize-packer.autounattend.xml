@@ -91,6 +91,16 @@
                         <Group>Administrators</Group>
                         <Name>Administrator</Name>
                     </LocalAccount>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>vagrant</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Group>Administrators</Group>
+                        <Name>vagrant</Name>
+                        <DisplayName>vagrant</DisplayName>
+                        <Description>vagrant user</Description>
+                    </LocalAccount>
                 </LocalAccounts>
                 <AdministratorPassword>
                     <Value>PackerAdmin</Value>
