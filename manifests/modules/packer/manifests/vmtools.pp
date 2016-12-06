@@ -12,6 +12,17 @@ class packer::vmtools inherits packer::vmtools::params {
       }
     }
 
+    redhat: {
+      if $::operatingsystemrelease in ['25'] {
+        package { 'open-vm-tools':
+          ensure => installed,
+        }
+        file { '/mnt/hgfs':
+        ensure => directory,
+        }
+      }
+    }
+
     default: {
       if ( $required_packages != undef ) {
         package { $required_packages:
