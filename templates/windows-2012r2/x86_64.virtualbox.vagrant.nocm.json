@@ -1,0 +1,63 @@
+{
+  "variables": {
+    "template_name"    : "windows-2012r2-x86_64",
+    "provisioner"      : "virtualbox",
+    "iso_url"          : "http://osmirror.delivery.puppetlabs.net/iso/en_windows_server_2012_r2_with_update_x64_dvd_6052708.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum"     : "78bff6565f178ed08ab534397fe44845",
+    "headless"         : "true"
+  },
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox with Vagrant",
+  "builders": [
+    {
+      "name"                : "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name"             : "packer-{{build_name}}",
+      "type"                : "virtualbox-iso",
+      "iso_url"             : "{{user `iso_url`}}",
+      "iso_checksum_type"   : "{{user `iso_checksum_type`}}",
+      "iso_checksum"        : "{{user `iso_checksum`}}",
+      "headless"            : "{{user `headless`}}",
+      "guest_additions_mode": "attach",
+
+      "communicator"  : "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "PackerAdmin",
+      "winrm_timeout" : "16h",
+
+      "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout": "1h",
+      "guest_os_type"   : "Windows2012_64",
+      "disk_size"       : 61440,
+      "floppy_files"    : [
+        "./templates/windows-2012r2/files/autounattend.xml",
+        "./scripts/windows/bootstrap-base.bat",
+        "./scripts/windows/start-boxstarter.ps1",
+        "./scripts/windows/windows-env.ps1",
+        "./scripts/windows/shutdown-packer.bat",
+        "./scripts/windows/generalize-packer.bat",
+        "./scripts/windows/clean-disk-dism.ps1",
+        "./templates/windows-2012r2/files/generalize-packer.autounattend.xml",
+        "./templates/windows-2012r2/files/{{build_name}}.package.ps1"
+      ],
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","2048"],
+        ["modifyvm","{{.Name}}","--cpus","2"]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type"  : "powershell",
+      "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
+    }
+  ],
+  "post-processors": [{
+    "type"                : "vagrant",
+    "compression_level"   : 9,
+    "keep_input_artifact" : false,
+    "output"              : "windows2012r2_{{.Provider}}.box",
+    "vagrantfile_template": "./templates/windows-2012r2/files/vagrantfile-windows2012r2.template"
+  }]
+}

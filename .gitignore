@@ -4,3 +4,4 @@ output-*
 hiera/*
 drivers/
 packer
+.DS_Store
