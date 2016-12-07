@@ -1,0 +1,59 @@
+{
+  "variables": {
+    "provisioner"      : "virtualbox",
+    "template_name"    : "windows-2012r2-x86_64",
+    "template_os"      : "Windows2012_64",
+    "iso_url"          : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_r2_with_update_x64_dvd_6052708_SlipStream_01.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum"     : "5006c404bded89c4f7f24e7df8c6a266",
+    "headless"         : "true",
+    "memory_size"      : "2048",
+    "cpu_count"        : "2",
+    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+  },
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox",
+  "builders": [
+    {
+      "type"                   : "virtualbox-iso",
+      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name"                : "packer-{{build_name}}",
+      "output_directory"       : "{{user `vmware_output_dir`}}/output-{{build_name}}",
+      "iso_url"                : "{{user `iso_url`}}",
+      "iso_checksum_type"      : "{{user `iso_checksum_type`}}",
+      "iso_checksum"           : "{{user `iso_checksum`}}",
+      "headless"               : "{{user `headless`}}",
+      "guest_os_type"          : "{{user `template_os`}}",
+      "guest_additions_mode"   : "attach",
+      "disk_size"              : 61440,
+      "communicator"           : "winrm",
+      "winrm_username"         : "Administrator",
+      "winrm_password"         : "PackerAdmin",
+      "winrm_timeout"          : "16h",
+      "virtualbox_version_file": ".vbox_version",
+      "shutdown_command"       : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout"       : "1h",
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
+        ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"]
+      ],
+      "floppy_files": [
+        "./files/virtualbox/autounattend.xml",
+        "./files/virtualbox/oracle-cert.cer",
+        "./files/virtualbox/generalize-packer.autounattend.xml",
+        "./files/virtualbox/{{build_name}}.package.ps1",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/clean-disk-dism.ps1"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type"  : "powershell",
+      "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
+    }
+  ]
+}

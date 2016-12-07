@@ -123,7 +123,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vmpooler'"
       ]
     },
     {
@@ -160,7 +160,7 @@
     {
       "type": "powershell",
       "inline": [
-        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
+        "C:\\Packer\\Init\\vagrant-arm-host.ps1"
       ]
     }
   ],
