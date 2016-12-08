@@ -3,7 +3,7 @@
   "variables":
     {
       "template_name": "ubuntu-16.10-i386",
-      "version": "1.1.0",
+      "version": "0.0.1",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
@@ -20,7 +20,9 @@
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
       "memory_size": "2048",
-      "cpu_count": "2"
+      "cpu_count": "2",
+
+      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
 
     },
 
@@ -30,7 +32,7 @@
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
       "headless": true,
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "source_path": "{{user `output_directory`}}output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,
