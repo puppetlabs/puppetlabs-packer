@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-10-x86_64",
+    "template_name": "windows-10-i386",
     "version": "0.0.1",
 
     "provisioner": "vmware",
@@ -153,7 +153,7 @@
     },
     {
       "type": "file",
-      "source": "./files/post-clone.autounattend.xml",
+      "source": "./files/i386/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {
