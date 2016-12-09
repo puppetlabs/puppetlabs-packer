@@ -2,6 +2,22 @@
 # This is being done in a separate script to the windows packages deliberately, as the windows
 # packages are common to both Cygwin and and bitvise machines.
 #
+# NOTE  Cygwin Packages were grabbed from Cygwin timemachine hosted on Fruitbat:
+#         http://www.fruitbat.org/Cygwin/timemachine.html#cygwinmirror
+# Index of releases at: ftp://www.fruitbat.org/pub/cygwin/circa/index.html
+# 32 bit release used (2.4.0): ftp://www.fruitbat.org/pub/cygwin/circa/2016/01/16/111028
+# 64 bit release used (2.4.0): ftp://www.fruitbat.org/pub/cygwin/circa/64bit/2016/01/16/041034
+
+# Sample command to grab 32 bit packages:
+# /cygdrive/c/cygwin_packages/setup-x86 \
+#    -s ftp://www.fruitbat.org/pub/cygwin/circa/2016/01/16/111028 \
+#    --download \
+#    --only-site \
+#    --no-verify \
+#    --root C:\\cygwin64 \
+#    --quiet-mode \
+#    --packages alternatives,autoconf,autoconf2.1,autoconf2.5,base-cygwin,base-files,bash,binutils,bzip2,ca-certificates,coreutils,crypt,csih,curl,cygrunsrv,cygutils,cygwin,cygwin-devel,dash,diffutils,editrights,file,findutils,gawk,getent,git,grep,groff,gzip,hostname,info,ipc-utils,less,libargp,libasn1_8,libattr1,libblkid1,libbz2_1,libcom_err2,libcrypt0,libcurl4,libdb5.3,libedit0,libexpat1,libffi6,libfontconfig1,libfreetype6,libgcc1,libgdbm4,libgmp10,libgssapi3,libgssapi_krb5_2,libguile17,libheimbase1,libheimntlm0,libhx509_5,libiconv,libiconv2,libidn11,libintl8,libk5crypto3,libkafs0,libkrb5_26,libkrb5_3,libkrb5support0,libltdl7,liblzma5,libmetalink3,libmpfr4,libncursesw10,libopenldap2_4_2,libopenssl100,libp11-kit0,libpcre1,libpipeline1,libpng16,libpopt0,libreadline7,libroken18,libsasl2_3,libsigsegv2,libsmartcols1,libsqlite3_0,libssh2_1,libssp0,libstdc++6,libtasn1_6,libuuid-devel,libuuid1,libwind0,libwrap0,libX11_6,libXau6,libxcb1,libXdmcp6,libXext6,libXft2,libXrender1,libXss1,login,lynx,m4,make,makedepend,man,man-db,mintty,nano,openssh,openssl,p11-kit,p11-kit-trust,patch,patchutils,perl,perl-Carp,perl-Error,perl-Pod-Simple,perl_autorebase,perl_base,popt,python,python-tkinter,rebase,rsync,run,sed,tar,tcl,tcl-tix,tcl-tk,terminfo,texinfo,tzcode,util-linux,vim-minimal,which,xz,zlib0 \
+#    --local-package-dir C:\\Packer\\Downloads\\cygwin\\packages
 
 $ErrorActionPreference = 'Stop'
 
