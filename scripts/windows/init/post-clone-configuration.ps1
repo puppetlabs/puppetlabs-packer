@@ -62,9 +62,8 @@ Write-Host "Generate SSH Keys"
 
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
 Write-Host "Setup Authorised Keys"
-$CygpCygwinDownloads = $Cygwindownloads.replace("\","/").replace("C:","/cygdrive/c")
 & $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "$CygpCygwinDownloads/authorized_keys" `>`> /home/Administrator/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vmpooler" `>`> /home/Administrator/.ssh/authorized_keys`'
 
 Write-Host "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
