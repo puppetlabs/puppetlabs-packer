@@ -44,8 +44,7 @@ Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packag
 # Copy setup program to C:\Windows\system32 to deal with beaker issue (RE-7855)
 Copy-Item -Path "C:\Packer\Downloads\Cygwin\setup-$ARCH.exe" -Destination "$ENV:WINDIR\system32\setup-$ARCH.exe"
 
-# Setup Authorised Keys and QA Password for later use
-Copy-Item -Path "A:\authorized_keys" -Destination "$CygwinDownloads\authorized_keys"
+# Setup Password for later use
 if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
 $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
