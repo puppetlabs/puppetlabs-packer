@@ -14,12 +14,16 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_aio": "https://yum.puppetlabs.com/fedora/f24/PC1/x86_64/puppet-agent-1.8.1-1.fedoraf24.x86_64.rpm"
+      "puppet_aio": "https://yum.puppetlabs.com/fedora/f24/PC1/x86_64/puppet-agent-1.8.1-1.fedoraf24.x86_64.rpm",
+
+      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
+
     },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "output_directory": "{{user `output_directory`}}output-{{build_name}}",
       "type": "vmware-iso",
       "headless": true,
       "boot_command": [
@@ -44,9 +48,10 @@
       "shutdown_command": "/sbin/halt -h -p",
       "tools_upload_flavor": "linux",
       "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+	"ethernet0.pciSlotNumber": "32",
         "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "cpuid.coresPerSocket": "1"
+        "numvcpus": "{{user `cpu_count`}}"
       }
     }
   ],
