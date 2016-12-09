@@ -6,7 +6,7 @@
     "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_10_enterprise_version_1607_updated_jul_2016_x86_dvd_9060097_SlipStream_02.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "14ba31a70181e8865598c2e06e202b10",
-    "headless": "false",
+    "headless": "true",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
@@ -35,11 +35,11 @@
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
-      "guest_os_type": "windows9",
+      "guest_os_type": "windows8",
       "disk_size": 61440,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/autounattend.xml",
+        "files/i386/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
@@ -47,8 +47,8 @@
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/clean-disk-dism.ps1",
         "../../scripts/windows/clean-disk-sdelete.ps1",
-        "files/generalize-packer.autounattend.xml",
-        "files/{{build_name}}.package.ps1"
+        "files/i386/generalize-packer.autounattend.xml",
+        "files/i386/{{build_name}}.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],

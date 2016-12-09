@@ -36,11 +36,11 @@
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
-      "guest_os_type": "windows8srv-64",
+      "guest_os_type": "windows8",
       "disk_size": 61440,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/autounattend.xml",
+        "files/i386/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
@@ -48,8 +48,8 @@
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generate-slipstream.ps1",
         "files/slipstream-filter",
-        "files/generalize-packer.autounattend.xml",
-        "files/windows-10-slipstream.package.ps1"
+        "files/i386/generalize-packer.autounattend.xml",
+        "files/i386/windows-10-slipstream.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
