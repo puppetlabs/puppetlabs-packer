@@ -24,4 +24,9 @@ class packer::updates {
 
   package { $pkgs_to_update: ensure => latest; }
 
+  if $::operatingsystem == 'Ubuntu' {
+    file { '/etc/apt/apt.conf.d/10disable-periodic':
+      content => 'APT::Periodic::Enable \"0\";'
+    }
+  }
 }
