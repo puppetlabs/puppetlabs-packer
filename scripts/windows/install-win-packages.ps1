@@ -7,24 +7,29 @@ $ErrorActionPreference = 'Stop'
 . A:\windows-env.ps1
 
 Write-Host "Installing Puppet Agent..."
-Download-File https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi $PackerDownloads\puppet-agent.msi
+if ("$ARCH" -eq "x86") {
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x86-latest.msi"
+} else {
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
+}
+Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
 Start-Process -Wait "msiexec" -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
 Write-Host "Installed Puppet Agent..."
 
 Write-Host "Installing Google Chrome Browser"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup_x86_64.exe $PackerDownloads\ChromeSetup_x86_64.exe
-Start-Process -Wait "$PackerDownloads\ChromeSetup_x86_64.exe" -ArgumentList "/silent /install"
+Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe $PackerDownloads\ChromeSetup-$ARCH.exe
+Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" -ArgumentList "/silent /install"
 Write-Host "Google Chrome Browser Installed"
 
 # Install Notepad++
 Write-Host "Installing Notepad++"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.6.9.2.Installer.exe $PackerDownloads\npp.6.9.2.Installer.exe
-Start-Process -Wait "$PackerDownloads\npp.6.9.2.Installer.exe" -ArgumentList "/S"
+Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.7.2.2.Installer-$ARCH.exe $PackerDownloads\npp.7.2.2.Installer-$ARCH.exe
+Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" -ArgumentList "/S"
 Write-Host "Notepad++ Installed"
 
 Write-Host "7zip"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-x64.exe  $PackerDownloads\7z1602-x64.exe
-Start-Process -Wait "$PackerDownloads\7z1602-x64.exe" -ArgumentList "/S"
+Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$ARCH.exe  $PackerDownloads\7z1602-$ARCH.exe
+Start-Process -Wait "$PackerDownloads\7z1602-$ARCH.exe" -ArgumentList "/S"
 Write-Host "7zip Installed"
 
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey

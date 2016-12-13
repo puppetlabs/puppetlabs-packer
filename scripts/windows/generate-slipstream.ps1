@@ -24,8 +24,13 @@ Download-File http://buildsources.delivery.puppetlabs.net/windows/winadk/adksetu
 Start-Process -Wait "$PackerDownloads\adksetup_win2012r2.exe" -ArgumentList "/quiet /norestart /features OptionId.DeploymentTools"
 Write-Host "Win ADK Installed"
 
-# Need extra disk for this bit.
-$IsoGen = "C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
+# Need extra disk for this bit - depending on Arch - on 64 bit machines, the util lives under x86 program files
+if ("$ARCH" -eq "x86") {
+  $IsoGen = "$ENV:ProgramFiles\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\Oscdimg\oscdimg.exe"
+} else {
+  $IsoGen = "${ENV:ProgramFiles(X86)}\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
+}
+
 if ($psversiontable.psversion.major -gt 2) {
   $size = (Get-PartitionSupportedSize -DriveLetter C)
   $sizemax = $size.SizeMax

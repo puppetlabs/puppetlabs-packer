@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-7-x86_64",
+    "template_name": "windows-10-i386",
     "version": "0.0.1",
 
     "provisioner": "vmware",
@@ -20,7 +20,7 @@
     "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
   },
 
-  "description": "Builds a Windows 7 template VM for use in VMware",
+  "description": "Builds a Windows 10 (Anniversary Edition) template VM for use in VMware",
 
   "builders": [
     {
@@ -116,13 +116,13 @@
     },
     {
       "type": "file",
-      "source": "files/win-7-x86_64-std.pp",
-      "destination": "C:\\Packer\\puppet\\win-7-x86_64-std.pp"
+      "source": "files/win-10-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-10-x86_64-std.pp"
     },
     {
       "type": "powershell",
       "inline": [
-        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vmpooler'"
       ]
     },
     {
@@ -153,7 +153,7 @@
     },
     {
       "type": "file",
-      "source": "./files/post-clone.autounattend.xml",
+      "source": "./files/i386/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {

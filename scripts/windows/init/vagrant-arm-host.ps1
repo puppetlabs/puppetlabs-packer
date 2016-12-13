@@ -20,9 +20,13 @@ Write-Host "Generate SSH Keys"
 
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
 Write-Host "Setup Authorised Keys"
-$CygpCygwinDownloads = $Cygwindownloads.replace("\","/").replace("C:","/cygdrive/c")
 & $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "$CygpCygwinDownloads/authorized_keys" `>`> /home/Administrator/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vagrant" `>`> /home/Administrator/.ssh/authorized_keys`'
+
+Write-Host "Create vagrant directory and setup ssh for it"
+& $CygWinShell --login -c `'mkdir /home/vagrant`'
+& $CygWinShell --login -c `'cp -r /home/Administrator/.ssh /home/vagrant`'
+& $CygWinShell --login -c `'chown -R vagrant /home/vagrant`'
 
 Write-Host "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
