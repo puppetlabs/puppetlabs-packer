@@ -1,3 +1,7 @@
+param (
+  [string]$LoginUser = "Administrator",
+  [string]$LoginPassword = "PackerAdmin"
+)
 $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
@@ -22,8 +26,8 @@ Remove-Item -Path "$($Env:USERPROFILE)\Desktop\Boxstarter Shell.lnk" -Confirm:$f
 Remove-Item -Path "$($Env:APPDATA)\Microsoft\Windows\Start Menu\Programs\Boxstarter" -Recurse -Confirm:$false -Force -ErrorAction SilentlyContinue | Out-Null
 
 # Use Admin Plaintext password for this phase of configuration
-$secpasswd = ConvertTo-SecureString "PackerAdmin" -AsPlainText -Force
-$cred = New-Object System.Management.Automation.PSCredential ("Administrator", $secpasswd)
+$secpasswd = ConvertTo-SecureString "$LoginPassword" -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential ("$LoginUser", $secpasswd)
 
 Import-Module $env:appdata\boxstarter\boxstarter.chocolatey\boxstarter.chocolatey.psd1
 Install-BoxstarterPackage -PackageName ($packageFile.Fullname) -Credential $cred
