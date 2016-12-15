@@ -24,11 +24,14 @@ $ErrorActionPreference = 'Stop'
 . A:\windows-env.ps1
 
 # Work out what CYGDIR is and set it as a Windows Environment Variable
+# Note - need seperate Prefix var for environment variables due to cygwin/git-for-win idiosyncrasies
 Write-Host "Setting CYGWINDIR"
 if ($ARCH -eq 'x86') {
   $CygWinDir = "C:\cygwin"
+  $CygEnvPrefix = "C:/cygwin"
 } else {
   $CygWinDir = "C:\cygwin64"
+  $CygEnvPrefix = "C:/cygwin64"
 }
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name CYGWINDIR -Value $CygWinDir
@@ -75,6 +78,13 @@ $ostring = "-o" + $CygwinDownloads
                --root $CygWinDir `
                --local-package-dir $CygwinDownloads\packages
 
+
+
+# Set GIT Related env variables to ensure correct editor is used etc.
+Write-Host "GIT Environment variables to use Cygwin utils"
+$RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+
+Set-ItemProperty -Path $RegPath -Name GIT_EDITOR -Value "$CygEnvPrefix/bin/vi.exe"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20

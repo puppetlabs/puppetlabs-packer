@@ -22,6 +22,9 @@ Write-Host "Setup Authorised Keys"
 & $CygWinShell --login -c `'cp /home/vagrant/.ssh/id_rsa.pub /home/vagrant/.ssh/authorized_keys`'
 & $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vagrant" `>`> /home/vagrant/.ssh/authorized_keys`'
 
+# Add github.com as a known host (needed for git@gihub:<repo> clone ops)
+& $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/vagrant/.ssh/known_hosts`'
+
 Write-Host "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
 Set-Service "sshd" -StartupType Manual
