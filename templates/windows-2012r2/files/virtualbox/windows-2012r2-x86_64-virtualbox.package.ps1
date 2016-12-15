@@ -13,6 +13,16 @@ Write-BoxstarterMessage "Disabling Hiberation..."
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
 
+if (-not (Test-Path "A:\Autologon.installed"))
+{
+  # Quick fix to get the autologon working for vagrant.
+  Write-BoxstarterMessage "Installing Autologon to get over sysprep login issues"
+  choco install autologon -y
+  reg.exe ADD "HKCU\Software\Sysinternals\Autologon" /v "EulaAccepted" /t REG_DWORD /d 1 /f
+  autologon vagrant . vagrant
+  Touch-File "A:\Autologon.installed"
+}
+
 if (-not (Test-Path "A:\DesktopExperience.installed"))
 {
   # Enable Desktop experience to get cleanmgr
@@ -21,6 +31,7 @@ if (-not (Test-Path "A:\DesktopExperience.installed"))
   Touch-File "A:\DesktopExperience.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
+
 
 if (-not (Test-Path "A:\NET45.installed"))
 {

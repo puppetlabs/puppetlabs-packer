@@ -15,8 +15,8 @@
       "source_path"         : "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
       "headless"            : "{{user `headless`}}",
       "communicator"        : "winrm",
-      "winrm_username"      : "Administrator",
-      "winrm_password"      : "PackerAdmin",
+      "winrm_username"      : "vagrant",
+      "winrm_password"      : "vagrant",
       "winrm_timeout"       : "16h",
       "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout"    : "1h",
@@ -109,8 +109,20 @@
     },
     {
       "type": "file",
-      "source": "./files/post-clone.autounattend.xml",
+      "source": "./files/virtualbox/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Initiate Sysprep'",
+        "C:\\Windows\\System32\\sysprep\\sysprep /oobe /quit /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
+        "Write-Host 'Sysprep queued.'",
+        "Start-Sleep -Seconds 10"
+      ]
+    },
+    {
+      "type": "windows-restart"
     },
     {
       "type": "powershell",
