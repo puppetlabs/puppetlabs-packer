@@ -6,6 +6,6 @@
       "iso_checksum": "a63241b0f767afa1f9f7e59e6f0f00d6b8d19ed85936a7934222c03a92e61bf3",
       "iso_checksum_type": "sha256",
       
-      "puppet_aio": "http://yum.puppetlabs.com/el/6/PC1/x86_64/puppet-agent-1.7.0-1.el6.x86_64.rpm"
+      "puppet_aio": "http://yum.puppetlabs.com/el/6/PC1/x86_64/puppet-agent-1.8.2-1.el6.x86_64.rpm"
 
     }
