@@ -33,16 +33,24 @@ all boxes build an come up properly,
 Command to build a box :
 
 ```
-~/bin/packer build -var "headless=false" -var-file=builder.variables.json -var-file=x86_64.centos-6.8.variables.json -var-file=provisioner.variables.json libvirt.base.json
-~/bin/packer build -var "headless=false" -var-file=builder.variables.json -var-file=x86_64.centos-6.8.variables.json -var-file=provisioner.variables.json libvirt.nocm.json
+~/bin/packer build -var "headless=false" -var-file=builder.variables.json -var-file=provisioner.variables.json -var-file=x86_64.centos-6.8.variables.json libvirt.base.json
+~/bin/packer build -var "headless=false" -var-file=builder.variables.json -var-file=provisioner.variables.json -var-file=x86_64.centos-6.8.variables.json libvirt.nocm.json
 ```
 
+## testing 
+
+```
+  for i in `ls *centos*.json`
+  do
+    ~/bin/packer validate --syntax-only -var-file=builder.variables.json -var-file=provisioner.variables.json -var-file=$i libvirt.base.json 
+  done
+```
 
 # TODO
 
 * looking for a proper dir structure ?
 * write decentt docs
 * add virtualbox, vmware and more
-* look how to add version 5 and 7 
+* look how to add version 5 (during build, VM does not power recycle properly) 
 * ......
 
