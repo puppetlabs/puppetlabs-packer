@@ -9,9 +9,8 @@ $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a r
 
 if (Test-PendingReboot){ Invoke-Reboot }
 
-Write-BoxstarterMessage "Disabling Hiberation..."
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
+Write-BoxstarterMessage "Disabling Sleep timers"
+Disable-PC-Sleep
 
 if (-not (Test-Path "A:\NET45.installed"))
 {

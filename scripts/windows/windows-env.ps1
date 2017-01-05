@@ -88,3 +88,33 @@ Function Touch-File
         echo $null > $file
     }
 }
+
+
+# Helper function to disable all sleep timeouts on the windows box.
+# Adding on the suspicion that the Cumulative Updates for Win-10 are allowing
+# standby sleep to activate during the long download.
+
+Function Disable-PC-Sleep
+{
+  Write-Host "Disabling all Sleep timers"
+  Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
+  Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
+  Try
+  {
+    # Move it to high performance mode.
+    $HighPerf = powercfg -l | %{if($_.contains("High performance")) {$_.split()[3]}}
+    $CurrPlan = $(powercfg -getactivescheme).split()[3]
+    if ($CurrPlan -ne $HighPerf) {powercfg -setactive $HighPerf}
+    # Belt and braces - disable all timeouts.
+    powercfg -x -monitor-timeout-ac 0
+    powercfg -x -monitor-timeout-dc 0
+    powercfg -x -disk-timeout-ac 0
+    powercfg -x -disk-timeout-dc 0
+    powercfg -x -standby-timeout-ac 0
+    powercfg -x -standby-timeout-dc 0
+    powercfg -x -hibernate-timeout-ac 0
+    powercfg -x -hibernate-timeout-dc 0
+  } Catch {
+      Write-Warning -Message "Unable to set power plan to high performance"
+  }
+}
