@@ -32,6 +32,11 @@ Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$A
 Start-Process -Wait "$PackerDownloads\7z1602-$ARCH.exe" -ArgumentList "/S"
 Write-Host "7zip Installed"
 
+Write-Host "Git For Windows"
+Download-File http://buildsources.delivery.puppetlabs.net/windows/gitforwin/Git-2.11.0-$ARCH.exe  $PackerDownloads\Git-2.11.0-$ARCH.exe
+Start-Process -Wait "$PackerDownloads\Git-2.11.0-$ARCH.exe" -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
+Write-Host "Git For Windows Installed"
+
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey
 Write-Host "Installing Sysinternal Tools"
 $ostring = "-o" + $SysInternals

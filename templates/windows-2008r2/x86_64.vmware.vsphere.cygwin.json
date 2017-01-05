@@ -47,7 +47,7 @@
         "../../scripts/windows/install-win-packages.ps1",
         "../../scripts/windows/install-cygwin.ps1",
         "../../scripts/windows/cygwin-packages",
-        "../../scripts/windows/authorized_keys",
+        "../../scripts/windows/gitforwin.inf",
         "../../scripts/windows/puppet-configure.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",

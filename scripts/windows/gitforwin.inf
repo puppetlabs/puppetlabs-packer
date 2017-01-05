@@ -1,0 +1,16 @@
+[Setup]
+Lang=default
+Dir=C:\Program Files\Git
+Group=Git
+NoIcons=1
+SetupType=default
+Components=
+Tasks=
+PathOption=Cmd
+SSHOption=OpenSSH
+CRLFOption=CRLFCommitAsIs
+BashTerminalOption=ConHost
+PerformanceTweaksFSCache=Enabled
+UseCredentialManager=Disabled
+EnableSymlinks=Disabled
+EnableBuiltinDifftool=Disabled
