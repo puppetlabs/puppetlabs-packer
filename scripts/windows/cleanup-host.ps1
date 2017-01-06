@@ -4,13 +4,14 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
+$SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
+
 Write-Host "Uninstalling Puppet Agent..."
 Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.msi /qn /norestart"
 
 # Remove Boxstarter
-Write-Host "Uninstalling boxstarter & sdelete..."
+Write-Host "Uninstalling boxstarter..."
 choco uninstall boxstarter --yes
-choco uninstall sdelete --yes
 
 # Remove Chocolatey - using instructions at https://chocolatey.org/docs/uninstallation
 Write-Host "Uninstalling Chocolatey and all its bits..."
@@ -41,6 +42,7 @@ Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
 Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 
 # Clean up files (including those not addressed by cleanmgr)
+# This list is a bit different from that in the dism cleanup script.
 Write-Host "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\Nuget",
@@ -68,6 +70,15 @@ wevtutil clear-log Application
 wevtutil clear-log Security
 wevtutil clear-log Setup
 wevtutil clear-log System
+
+# Display Free Space Statistics at end
+$SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
+$SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
+
+Write-Host "Cleaning Complete"
+Write-Host "Starting Free Space $SpaceAtStart GB"
+Write-Host "Current Free Space $SpaceAtEnd GB"
+Write-Host "Reclaimed $SpaceReclaimed GB"
 
 # TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
 # extra space released by the delete commands above.

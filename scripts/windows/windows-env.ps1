@@ -89,7 +89,6 @@ Function Touch-File
     }
 }
 
-
 # Helper function to disable all sleep timeouts on the windows box.
 # Adding on the suspicion that the Cumulative Updates for Win-10 are allowing
 # standby sleep to activate during the long download.
@@ -116,5 +115,18 @@ Function Disable-PC-Sleep
     powercfg -x -hibernate-timeout-dc 0
   } Catch {
       Write-Warning -Message "Unable to set power plan to high performance"
+  }
+}
+
+# Helper function to perform a final reboot.
+# This should help pick up any "trailing" windows updates as it appears that
+# There are still some missing updates.
+
+Function Do-Packer-Final-Reboot
+{
+  if (-not (Test-Path "A:\Final.Reboot"))
+  {
+    Touch-File "A:\Final.Reboot"
+    Invoke-Reboot
   }
 }

@@ -93,6 +93,15 @@
     {
       "type": "powershell",
       "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
         "A:\\clean-disk-sdelete.ps1"
       ]
     }

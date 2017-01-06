@@ -9,6 +9,7 @@ $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a r
 
 if (Test-PendingReboot){ Invoke-Reboot }
 
+# Need to guard against system going into standby for long updates
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
@@ -29,6 +30,9 @@ $net = get-netconnectionprofile;Set-NetConnectionProfile -Name $net.Name -Networ
 Write-BoxstarterMessage "Starting Windows Update Pass"
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
+
+# Do one final reboot in case there are any more updates to be picked up.
+Do-Packer-Final-Reboot
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-BoxstarterMessage "Enable Remote Desktop"

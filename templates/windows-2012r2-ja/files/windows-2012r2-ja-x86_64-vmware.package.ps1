@@ -9,9 +9,9 @@ $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a r
 
 if (Test-PendingReboot){ Invoke-Reboot }
 
-Write-BoxstarterMessage "Disabling Hiberation..."
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
+# Need to guard against system going into standby for long updates
+Write-BoxstarterMessage "Disabling Sleep timers"
+Disable-PC-Sleep
 
 if (-not (Test-Path "A:\DesktopExperience.installed"))
 {
@@ -34,6 +34,9 @@ if (-not (Test-Path "A:\NET45.installed"))
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }
+
+# Do one final reboot in case there are any more updates to be picked up.
+Do-Packer-Final-Reboot
 
 # Disable UAC
 Write-BoxstarterMessage "Disable UAC"
