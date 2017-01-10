@@ -101,7 +101,7 @@ if ($WindowsVersion -eq '6.1.7601' ) {
 }
 ElseIf ($WindowsVersion -eq '6.2.9200' -or $WindowsVersion -eq '6.0.6002') {
   # Note /ResetBase option is not available on Windows-2012, so need to screen for this.
-  dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup
+  Write-Host "Skipping Cleanup"
 } else {
   dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup /ResetBase
 }

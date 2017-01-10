@@ -1,0 +1,10 @@
+# CAB files to be filtered out in case of DISM Issues
+windows8-rt-kb2981685-x64.cab
+windows8-rt-kb2973501-x64.cab
+windows8-rt-kb3003729-x64.cab
+windows8-rt-kb3012702-x64.cab
+windows8-rt-kb3096053-x64.cab
+windows8-rt-kb3080446-x64.cab
+windows8-rt-kb3042058-x64.cab
+Windows8-RT-KB3173426-x64.cab
+windows8-rt-kb3170455-x64.cab
