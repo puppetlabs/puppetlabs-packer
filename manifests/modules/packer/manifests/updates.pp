@@ -14,6 +14,7 @@ class packer::updates {
   $redhat_pkgs = [
     'glibc',
     'openssh',
+    'kernel',
   ]
 
   if $::osfamily == 'Debian' {
