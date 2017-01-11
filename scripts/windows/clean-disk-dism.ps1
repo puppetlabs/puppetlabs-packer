@@ -54,6 +54,40 @@ reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCache
 Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
 Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 
+# Now that all Update operations are complete, disable Windows Update and STOP it.
+Write-Host "Stopping and Disabling Windows Update"
+net stop wuauserv
+Set-Service wuauserv -StartupType Disabled
+
+# Clean up files (including those not addressed by cleanmgr)
+Write-Host "Clearing Files"
+@(
+    "$ENV:LOCALAPPDATA\temp\*",
+    "$ENV:WINDIR\logs",
+    "$ENV:WINDIR\temp\*",
+    "$ENV:WINDIR\SoftwareDistribution\Download\*",
+    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportArchive",
+    "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
+    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
+    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
+    "$ENV:WINDIR\winsxs\manifestcache"
+) | % {
+        if(Test-Path $_) {
+            Write-Host "Removing $_"
+            Takeown /d Y /R /f $_
+            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+        }
+    }
+
+# Clearing Logs
+Write-Host "Clearing Logs"
+wevtutil clear-log Application
+wevtutil clear-log Security
+wevtutil clear-log Setup
+wevtutil clear-log System
+
+# Display Free Space Statistics at end
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 $SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
 

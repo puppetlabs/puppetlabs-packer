@@ -78,6 +78,10 @@
         "time.synchronize.tools.startup": "FALSE",
         "time.synchronize.tools.enable": "FALSE",
         "time.synchronize.resume.host": "FALSE"
+      },
+      "vmx_data_post": {
+        "memsize": "6144",
+        "devices.hotplug": "false"
       }
     }
   ],
