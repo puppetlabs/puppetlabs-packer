@@ -1,17 +1,17 @@
 {
   "variables": {
     "template_name": "windows-2012-x86_64",
+    "os_name" : "Win-2012",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_x64_dvd_915478_SlipStream_02.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_x64_dvd_915478.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "9557556a063802c1d29e55a6d539e2ed",
-    "headless": "true",
-    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
-    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+    "iso_checksum": "da91135483e24689bfdaf05d40301506",
+    "headless": "false",
+    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
-  "description": "Builds a Windows Server 2012 template VM for use in VMware",
+  "description": "Customised Win-2012 build to prepare slipstream ISO",
 
   "_comment": [
       "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
@@ -24,8 +24,6 @@
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
-      "output_directory": "{{user `vmware_output_dir`}}/output-{{build_name}}",
-
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
@@ -36,22 +34,22 @@
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
-      "disk_size": 61440,
+      "disk_size": 40720,
       "disk_type_id": "0",
       "floppy_files": [
         "files/autounattend.xml",
+        "files/generalize-packer.autounattend.xml",
+        "files/slipstream-filter",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "../../scripts/windows/clean-disk-dism.ps1",
-        "../../scripts/windows/clean-disk-sdelete.ps1",
-        "files/generalize-packer.autounattend.xml",
-        "files/{{build_name}}.package.ps1"
+        "../../scripts/windows/generate-slipstream.ps1",
+        "files/windows-2012-slipstream.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
       "boot_wait": "1s",
 
       "vmx_data": {
@@ -93,17 +91,9 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\clean-disk-dism.ps1"
-      ]
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "inline": [
-        "A:\\clean-disk-sdelete.ps1"
-      ]
+        "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `os_name`}} -ImageIndex 2"
+      ],
+      "valid_exit_codes": [0,1]
     }
   ]
 }

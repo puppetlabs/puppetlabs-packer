@@ -130,3 +130,22 @@ Function Do-Packer-Final-Reboot
     Invoke-Reboot
   }
 }
+
+# Helper function to install Windows/MS Patch.
+# Downloads file to $TEMP and uses wusa to install it.
+
+Function Install_Win_Patch
+{
+  param(
+    [Parameter(Mandatory = $true)]
+    [String]$PatchUrl
+  )
+
+  $PatchFilename = $PatchUrl.Substring($PatchUrl.LastIndexOf("/") + 1)
+
+  Write-Host "Downloading $PatchFilename"
+  Download-File "$PatchUrl"  "$ENV:TEMP\$PatchFilename"
+  Write-Host "Applying $PatchFilename Patch"
+  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$PatchFilename /quiet /norestart"
+  Write-Host "Patch Installed"
+}

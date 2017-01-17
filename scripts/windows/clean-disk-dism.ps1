@@ -69,8 +69,7 @@ Write-Host "Clearing Files"
     "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportArchive",
     "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
-    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
-    "$ENV:WINDIR\winsxs\manifestcache"
+    "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue"
 ) | % {
         if(Test-Path $_) {
             Write-Host "Removing $_"
