@@ -5,14 +5,16 @@
     "headless"      : "true",
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
     "packer_sha"    : "{{env `PACKER_SHA`}}",
-    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+    "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
   },
   "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox with Vagrant",
   "builders": [
     {
       "type"                : "virtualbox-ovf",
       "name"                : "{{user `template_name`}}-{{user `provisioner`}}-vagrant-cygwin",
-      "source_path"         : "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "source_path"         : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "output_directory"    : "{{user `packer_output_dir`}}/output-{{build_name}}",
       "headless"            : "{{user `headless`}}",
       "communicator"        : "winrm",
       "winrm_username"      : "vagrant",
