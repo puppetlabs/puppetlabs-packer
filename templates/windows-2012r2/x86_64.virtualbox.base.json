@@ -44,7 +44,8 @@
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/clean-disk-dism.ps1"
+        "../../scripts/windows/clean-disk-dism.ps1",
+        "../../scripts/windows/clean-disk-sdelete.ps1"
       ]
     }
   ],
