@@ -65,6 +65,10 @@ Write-Host "Setup Authorised Keys"
 & $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
 & $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vmpooler" `>`> /home/Administrator/.ssh/authorized_keys`'
 
+# Setup LSA Authentication
+Write-Host "Register the Cygwin LSA authentication package "
+& $CygWinShell --login -c `'auto_answer="yes" /usr/bin/cyglsa-config`'
+
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
 & $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/Administrator/.ssh/known_hosts`'
 

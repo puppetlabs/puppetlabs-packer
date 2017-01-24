@@ -132,6 +132,9 @@
       "inline": [
         "C:\\Packer\\Init\\vagrant-arm-host.ps1"
       ]
+    },
+    {
+      "type": "windows-restart"
     }
   ],
     "post-processors": [{
