@@ -9,7 +9,7 @@
     "headless"         : "true",
     "memory_size"      : "2048",
     "cpu_count"        : "2",
-    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
   },
   "description": "Builds a Windows Server 2012 R2 template VM for use in VirtualBox",
   "builders": [
@@ -17,7 +17,7 @@
       "type"                   : "virtualbox-iso",
       "name"                   : "{{user `template_name`}}-{{user `provisioner`}}",
       "vm_name"                : "packer-{{build_name}}",
-      "output_directory"       : "{{user `vmware_output_dir`}}/output-{{build_name}}",
+      "output_directory"       : "{{user `packer_output_dir`}}/output-{{build_name}}",
       "iso_url"                : "{{user `iso_url`}}",
       "iso_checksum_type"      : "{{user `iso_checksum_type`}}",
       "iso_checksum"           : "{{user `iso_checksum`}}",
@@ -44,7 +44,8 @@
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/clean-disk-dism.ps1"
+        "../../scripts/windows/clean-disk-dism.ps1",
+        "../../scripts/windows/clean-disk-sdelete.ps1"
       ]
     }
   ],

@@ -17,7 +17,8 @@
     "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
     "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
     "packer_sha": "{{env `PACKER_SHA`}}",
-    "vmware_output_dir": "{{env `VMWARE_OUTPUT_DIR`}}"
+    "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
   },
 
   "description": "Builds a Windows Server 2016 Technical Preview 5 template VM for use in VMware",
@@ -27,8 +28,8 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-cygwin",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "source_path": "output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
-      "output_directory": "{{user `vmware_output_dir`}}/output-{{build_name}}",
+      "source_path": "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "headless": "{{user `headless`}}",
 
@@ -176,7 +177,8 @@
       "vm_folder": "{{user `packer_vcenter_folder`}}",
       "vm_name": "{{user `template_name`}}-{{user `version`}}",
       "vm_network": "{{user `packer_vcenter_net`}}",
-      "insecure" : "{{user `packer_vcenter_insecure`}}"
+      "insecure" : "{{user `packer_vcenter_insecure`}}",
+      "overwrite" : "true"
     }
   ]
 }
