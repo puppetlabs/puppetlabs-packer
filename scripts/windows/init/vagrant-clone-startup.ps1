@@ -29,4 +29,7 @@ Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "A
 Write-Host "Starting SSH server!"
 Start-Service "sshd"
 
+#Make sure WinRM is running
+Set-Service "WinRM" -StartupType Automatic -Status Running
+
 ExitScript 0
