@@ -60,6 +60,8 @@ net stop wuauserv
 Set-Service wuauserv -StartupType Disabled
 
 # Clean up files (including those not addressed by cleanmgr)
+# Use Try/Catch in preference to SilentlyContinue as this needs to be PS 2 compatible
+# to avoid aborting on locked files etc in Win-2008r2
 Write-Host "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\temp\*",
@@ -72,10 +74,15 @@ Write-Host "Clearing Files"
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue"
 ) | % {
         if(Test-Path $_) {
-            Write-Host "Removing $_"
-            Takeown /d Y /R /f $_
-            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
-            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+            Try {
+              Write-Host "Removing $_"
+              Takeown /d Y /R /f $_
+              Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+              Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+            }
+            catch {
+              Write-Host "Ignoring Error - Continue"
+            }
         }
     }
 
