@@ -2,6 +2,7 @@
   "variables": {
     "template_name": "windows-2012r2-ja-x86_64",
     "version": "0.0.1",
+    "template_config": "vsphere.cygwin",
 
     "provisioner": "vmware",
     "headless": "true",
@@ -25,10 +26,10 @@
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-cygwin",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "source_path": "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "source_path": "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
       "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "headless": "{{user `headless`}}",

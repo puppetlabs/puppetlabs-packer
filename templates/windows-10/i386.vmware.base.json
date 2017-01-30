@@ -1,6 +1,7 @@
 {
   "variables": {
     "template_name": "windows-10-i386",
+    "template_config": "base",
 
     "provisioner": "vmware",
     "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_10_enterprise_version_1607_updated_jul_2016_x86_dvd_9060097_SlipStream_02.iso",
@@ -18,7 +19,7 @@
   ],
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
       "iso_url": "{{user `iso_url`}}",

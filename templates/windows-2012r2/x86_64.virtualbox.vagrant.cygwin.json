@@ -2,6 +2,8 @@
   "variables": {
     "template_name" : "windows-2012r2-x86_64",
     "provisioner"   : "virtualbox",
+    "template_config": "vagrant.cygwin",
+
     "headless"      : "true",
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
     "packer_sha"    : "{{env `PACKER_SHA`}}",
@@ -12,8 +14,8 @@
   "builders": [
     {
       "type"                : "virtualbox-ovf",
-      "name"                : "{{user `template_name`}}-{{user `provisioner`}}-vagrant-cygwin",
-      "source_path"         : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.ovf",
+      "name"                : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "source_path"         : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.ovf",
       "output_directory"    : "{{user `packer_output_dir`}}/output-{{build_name}}",
       "headless"            : "{{user `headless`}}",
       "communicator"        : "winrm",
@@ -139,7 +141,7 @@
   ],
     "post-processors": [{
     "type"                : "vagrant",
-    "output"              : "output/{{.Provider}}/{{user `template_name`}}-{{.Provider}}-cygwin.box",
+    "output"              : "{{user `packer_output_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
     "vagrantfile_template": "./files/virtualbox/vagrantfile-windows2012r2.template"
   }]
 }
