@@ -60,6 +60,7 @@
 
       "vmx_data": {
         "gui.fitguestusingnativedisplayresolution": "FALSE",
+        "annotation": "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
         "firmware": "efi",
         "memsize": "4096",
