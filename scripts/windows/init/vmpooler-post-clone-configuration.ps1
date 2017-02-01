@@ -76,9 +76,10 @@ Write-Host "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
 Set-Service "sshd" -StartupType Manual
 
-Write-Host "Re-enable NETBios Services"
+Write-Host "Re-enable NETBios and WinRM Services"
 Set-Service "lmhosts" -StartupType Automatic
 Set-Service "netbt" -StartupType Automatic
+Set-Service "WinRM" -StartupType Automatic
 
 # Set Startup script (starts sshd)
 Write-Host "Setting startup script"
