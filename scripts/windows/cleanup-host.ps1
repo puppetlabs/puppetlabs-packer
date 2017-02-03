@@ -56,12 +56,18 @@ Write-Host "Clearing Files"
     "$ENV:WINDIR\winsxs\manifestcache",
     "C:\ProgramData\PuppetLabs"
 ) | % {
+      try {
         if(Test-Path $_) {
             Write-Host "Removing $_"
             Takeown /d Y /R /f $_
             Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
             Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+          }
         }
+        catch {
+            Write-Host "Ignoring Error - Continue"
+        }
+
     }
 
 # Clearing Logs
@@ -85,8 +91,10 @@ Write-Host "Reclaimed $SpaceReclaimed GB"
 
 # Extend C: partition to full extend - this is predicated on the existance of PS call.
 # So Powershell Version 2 and earlier must resort to diskpart.
+# Need to add extra check for Win-2008r2 even with WMF 5 added as this still breaks.
 
-if ($psversiontable.psversion.major -gt 2) {
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+if ($psversiontable.psversion.major -gt 2 -and $WindowsVersion -ne '6.1.7601') {
   $size = (Get-PartitionSupportedSize -DriveLetter C)
   $sizemax = $size.SizeMax
   Write-Host "Setting Drive C partition size to $sizemax"

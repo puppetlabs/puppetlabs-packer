@@ -1,0 +1,186 @@
+{
+  "variables": {
+    "template_name": "windows-2008r2-wmf5-x86_64",
+    "version": "0.0.1",
+    "template_config": "vsphere.cygwin",
+
+    "provisioner": "vmware",
+    "headless": "true",
+
+    "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
+    "packer_vcenter_username": "{{env `PACKER_VCENTER_USERNAME`}}",
+    "packer_vcenter_password": "{{env `PACKER_VCENTER_PASSWORD`}}",
+    "packer_vcenter_dc": "{{env `PACKER_VCENTER_DC`}}",
+    "packer_vcenter_cluster": "{{env `PACKER_VCENTER_CLUSTER`}}",
+    "packer_vcenter_datastore": "{{env `PACKER_VCENTER_DATASTORE`}}",
+    "packer_vcenter_folder": "{{env `PACKER_VCENTER_FOLDER`}}",
+    "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
+    "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
+    "packer_sha": "{{env `PACKER_SHA`}}",
+    "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
+  },
+
+  "description": "Builds a Windows Server 2008r2 template VM for use in VMware",
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name": "packer-{{build_name}}",
+      "type": "vmware-vmx",
+      "source_path": "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
+
+      "headless": "{{user `headless`}}",
+
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "PackerAdmin",
+      "winrm_timeout": "8h",
+
+      "shutdown_command": "A:\\shutdown-packer.bat",
+      "shutdown_timeout": "1h",
+
+
+      "floppy_files": [
+        "../../scripts/windows/bootstrap-base.bat",
+        "../../scripts/windows/cleanup-host.ps1",
+        "../../scripts/windows/install-win-packages.ps1",
+        "../../scripts/windows/install-cygwin.ps1",
+        "../../scripts/windows/cygwin-packages",
+        "../../scripts/windows/gitforwin.inf",
+        "../../scripts/windows/puppet-configure.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
+        "files/config-vmware-vsphere-cygwin.ps1"
+      ],
+
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution": "FALSE",
+        "annotation": "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
+
+        "firmware": "efi",
+        "memsize": "4096",
+        "numvcpus": "2",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "scsi0.virtualdev": "lsisas1068",
+        "virtualHW.version": "10",
+        "devices.hotplug": "false",
+
+        "vcpu.hotadd": "TRUE",
+        "mem.hotadd": "TRUE",
+
+        "tools.syncTime": "FALSE",
+        "time.synchronize.continue": "FALSE",
+        "time.synchronize.restore": "FALSE",
+        "time.synchronize.resume.disk": "FALSE",
+        "time.synchronize.shrink": "FALSE",
+        "time.synchronize.tools.startup": "FALSE",
+        "time.synchronize.tools.enable": "FALSE",
+        "time.synchronize.resume.host": "FALSE"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "md -Path C:\\Packer\\puppet\\modules",
+        "md -Path C:\\Packer\\Downloads",
+        "md -Path C:\\Packer\\Downloads\\Cygwin",
+        "md -Path C:\\Packer\\Init",
+        "md -Path C:\\Packer\\Logs",
+        "md -Path C:\\Packer\\Sysinternals"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-win-packages.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-cygwin.ps1"
+      ],
+      "environment_vars": [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../manifests/windows",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "files/win-2008r2-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2008r2-x86_64-std.pp"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\config-vmware-vsphere-cygwin.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/windows/init",
+      "destination": "C:\\Packer\\Init"
+    },
+    {
+      "type": "file",
+      "source": "./files/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vsphere",
+      "host": "{{user `packer_vcenter_host`}}",
+      "username": "{{user `packer_vcenter_username`}}",
+      "password": "{{user `packer_vcenter_password`}}",
+      "datacenter": "{{user `packer_vcenter_dc`}}",
+      "cluster": "{{user `packer_vcenter_cluster`}}",
+      "datastore": "{{user `packer_vcenter_datastore`}}",
+      "vm_folder": "{{user `packer_vcenter_folder`}}",
+      "vm_name": "{{user `template_name`}}-{{user `version`}}",
+      "vm_network": "{{user `packer_vcenter_net`}}",
+      "insecure" : "{{user `packer_vcenter_insecure`}}",
+      "overwrite" : "true"
+    }
+  ]
+}
