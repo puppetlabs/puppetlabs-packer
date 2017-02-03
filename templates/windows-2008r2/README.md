@@ -2,7 +2,7 @@
 
 ### About
 
-This is the Windows 2012 Packer Template
+This is the Windows 2008R2 Packer Template
 
 ### VM settings
 
