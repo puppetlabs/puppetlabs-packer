@@ -1,6 +1,6 @@
 {
   "variables": {
-    "template_name": "windows-2008r2-x86_64",
+    "template_name": "windows-2012r2-wmf5-x86_64",
     "version": "0.0.1",
     "template_config": "vsphere.cygwin",
 
@@ -22,7 +22,7 @@
     "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
   },
 
-  "description": "Builds a Windows Server 2008r2 template VM for use in VMware",
+  "description": "Builds a Windows Server 2012 R2 template VM for use in VMware",
 
   "builders": [
     {
@@ -54,7 +54,7 @@
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
-        "files/config-vmware-vsphere-cygwin.ps1"
+        "files/config-winsettings.ps1"
       ],
 
       "vmx_data": {
@@ -80,6 +80,10 @@
         "time.synchronize.tools.startup": "FALSE",
         "time.synchronize.tools.enable": "FALSE",
         "time.synchronize.resume.host": "FALSE"
+      },
+      "vmx_data_post": {
+        "memsize": "6144",
+        "devices.hotplug": "false"
       }
     }
   ],
@@ -120,8 +124,8 @@
     },
     {
       "type": "file",
-      "source": "files/win-2008r2-x86_64-std.pp",
-      "destination": "C:\\Packer\\puppet\\win-2008r2-x86_64-std.pp"
+      "source": "files/win-2012r2-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2012r2-x86_64-std.pp"
     },
     {
       "type": "powershell",
@@ -135,7 +139,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\config-vmware-vsphere-cygwin.ps1"
+        "A:\\config-winsettings.ps1"
       ]
     },
     {
@@ -157,7 +161,7 @@
     },
     {
       "type": "file",
-      "source": "./files/post-clone.autounattend.xml",
+      "source": "./files/vmware/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {

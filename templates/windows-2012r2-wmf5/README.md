@@ -2,7 +2,7 @@
 
 ### About
 
-This is the Windows 2012R2 (Japanese) Packer Template
+This is the Windows 2012R2 (WMF5) Packer Template
 
 ### VM settings
 
