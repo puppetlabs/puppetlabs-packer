@@ -44,6 +44,15 @@ class packer::vsphere::params {
       $gpgkey                = "RPM-GPG-KEY-${::operatingsystem}-${::operatingsystemmajrelease}"
     }
 
+    'SLES': {
+      $startup_file          = '/etc/rc.d/after.local'
+      $startup_file_source   = 'rc.local'
+      $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
+      $bootstrap_file_source = 'sles.rb.erb'
+      $ruby_package          = [ 'ruby' ]
+      $gpgkey                = "RPM-GPG-KEY-${::operatingsystem}-${::operatingsystemmajrelease}"
+    }
+
     'Fedora': {
       $startup_file          = '/etc/rc.d/rc.local'
       $startup_file_source   = 'rc.local'

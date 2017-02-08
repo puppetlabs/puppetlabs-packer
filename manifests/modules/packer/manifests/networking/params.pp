@@ -40,7 +40,11 @@ class packer::networking::params {
         }
       }
     }
-
+    suse: {
+      $interface_script = '/etc/sysconfig/network/ifcfg-eth0'
+      $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
+      $udev_rule_gen    = '/lib/udev/rules.d/75-persistent-net-generator.rules'
+    }
     default: {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }

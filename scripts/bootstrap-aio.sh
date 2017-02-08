@@ -12,6 +12,8 @@ if [ -n "${PC_REPO}" ]; then
     rpm -Uhv $tmp_dir/pc-repo.rpm
     if type dnf >/dev/null ; then
       dnf install -y puppet-agent
+    elif type zypper >/dev/null ; then
+      zypper install -y puppet-agent
     else
       yum install -y puppet-agent
     fi

@@ -82,7 +82,7 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
-      
+
       if $::operatingsystem == 'Fedora' {
         yumrepo { "localmirror-everything":
           descr    => "localmirror-everything",
@@ -91,7 +91,21 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
       }
-   }  
+    }
+
+    suse: {
+
+      zypprepo { "localmirror-os":
+        descr       => "localmirror-os",
+        enabled     => 1,
+        autorefresh => 1,
+        baseurl     => "${repo_mirror}/${loweros}-${facts[os][release][major]}-sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os",
+        gpgcheck    => "1",
+        gpgkey      => "file:///etc/pki/rpm-gpg/${gpgkey}",
+        type        => 'rpm-md'
+      }
+    }
+
 
    default: {
      fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
