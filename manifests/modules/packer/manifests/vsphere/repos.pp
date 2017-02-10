@@ -49,6 +49,19 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           'deb' => true,
         },
       }
+
+      if $::operatingsystem == 'Ubuntu' and $::operatingsystemrelease == '16.10' {
+        apt::pin { 'apt-puppet-agent':
+          packages => 'puppet-agent',
+          origin   => 'apt.puppetlabs.com',
+          priority => 1001,
+        }
+        apt::pin { 'builds-puppet-agent':
+          packages => 'puppet-agent',
+          origin   => 'builds.delivery.puppetlabs.net',
+          priority => 1001,
+        }
+      }
     }
 
     redhat: {
