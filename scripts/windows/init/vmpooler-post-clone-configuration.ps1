@@ -11,13 +11,21 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
+# Windows version checking logic is copied here as its not present by Default
+# on the installed system (might be an idea to change this in the future)
+Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
+Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
 # One off registry fix for background which isn't copied correctly from Default User profile
 reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
 
 # First things first - resync time to make sure we aren't using ESX/VMware time (RE-8033)
-If ($WindowsVersion -ne '6.0.6002') {
+
+If ($WindowsVersion -like $WindowsServer2008) {
+	Write-Host "Resync Time not done for Win-2008"
+}
+else {
 	Write-Host "Resyncing Time"
 	w32tm /resync
 	w32tm /tz
@@ -106,7 +114,7 @@ try {
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
 Write-Host "Renaming Host to $NewVMName"
-if ($WindowsVersion -eq '6.1.7601' -or $WindowsVersion -eq '6.0.6002') {
+if ($WindowsVersion -like $WindowsServer2008R2 -or $WindowsVersion -like $WindowsServer2008) {
 	$(gwmi win32_computersystem).Rename("$NewVMName")
 	shutdown /t 0 /r /f
 }

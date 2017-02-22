@@ -4,8 +4,13 @@
 
 $ErrorActionPreference = 'Stop'
 
+# Windows version checking logic is copied here as its not present by Default
+# on the installed system (might be an idea to change this in the future)
+Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
+Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
-If ($WindowsVersion -eq '6.0.6002') {
+
+If ($WindowsVersion -like $WindowsServer2008) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
   # Which seems to be necessary to get Puppet and other things to run correctly.

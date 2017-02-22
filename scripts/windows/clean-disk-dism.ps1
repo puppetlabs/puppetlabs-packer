@@ -14,17 +14,16 @@ Foreach ($Key in $SubKeys)
 # Cleanup Windows Update area after all that
 # Clean the WinSxS area - actual action depends on OS Level - full DISM commands only available from 2012R2 and later.
 Write-Host "Cleaning up WinxSx updates"
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
-If ($WindowsVersion -eq '6.0.6002') {
+If ($WindowsVersion -like $WindowsServer2008) {
   Write-Host "Windows 2008 - Reduced cleanup"
   compcln /quiet
 }
-ElseIf ($WindowsVersion -eq '6.1.7601' ) {
+ElseIf ($WindowsVersion -like $WindowsServer2008R2 ) {
   # Windows 2008R2/Win-7 - just set registry keys for cleanmgr utility
   reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup"       /v $CleanMgrStateFlags /t REG_DWORD /d $CleanMgrStateFlagClean /f
   reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Service Pack Cleanup" /v $CleanMgrStateFlags /t REG_DWORD /d $CleanMgrStateFlagClean /f
 }
-ElseIf ($WindowsVersion -eq '6.2.9200') {
+ElseIf ($WindowsVersion -like $WindowsServer2012) {
   # Note /ResetBase option is not available on Windows-2012, so need to screen for this.
   dism /online /Cleanup-Image /StartComponentCleanup
   dism /online /cleanup-image /SPSuperseded
@@ -33,7 +32,7 @@ ElseIf ($WindowsVersion -eq '6.2.9200') {
   dism /online /cleanup-image /SPSuperseded
 }
 
-If ($WindowsVersion -eq '6.0.6002') {
+If ($WindowsVersion -like $WindowsServer2008) {
   Write-Host "Skipping CleanMgr for Windows 2008"
 }
 else {

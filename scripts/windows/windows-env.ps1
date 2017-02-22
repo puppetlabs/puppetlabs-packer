@@ -1,11 +1,17 @@
 # Placeholder Environment script for common variable definition.
 $ErrorActionPreference = 'Stop'
 
-# TODO Define variables in later tickets.
-
-# Windows Version is used for OS detection in several places, so put here.
+# Defining set of constants for Windows version checking used throughout the code.
+# Using Major/Minor versions only as listed in:
+#   https://msdn.microsoft.com/en-gb/library/windows/desktop/ms724832%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
+# These are intended to be checking using the "-like" comparison with these constants on the RHS of the test express
+# The $WindowsVersion variable is also determined at this stage as its used in multiple scripts.
+Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
+Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
+Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
-If ($WindowsVersion -eq '6.0.6002') {
+
+If ($WindowsVersion -like $WindowsServer2008) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
   # Which seems to be necessary to get Puppet and other things to run correctly.
@@ -45,9 +51,9 @@ if ($ENV:PROCESSOR_ARCHITECTURE -eq 'x86') {
 
 # Cleanmgr Registry "SageSet" Value - setting this to "random" value and associated constants
 $CleanMgrSageSet = "5462"
-Set-Variable -Name CleanMgrStateFlags -Value "StateFlags$CleanMgrSageSet" -Option Constant
-Set-Variable -Name CleanMgrStateFlagClean -Value 2 -Option Constant
-Set-Variable -Name CleanMgrStateFlagNoAction -Value 0 -Option Constant
+Set-Variable -Option Constant -Name CleanMgrStateFlags        -Value "StateFlags$CleanMgrSageSet"
+Set-Variable -Option Constant -Name CleanMgrStateFlagClean    -Value 2
+Set-Variable -Option Constant -Name CleanMgrStateFlagNoAction -Value 0
 
 # Function to download the packages we need - used in several scripts.
 
