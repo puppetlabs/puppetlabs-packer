@@ -38,8 +38,14 @@ if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { R
 reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v "ChocolateyInstall" /f
 
 # Run Cleanmgr again.
-Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
-Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+If ($WindowsVersion -eq '6.0.6002') {
+  Write-Host "Skipping CleanMgr for Windows 2008"
+}
+else {
+  Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
+  Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
+}
 
 # Clean up files (including those not addressed by cleanmgr)
 # This list is a bit different from that in the dism cleanup script.
@@ -93,7 +99,6 @@ Write-Host "Reclaimed $SpaceReclaimed GB"
 # So Powershell Version 2 and earlier must resort to diskpart.
 # Need to add extra check for Win-2008r2 even with WMF 5 added as this still breaks.
 
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 if ($psversiontable.psversion.major -gt 2 -and $WindowsVersion -ne '6.1.7601') {
   $size = (Get-PartitionSupportedSize -DriveLetter C)
   $sizemax = $size.SizeMax
