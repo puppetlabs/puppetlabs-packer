@@ -3,6 +3,25 @@ $ErrorActionPreference = 'Stop'
 
 # TODO Define variables in later tickets.
 
+# Windows Version is used for OS detection in several places, so put here.
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+If ($WindowsVersion -eq '6.0.6002') {
+  # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
+  # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
+  # Which seems to be necessary to get Puppet and other things to run correctly.
+  # Suspect this is due to the early (mis)implementation of UAC in Vista/Win-2008
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
+  $objectRef = $host.GetType().GetField("externalHostRef", $bindingFlags).GetValue($host)
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetProperty"
+  $consoleHost = $objectRef.GetType().GetProperty("Value", $bindingFlags).GetValue($objectRef, @())
+  [void] $consoleHost.GetType().GetProperty("IsStandardOutputRedirected", $bindingFlags).GetValue($consoleHost, @())
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
+  $field = $consoleHost.GetType().GetField("standardOutputWriter", $bindingFlags)
+  $field.SetValue($consoleHost, [Console]::Out)
+  $field2 = $consoleHost.GetType().GetField("standardErrorWriter", $bindingFlags)
+  $field2.SetValue($consoleHost, [Console]::Out)
+}
+
 # Common variable definitions for packer installations and staging
 
 $PackerStaging = "C:\Packer"
