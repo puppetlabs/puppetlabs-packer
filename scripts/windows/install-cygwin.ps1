@@ -52,38 +52,37 @@ foreach ($line in $content)
     $CygWinPackageList = $splitUp[0]
   }
 }
-
 Write-Host "Package list is: $CygWinPackageList"
-$CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
-
-# Download cygwin setup.exe and packages from local repo and unzip
-Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
-Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
-
-# Copy setup program to C:\Windows\system32 to deal with beaker issue (RE-7855)
-Copy-Item -Path "C:\Packer\Downloads\Cygwin\setup-$ARCH.exe" -Destination "$ENV:WINDIR\system32\setup-$ARCH.exe"
 
 # Setup Password for later use
 if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
 $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
-$ostring = "-o" + $CygwinDownloads
-& $7zip x "$CygwinDownloads\packages_$ARCH.zip" -y $ostring
+Write-Host "Downloading Cygwin Packages"
+Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
+Write-Host "Extracting $CygwinDownloads\packages_$ARCH.zip"
+Start-Process -Wait "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
 
+Write-Host "Downloading Cygwin Setup"
+$CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
+Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
 # Install Cygwin from the download location.
-& $CygWinSetup --quiet-mode `
-               --packages $CygWinPackageList `
-               --no-verify `
-               --local-install `
-               --root $CygWinDir `
-               --local-package-dir $CygwinDownloads\packages
+# Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
+Write-Host "Installing Cygwin"
+$CygwinArguments = "--quiet-mode " + `
+                   "--packages $CygWinPackageList " + `
+                   "--no-verify --local-install " + `
+                   "--root $CygWinDir " + `
+                   "--local-package-dir $CygwinDownloads\packages"
+Start-Process -Wait "$CygWinSetup" -PassThru -NoNewWindow -ArgumentList "$CygwinArguments"
 
-
+# Copy setup program to C:\Windows\system32 to deal with beaker issue (RE-7855)
+Write-Host "Copying $CygWinSetup to $ENV:WINDIR\system32"
+Copy-Item -Path "$CygWinSetup" -Destination "$ENV:WINDIR\system32\setup-$ARCH.exe"
 
 # Set GIT Related env variables to ensure correct editor is used etc.
-Write-Host "GIT Environment variables to use Cygwin utils"
+Write-Host "Set GIT Environment variables to use Cygwin utils"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
-
 Set-ItemProperty -Path $RegPath -Name GIT_EDITOR -Value "$CygEnvPrefix/bin/vi.exe"
 
 # Sleep to let console log catch up (and get captured by packer)
