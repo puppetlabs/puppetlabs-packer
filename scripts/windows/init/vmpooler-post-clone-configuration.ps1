@@ -11,13 +11,17 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+
 # One off registry fix for background which isn't copied correctly from Default User profile
 reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
 
 # First things first - resync time to make sure we aren't using ESX/VMware time (RE-8033)
-Write-Host "Resyncing Time"
-w32tm /resync
-w32tm /tz
+If ($WindowsVersion -ne '6.0.6002') {
+	Write-Host "Resyncing Time"
+	w32tm /resync
+	w32tm /tz
+}
 
 # Get VMPooler Guest name
 # This is a bit roundabout, but it allows us to detect of the guestinfo.hostname is available or not
@@ -102,7 +106,6 @@ try {
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
 Write-Host "Renaming Host to $NewVMName"
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 if ($WindowsVersion -eq '6.1.7601' -or $WindowsVersion -eq '6.0.6002') {
 	$(gwmi win32_computersystem).Rename("$NewVMName")
 	shutdown /t 0 /r /f
