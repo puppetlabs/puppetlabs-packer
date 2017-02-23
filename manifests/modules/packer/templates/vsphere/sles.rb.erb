@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+
+
+hostname = `vmtoolsd --cmd "info-get guestinfo.hostname"`
+
+hostname = hostname.chomp
+
+puts "Nice to meet you, my VM name is '#{hostname}'."
+
+puts "\n"
+
+puts '- Setting local hostname...'
+
+File.open('/etc/hostname', 'w') do |f|
+  f.write(hostname)
+end
+
+Kernel.system("hostnamectl set-hostname #{hostname}")
+
+puts '- Re-obtaining DHCP lease...'
+
+Kernel.system('systemctl restart wicked.service')
+
+puts '- Cleaning up...'
+
+Kernel.system('rm /etc/vsphere-bootstrap.rb')
+Kernel.system('echo "exit 0" > /etc/rc.d/after.local')
+
+puts "\n"
+
+puts 'Done!'

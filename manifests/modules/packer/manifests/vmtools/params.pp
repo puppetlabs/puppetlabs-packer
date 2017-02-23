@@ -11,6 +11,11 @@ class packer::vmtools::params {
       $required_packages = [ "linux-headers-${::kernelrelease}" ]
     }
 
+    'Suse' : {
+      $root_home = '/root'
+      $required_packages = [ 'kernel-devel', 'gcc' ]
+    }
+
     default : {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
