@@ -25,7 +25,7 @@ class packer::vsphere::networking inherits packer::networking::params {
             ensure => absent,
           }
         }
-        network::interface { 'ens32':
+        network::interface { 'ens160':
           enable_dhcp   => true,
         }
       }

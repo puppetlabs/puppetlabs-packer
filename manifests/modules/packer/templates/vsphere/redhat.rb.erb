@@ -21,12 +21,12 @@ puts '- Re-obtaining DHCP lease...'
 
 <% if (@operatingsystem == 'CentOS') or (@operatingsystem == 'Scientific') -%>
   <% if @operatingsystemmajrelease == '7' -%>
-    File.open('/var/lib/NetworkManager/dhclient-ens32.conf', 'a') do |f|
+    File.open('/var/lib/NetworkManager/dhclient-ens160.conf', 'a') do |f|
       f << "send host-name #{hostname}"
     end
     Kernel.system('/sbin/service NetworkManager restart')
-    Kernel.system('/usr/bin/nmcli con down id ens32')
-    Kernel.system('/usr/bin/nmcli con up id ens32')
+    Kernel.system('/usr/sbin/ifdown ens160')
+    Kernel.system('/usr/sbin/ifup ens160')
   <% end -%>
   <% if @operatingsystemmajrelease == '6' -%>
     File.open('/etc/dhcp/dhclient-eth0.conf', 'a') do |f|

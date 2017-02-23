@@ -14,7 +14,7 @@ class packer::vmtools inherits packer::vmtools::params {
     }
 
     redhat: {
-      if $::operatingsystemrelease in ['25'] {
+      if $::operatingsystemmajrelease in ['25', '7'] {
         package { 'open-vm-tools':
           ensure => installed,
         }
@@ -73,6 +73,6 @@ class packer::vmtools inherits packer::vmtools::params {
         match   => '/tmp/vmtools',
         require => Exec[ 'remove /tmp/vmtools' ],
       }
-    } 
+    }
   }
 }
