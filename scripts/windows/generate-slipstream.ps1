@@ -94,12 +94,11 @@ ForEach ($Cab in $Cabs) {
     }
 }
 
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
-if ($WindowsVersion -eq '6.1.7601' ) {
+if ($WindowsVersion -like $WindowsServer2008R2 ) {
   # Windows 2008R2/Win-7 - just set registry keys for cleanmgr utility
   Write-Host "Skipping Cleanup"
 }
-ElseIf ($WindowsVersion -eq '6.2.9200' -or $WindowsVersion -eq '6.0.6002') {
+ElseIf ($WindowsVersion -like $WindowsServer2012 -or $WindowsVersion -like $WindowsServer2008) {
   # Note /ResetBase option is not available on Windows-2012, so need to screen for this.
   Write-Host "Skipping Cleanup"
 } else {

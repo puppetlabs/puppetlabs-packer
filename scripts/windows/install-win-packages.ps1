@@ -12,52 +12,54 @@ if ("$ARCH" -eq "x86") {
 } else {
   $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
 }
+
+# Define common Start-Process params appropriate for running the install setups.
+# Main one is -Wait (until setup is complete).
+# PassThru and NoNewWindow also relevant to ensure any installer console output is properly captured
+$SprocParms = @{'PassThru'=$true;
+                'NoNewWindow'=$true
+}
+
 Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
-Start-Process -Wait "msiexec" -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
+Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
 Write-Host "Installed Puppet Agent..."
 
 Write-Host "Installing Google Chrome Browser"
 Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe $PackerDownloads\ChromeSetup-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" -ArgumentList "/silent /install"
+Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" @SprocParms -ArgumentList "/silent /install"
 Write-Host "Google Chrome Browser Installed"
 
-# Install Notepad++
 Write-Host "Installing Notepad++"
 Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.7.2.2.Installer-$ARCH.exe $PackerDownloads\npp.7.2.2.Installer-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" -ArgumentList "/S"
+Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" @SprocParms -ArgumentList "/S"
 Write-Host "Notepad++ Installed"
 
-Write-Host "7zip"
+Write-Host "Installing 7zip"
 Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$ARCH.exe  $PackerDownloads\7z1602-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\7z1602-$ARCH.exe" -ArgumentList "/S"
+Start-Process -Wait "$PackerDownloads\7z1602-$ARCH.exe" @SprocParms -ArgumentList "/S"
 Write-Host "7zip Installed"
 
-Write-Host "Git For Windows"
+Write-Host "Installing Git For Windows"
 Download-File http://buildsources.delivery.puppetlabs.net/windows/gitforwin/Git-2.11.0-$ARCH.exe  $PackerDownloads\Git-2.11.0-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\Git-2.11.0-$ARCH.exe" -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
+Start-Process -Wait "$PackerDownloads\Git-2.11.0-$ARCH.exe" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
 Write-Host "Git For Windows Installed"
 
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey
 Write-Host "Installing Sysinternal Tools"
-$ostring = "-o" + $SysInternals
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/procexp.zip $PackerDownloads\procexp.zip
-& $7zip x C:\Packer\Downloads\procexp.zip -y $ostring
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/procmon.zip $PackerDownloads\procmon.zip
-& $7zip x C:\Packer\Downloads\procmon.zip -y $ostring
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/pstools.zip $PackerDownloads\pstools.zip
-& $7zip x C:\Packer\Downloads\pstools.zip -y $ostring
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/sdelete.zip $PackerDownloads\sdelete.zip
-& $7zip x C:\Packer\Downloads\sdelete.zip -y $ostring
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/bginfo.zip $PackerDownloads\bginfo.zip
-& $7zip x C:\Packer\Downloads\bginfo.zip -y $ostring
-
-Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/autologon.zip $PackerDownloads\autologon.zip
-& $7zip x C:\Packer\Downloads\autologon.zip -y $ostring
+$SysInternalsTools = @(
+  'procexp',
+  'procmon',
+  'pstools',
+  'bginfo',
+  'autologon'
+)
+$SysInternalsTools | % {
+  Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/$_.zip $PackerDownloads\$_.zip
+  # PS2 has a bug with "Start-Process -Wait" which can cause it to fail if the command finishes "too quickly", so using this
+  # workaround to address random failures (especially with Win-2012)
+  $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $PackerDownloads\$_.zip -y -o$SysInternals"
+  $zproc.WaitForExit()
+}
 
 Write-Host "Updating path with $SysInternals"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'

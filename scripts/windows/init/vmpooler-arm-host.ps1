@@ -4,6 +4,29 @@
 
 $ErrorActionPreference = 'Stop'
 
+# Windows version checking logic is copied here as its not present by Default
+# on the installed system (might be an idea to change this in the future)
+Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
+Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
+$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
+
+If ($WindowsVersion -like $WindowsServer2008) {
+  # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
+  # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
+  # Which seems to be necessary to get Puppet and other things to run correctly.
+  # Suspect this is due to the early (mis)implementation of UAC in Vista/Win-2008
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
+  $objectRef = $host.GetType().GetField("externalHostRef", $bindingFlags).GetValue($host)
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetProperty"
+  $consoleHost = $objectRef.GetType().GetProperty("Value", $bindingFlags).GetValue($objectRef, @())
+  [void] $consoleHost.GetType().GetProperty("IsStandardOutputRedirected", $bindingFlags).GetValue($consoleHost, @())
+  $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
+  $field = $consoleHost.GetType().GetField("standardOutputWriter", $bindingFlags)
+  $field.SetValue($consoleHost, [Console]::Out)
+  $field2 = $consoleHost.GetType().GetField("standardErrorWriter", $bindingFlags)
+  $field2.SetValue($consoleHost, [Console]::Out)
+}
+
 # Arm machine using RunOnce Keys
 Write-Host "Arming machine for first-run"
 reg import C:\Packer\Init\vmpooler-clone-arm-runonce.reg
