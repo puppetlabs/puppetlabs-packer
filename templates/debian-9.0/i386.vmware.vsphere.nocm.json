@@ -4,7 +4,7 @@
     {
       "template_name": "debian-9.0-i386",
       "vsphere_name": "debian-9-i386",
-      "version": "0.0.1",
+      "version": "0.0.2",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
