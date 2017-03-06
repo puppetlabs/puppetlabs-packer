@@ -4,6 +4,13 @@ class packer::vsphere::repos inherits packer::vsphere::params {
 
     debian: {
 
+      file { $periodic_file:
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => 'puppet:///modules/packer/vsphere/periodic',
+      }
+
       exec { "apt-update":
         command => "/usr/bin/apt-get update"
       }
