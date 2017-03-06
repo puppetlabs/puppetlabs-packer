@@ -15,13 +15,17 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.9.2-1xenial_i386.deb",
+
+      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
     },
 
   "builders": [
     {
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "output_directory": "{{user `output_directory`}}output-{{build_name}}",
       "type": "vmware-iso",
+      "headless": true,
       "boot_command": [
         "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -50,7 +54,6 @@
       "boot_wait": "45s",
       "disk_size": 20480,
       "guest_os_type": "{{user `template_os`}}",
-      "headless": "{{user `headless`}}",
       "http_directory": "files",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -73,19 +76,19 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },
@@ -97,10 +100,10 @@
       "type": "shell",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh"
       ]
     }
