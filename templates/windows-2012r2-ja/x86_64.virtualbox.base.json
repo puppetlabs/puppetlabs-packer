@@ -1,0 +1,72 @@
+{
+  "variables": {
+    "provisioner"      : "virtualbox",
+    "template_name"    : "windows-2012r2-ja-x86_64",
+    "template_config": "base",
+    "template_os"      : "Windows2012_64",
+
+    "iso_url"          : "http://osmirror.delivery.puppetlabs.net/iso/windows/ja_windows_server_2012_r2_with_update_x64_dvd_6052738_SlipStream_01.iso",
+    "iso_checksum_type": "md5",
+    "iso_checksum"     : "d06430e4ddc79330649b4b16d984a3d5",
+    "headless"         : "true",
+    "memory_size"      : "2048",
+    "cpu_count"        : "2",
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
+  },
+  "description": "Builds a Windows Server 2012 R2 Japanese template VM for use in VirtualBox",
+  "builders": [
+    {
+      "type"                   : "virtualbox-iso",
+      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name"                : "packer-{{build_name}}",
+      "output_directory"       : "{{user `packer_output_dir`}}/output-{{build_name}}",
+      "iso_url"                : "{{user `iso_url`}}",
+      "iso_checksum_type"      : "{{user `iso_checksum_type`}}",
+      "iso_checksum"           : "{{user `iso_checksum`}}",
+      "headless"               : "{{user `headless`}}",
+      "guest_os_type"          : "{{user `template_os`}}",
+      "guest_additions_mode"   : "attach",
+      "disk_size"              : 61440,
+      "communicator"           : "winrm",
+      "winrm_username"         : "vagrant",
+      "winrm_password"         : "vagrant",
+      "winrm_timeout"          : "16h",
+      "virtualbox_version_file": ".vbox_version",
+      "shutdown_command"       : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout"       : "1h",
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
+        ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"]
+      ],
+      "floppy_files": [
+        "./files/virtualbox/autounattend.xml",
+        "./files/virtualbox/oracle-cert.cer",
+        "./files/virtualbox/oracle-cert-1.cer",
+        "./files/virtualbox/generalize-packer.autounattend.xml",
+        "./files/virtualbox/{{build_name}}.package.ps1",
+        "../../scripts/windows/generalize-packer.bat",
+        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/clean-disk-dism.ps1",
+        "../../scripts/windows/clean-disk-sdelete.ps1"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type"  : "powershell",
+      "inline": [
+        "A:\\clean-disk-dism.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\clean-disk-sdelete.ps1"
+      ]
+    }
+  ]
+}
