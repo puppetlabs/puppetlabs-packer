@@ -136,7 +136,7 @@
             </UserAccounts>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd /c certutil -addstore -f "TrustedPublisher" A:\oracle-cert.cer</CommandLine>
+                    <CommandLine>cmd /c certutil -addstore -f "TrustedPublisher" A:\oracle-cert-1.cer</CommandLine>
                     <Description>Install VirtualBox Tools cert</Description>
                     <Order>1</Order>
                 </SynchronousCommand>

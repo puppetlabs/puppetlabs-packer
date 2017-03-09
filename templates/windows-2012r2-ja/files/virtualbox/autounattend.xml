@@ -136,34 +136,29 @@
             </UserAccounts>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd /c certutil -addstore -f "TrustedPublisher" A:\oracle-cert.cer</CommandLine>
+                    <CommandLine>cmd /c certutil -addstore -f "TrustedPublisher" A:\oracle-cert-1.cer</CommandLine>
                     <Description>Install VirtualBox Tools cert</Description>
                     <Order>1</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd /c certutil -addstore -f "TrustedPublisher" A:\oracle-cert-1.cer</CommandLine>
-                    <Description>Install VirtualBox Tools cert</Description>
-                    <Order>2</Order>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c start /wait E:\VBoxWindowsAdditions.exe /S</CommandLine>
                     <Description>Install VirtualBox Tools (and drivers)</Description>
-                    <Order>3</Order>
+                    <Order>2</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c wmic useraccount where "name='Administrator'" set PasswordExpires=FALSE</CommandLine>
                     <Description>Disable Administrator Password reset</Description>
-                    <Order>4</Order>
+                    <Order>3</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
                     <Description>Disable vagrant Password reset</Description>
-                    <Order>5</Order>
+                    <Order>4</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c A:\generalize-packer.bat</CommandLine>
                     <Description>Sysprep generalize</Description>
-                    <Order>6</Order>
+                    <Order>5</Order>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>

@@ -40,7 +40,7 @@
       ],
       "floppy_files": [
         "./files/virtualbox/autounattend.xml",
-        "./files/virtualbox/oracle-cert.cer",
+        "./files/virtualbox/oracle-cert-1.cer",
         "./files/virtualbox/generalize-packer.autounattend.xml",
         "./files/virtualbox/{{build_name}}.package.ps1",
         "../../scripts/windows/generalize-packer.bat",
