@@ -6,12 +6,12 @@ class packer::vsphere::networking inherits packer::networking::params {
 
   case $::osfamily {
     debian: {
-      if $::operatingsystemrelease in ['15.10', '16.04'] {
+      if $::operatingsystemrelease in ['15.10'] {
         network::interface { 'ens32':
           enable_dhcp   => true,
       }
     }
-      if $::operatingsystemrelease in ['stretch/sid', '16.10'] {
+      if $::operatingsystemrelease in ['stretch/sid', '16.04', '16.10'] {
         network::interface { 'ens160':
           enable_dhcp   => true,
       }
