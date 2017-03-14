@@ -46,6 +46,10 @@ else {
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 }
 
+# Clear Puppet Event Log & SOFTWARE registry keys
+reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Puppet"  /f
+reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
+
 # Clean up files (including those not addressed by cleanmgr)
 # This list is a bit different from that in the dism cleanup script.
 Write-Host "Clearing Files"
@@ -59,7 +63,8 @@ Write-Host "Clearing Files"
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
     "$ENV:WINDIR\winsxs\manifestcache",
-    "C:\ProgramData\PuppetLabs"
+    "C:\ProgramData\PuppetLabs",
+    "C:\Program Files\Puppet Labs"
 ) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
