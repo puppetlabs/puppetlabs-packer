@@ -30,8 +30,8 @@ Remove-Item -Recurse -Force "$env:ChocolateyInstall"
 [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
 %{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'Machine')}
 
-if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyBinRoot" }
-if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyToolsRoot" }
+if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyBinRoot" }
+if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyToolsRoot" }
 [System.Environment]::SetEnvironmentVariable("ChocolateyBinRoot", $null, 'User')
 [System.Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", $null, 'User')
 # Stray key that also needs removed to clean Chocolatey
@@ -60,20 +60,7 @@ Write-Host "Clearing Files"
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
     "$ENV:WINDIR\winsxs\manifestcache",
     "C:\ProgramData\PuppetLabs"
-) | % {
-      try {
-        if(Test-Path $_) {
-            Write-Host "Removing $_"
-            Takeown /d Y /R /f $_
-            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
-            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-          }
-        }
-        catch {
-            Write-Host "Ignoring Error - Continue"
-        }
-
-    }
+) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
 Write-Host "Clearing Logs"
