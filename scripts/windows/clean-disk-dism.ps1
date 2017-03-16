@@ -83,19 +83,7 @@ Write-Host "Clearing Files"
     "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue"
-) | % {
-        if(Test-Path $_) {
-            Try {
-              Write-Host "Removing $_"
-              Takeown /d Y /R /f $_
-              Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
-              Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-            }
-            catch {
-              Write-Host "Ignoring Error - Continue"
-            }
-        }
-    }
+) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
 Write-Host "Clearing Logs"

@@ -174,3 +174,23 @@ Function Install_Win_Patch
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$PatchFilename /quiet /norestart"
   Write-Host "Patch Installed"
 }
+
+# Helper function to delete file, with try/catch to ignore errors.
+# This function is used in both the clean host and clean-disk scripts.
+
+Function ForceFullyDelete-Paths
+{
+  $filetodelete = $args[0]
+
+  try {
+    if(Test-Path $filetodelete) {
+        Write-Host "Removing $filetodelete"
+        Takeown /d Y /R /f $filetodelete
+        Icacls $filetodelete /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+        Remove-Item $filetodelete -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      }
+    }
+    catch {
+        Write-Host "Ignoring Error deleting: $filetodelete - Continue"
+    }
+}

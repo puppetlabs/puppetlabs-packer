@@ -30,8 +30,8 @@ Remove-Item -Recurse -Force "$env:ChocolateyInstall"
 [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
 %{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'Machine')}
 
-if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyBinRoot" }
-if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { Remove-Item -Recurse -Force "$env:ChocolateyToolsRoot" }
+if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyBinRoot" }
+if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyToolsRoot" }
 [System.Environment]::SetEnvironmentVariable("ChocolateyBinRoot", $null, 'User')
 [System.Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", $null, 'User')
 # Stray key that also needs removed to clean Chocolatey
@@ -46,6 +46,10 @@ else {
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 }
 
+# Clear Puppet Event Log & SOFTWARE registry keys
+reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Puppet"  /f
+reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
+
 # Clean up files (including those not addressed by cleanmgr)
 # This list is a bit different from that in the dism cleanup script.
 Write-Host "Clearing Files"
@@ -59,21 +63,9 @@ Write-Host "Clearing Files"
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
     "$ENV:WINDIR\winsxs\manifestcache",
-    "C:\ProgramData\PuppetLabs"
-) | % {
-      try {
-        if(Test-Path $_) {
-            Write-Host "Removing $_"
-            Takeown /d Y /R /f $_
-            Icacls $_ /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
-            Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-          }
-        }
-        catch {
-            Write-Host "Ignoring Error - Continue"
-        }
-
-    }
+    "C:\ProgramData\PuppetLabs",
+    "C:\Program Files\Puppet Labs"
+) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
 Write-Host "Clearing Logs"
