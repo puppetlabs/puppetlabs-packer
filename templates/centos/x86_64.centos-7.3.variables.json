@@ -1,0 +1,11 @@
+    {
+      "template_name": "centos-7.3-x86_64",
+      "template_os": "RedHat_64",
+
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7-x86_64-DVD-1611.iso",
+      "iso_checksum": "c455ee948e872ad2194bdddd39045b83634e8613249182b88f549bb2319d97eb",
+      "iso_checksum_type": "sha256",
+            
+      "puppet_aio": "http://yum.puppetlabs.com/el/7/PC1/x86_64/puppet-agent-1.8.2-1.el7.x86_64.rpm"
+
+    }

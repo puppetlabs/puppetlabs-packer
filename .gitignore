@@ -4,5 +4,7 @@ output/
 *.bak
 hiera/*
 drivers/
+*serial.out
 packer
 .DS_Store
+serial.out
