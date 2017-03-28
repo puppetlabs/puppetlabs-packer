@@ -1,0 +1,15 @@
+---
+HOSTS:
+  win-acpt:
+    roles:
+      - agent
+    platform: <%= platform_name %>
+    template: <%= platform_template %>
+    hypervisor: vcloud
+CONFIG:
+  nfs_server: none
+  consoleport: 443
+  datastore: instance2_1
+  folder: packer/acceptancehosts
+  resourcepool: acceptance1
+  timeout: 600

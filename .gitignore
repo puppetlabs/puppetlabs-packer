@@ -1,8 +1,15 @@
 packer_cache
 output-*
 output/
+vendor/*
 *.bak
 hiera/*
 drivers/
 packer
 .DS_Store
+Gemfile.lock
+Gemfile.local
+acceptance/junit/*
+acceptance/log/*
+acceptance/tmp/*
+acceptance/hosts.yaml
