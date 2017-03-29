@@ -6,6 +6,7 @@ vendor/*
 hiera/*
 drivers/
 packer
+!manifests/modules/packer
 .DS_Store
 Gemfile.lock
 Gemfile.local
