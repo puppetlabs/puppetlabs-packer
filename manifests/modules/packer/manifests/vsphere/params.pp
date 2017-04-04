@@ -9,6 +9,12 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
+      if $facts[os][release] in ['12.04', '14.04'] {
+        $periodic_file         = '/etc/apt/apt.conf.d/02periodic'
+      }
+      else {
+        $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
+      }
       if $::operatingsystemrelease in ['10.04', '12.04'] {
         $ruby_package          = [ 'ruby', 'rubygems' ]
       }
@@ -27,6 +33,12 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'debian.rb.erb'
+      if $facts[os][release] in ['7', '8'] {
+        $periodic_file         = '/etc/apt/apt.conf.d/02periodic'
+      }
+      else {
+        $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
+      }
       $ruby_package          = [ 'ruby' ]
       $repo_name             = 'debian'
       $repo_list             = 'main contrib non-free'

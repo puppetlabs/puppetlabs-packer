@@ -3,7 +3,7 @@
   "variables":
     {
       "template_name": "ubuntu-16.10-i386",
-      "version": "0.0.3",
+      "version": "0.0.4",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
