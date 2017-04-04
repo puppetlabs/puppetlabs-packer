@@ -3,6 +3,7 @@
     "template_name" : "windows-2012r2-x86_64",
     "provisioner"   : "virtualbox",
     "template_config": "vagrant.cygwin",
+    "beakerhost": "windows2012r2-64",
 
     "headless"      : "true",
     "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",

@@ -3,6 +3,7 @@
     "template_name": "windows-10-i386",
     "version": "0.0.1",
     "template_config": "vsphere.cygwin",
+    "beakerhost": "windows10ent-32",
 
     "provisioner": "vmware",
     "headless": "true",

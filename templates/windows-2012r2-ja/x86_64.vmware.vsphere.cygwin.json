@@ -3,6 +3,7 @@
     "template_name": "windows-2012r2-ja-x86_64",
     "version": "0.0.1",
     "template_config": "vsphere.cygwin",
+    "beakerhost": "windows2012r2_ja-64",
 
     "provisioner": "vmware",
     "headless": "true",

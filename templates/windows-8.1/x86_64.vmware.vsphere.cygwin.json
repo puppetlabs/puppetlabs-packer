@@ -3,6 +3,7 @@
     "template_name": "windows-8.1-x86_64",
     "version": "0.0.1",
     "template_config": "vsphere.cygwin",
+    "beakerhost": "windows81-64",
 
     "provisioner": "vmware",
     "headless": "true",
