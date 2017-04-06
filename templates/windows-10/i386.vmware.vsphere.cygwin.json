@@ -55,7 +55,7 @@
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
-        "files/config-vmware-vsphere-cygwin.ps1"
+        "files/config-winsettings.ps1"
       ],
 
       "vmx_data": {
@@ -136,7 +136,7 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\config-vmware-vsphere-cygwin.ps1"
+        "A:\\config-winsettings.ps1"
       ]
     },
     {
@@ -158,7 +158,7 @@
     },
     {
       "type": "file",
-      "source": "./files/i386/post-clone.autounattend.xml",
+      "source": "./files/i386/vmware/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {

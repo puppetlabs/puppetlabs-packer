@@ -162,7 +162,7 @@
     },
     {
       "type": "file",
-      "source": "./files/vmware/post-clone.autounattend.xml",
+      "source": "./files/x86_64/vmware/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {

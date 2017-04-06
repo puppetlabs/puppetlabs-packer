@@ -30,7 +30,7 @@
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_password": "PackerAdmin",
-      "winrm_timeout": "16h",
+      "winrm_timeout": "8h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
@@ -38,8 +38,8 @@
       "disk_size": 30720,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/vmware/autounattend.xml",
-        "files/vmware/generalize-packer.autounattend.xml",
+        "files/x86_64/vmware/autounattend.xml",
+        "files/x86_64/vmware/generalize-packer.autounattend.xml",
         "files/slipstream-filter",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",

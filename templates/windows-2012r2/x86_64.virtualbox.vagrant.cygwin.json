@@ -23,7 +23,7 @@
       "communicator"        : "winrm",
       "winrm_username"      : "vagrant",
       "winrm_password"      : "vagrant",
-      "winrm_timeout"       : "16h",
+      "winrm_timeout"       : "8h",
       "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout"    : "1h",
       "guest_additions_mode": "attach",
@@ -116,7 +116,7 @@
     },
     {
       "type": "file",
-      "source": "./files/virtualbox/post-clone.autounattend.xml",
+      "source": "./files/x86_64/virtualbox/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {
@@ -144,6 +144,6 @@
     "post-processors": [{
     "type"                : "vagrant",
     "output"              : "{{user `packer_shared_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
-    "vagrantfile_template": "./files/virtualbox/vagrantfile-windows2012r2.template"
+    "vagrantfile_template": "./files/x86_64/virtualbox/vagrantfile-windows2012r2.template"
   }]
 }
