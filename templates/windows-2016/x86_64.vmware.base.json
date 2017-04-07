@@ -40,16 +40,16 @@
       "disk_size": 61440,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/autounattend.xml",
+        "files/x86_64/vmware/autounattend.xml",
+        "files/x86_64/vmware/generalize-packer.autounattend.xml",
+        "files/x86_64/vmware/{{build_name}}.package.ps1",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/clean-disk-dism.ps1",
-        "../../scripts/windows/clean-disk-sdelete.ps1",
-        "files/generalize-packer.autounattend.xml",
-        "files/{{build_name}}.package.ps1"
+        "../../scripts/windows/clean-disk-sdelete.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],

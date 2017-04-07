@@ -32,7 +32,7 @@
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_password": "PackerAdmin",
-      "winrm_timeout": "16h",
+      "winrm_timeout": "8h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
@@ -40,7 +40,7 @@
       "disk_size": 61440,
       "disk_type_id": "0",
       "floppy_files": [
-        "files/vmware/autounattend.xml",
+        "files/x86_64/vmware/autounattend.xml",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
@@ -48,8 +48,8 @@
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/clean-disk-dism.ps1",
         "../../scripts/windows/clean-disk-sdelete.ps1",
-        "files/vmware/generalize-packer.autounattend.xml",
-        "files/vmware/{{build_name}}.package.ps1"
+        "files/x86_64/vmware/generalize-packer.autounattend.xml",
+        "files/x86_64/vmware/{{build_name}}.package.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],

@@ -58,7 +58,7 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
         "files/shutdown-packer-2008.ps1",
-        "files/config-vmware-vsphere-cygwin.ps1"
+        "files/config-winsettings.ps1"
       ],
 
       "vmx_data": {
@@ -149,7 +149,7 @@
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
-        "A:\\config-vmware-vsphere-cygwin.ps1"
+        "A:\\config-winsettings.ps1"
       ]
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "type": "file",
-      "source": "./files/post-clone.autounattend.xml",
+      "source": "./files/x86_64/vmware/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
     },
     {

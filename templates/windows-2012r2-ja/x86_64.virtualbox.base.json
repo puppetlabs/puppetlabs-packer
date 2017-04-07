@@ -30,7 +30,7 @@
       "communicator"           : "winrm",
       "winrm_username"         : "vagrant",
       "winrm_password"         : "vagrant",
-      "winrm_timeout"          : "16h",
+      "winrm_timeout"          : "8h",
       "virtualbox_version_file": ".vbox_version",
       "shutdown_command"       : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout"       : "1h",
@@ -39,10 +39,10 @@
         ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"]
       ],
       "floppy_files": [
-        "./files/virtualbox/autounattend.xml",
-        "./files/virtualbox/oracle-cert-1.cer",
-        "./files/virtualbox/generalize-packer.autounattend.xml",
-        "./files/virtualbox/{{build_name}}.package.ps1",
+        "./files/x86_64/virtualbox/autounattend.xml",
+        "./files/x86_64/virtualbox/oracle-cert-1.cer",
+        "./files/x86_64/virtualbox/generalize-packer.autounattend.xml",
+        "./files/x86_64/virtualbox/{{build_name}}.package.ps1",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
