@@ -4,6 +4,7 @@
     {
       "template_name": "debian-9.0-i386",
       "vsphere_name": "debian-9-i386",
+      "template_config": "vsphere-nocm",
       "version": "0.0.2",
 
       "provisioner": "vmware",
@@ -20,20 +21,23 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
+      "headless": "true",
+
       "memory_size": "2048",
       "cpu_count": "2",
 
-      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
-
+      "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
+      "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}-vsphere-nocm",
-      "vm_name": "packer-{{build_name}}",
       "type": "vmware-vmx",
-      "headless": true,
-      "source_path": "{{user `output_directory`}}output-{{user `template_name`}}-{{user `provisioner`}}/packer-{{user `template_name`}}-{{user `provisioner`}}.vmx",
+      "headless": "{{user `headless`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name": "packer-{{build_name}}",
+      "source_path": "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
       "ssh_username": "root",
       "ssh_password": "puppet",
       "ssh_port": 22,
@@ -106,7 +110,7 @@
       "cluster": "{{user `packer_vcenter_cluster`}}",
       "datastore": "{{user `packer_vcenter_datastore`}}",
       "vm_folder": "{{user `packer_vcenter_folder`}}",
-      "vm_name": "{{user `vshpere_name`}}",
+      "vm_name": "{{user `vsphere_name`}}",
       "vm_network": "{{user `packer_vcenter_net`}}",
       "insecure" : "{{user `packer_vcenter_insecure`}}"
     }

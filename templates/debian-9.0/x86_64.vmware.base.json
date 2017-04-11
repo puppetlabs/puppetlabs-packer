@@ -4,9 +4,10 @@
     {
       "template_name": "debian-9.0-x86_64",
       "template_os": "debian7-64",
+      "template_config": "base",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-stretch-DI-alpha8-amd64-xfce-CD-1.iso",
-      "iso_checksum": "47781642a3501ec00c6d724f4253c39fdd140d58e34239ac755cdcb63feba734",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-stretch-DI-rc3-amd64-xfce-CD-1.iso",
+      "iso_checksum": "156134299f3303ca505501127f7d5d169cbf868525b1e2eede59d7f4a40a2e3e",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
@@ -15,17 +16,18 @@
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.8.2-1jessie_amd64.deb",
+      "headless": "true",
 
-      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
+      "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
 
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "output_directory": "{{user `output_directory`}}output-{{build_name}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
       "type": "vmware-iso",
-      "headless": true,
+      "headless": "{{user `headless`}}",
       "boot_command": [
         "<esc><wait>",
         "install <wait>",
