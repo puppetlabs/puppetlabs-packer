@@ -3,7 +3,8 @@
   "variables":
     {
       "template_name": "debian-8.2-i386",
-      "template_os": "debian8",
+      "template_os": "debian7",
+      "template_config": "base",
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-8.2.0-i386-CD-1.iso",
       "iso_checksum": "87060c2777f55806e313db22ba8a78aee9f7119b6321448a1dfdaf0bbfcb67ce",
@@ -14,13 +15,18 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_nfs": "{{env `PUPPET_NFS`}}"
+      "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.8.2-1jessie_i386.deb",
+      "headless": "true",
+
+      "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
       "type": "vmware-iso",
+      "headless": "{{user `headless`}}",
       "boot_command": [
         "<esc><wait>",
         "install <wait>",
@@ -57,19 +63,19 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-puppet.sh"
+        "../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "puppet-masterless",
-      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --parser=future --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter": {
         "provisioner": "{{user `provisioner`}}"
       },
@@ -79,12 +85,13 @@
 
     {
       "type": "shell",
+      "execute_command": "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
       "environment_vars": [
         "TEMPLATE={{user `template_name`}}",
-        "PUPPET_NFS={{user `puppet_nfs`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-puppet.sh",
+        "../../scripts/cleanup-aio.sh",
         "../../scripts/cleanup-packer.sh"
       ]
     }

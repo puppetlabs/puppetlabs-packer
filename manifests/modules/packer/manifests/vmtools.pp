@@ -3,7 +3,7 @@ class packer::vmtools inherits packer::vmtools::params {
   case $::osfamily {
     debian: {
       # Debian 9.0 alpha release returns 'stretch/sid' for operatingsystemrelease:
-      if $::operatingsystemrelease in ['stretch/sid', '16.04', '16.10'] {
+      if $::operatingsystemrelease in ['stretch/sid', '16.04', '16.10', '8.0'] {
         package { 'open-vm-tools':
           ensure => installed,
         }

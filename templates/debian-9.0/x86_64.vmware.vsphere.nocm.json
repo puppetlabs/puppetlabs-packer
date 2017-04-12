@@ -6,7 +6,7 @@
       "vsphere_name": "debian-9-x86_64",
       "template_config": "vsphere-nocm",
       "version": "0.0.2",
-
+      "beakerhost": "debian9-64",
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
       "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.8.2-1jessie_amd64.deb",
@@ -20,7 +20,8 @@
       "packer_vcenter_folder": "{{env `PACKER_VCENTER_FOLDER`}}",
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
-
+      "packer_sha": "{{env `PACKER_SHA`}}",
+    
       "headless": "true",
 
       "memory_size": "2048",
@@ -44,13 +45,12 @@
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "/sbin/halt -h -p",
       "vmx_data": {
-        "annotation": "{{user `template_name`}}-{{user `version`}} built {{isotime}}"
+      "annotation": "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}"
       },
       "vmx_data_post": {
         "cpuid.coresPerSocket": "1",
         "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "ethernet0.virtualDev": "vmxnet3"
+        "numvcpus": "{{user `cpu_count`}}"
       }
     }
   ],
@@ -110,9 +110,10 @@
       "cluster": "{{user `packer_vcenter_cluster`}}",
       "datastore": "{{user `packer_vcenter_datastore`}}",
       "vm_folder": "{{user `packer_vcenter_folder`}}",
-      "vm_name": "{{user `vsphere_name`}}",
+      "vm_name": "{{user `template_name`}}-{{user `version`}}",
       "vm_network": "{{user `packer_vcenter_net`}}",
-      "insecure" : "{{user `packer_vcenter_insecure`}}"
+      "insecure" : "{{user `packer_vcenter_insecure`}}",
+      "overwrite" : "true"
     }
   ]
 }
