@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "sles-12.1-x86_64",
+      "template_name": "sles-12sp1-x86_64",
       "version": "0.0.1",
 
       "provisioner": "vmware",
