@@ -61,6 +61,9 @@ if (-not (Test-Path "A:\WMF5.installed"))
   Invoke-Reboot
 }
 
+# Re-direct Updates to use WSUS Server
+Enable-UpdatesFromInternalWSUS
+
 # Install Updates and reboot until this is completed.
 Install-WindowsUpdate -AcceptEula
 if (Test-PendingReboot) { Invoke-Reboot }

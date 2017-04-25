@@ -22,6 +22,9 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
+# Re-direct Updates to use WSUS Server
+Enable-UpdatesFromInternalWSUS
+
 # Install Updates and reboot until this is completed.
 Write-BoxstarterMessage "Starting Windows Update Pass"
 Install-WindowsUpdate -AcceptEula

@@ -38,21 +38,13 @@ New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
 $MSUPackageDir = "$ENV:WINDIR\SoftwareDistribution\Download\SlipMSUPackages"
 New-Item -ItemType directory -Force -Path $MSUPackageDir
 
-# Forget downloading any windows update pass - download the updates we need directly.
-# (KB3199986) - http://download.windowsupdate.com/c/msdownload/update/software/crup/2016/10/windows10.0-kb3199986-x64_5d4678c30de2de2bd7475073b061d0b3b2e5c3be.msu
-# (KB3200970) - Cumulative Update - http://download.windowsupdate.com/d/msdownload/update/software/secu/2016/11/windows10.0-kb3200970-x64_3fa1daafc46a83ed5d0ecbd0a811e1421b7fad5a.msu
+# Re-direct Updates to use WSUS Server
+Enable-UpdatesFromInternalWSUS
 
-if (-not (Test-Path "A:\Win10.Downloads"))
-{
-  # Install Windows Rollup Update first.
-  Write-Host "Download KB KB3199986"
-  Download-File "http://download.windowsupdate.com/c/msdownload/update/software/crup/2016/10/windows10.0-kb3199986-x64_5d4678c30de2de2bd7475073b061d0b3b2e5c3be.msu"  "$MSUPackageDir\windows10.0-kb3199986-x64_5d4678c30de2de2bd7475073b061d0b3b2e5c3be.msu"
-  Write-Host "Download Main CU - KB3200970"
-  Download-File "http://download.windowsupdate.com/d/msdownload/update/software/secu/2016/11/windows10.0-kb3200970-x64_3fa1daafc46a83ed5d0ecbd0a811e1421b7fad5a.msu"  "$MSUPackageDir\windows10.0-kb3200970-x64_3fa1daafc46a83ed5d0ecbd0a811e1421b7fad5a.msu"
-  Write-Host "Downloads complete"
-  Touch-File "A:\Win10.Downloads"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
+# Install Updates and reboot until this is completed.
+Write-BoxstarterMessage "Starting Windows Update Pass"
+Install-WindowsUpdate -AcceptEula
+if (Test-PendingReboot) { Invoke-Reboot }
 
 Copy-Item A:\windows-env.ps1 C:\Packer\Dism
 Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
