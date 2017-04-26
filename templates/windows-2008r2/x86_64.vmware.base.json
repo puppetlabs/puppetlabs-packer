@@ -32,7 +32,7 @@
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_password": "PackerAdmin",
-      "winrm_timeout": "8h",
+      "winrm_timeout": "4h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
