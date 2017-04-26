@@ -14,4 +14,3 @@ acceptance/junit/*
 acceptance/log/*
 acceptance/tmp/*
 acceptance/hosts.yaml
-!manifests/modules/packer/
