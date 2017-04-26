@@ -143,19 +143,6 @@ Function Disable-PC-Sleep
   }
 }
 
-# Helper function to perform a final reboot.
-# This should help pick up any "trailing" windows updates as it appears that
-# There are still some missing updates.
-
-Function Do-Packer-Final-Reboot
-{
-  if (-not (Test-Path "A:\Final.Reboot"))
-  {
-    Touch-File "A:\Final.Reboot"
-    Invoke-Reboot
-  }
-}
-
 # Helper function to install Windows/MS Patch.
 # Downloads file to $TEMP and uses wusa to install it.
 
@@ -193,4 +180,67 @@ Function ForceFullyDelete-Paths
     catch {
         Write-Host "Ignoring Error deleting: $filetodelete - Continue"
     }
+}
+
+# Helper Function set Windows Update to use the Internal Production WSUS Server
+
+Function Enable-UpdatesFromInternalWSUS
+{
+  $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
+  Write-Host "Setting Windows Update Server to $WSUSServer"
+
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "$WSUSServer" /f
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "$WSUSServer" /f
+
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
+  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
+}
+
+# Helper function to perform a final reboot.
+# This should help pick up any "trailing" windows updates as it appears that
+# There are still some missing updates.
+
+Function Do-Packer-Final-Reboot
+{
+  if (-not (Test-Path "A:\Final.Reboot"))
+  {
+    Touch-File "A:\Final.Reboot"
+    Invoke-Reboot
+  }
+}
+
+# Helper function to encapsulate the complete update sequence used for packer
+
+Function Install-PackerWindowsUpdates
+{
+  if (-not (Test-Path "A:\WSUS.redirect"))
+  {
+    Touch-File "A:\WSUS.redirect"
+    # Re-direct Updates to use WSUS Server
+    Enable-UpdatesFromInternalWSUS
+  }
+
+  # Install Updates and reboot until this is completed.
+  try {
+     Install-WindowsUpdate -AcceptEula
+  }
+  catch {
+     Write-Host "Ignoring first Update error."
+  }
+  if (Test-PendingReboot) { Invoke-Reboot }
+  # This is a sort of belt and braces approach - it may work better after we reboot it again.
+  # This is particularly for the benefit of Windows-7/2008R2
+  try {
+    Install-WindowsUpdate -AcceptEula
+  }
+  catch {
+    Invoke-Reboot
+  }
+  if (Test-PendingReboot) { Invoke-Reboot }
+
+  # Do one final reboot in case there are any more updates to be picked up.
+  Do-Packer-Final-Reboot
 }

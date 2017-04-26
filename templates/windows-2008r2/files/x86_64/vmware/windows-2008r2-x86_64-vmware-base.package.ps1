@@ -44,9 +44,8 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Enable RDP
 Write-BoxstarterMessage "Enable Remote Desktop"

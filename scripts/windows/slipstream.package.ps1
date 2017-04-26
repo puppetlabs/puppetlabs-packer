@@ -9,20 +9,9 @@ $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a r
 
 if (Test-PendingReboot){ Invoke-Reboot }
 
-Write-BoxstarterMessage "Disabling Hiberation..."
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
-Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
-
-
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "http://10.32.163.228:8530" /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "http://10.32.163.228:8530" /f
-
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
-
+# Need to guard against system going into standby for long updates
+Write-BoxstarterMessage "Disabling Sleep timers"
+Disable-PC-Sleep
 
 if (-not (Test-Path "A:\NET45.installed"))
 {
@@ -33,9 +22,8 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Create Dism directories and copy files over.
 # This allows errors to be handled manually in event of dism failures
@@ -46,6 +34,7 @@ New-Item -ItemType directory -Force -Path C:\Packer\Downloads
 New-Item -ItemType directory -Force -Path C:\Packer\Dism\Mount
 New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
 
+# Setup Dism Directories
 Copy-Item A:\windows-env.ps1 C:\Packer\Dism
 Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
 Copy-Item A:\slipstream-filter C:\Packer\Dism

@@ -17,15 +17,6 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "http://10.32.163.228:8530" /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "http://10.32.163.228:8530" /f
-
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
-
 if (-not (Test-Path "A:\NET45.installed"))
 {
   # Install .Net Framework 4.5.2
@@ -51,17 +42,13 @@ if (-not (Test-Path "A:\Win2012.Patches"))
     'http://download.windowsupdate.com/d/msdownload/update/software/crup/2016/06/windows8-rt-kb3173426-x64_ecf1b38d9e3cdf1eace07b9ddbf6f57c1c9d9309.msu'
   )
   $patches | % { Install_Win_Patch -PatchUrl $_ }
-  
+
   Touch-File "A:\Win2012.Patches"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
-
-# Do one final reboot in case there are any more updates to be picked up.
-Do-Packer-Final-Reboot
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Create Dism directories and copy files over.
 # This allows errors to be handled manually in event of dism failures

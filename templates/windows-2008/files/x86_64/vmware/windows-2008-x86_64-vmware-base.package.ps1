@@ -13,16 +13,6 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
-# Need to use WUServer as updates won't work from main MS Servers - similar to Win-2013 issues
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "http://10.32.163.228:8530" /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "http://10.32.163.228:8530" /f
-
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
-reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
-
 # Make sure network connection is private
 Write-BoxstarterMessage "Setting network adapters to private"
 $networkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]"{DCB00C01-570F-4A9B-8D69-199FDBA5723B}"))
@@ -71,16 +61,8 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Install Updates and reboot until this is completed.
-try {
-    Install-WindowsUpdate -AcceptEula
-}
-catch {
-    Write-Host "Ignoring first Update error."
-}
-if (Test-PendingReboot) { Invoke-Reboot }
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Enable RDP
 Write-BoxstarterMessage "Enable Remote Desktop"
