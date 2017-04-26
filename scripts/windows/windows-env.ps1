@@ -231,7 +231,14 @@ Function Install-PackerWindowsUpdates
      Write-Host "Ignoring first Update error."
   }
   if (Test-PendingReboot) { Invoke-Reboot }
-  Install-WindowsUpdate -AcceptEula
+  # This is a sort of belt and braces approach - it may work better after we reboot it again.
+  # This is particularly for the benefit of Windows-7/2008R2
+  try {
+    Install-WindowsUpdate -AcceptEula
+  }
+  catch {
+    Invoke-Reboot
+  }
   if (Test-PendingReboot) { Invoke-Reboot }
 
   # Do one final reboot in case there are any more updates to be picked up.
