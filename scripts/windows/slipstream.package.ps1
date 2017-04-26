@@ -22,12 +22,8 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Re-direct Updates to use WSUS Server
-Enable-UpdatesFromInternalWSUS
-
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Create Dism directories and copy files over.
 # This allows errors to be handled manually in event of dism failures
@@ -38,6 +34,7 @@ New-Item -ItemType directory -Force -Path C:\Packer\Downloads
 New-Item -ItemType directory -Force -Path C:\Packer\Dism\Mount
 New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
 
+# Setup Dism Directories
 Copy-Item A:\windows-env.ps1 C:\Packer\Dism
 Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
 Copy-Item A:\slipstream-filter C:\Packer\Dism

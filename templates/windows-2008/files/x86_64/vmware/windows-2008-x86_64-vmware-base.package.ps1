@@ -61,19 +61,8 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Re-direct Updates to use WSUS Server
-Enable-UpdatesFromInternalWSUS
-
-# Install Updates and reboot until this is completed.
-try {
-    Install-WindowsUpdate -AcceptEula
-}
-catch {
-    Write-Host "Ignoring first Update error."
-}
-if (Test-PendingReboot) { Invoke-Reboot }
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Enable RDP
 Write-BoxstarterMessage "Enable Remote Desktop"

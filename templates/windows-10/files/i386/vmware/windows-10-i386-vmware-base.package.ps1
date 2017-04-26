@@ -26,16 +26,8 @@ if (-not (Test-Path "A:\NET45.installed"))
 Write-BoxstarterMessage "Set all network adapters private"
 $net = get-netconnectionprofile;Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private
 
-# Re-direct Updates to use WSUS Server
-Enable-UpdatesFromInternalWSUS
-
-# Install Updates and reboot until this is completed.
-Write-BoxstarterMessage "Starting Windows Update Pass"
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
-
-# Do one final reboot in case there are any more updates to be picked up.
-Do-Packer-Final-Reboot
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-BoxstarterMessage "Enable Remote Desktop"

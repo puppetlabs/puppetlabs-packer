@@ -40,15 +40,8 @@ if (-not (Test-Path "A:\WMF5.installed"))
   Invoke-Reboot
 }
 
-# Re-direct Updates to use WSUS Server
-Enable-UpdatesFromInternalWSUS
-
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
-
-# Do one final reboot in case there are any more updates to be picked up.
-Do-Packer-Final-Reboot
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
 # Disable UAC
 Write-BoxstarterMessage "Disable UAC"

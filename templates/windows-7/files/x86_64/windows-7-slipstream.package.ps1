@@ -38,15 +38,9 @@ if (-not (Test-Path "A:\Win7MSU.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-# Re-direct Updates to use WSUS Server
-Enable-UpdatesFromInternalWSUS
+# Run the Packer Update Sequence
+Install-PackerWindowsUpdates
 
-# Install Updates and reboot until this is completed.
-Install-WindowsUpdate -AcceptEula
-if (Test-PendingReboot) { Invoke-Reboot }
-
-# Do one final reboot in case there are any more updates to be picked up.
-Do-Packer-Final-Reboot
 
 # Create Dism directories and copy files over.
 # This allows errors to be handled manually in event of dism failures
