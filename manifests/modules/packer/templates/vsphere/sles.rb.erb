@@ -24,6 +24,7 @@ Kernel.system('systemctl restart wicked.service')
 puts '- Cleaning up...'
 
 Kernel.system('rm /etc/vsphere-bootstrap.rb')
+Kernel.system('rm /etc/zypp/repos.d/SLES*.repo')
 Kernel.system('echo "exit 0" > /etc/rc.d/after.local')
 
 puts "\n"

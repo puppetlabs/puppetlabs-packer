@@ -37,5 +37,9 @@ class packer::updates {
     file { '/etc/apt/apt.conf.d/10disable-periodic':
       content => 'APT::Periodic::Enable \"0\";'
     }
+  } elsif $::osfamily == 'Suse' {
+    file { '/etc/zypp/locks':
+      ensure => absent
+    }
   }
 }

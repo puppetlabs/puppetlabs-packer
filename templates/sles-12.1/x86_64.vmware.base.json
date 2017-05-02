@@ -2,7 +2,7 @@
 
   "variables":
     {
-      "template_name": "sles-12.1-x86_64",
+      "template_name": "sles-12sp1-x86_64",
       "template_os": "linux",
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/SLE-12-SP1-Server-DVD-x86_64-GM-DVD1.iso",
