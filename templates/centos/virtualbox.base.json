@@ -1,0 +1,106 @@
+{
+
+  "variables":
+    {
+      "provisioner": "virtualbox",
+      "headless": "true",
+
+      "template_name": null,
+      "virtualbox_template_os": null,
+      "iso_url": null,
+      "iso_checksum": null,
+      "iso_checksum_type": null,
+      "puppet_aio": null,
+
+      "kickstart_file": null,
+      "boot_wait": null,
+      "disk_size": null,
+      "ssh_username": null,
+      "ssh_password": null,
+      "ssh_port": null,
+      "ssh_wait_timeout": null,
+      "shutdown_command": null,
+      "memory_size": null,
+      "cpu_count": null,
+
+      "required_modules": null
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `kickstart_file`}} <wait>",
+        "<enter>"
+      ],
+      "boot_wait": "{{user `boot_wait`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_os_type": "{{user `virtualbox_template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_port": "{{user `ssh_port`}}",
+      "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/bootstrap-puppet.sh"
+      ]
+    },
+
+    {
+      "type": "puppet-masterless",
+      "execute_command": "{{.FacterVars}} PATH=$PATH:/opt/puppet/bin /opt/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter": {
+        "provisioner": "{{user `provisioner`}}"
+      },
+      "manifest_dir": "../../manifests",
+      "manifest_file": "../../manifests/base.pp"
+    },
+
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars": [
+        "TEMPLATE={{user `template_name`}}",
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts": [
+        "../../scripts/cleanup-aio.sh",
+        "../../scripts/cleanup-packer.sh"
+      ]
+    }
+  ]
+
+}
