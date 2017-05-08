@@ -21,4 +21,14 @@ class windows_template::configure_services()
       ensure => 'stopped',
       enable => false,
     }
+
+    # Disable Google Update Services to prevent pending reboot requests
+    service { 'gupdate':
+      ensure => 'stopped',
+      enable => false,
+    }
+    service { 'gupdatem':
+      ensure => 'stopped',
+      enable => false,
+    }
 }
