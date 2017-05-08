@@ -61,7 +61,8 @@ $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 Write-Host "Downloading Cygwin Packages"
 Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
 Write-Host "Extracting $CygwinDownloads\packages_$ARCH.zip"
-Start-Process -Wait "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
+$zproc = Start-Process "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
+$zproc.WaitForExit()
 
 Write-Host "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
