@@ -29,7 +29,7 @@ class packer::vmtools::params {
 
     vmware: {
       $tools_iso   = 'linux.iso'
-      $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz -C /tmp/ ; /tmp/vmware-tools-distrib/vmware-install.pl --force-install ; rm -rf /tmp/vmware-tools-distrib'
+      $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz -C /tmp/ && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
     }
 
     default: {
