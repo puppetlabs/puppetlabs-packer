@@ -216,6 +216,16 @@ Function Do-Packer-Final-Reboot
 
 Function Install-PackerWindowsUpdates
 {
+  param (
+    [switch]$DisableWUSA
+  )
+
+  # If DisableWUSA is set, then touch the "WUSA.redirect" file to disable it
+  if ( $DisableWUSA ) {
+    Write-Host "Disable WUSA Re-direct"
+    Touch-File "A:\WSUS.redirect"
+  }
+
   if (-not (Test-Path "A:\WSUS.redirect"))
   {
     Touch-File "A:\WSUS.redirect"

@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-# Customised Slipstream script for Windows-7 - this proves a bit more difficult than the "usual"
+# Customised Slipstream script for Windows-2008r2 - this proves a bit more difficult than the "usual"
 # Slipstream update process.
 # Use a rollup update.
 
@@ -27,21 +27,38 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-$Win7RollupMsu = "windows6.1-kb3125574-v4-x64_2dafb1d203c8964239af3048b5dd4b1264cd93b9.msu"
-if (-not (Test-Path "A:\Win7MSU.installed"))
+if (-not (Test-Path "A:\KB3020369.installed"))
+{
+  # Install the WinSxS cleanup patch
+  Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
+  Install_Win_Patch "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB3020369-x64.msu"
+  Touch-File "A:\KB3020369.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
+
+if (-not (Test-Path "A:\KB2852386.installed"))
+{
+  # Install the WinSxS cleanup patch
+  Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
+  Install_Win_Patch "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
+  Touch-File "A:\KB2852386.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
+
+$Win2008r2RollupMsu = "windows6.1-kb3125574-v4-x64_2dafb1d203c8964239af3048b5dd4b1264cd93b9.msu"
+if (-not (Test-Path "A:\Win2008r2MSU.installed"))
 {
   # Install Windows Rollup Update first.
-  Write-Host "Install Windows 7 Rollup update"
-  Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-7-msu/$Win7RollupMsu"  "$ENV:TEMP\$Win7RollupMsu"
-  Write-Host "Applying $Win7RollupMsu Patch"
-  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win7RollupMsu /quiet /norestart"
-  Touch-File "A:\Win7MSU.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
+  Write-Host "Install Windows 2008r2 Rollup update"
+  Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/$Win2008r2RollupMsu"  "$ENV:TEMP\$Win2008r2RollupMsu"
+  Write-Host "Applying $Win2008r2RollupMsu Patch"
+  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win2008r2RollupMsu /quiet /norestart"
+  Touch-File "A:\Win2008r2MSU.installed"
+  Invoke-Reboot
 }
 
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
-
 
 # Create Dism directories and copy files over.
 # This allows errors to be handled manually in event of dism failures

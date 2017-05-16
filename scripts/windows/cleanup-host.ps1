@@ -11,24 +11,29 @@ Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.ms
 
 # Remove Boxstarter
 Write-Host "Uninstalling boxstarter..."
-choco uninstall boxstarter --yes
+choco uninstall boxstarter --yes --force
 
 # Remove Chocolatey - using instructions at https://chocolatey.org/docs/uninstallation
 Write-Host "Uninstalling Chocolatey and all its bits..."
 
-Remove-Item -Recurse -Force "$env:ChocolateyInstall"
-[System.Text.RegularExpressions.Regex]::Replace( `
-[Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment').GetValue('PATH', '',  `
-[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
-[System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
-[System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
-%{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'User')}
-[System.Text.RegularExpressions.Regex]::Replace( `
-[Microsoft.Win32.Registry]::LocalMachine.OpenSubKey('SYSTEM\CurrentControlSet\Control\Session Manager\Environment\').GetValue('PATH', '', `
-[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
-[System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
-[System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
-%{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'Machine')}
+try {
+  Remove-Item -Recurse -Force "$env:ChocolateyInstall"
+  [System.Text.RegularExpressions.Regex]::Replace( `
+  [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment').GetValue('PATH', '',  `
+  [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
+  [System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
+  [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
+  %{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'User')}
+  [System.Text.RegularExpressions.Regex]::Replace( `
+  [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey('SYSTEM\CurrentControlSet\Control\Session Manager\Environment\').GetValue('PATH', '', `
+  [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames).ToString(),  `
+  [System.Text.RegularExpressions.Regex]::Escape("$env:ChocolateyInstall\bin") + '(?>;)?', '', `
+  [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | `
+  %{[System.Environment]::SetEnvironmentVariable('PATH', $_, 'Machine')}
+}
+catch {
+    Write-Host "Ignoring Error deleting: $filetodelete - Continue"
+}
 
 if ($env:ChocolateyBinRoot -ne '' -and $env:ChocolateyBinRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyBinRoot" }
 if ($env:ChocolateyToolsRoot -ne '' -and $env:ChocolateyToolsRoot -ne $null) { ForceFullyDelete-Paths "$env:ChocolateyToolsRoot" }
