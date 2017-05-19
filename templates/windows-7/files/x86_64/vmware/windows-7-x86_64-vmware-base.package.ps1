@@ -17,8 +17,7 @@ if (-not (Test-Path "A:\NET45.installed"))
 {
   # Install .Net Framework 4.5.2
   Write-BoxstarterMessage "Installing .Net 4.5"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/dotnet45/dotnetfx45_full_x86_x64.exe" "$Env:TEMP/dotnetfx45_full_x86_x64.exe"
-  Start-Process -Wait "$Env:TEMP/dotnetfx45_full_x86_x64.exe" -NoNewWindow -PassThru -ArgumentList "/quiet /norestart"
+  choco install dotnet4.5.2 -y
   Touch-File "A:\NET45.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
