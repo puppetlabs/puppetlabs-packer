@@ -254,3 +254,63 @@ Function Install-PackerWindowsUpdates
   # Do one final reboot in case there are any more updates to be picked up.
   Do-Packer-Final-Reboot
 }
+
+# Helper function to remove Windows-10 packages that break sysprep (packages are not needed in our test env)
+
+Function Remove-Win10Packages
+{
+  if (-not (Test-Path "A:\RemoveWin10Packages.installed"))
+  {
+    Write-Host "Remove Win-10 Packages that cause Sysprep Issues"
+    $OffendingWin10Packages = @(
+      'Microsoft.WindowsCal*',
+      'Microsoft.Appconnector*',
+      'Microsoft.People*',
+      'Microsoft.Getstarted*',
+      'Microsoft.Office*',
+      'microsoft.windowscommunicationsapps*',
+      'Microsoft.MicrosoftSolitaire*',
+      'Microsoft.SkypeApp*',
+      'Microsoft.WindowsCamera*',
+      'Microsoft.3DBuilder*',
+      'Microsoft.FeedbackHub*',
+      'Microsoft.Messaging*',
+      'Microsoft.Zune*',
+      'Microsoft.WindowsCamera*',
+      'Microsoft.WindowsSoundRecorder*',
+      'Microsoft.Store*',
+      'Microsoft.OneConnect*',
+      'Microsoft.BingWeather*',
+      'Microsoft.Contact.Support*',
+      'Microsoft.ContactSupport*',
+      'Microsoft.MicrosoftStickyNotes*',
+      'Microsoft.WindowsMaps*',
+      'Microsoft.WindowsAlarms*',
+      'Microsoft.Windows.Photos*',
+      'Microsoft.WindowsMaps*',
+      'Microsoft.WindowsStore*',
+      'Microsoft.MicrosoftOfficeHub*'
+    )
+    $OffendingWin10Packages | % {
+      Write-Host "Removing $_"
+      Get-AppxPackage -allusers -Name "$_" | Remove-AppxPackage
+    }
+
+    if ("$ARCH" -eq "x86_64") {
+      $SystemDir = "SysWOW64"
+    } else {
+      $SystemDir = "System32"
+    }
+    try {
+      taskkill /f /im OneDrive.exe
+      $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
+      $zproc.WaitForExit()
+    }
+    catch {
+      Write-Host "Ignoring OneDrive uninstall error"
+    }
+
+    Touch-File "A:\RemoveWin10Packages.installed"
+    if (Test-PendingReboot) { Invoke-Reboot }
+  }
+}
