@@ -13,6 +13,15 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
+if (-not (Test-Path "A:\DesktopExperience.installed"))
+{
+  # Enable Desktop experience to get cleanmgr
+  Write-BoxstarterMessage "Enable Desktop-Experience"
+  Add-WindowsFeature Desktop-Experience -ErrorAction SilentlyContinue
+  Touch-File "A:\DesktopExperience.installed"
+  if (Test-PendingReboot) { Invoke-Reboot }
+}
+
 if (-not (Test-Path "A:\NET45.installed"))
 {
   # Install .Net Framework 4.5.2
@@ -25,10 +34,19 @@ if (-not (Test-Path "A:\NET45.installed"))
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 
-# Enable Remote Desktop (with reduce authentication resetting here again)
-Write-BoxstarterMessage "Enable Remote Desktop"
-Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
-netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
+# Create Dism directories and copy files over.
+# This allows errors to be handled manually in event of dism failures
+
+New-Item -ItemType directory -Force -Path C:\Packer
+New-Item -ItemType directory -Force -Path C:\Packer\Dism
+New-Item -ItemType directory -Force -Path C:\Packer\Downloads
+New-Item -ItemType directory -Force -Path C:\Packer\Dism\Mount
+New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
+
+# Setup Dism Directories
+Copy-Item A:\windows-env.ps1 C:\Packer\Dism
+Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
+Copy-Item A:\slipstream-filter C:\Packer\Dism
 
 # Add WinRM Firewall Rule
 Write-BoxstarterMessage "Setting up winrm"
@@ -44,13 +62,7 @@ try {
 catch {
   $global:error.RemoveAt(0)
 }
-Write-BoxstarterMessage "Enable PS-Remoting -Force"
-try {
-  Enable-PSRemoting @enableArgs
-}
-catch {
-  Write-BoxstarterMessage "Ignoring PSRemoting Error"
-}
+Enable-PSRemoting @enableArgs
 Enable-WSManCredSSP -Force -Role Server
 # NOTE - This is insecure but can be shored up in later customisation.  Required for Vagrant and other provisioning tools
 winrm set winrm/config/client/auth '@{Basic="true"}'

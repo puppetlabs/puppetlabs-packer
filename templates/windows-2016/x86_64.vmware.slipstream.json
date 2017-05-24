@@ -1,18 +1,19 @@
 {
   "variables": {
     "template_name": "windows-2016-x86_64",
+    "os_name" : "Win-2016",
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2016_x64_dvd_9718492_Slip_02.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2016_x64_dvd_9718492.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "47993d89a256960eed2e58c9b394aa97",
-    "headless": "true",
+    "iso_checksum": "e02d2e482b0f3dab915435e9040c13b4",
+    "headless": "false",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
   },
 
-  "description": "Builds a Windows Server 2016 Technical Preview template VM for use in VMware",
+  "description": "Builds a Windows Server 2016 Enterprise template VM for use in VMware",
 
   "_comment": [
       "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
@@ -32,7 +33,7 @@
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_password": "PackerAdmin",
-      "winrm_timeout": "4h",
+      "winrm_timeout": "8h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
       "shutdown_timeout": "1h",
@@ -41,18 +42,18 @@
       "disk_type_id": "0",
       "floppy_files": [
         "files/x86_64/vmware/autounattend.xml",
-        "files/x86_64/vmware/generalize-packer.autounattend.xml",
-        "files/x86_64/vmware/{{build_name}}.package.ps1",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
-        "../../scripts/windows/clean-disk-dism.ps1",
-        "../../scripts/windows/clean-disk-sdelete.ps1"
+        "../../scripts/windows/generate-slipstream.ps1",
+        "files/slipstream-filter",
+        "files/x86_64/vmware/generalize-packer.autounattend.xml",
+        "files/x86_64/windows-2016-slipstream.package.ps1"
       ],
 
-      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"],
+      "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
       "boot_wait": "1s",
 
       "vmx_data": {
@@ -94,17 +95,9 @@
     {
       "type": "powershell",
       "inline": [
-        "A:\\clean-disk-dism.ps1"
-      ]
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "inline": [
-        "A:\\clean-disk-sdelete.ps1"
-      ]
+        "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `os_name`}} -ImageIndex 2 -PatchSearch *.msu"
+      ],
+      "valid_exit_codes": [0,1]
     }
   ]
 }
