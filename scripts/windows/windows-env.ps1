@@ -261,40 +261,13 @@ Function Remove-Win10Packages
 {
   if (-not (Test-Path "A:\RemoveWin10Packages.installed"))
   {
-    Write-Host "Remove Win-10 Packages that cause Sysprep Issues"
-    $OffendingWin10Packages = @(
-      'Microsoft.WindowsCal*',
-      'Microsoft.Appconnector*',
-      'Microsoft.People*',
-      'Microsoft.Getstarted*',
-      'Microsoft.Office*',
-      'microsoft.windowscommunicationsapps*',
-      'Microsoft.MicrosoftSolitaire*',
-      'Microsoft.SkypeApp*',
-      'Microsoft.WindowsCamera*',
-      'Microsoft.3DBuilder*',
-      'Microsoft.FeedbackHub*',
-      'Microsoft.Messaging*',
-      'Microsoft.Zune*',
-      'Microsoft.WindowsCamera*',
-      'Microsoft.WindowsSoundRecorder*',
-      'Microsoft.Store*',
-      'Microsoft.OneConnect*',
-      'Microsoft.BingWeather*',
-      'Microsoft.Contact.Support*',
-      'Microsoft.ContactSupport*',
-      'Microsoft.MicrosoftStickyNotes*',
-      'Microsoft.WindowsMaps*',
-      'Microsoft.WindowsAlarms*',
-      'Microsoft.Windows.Photos*',
-      'Microsoft.WindowsMaps*',
-      'Microsoft.WindowsStore*',
-      'Microsoft.MicrosoftOfficeHub*'
-    )
-    $OffendingWin10Packages | % {
-      Write-Host "Removing $_"
-      Get-AppxPackage -allusers -Name "$_" | Remove-AppxPackage
-    }
+    Write-Host "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+
+    Import-Module Appx
+    Import-Module Dism
+
+    Get-AppxPackage | % {if (!($_.IsFramework -or $_.PublisherId -eq "cw5n1h2txyewy")) {$_}} | Remove-AppxPackage -ErrorAction SilentlyContinue
+    Get-AppXProvisionedPackage -Online | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 
     if ("$ARCH" -eq "x86_64") {
       $SystemDir = "SysWOW64"
@@ -302,9 +275,15 @@ Function Remove-Win10Packages
       $SystemDir = "System32"
     }
     try {
+      Write-Host "Removing OneDrive"
       taskkill /f /im OneDrive.exe
       $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
       $zproc.WaitForExit()
+
+      Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
     }
     catch {
       Write-Host "Ignoring OneDrive uninstall error"
