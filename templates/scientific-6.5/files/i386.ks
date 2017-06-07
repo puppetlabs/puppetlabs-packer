@@ -40,5 +40,5 @@ nfs-utils
 -ipw2100-firmware
 -ipw2200-firmware
 -ivtv-firmware
+-yum-autoupdate
 %end
-
