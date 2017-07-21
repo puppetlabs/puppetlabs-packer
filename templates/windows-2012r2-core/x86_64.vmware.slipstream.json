@@ -32,7 +32,7 @@
       "winrm_password": "PackerAdmin",
       "winrm_timeout": "8h",
 
-      "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_command": "cmd.exe /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File A:\\core-shutdown.ps1 -UseStartupWorkaround",
       "shutdown_timeout": "1h",
       "guest_os_type": "windows8srv-64",
       "disk_size": 30720,
@@ -47,7 +47,9 @@
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generate-slipstream.ps1",
-        "../../scripts/windows/slipstream.package.ps1"
+        "../../scripts/windows/slipstream.package.ps1",
+        "../../scripts/windows/core-shutdown.ps1",
+        "../../scripts/windows/startup-profile.ps1"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],

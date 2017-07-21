@@ -68,7 +68,7 @@
                   <Order>3</Order>
               </SynchronousCommand>
               <SynchronousCommand wcm:action="add">
-                  <CommandLine>cmd.exe /c "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe a:\start-boxstarter.ps1 -LoginUser vagrant -LoginPassword vagrant"</CommandLine>
+                  <CommandLine>cmd.exe /c "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe a:\start-boxstarter.ps1 -LoginUser vagrant -LoginPassword vagrant -UseStartupWorkaround"</CommandLine>
                   <Description>Start BoxStarter</Description>
                   <Order>4</Order>
               </SynchronousCommand>

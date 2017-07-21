@@ -1,11 +1,31 @@
 param (
   [string]$LoginUser = "Administrator",
-  [string]$LoginPassword = "PackerAdmin"
+  [string]$LoginPassword = "PackerAdmin",
+  [switch] $UseStartupWorkaround = $false
 )
 $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 $PackageDir = 'A:\'
+
+function Install-StartupWorkaround {
+     Set-ItemProperty `
+             -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" `
+             -Name Shell -Value "PowerShell.exe -NoExit"
+
+     $profileDir = (Split-Path -Parent $PROFILE)
+     if (!(Test-Path $profileDir)) {
+         New-Item -Type Directory $profileDir
+     }
+
+     Copy-Item -Force A:\startup-profile.ps1 $PROFILE
+ }
+
+ if ($UseStartupWorkaround) {
+     Write-Warning "Using PowerShell profile workaround for startup items"
+     Install-StartupWorkaround
+ }
+
 
 # Remove AutoLogin for Packer - will be re-instated at end if required.
 $WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
@@ -41,6 +61,11 @@ if ($WindowsVersion -like $WindowsServer2008 ) {
     choco install $_ -y --force --version "2.8.29" --argsglobal=true --paramsglobal=true --ignoredependencies=true
     choco pin add --name="$_"
   }
+
+  # This import is still needed for Earlier Pinned version for win-2008
+  Write-Host "Importing Modules"
+  Import-Module $env:appdata\boxstarter\boxstarter.chocolatey\boxstarter.chocolatey.psd1
+
 }
 else {
   iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/mwrock/boxstarter/master/BuildScripts/bootstrapper.ps1'))
@@ -54,9 +79,6 @@ Remove-Item -Path "$($Env:APPDATA)\Microsoft\Windows\Start Menu\Programs\Boxstar
 # Use Admin Plaintext password for this phase of configuration
 $secpasswd = ConvertTo-SecureString "$LoginPassword" -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ("$LoginUser", $secpasswd)
-
-Write-Host "Importing Modules"
-Import-Module $env:appdata\boxstarter\boxstarter.chocolatey\boxstarter.chocolatey.psd1
 
 Write-Host "Executing Boxstarter Package"
 Install-BoxstarterPackage -PackageName ($packageFile.Fullname) -Credential $cred
