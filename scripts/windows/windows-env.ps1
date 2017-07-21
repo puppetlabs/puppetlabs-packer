@@ -11,6 +11,17 @@ Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
+# Test to see if we are Core Version or not.
+# Core installation (no GUI). While there is a more exact WMI query to determine this, checking to see
+# if windows explorer installed is an equally valid check for Windows-2012r2 etc.
+# see https://serverfault.com/questions/529124/identify-windows-2012-server-core#
+if (Test-Path "$env:windir\explorer.exe") {
+  Set-Variable -Option Constant -Name WindowsServerCore -Value $false
+}
+else {
+  Set-Variable -Option Constant -Name WindowsServerCore -Value $true
+}
+
 If ($WindowsVersion -like $WindowsServer2008) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.

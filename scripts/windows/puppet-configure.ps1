@@ -106,6 +106,12 @@ if ("$ARCH" -eq "x86") {
 } else {
   $ENV:FACTER_chrome_root        = "$ENV:ProgramFiles `(x86`)\Google\Chrome"
 }
+If ( $WindowsServerCore ) {
+  $ENV:FACTER_windows_install_option = "Core"
+}
+else {
+  $ENV:FACTER_windows_install_option = "Normal"
+}
 
 # Loop through all Manifest Files in A:\ and process them
 # Keep reapplying until no resources are modified, or MaxAttempts is hit

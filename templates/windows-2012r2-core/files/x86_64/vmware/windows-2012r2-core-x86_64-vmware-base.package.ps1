@@ -16,6 +16,7 @@ Disable-PC-Sleep
 if (-not (Test-Path "A:\NET462.installed"))
 {
   # Install .Net Framework 4.5.2
+  # Using explicit install here as choco install seems to misbehave sligtly with the /q argument
   Write-BoxstarterMessage "Installing .Net 4.6.2"
   choco install dotnet-4.6.2 -y --install-arguments="/q /norestart"
   Touch-File "A:\NET462.installed"
@@ -25,19 +26,14 @@ if (-not (Test-Path "A:\NET462.installed"))
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 
-# Create Dism directories and copy files over.
-# This allows errors to be handled manually in event of dism failures
+# Disable UAC
+Write-BoxstarterMessage "Disable UAC"
+Disable-UAC
 
-New-Item -ItemType directory -Force -Path C:\Packer
-New-Item -ItemType directory -Force -Path C:\Packer\Dism
-New-Item -ItemType directory -Force -Path C:\Packer\Downloads
-New-Item -ItemType directory -Force -Path C:\Packer\Dism\Mount
-New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
-
-# Setup Dism Directories
-Copy-Item A:\windows-env.ps1 C:\Packer\Dism
-Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
-Copy-Item A:\slipstream-filter C:\Packer\Dism
+# Enable Remote Desktop (with reduce authentication resetting here again)
+Write-BoxstarterMessage "Enable Remote Desktop"
+Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
+netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
 # Add WinRM Firewall Rule
 Write-BoxstarterMessage "Setting up winrm"
@@ -59,7 +55,6 @@ Enable-WSManCredSSP -Force -Role Server
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 Write-BoxstarterMessage "WinRM setup complete"
 
 # End

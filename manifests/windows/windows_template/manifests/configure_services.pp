@@ -7,12 +7,6 @@ class windows_template::configure_services()
       ensure => 'running',
       enable => true,
     }
-    # Disable Audiosrv (Audio) service
-    service { 'Audiosrv':
-      ensure => 'stopped',
-      enable => false,
-    }
-
     # Netbios and lmosts are handled in scripting as they
     # need to be sequenced carefully during the post-clone-first-boot
 
@@ -22,16 +16,27 @@ class windows_template::configure_services()
       enable => false,
     }
 
-    # Disable Google Update Services to prevent pending reboot requests (except win-2008)
-    if ($::operatingsystemrelease != '2008')
+    # Following services are only considered in Non-Core installation.
+    if ("${windows_install_option}" != 'Core')
     {
-      service { 'gupdate':
+      # Disable Audiosrv (Audio) service
+      service { 'Audiosrv':
         ensure => 'stopped',
         enable => false,
       }
-      service { 'gupdatem':
-        ensure => 'stopped',
-        enable => false,
+
+      # Disable Google Update Services to prevent pending reboot requests (except win-2008)
+      if ($::operatingsystemrelease != '2008')
+      {
+        service { 'gupdate':
+          ensure => 'stopped',
+          enable => false,
+        }
+        service { 'gupdatem':
+          ensure => 'stopped',
+          enable => false,
+        }
       }
     }
+
 }

@@ -98,10 +98,15 @@ if ($WindowsVersion -like $WindowsServer2008R2 ) {
   # Windows 2008R2/Win-7 - just set registry keys for cleanmgr utility
   Write-Host "Skipping Cleanup"
 }
-ElseIf ($WindowsVersion -like $WindowsServer2012 -or $WindowsVersion -like $WindowsServer2008) {
+ElseIf ($WindowsVersion -like $WindowsServer2012R2 ) {
+  # Win-2012R2 gives an error, so skip
+  Write-Host "Skipping Cleanup (Win-2012R2)"
+}
+ElseIf ($WindowsVersion -like $WindowsServer2012 -or $WindowsVersion -like $WindowsServer2008 ) {
   # Note /ResetBase option is not available on Windows-2012, so need to screen for this.
-  Write-Host "Skipping Cleanup"
+  Write-Host "Skipping Cleanup - Not Available"
 } else {
+  Write-Host "Starting DISM Cleanup"
   dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup /ResetBase
 }
 

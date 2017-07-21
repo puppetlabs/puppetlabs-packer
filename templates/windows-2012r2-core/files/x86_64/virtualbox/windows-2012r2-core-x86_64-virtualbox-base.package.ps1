@@ -13,6 +13,16 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
+if (-not (Test-Path "A:\Autologon.installed"))
+{
+  # Quick fix to get the autologon working for vagrant.
+  Write-BoxstarterMessage "Installing Autologon to get over sysprep login issues"
+  choco install autologon -y
+  reg.exe ADD "HKCU\Software\Sysinternals\Autologon" /v "EulaAccepted" /t REG_DWORD /d 1 /f
+  autologon vagrant . vagrant
+  Touch-File "A:\Autologon.installed"
+}
+
 if (-not (Test-Path "A:\NET462.installed"))
 {
   # Install .Net Framework 4.5.2
@@ -25,19 +35,14 @@ if (-not (Test-Path "A:\NET462.installed"))
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 
-# Create Dism directories and copy files over.
-# This allows errors to be handled manually in event of dism failures
+# Disable UAC
+Write-BoxstarterMessage "Disable UAC"
+Disable-UAC
 
-New-Item -ItemType directory -Force -Path C:\Packer
-New-Item -ItemType directory -Force -Path C:\Packer\Dism
-New-Item -ItemType directory -Force -Path C:\Packer\Downloads
-New-Item -ItemType directory -Force -Path C:\Packer\Dism\Mount
-New-Item -ItemType directory -Force -Path C:\Packer\Dism\Logs
-
-# Setup Dism Directories
-Copy-Item A:\windows-env.ps1 C:\Packer\Dism
-Copy-Item A:\generate-slipstream.ps1 C:\Packer\Dism
-Copy-Item A:\slipstream-filter C:\Packer\Dism
+# Enable Remote Desktop (with reduce authentication resetting here again)
+Write-BoxstarterMessage "Enable Remote Desktop"
+Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
+netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
 # Add WinRM Firewall Rule
 Write-BoxstarterMessage "Setting up winrm"
@@ -59,7 +64,6 @@ Enable-WSManCredSSP -Force -Role Server
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 Write-BoxstarterMessage "WinRM setup complete"
 
 # End
