@@ -1,0 +1,12 @@
+---
+name: 'windows-2016-core'
+description: 'windows-2016'
+version: '1.0.0'
+
+arches:
+  - name: '64'
+    description: '64-bit (amd64/x86_64)'
+
+configs:
+  - name: 'cygwin'
+    description: 'Cygwin provides SSH layer'
