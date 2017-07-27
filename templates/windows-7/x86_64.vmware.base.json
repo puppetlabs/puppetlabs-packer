@@ -4,9 +4,9 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_02.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_03.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "d0cfa6d4de725e14ba72f4fd91c615b0",
+    "iso_checksum": "4246cfa663a9a581d2da4ba784554308",
     "headless": "true",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
