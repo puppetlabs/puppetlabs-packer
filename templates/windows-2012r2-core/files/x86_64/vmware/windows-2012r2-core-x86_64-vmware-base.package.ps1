@@ -13,16 +13,6 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
-if (-not (Test-Path "A:\NET462.installed"))
-{
-  # Install .Net Framework 4.5.2
-  # Using explicit install here as choco install seems to misbehave sligtly with the /q argument
-  Write-BoxstarterMessage "Installing .Net 4.6.2"
-  choco install dotnet-4.6.2 -y --install-arguments="/q /norestart"
-  Touch-File "A:\NET462.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 

@@ -4,9 +4,9 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_02.iso",
+    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_03.iso",
     "iso_checksum_type": "md5",
-    "iso_checksum": "3689de89d445febc77a4df0ae37d1b03",
+    "iso_checksum": "f94011cfdc4e0498a01a86a0cafe403e",
     "headless": "true",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
     "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"

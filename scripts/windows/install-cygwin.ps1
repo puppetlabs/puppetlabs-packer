@@ -1,3 +1,4 @@
+Write-Host "Cygwin Installation Script"
 # Install and configure Cygwin.
 # This is being done in a separate script to the windows packages deliberately, as the windows
 # packages are common to both Cygwin and and bitvise machines.
@@ -20,7 +21,7 @@
 #    --local-package-dir C:\\Packer\\Downloads\\cygwin\\packages
 
 $ErrorActionPreference = 'Stop'
-
+Write-Host "Loading Windows Environment"
 . A:\windows-env.ps1
 
 # Work out what CYGDIR is and set it as a Windows Environment Variable

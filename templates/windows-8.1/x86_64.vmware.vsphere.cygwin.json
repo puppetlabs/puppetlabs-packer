@@ -104,6 +104,9 @@
       ]
     },
     {
+      "type": "windows-restart"
+    },
+    {
       "type": "powershell",
       "inline": [
         "A:\\install-cygwin.ps1"

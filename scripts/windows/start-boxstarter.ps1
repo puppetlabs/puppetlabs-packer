@@ -26,6 +26,9 @@ function Install-StartupWorkaround {
      Install-StartupWorkaround
  }
 
+ # Install latest .Net package now to avoid a double .net install (choco/boxstarter also installs it)
+ # This replaces the .Net Installation that used to be in the boxstarter package scripts.
+ Install-DotNetLatest
 
 # Remove AutoLogin for Packer - will be re-instated at end if required.
 $WinlogonPath = "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
@@ -68,6 +71,7 @@ if ($WindowsVersion -like $WindowsServer2008 ) {
 
 }
 else {
+  iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/mwrock/boxstarter/master/BuildScripts/bootstrapper.ps1'))
   Get-Boxstarter -Force
 }

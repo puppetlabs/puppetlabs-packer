@@ -23,15 +23,6 @@ if (-not (Test-Path "A:\Autologon.installed"))
   Touch-File "A:\Autologon.installed"
 }
 
-if (-not (Test-Path "A:\NET462.installed"))
-{
-  # Install .Net Framework 4.5.2
-  Write-BoxstarterMessage "Installing .Net 4.6.2"
-  choco install dotnet-4.6.2 -y --install-arguments="/q /norestart"
-  Touch-File "A:\NET462.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 
