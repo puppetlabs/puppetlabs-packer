@@ -125,7 +125,7 @@
     },
     {
       "type": "file",
-      "source": "../../manifests/windows",
+      "source": "../../manifests/windows/",
       "destination": "C:\\Packer\\puppet\\modules"
     },
     {
@@ -168,7 +168,7 @@
     },
     {
       "type": "file",
-      "source": "../../scripts/windows/init",
+      "source": "../../scripts/windows/init/",
       "destination": "C:\\Packer\\Init"
     },
     {
