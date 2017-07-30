@@ -33,7 +33,6 @@ if (-not (Test-Path "A:\KB2852386.installed"))
   Touch-File "A:\KB2852386.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
-
 if (-not (Test-Path "A:\NET45.installed"))
 {
   # Install .Net Framework 4.5.2
@@ -43,20 +42,12 @@ if (-not (Test-Path "A:\NET45.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-if (-not (Test-Path "A:\WMF4.installed"))
-{
-  # Install WMF 4 (Powershell)
-  Write-BoxstarterMessage "Installing WFM 4"
-  Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/wmf5/Windows6.1-KB2819745-x64-MultiPkg.msu"
-  Touch-File "A:\WMF4.installed"
-  Invoke-Reboot
-}
 
 if (-not (Test-Path "A:\WMF5.installed"))
 {
   # Install WMF 5 (Powershell)
-  Write-BoxstarterMessage "Installing WFM 5"
-  Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/wmf5/Win7AndW2K8R2-KB3134760-x64.msu"
+  Write-BoxstarterMessage "Installing WFM 5.1"
+  Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/wmf5/Win7AndW2K8R2-KB3191566-x64.msu"
   Touch-File "A:\WMF5.installed"
   Invoke-Reboot
 }
