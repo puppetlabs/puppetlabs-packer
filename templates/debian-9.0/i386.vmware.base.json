@@ -6,8 +6,8 @@
       "template_os": "debian7",
       "template_config": "base",
 
-      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-stretch-DI-rc3-i386-xfce-CD-1.iso",
-      "iso_checksum": "a249b14f295491525ed4a4c9ab6403723ad30b88cf6a7dfe89a2aa165d043938",
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/debian-9.0.0-i386-netinst.iso",
+      "iso_checksum": "3bf78f7b003203a6b771b05fa1790e74ee3ea15d6245a01683f90c02b95c0315",
       "iso_checksum_type": "sha256",
 
       "memory_size": "512",
@@ -15,7 +15,7 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.8.2-1jessie_i386.deb",
+      "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.10.5-1jessie_i386.deb",
       "headless": "true",
 
       "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
@@ -69,6 +69,7 @@
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
+        "./new_os_hacks/add_libreadline6.sh",
         "../../scripts/bootstrap-aio.sh"
       ]
     },
@@ -92,7 +93,8 @@
       ],
       "scripts": [
         "../../scripts/cleanup-aio.sh",
-        "../../scripts/cleanup-packer.sh"
+        "../../scripts/cleanup-packer.sh",
+        "./new_os_hacks/remove_libreadline6.sh"
       ]
     }
   ]
