@@ -55,6 +55,7 @@
       "tools_upload_flavor": "linux",
       "vmx_data": {
         "memsize": "{{user `memory_size`}}",
+        "ethernet0.virtualdev" : "vmxnet3",
         "numvcpus": "{{user `cpu_count`}}",
         "cpuid.coresPerSocket": "1"
       }
