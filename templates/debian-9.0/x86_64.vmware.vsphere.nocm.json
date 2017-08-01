@@ -50,6 +50,7 @@
       "vmx_data_post": {
         "cpuid.coresPerSocket": "1",
         "memsize": "{{user `memory_size`}}",
+        "ethernet0.virtualdev" : "vmxnet3",
         "numvcpus": "{{user `cpu_count`}}"
       }
     }
