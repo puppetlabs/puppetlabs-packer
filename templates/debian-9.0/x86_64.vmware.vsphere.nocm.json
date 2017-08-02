@@ -24,7 +24,7 @@
 
       "headless": "true",
 
-      "memory_size": "2048",
+      "memory_size": "4096",
       "cpu_count": "2",
 
       "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
