@@ -24,15 +24,21 @@ Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
 Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
 Write-Host "Installed Puppet Agent..."
 
-Write-Host "Installing Google Chrome Browser"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe $PackerDownloads\ChromeSetup-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" @SprocParms -ArgumentList "/silent /install"
-Write-Host "Google Chrome Browser Installed"
+If ( $WindowsServerCore ) {
+  Write-Host "Skipping Browser and Notepad++ installs for Windows Core"
+}
+else {
 
-Write-Host "Installing Notepad++"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.7.2.2.Installer-$ARCH.exe $PackerDownloads\npp.7.2.2.Installer-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" @SprocParms -ArgumentList "/S"
-Write-Host "Notepad++ Installed"
+  Write-Host "Installing Google Chrome Browser"
+  Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe $PackerDownloads\ChromeSetup-$ARCH.exe
+  Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" @SprocParms -ArgumentList "/silent /install"
+  Write-Host "Google Chrome Browser Installed"
+
+  Write-Host "Installing Notepad++"
+  Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.7.2.2.Installer-$ARCH.exe $PackerDownloads\npp.7.2.2.Installer-$ARCH.exe
+  Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" @SprocParms -ArgumentList "/S"
+  Write-Host "Notepad++ Installed"
+}
 
 Write-Host "Installing 7zip"
 Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$ARCH.exe  $PackerDownloads\7z1602-$ARCH.exe

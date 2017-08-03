@@ -29,18 +29,8 @@ if (-not (Test-Path "A:\KB2852386.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
-  Download-File http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu  $ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu
-  Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\Windows6.1-KB2852386-v2-x64.msu /quiet /norestart"
+  Install_Win_Patch -PatchUrl "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
   Touch-File "A:\KB2852386.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
-if (-not (Test-Path "A:\NET45.installed"))
-{
-  # Install .Net Framework 4.5.2
-  Write-BoxstarterMessage "Installing .Net 4.5"
-  choco install dotnet4.5.2 -y
-  Touch-File "A:\NET45.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 

@@ -13,24 +13,15 @@ if (Test-PendingReboot){ Invoke-Reboot }
 Write-BoxstarterMessage "Disabling Sleep timers"
 Disable-PC-Sleep
 
-if (-not (Test-Path "A:\NET45.installed"))
-{
-  # Install .Net Framework 4.5.2
-  Write-BoxstarterMessage "Installing .Net 4.5"
-  choco install dotnet4.5.2 -y
-  Touch-File "A:\NET45.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
 # Set all network adapters Private
 Write-BoxstarterMessage "Set all network adapters private"
 $net = get-netconnectionprofile;Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private
 
-# Remove Win-10 packages that break sysprep
-Remove-Win10Packages
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
+
+# Remove Win-10 packages that break sysprep
+Remove-Win10Packages
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-BoxstarterMessage "Enable Remote Desktop"
