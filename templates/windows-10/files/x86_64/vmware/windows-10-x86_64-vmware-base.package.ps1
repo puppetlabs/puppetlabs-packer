@@ -17,11 +17,11 @@ Disable-PC-Sleep
 Write-BoxstarterMessage "Set all network adapters private"
 $net = get-netconnectionprofile;Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private
 
-# Remove Win-10 packages that break sysprep
-Remove-Win10Packages
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
+
+# Remove Win-10 packages that break sysprep
+Remove-Win10Packages
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-BoxstarterMessage "Enable Remote Desktop"
