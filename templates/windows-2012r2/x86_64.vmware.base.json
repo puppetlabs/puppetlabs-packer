@@ -41,7 +41,6 @@
       "disk_type_id": "0",
       "floppy_files": [
         "files/x86_64/vmware/autounattend.xml",
-        "files/x86_64/vmware/generalize-packer.autounattend.xml",
         "files/x86_64/vmware/{{build_name}}.package.ps1",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
