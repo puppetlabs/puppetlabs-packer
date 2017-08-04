@@ -110,6 +110,9 @@
       ]
     },
     {
+      "type": "windows-restart"
+    },
+    {
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
@@ -125,7 +128,7 @@
     },
     {
       "type": "file",
-      "source": "../../manifests/windows",
+      "source": "../../manifests/windows/",
       "destination": "C:\\Packer\\puppet\\modules"
     },
     {
@@ -168,7 +171,7 @@
     },
     {
       "type": "file",
-      "source": "../../scripts/windows/init",
+      "source": "../../scripts/windows/init/",
       "destination": "C:\\Packer\\Init"
     },
     {

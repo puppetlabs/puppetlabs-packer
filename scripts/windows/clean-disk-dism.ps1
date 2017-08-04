@@ -35,6 +35,9 @@ ElseIf ($WindowsVersion -like $WindowsServer2012) {
 If ($WindowsVersion -like $WindowsServer2008) {
   Write-Host "Skipping CleanMgr for Windows 2008"
 }
+ElseIf ( $WindowsServerCore ) {
+  Write-Host "Skipping Clean-Mgr as GUI not installed (Core Installation)."
+}
 else {
   # Set registry keys for all the other cleanup areas we want to address with cleanmgr - fairly comprehensive cleanup
   $cleankeyprefix = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"

@@ -1,0 +1,152 @@
+{
+  "variables": {
+    "template_name" : "windows-2012r2-core-x86_64",
+    "provisioner"   : "virtualbox",
+    "template_config": "vagrant.cygwin",
+    "beakerhost": "windows2012r2-64",
+
+    "headless"      : "true",
+    "qa_root_passwd": "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "packer_sha"    : "{{env `PACKER_SHA`}}",
+    "packer_source_dir": "{{env `PACKER_VM_SRC_DIR`}}",
+    "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}",
+    "packer_shared_dir": "{{env `SHARED_DISK`}}"
+  },
+  "description": "Builds a Windows Server 2012 R2 Core template VM for use in VirtualBox with Vagrant",
+  "builders": [
+    {
+      "type"                : "virtualbox-ovf",
+      "name"                : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "source_path"         : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.ovf",
+      "output_directory"    : "{{user `packer_output_dir`}}/output-{{build_name}}",
+      "headless"            : "{{user `headless`}}",
+      "communicator"        : "winrm",
+      "winrm_username"      : "vagrant",
+      "winrm_password"      : "vagrant",
+      "winrm_timeout"       : "8h",
+      "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+      "shutdown_timeout"    : "1h",
+      "guest_additions_mode": "attach",
+      "floppy_files": [
+        "../../scripts/windows/cleanup-host.ps1",
+        "../../scripts/windows/install-win-packages.ps1",
+        "../../scripts/windows/install-cygwin.ps1",
+        "../../scripts/windows/cygwin-packages",
+        "../../scripts/windows/gitforwin.inf",
+        "../../scripts/windows/puppet-configure.ps1",
+        "../../scripts/windows/shutdown-packer.bat",
+        "../../scripts/windows/windows-env.ps1",
+        "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
+        "./files/config-winsettings.ps1"
+      ],
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","2048"],
+        ["modifyvm","{{.Name}}","--cpus","2"]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "md -Path C:\\Packer\\puppet\\modules",
+        "md -Path C:\\Packer\\Downloads",
+        "md -Path C:\\Packer\\Downloads\\Cygwin",
+        "md -Path C:\\Packer\\Init",
+        "md -Path C:\\Packer\\Logs",
+        "md -Path C:\\Packer\\Sysinternals"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-win-packages.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\install-cygwin.ps1"
+      ],
+      "environment_vars": [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "../../manifests/windows/",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "files/win-2012r2-x86_64-std.pp",
+      "destination": "C:\\Packer\\puppet\\win-2012r2-x86_64-std.pp"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vagrant'"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\config-winsettings.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../scripts/windows/init/",
+      "destination": "C:\\Packer\\Init"
+    },
+    {
+      "type": "file",
+      "source": "./files/x86_64/virtualbox/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Initiate Sysprep'",
+        "C:\\Windows\\System32\\sysprep\\sysprep /oobe /quit /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
+        "Write-Host 'Sysprep queued.'",
+        "Start-Sleep -Seconds 10"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\Packer\\Init\\vagrant-arm-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    }
+  ],
+    "post-processors": [{
+    "type"                : "vagrant",
+    "output"              : "{{user `packer_shared_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
+    "vagrantfile_template": "./files/x86_64/virtualbox/vagrantfile-windows2012r2.template"
+  }]
+}

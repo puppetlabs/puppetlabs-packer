@@ -46,6 +46,9 @@ reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 If ($WindowsVersion -like $WindowsServer2008) {
   Write-Host "Skipping CleanMgr for Windows 2008"
 }
+ElseIf ( $WindowsServerCore ) {
+  Write-Host "Skipping Clean-Mgr as GUI not installed (Core Installation)."
+}
 else {
   Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"

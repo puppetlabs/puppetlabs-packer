@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <UserData>
+                <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
+                <ProductKey>
+                    <!-- Do not uncomment the Key element if you are using trial ISOs -->
+                    <!-- KMS Setup keys  https://technet.microsoft.com/en-us/library/jj612867.aspx -->
+                    <Key>D2N9P-3P6X9-2R39C-7RTCD-MDVJX</Key>
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>Puppet Labs</FullName>
+                <Organization>Puppet Labs</Organization>
+            </UserData>
+        </component>
+    </settings>
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OEMInformation>
+                <HelpCustomized>false</HelpCustomized>
+            </OEMInformation>
+            <ComputerName>*</ComputerName>
+            <TimeZone>UTC</TimeZone>
+            <RegisteredOwner />
+            <ShowWindowsLive>false</ShowWindowsLive>
+            <CopyProfile>true</CopyProfile>
+        </component>
+        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
+        <component name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <IEHardenAdmin>false</IEHardenAdmin>
+            <IEHardenUser>false</IEHardenUser>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>net user administrator /active:yes</Path>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+        <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SkipAutoActivation>true</SkipAutoActivation>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>en-US</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-US</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <FirstLogonCommands>
+              <SynchronousCommand wcm:action="add">
+                  <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
+                  <Order>1</Order>
+              </SynchronousCommand>
+              <SynchronousCommand wcm:action="add">
+                  <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                  <Order>2</Order>
+              </SynchronousCommand>
+              <SynchronousCommand wcm:action="add">
+                  <CommandLine>wmic useraccount where &quot;name=&apos;vagrant&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                  <Order>3</Order>
+              </SynchronousCommand>
+              <SynchronousCommand wcm:action="add">
+                  <CommandLine>cmd.exe /c "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe a:\start-boxstarter.ps1 -LoginUser vagrant -LoginPassword vagrant -UseStartupWorkaround"</CommandLine>
+                  <Description>Start BoxStarter</Description>
+                  <Order>4</Order>
+              </SynchronousCommand>
+            </FirstLogonCommands>
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideLocalAccountScreen>true</HideLocalAccountScreen>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <NetworkLocation>Work</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+            </OOBE>
+            <RegisteredOwner />
+            <UserAccounts>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>PackerAdmin</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Description>Local Administrator</Description>
+                        <DisplayName>Administrator</DisplayName>
+                        <Group>Administrators</Group>
+                        <Name>Administrator</Name>
+                    </LocalAccount>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>vagrant</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Group>Administrators</Group>
+                        <Name>vagrant</Name>
+                        <DisplayName>vagrant</DisplayName>
+                        <Description>vagrant user</Description>
+                    </LocalAccount>
+                </LocalAccounts>
+                <AdministratorPassword>
+                    <Value>vagrant</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
+            <AutoLogon>
+                <Password>
+                    <Value>vagrant</Value>
+                    <PlainText>true</PlainText>
+                </Password>
+                <Domain>.</Domain>
+                <Enabled>true</Enabled>
+                <LogonCount>99999</LogonCount>
+                <Username>vagrant</Username>
+            </AutoLogon>
+        </component>
+    </settings>
+    <settings pass="offlineServicing">
+        <component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <EnableLUA>false</EnableLUA>
+        </component>
+        <!-- Added for driver injection. Typically for NICs and Mass Storage -->
+        <component name="Microsoft-Windows-PnpCustomizationsNonWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DriverPaths>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="0">
+                    <Path>A:\</Path>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
+    </settings>
+    <settings pass="auditUser">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RegisteredOwner />
+        </component>
+    </settings>
+    <settings pass="generalize">
+        <component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SkipRearm>8</SkipRearm>
+        </component>
+    </settings>
+    <cpi:offlineImage cpi:source="wim:c:/15bcc9dfbc0eebf6f640cf0419b697269c84eece8486f4531beb4ad606410664/sources/install.wim#Windows Server 2012 R2 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+</unattend>

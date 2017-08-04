@@ -22,15 +22,6 @@ if (-not (Test-Path "A:\DesktopExperience.installed"))
   if (Test-PendingReboot) { Invoke-Reboot }
 }
 
-if (-not (Test-Path "A:\NET45.installed"))
-{
-  # Install .Net Framework 4.5.2
-  Write-BoxstarterMessage "Installing .Net 4.5"
-  choco install dotnet4.5.2 -y
-  Touch-File "A:\NET45.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 

@@ -11,6 +11,17 @@ Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
+# Test to see if we are Core Version or not.
+# Core installation (no GUI). While there is a more exact WMI query to determine this, checking to see
+# if windows explorer installed is an equally valid check for Windows-2012r2 etc.
+# see https://serverfault.com/questions/529124/identify-windows-2012-server-core#
+if (Test-Path "$env:windir\explorer.exe") {
+  Set-Variable -Option Constant -Name WindowsServerCore -Value $false
+}
+else {
+  Set-Variable -Option Constant -Name WindowsServerCore -Value $true
+}
+
 If ($WindowsVersion -like $WindowsServer2008) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
@@ -211,6 +222,39 @@ Function Do-Packer-Final-Reboot
     Invoke-Reboot
   }
 }
+
+# Helper function to install latest .Net package appropriate for this platform
+Function Install-DotNetLatest
+{
+  if (-not (Test-Path "A:\InstallDotNetLatest.installed"))
+  {
+    # Install .Net 4.7 for all platforms except Windows 2008 (.Net 4.6)
+      if ($WindowsVersion -like $WindowsServer2008 ) {
+        Write-Host "Installing .Net 4.6"
+        $DotNetInstaller = "NDP46-KB3045557-x86-x64-AllOS-ENU.exe"
+      }
+      else {
+        Write-Host "Installing .Net 4.7"
+        $DotNetInstaller = "NDP47-KB3186497-x86-x64-AllOS-ENU.exe"
+        if ($WindowsVersion -like $WindowsServer2008r2 -or $WindowsVersion -like $WindowsServer2012 ) {
+          # Win-2008r2 & 2012 need this patch installed.
+          # This will fail silently if the patch is already installed.
+          Write-Host "Installing Pre-Requisite for .Net 4.7"
+          if ("$ARCH" -eq "x86") {
+            $PreReqPatch = "Windows6.1-KB4019990-x86.msu"
+          }
+          else {
+            $PreReqPatch = "Windows6.1-KB4019990-x64.msu"
+          }
+          Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/dotnet/$PreReqPatch"
+        }
+      }
+      Download-File "http://buildsources.delivery.puppetlabs.net/windows/dotnet/$DotNetInstaller" "$Env:TEMP/$DotNetInstaller"
+      Start-Process -Wait "$Env:TEMP/$DotNetInstaller" -NoNewWindow -PassThru -ArgumentList "/passive /norestart"
+  }
+  Touch-File "A:\InstallDotNetLatest.installed"
+}
+
 
 # Helper function to encapsulate the complete update sequence used for packer
 

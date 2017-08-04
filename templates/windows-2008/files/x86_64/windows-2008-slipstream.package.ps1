@@ -11,18 +11,6 @@ $Boxstarter.RebootOk=$true # Allow reboots?
 $Boxstarter.NoPassword=$false # Is this a machine with no login password?
 $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a reboot
 
-if (Test-PendingReboot){ Invoke-Reboot }
-
-if (-not (Test-Path "A:\NET45.installed"))
-{
-  # Install .Net Framework 4.5.2
-  Write-BoxstarterMessage "Installing .Net 4.5"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/dotnet45/dotnetfx45_full_x86_x64.exe" "$Env:TEMP/dotnetfx45_full_x86_x64.exe"
-  Start-Process -Wait "$Env:TEMP/dotnetfx45_full_x86_x64.exe" -NoNewWindow -PassThru -ArgumentList "/quiet /norestart"
-  Touch-File "A:\NET45.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-
 # Run the Packer Update Sequence
 Install-PackerWindowsUpdates
 
