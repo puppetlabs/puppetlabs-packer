@@ -39,14 +39,17 @@ If ($WindowsVersion -like $WindowsServer2008) {
   $field2.SetValue($consoleHost, [Console]::Out)
 }
 
-# Common variable definitions for packer installations and staging
+# For Startup files
+$startup = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup"
 
+# Common variable definitions for packer installations and staging
 $PackerStaging = "C:\Packer"
 $PackerDownloads = "$PackerStaging\Downloads"
 $PackerPuppet = "$PackerStaging\puppet"
+$PackerScripts = "$PackerStaging\Scripts"
 $SysInternals = "$PackerStaging\SysInternals"
+$PackerLogs = "$PackerStaging\Logs"
 $CygwinDownloads = "$PackerDownloads\Cygwin"
-$PackerLogs = "$PackerDownloads\Logs"
 
 # For Puppet modules configuration
 $ModulesPath = ''
@@ -72,6 +75,30 @@ Set-Variable -Option Constant -Name CleanMgrStateFlagNoAction -Value 0
 $SprocParms = @{'PassThru'=$true;
                 'NoNewWindow'=$true
 }
+
+#--- FUNCTIONS ---#
+
+# Function to stop transcript
+
+function ExitScript([int]$ExitCode){
+	Stop-Transcript
+	exit $ExitCode
+}
+
+# Helper to create consistent staging directories.
+function Create-PackerStagingDirectories {
+  if (-not (Test-Path "$PackerStaging")) {
+    Write-Host "Creating $PackerStaging"
+    md -Path $PackerStaging\puppet\modules
+    md -Path $PackerStaging\Downloads
+    md -Path $PackerStaging\Downloads\Cygwin
+    md -Path $PackerStaging\Init
+    md -Path $PackerStaging\Scripts
+    md -Path $PackerStaging\Logs
+    md -Path $PackerStaging\Sysinternals
+  }
+}
+
 
 # Function to download the packages we need - used in several scripts.
 
@@ -204,17 +231,25 @@ Function ForceFullyDelete-Paths
 
 Function Enable-UpdatesFromInternalWSUS
 {
-  $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
-  Write-Host "Setting Windows Update Server to $WSUSServer"
+  if (-not (Test-Path "$PackerLogs\WSUSRedirect.installed")) {
+    net stop wuauserv
 
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "$WSUSServer" /f
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "$WSUSServer" /f
+    $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
+    Write-Host "Setting Windows Update Server to $WSUSServer"
 
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
-  reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "$WSUSServer" /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "$WSUSServer" /f
+
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
+
+    net start wuauserv
+
+    Touch-File "$PackerLogs/WSUSRedirect.installed"
+  }
 }
 
 # Helper function to perform a final reboot.
@@ -223,9 +258,9 @@ Function Enable-UpdatesFromInternalWSUS
 
 Function Do-Packer-Final-Reboot
 {
-  if (-not (Test-Path "A:\Final.Reboot"))
+  if (-not (Test-Path "$PackerLogs\Final.Reboot"))
   {
-    Touch-File "A:\Final.Reboot"
+    Touch-File "$PackerLogs\Final.Reboot"
     Invoke-Reboot
   }
 }
@@ -233,7 +268,7 @@ Function Do-Packer-Final-Reboot
 # Helper function to install latest .Net package appropriate for this platform
 Function Install-DotNetLatest
 {
-  if (-not (Test-Path "A:\InstallDotNetLatest.installed"))
+  if (-not (Test-Path "$PackerLogs\InstallDotNetLatest.installed"))
   {
     # Install .Net 4.7 for all platforms except Windows 2008 (.Net 4.6)
       if ($WindowsVersion -like $WindowsServer2008 ) {
@@ -259,7 +294,7 @@ Function Install-DotNetLatest
       Download-File "http://buildsources.delivery.puppetlabs.net/windows/dotnet/$DotNetInstaller" "$Env:TEMP/$DotNetInstaller"
       Start-Process -Wait "$Env:TEMP/$DotNetInstaller" -NoNewWindow -PassThru -ArgumentList "/passive /norestart"
   }
-  Touch-File "A:\InstallDotNetLatest.installed"
+  Touch-File "$PackerLogs\InstallDotNetLatest.installed"
 }
 
 
@@ -274,12 +309,12 @@ Function Install-PackerWindowsUpdates
   # If DisableWUSA is set, then touch the "WUSA.redirect" file to disable it
   if ( $DisableWUSA ) {
     Write-Host "Disable WUSA Re-direct"
-    Touch-File "A:\WSUS.redirect"
+    Touch-File "$PackerLogs\WSUS.redirect"
   }
 
-  if (-not (Test-Path "A:\WSUS.redirect"))
+  if (-not (Test-Path "$PackerLogs\WSUS.redirect"))
   {
-    Touch-File "A:\WSUS.redirect"
+    Touch-File "$PackerLogs\WSUS.redirect"
     # Re-direct Updates to use WSUS Server
     Enable-UpdatesFromInternalWSUS
   }
@@ -351,3 +386,96 @@ Function Remove-Win10Packages
 
   if (Test-PendingReboot) { Invoke-Reboot }
 }
+
+# Helper Function to test for Pending Reboot
+# This is modelled from: https://github.com/mwrock/boxstarter/blob/master/Boxstarter.Bootstrapper/Get-PendingReboot.ps1
+# but only tests the current system and is simplied for packer environment (e.g. Domain & SCCM not evaluated)
+
+function Test-PendingReboot {
+  ## Setting pending values to false to cut down on the number of else statements
+  $CompPendRen,$PendFileRename = $false,$false
+
+  ## Setting CBSRebootPend to null since not all versions of Windows has this value
+  $CBSRebootPend = $null
+
+  ## Querying WMI for build version
+  $WMI_OS = Get-WmiObject -Class Win32_OperatingSystem -Property BuildNumber, CSName -ErrorAction Stop
+  $Computer = $WMI_OS.CSName
+
+  ## Making registry connection to the local/remote computer
+  $HKLM = [UInt32] "0x80000002"
+  $WMI_Reg = [WMIClass] "\\$Computer\root\default:StdRegProv"
+
+  ## If Vista/2008 & Above query the CBS Reg Key
+  If ([Int32]$WMI_OS.BuildNumber -ge 6001) {
+    $RegSubKeysCBS = $WMI_Reg.EnumKey($HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\")
+    $CBSRebootPend = $RegSubKeysCBS.sNames -contains "RebootPending"
+  }
+
+  ## Query WUAU from the registry
+  $RegWUAURebootReq = $WMI_Reg.EnumKey($HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\")
+  $WUAURebootReq = $RegWUAURebootReq.sNames -contains "RebootRequired"
+
+  ## Query PendingFileRenameOperations from the registry
+  $RegSubKeySM = $WMI_Reg.GetMultiStringValue($HKLM,"SYSTEM\CurrentControlSet\Control\Session Manager\","PendingFileRenameOperations")
+  $RegValuePFRO = $RegSubKeySM.sValue
+
+  ## Query ComputerName and ActiveComputerName from the registry
+  $ActCompNm = $WMI_Reg.GetStringValue($HKLM,"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName\","ComputerName")
+  $CompNm = $WMI_Reg.GetStringValue($HKLM,"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName\","ComputerName")
+
+  If ($ActCompNm -ne $CompNm)  {
+      $CompPendRen = $true
+  }
+
+  ## If PendingFileRenameOperations has a value set $RegValuePFRO variable to $true
+  If ($RegValuePFRO) {
+    $PendFileRename = $true
+  }
+
+  $RebootPending=($CompPendRen -or $CBSRebootPend -or $WUAURebootReq -or $PendFileRename)
+  if ($RebootPending) {
+      Write-Host "Reboot is Pending"
+      return $true
+  }
+  Else {
+      Write-Host "Reboot is not needed"
+      return $false
+  }
+}
+
+# Helper function to perform a reboot and continue the windows update process.
+
+function Invoke-Reboot {
+
+    Write-Host "Starting Reboot sequence"
+
+    Write-Host "writing restart file"
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1`""
+    New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
+
+	  shutdown /t 0 /r /f
+}
+
+# Clear reboot files.
+
+function Clear-RebootFiles {
+
+  Remove-Item -Path "$startup\packer-post-restart.bat"
+
+}
+
+# Windows Core startup
+
+function Install-StartupWorkaround {
+     Set-ItemProperty `
+             -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" `
+             -Name Shell -Value "PowerShell.exe -NoExit"
+
+     $profileDir = (Split-Path -Parent $PROFILE)
+     if (!(Test-Path $profileDir)) {
+         New-Item -Type Directory $profileDir
+     }
+
+     Copy-Item -Force A:\startup-profile.ps1 $PROFILE
+ }

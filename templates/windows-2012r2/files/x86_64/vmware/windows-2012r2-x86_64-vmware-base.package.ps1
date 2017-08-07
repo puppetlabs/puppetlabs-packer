@@ -2,13 +2,13 @@ $ErrorActionPreference = "Stop"
 
 . A:\windows-env.ps1
 
+Write-Host "Running Win-2012r2 Package Customisation"
 
-
-if (-not (Test-Path "A:\DesktopExperience.installed"))
+if (-not (Test-Path "$PackerLogs\DesktopExperience.installed"))
 {
   # Enable Desktop experience to get cleanmgr
   Write-Host "Enable Desktop-Experience"
   Add-WindowsFeature Desktop-Experience
-  Touch-File "A:\DesktopExperience.installed"
+  Touch-File "$PackerLogs\DesktopExperience.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
