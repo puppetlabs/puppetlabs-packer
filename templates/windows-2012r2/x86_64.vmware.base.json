@@ -43,7 +43,7 @@
         "files/x86_64/vmware/autounattend.xml",
         "files/x86_64/vmware/{{build_name}}.package.ps1",
         "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/start-pswindowsupdate.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generalize-packer.bat",

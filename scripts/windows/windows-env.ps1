@@ -66,6 +66,13 @@ Set-Variable -Option Constant -Name CleanMgrStateFlags        -Value "StateFlags
 Set-Variable -Option Constant -Name CleanMgrStateFlagClean    -Value 2
 Set-Variable -Option Constant -Name CleanMgrStateFlagNoAction -Value 0
 
+# Define common Start-Process params appropriate for running the install setups.
+# Main one is -Wait (until setup is complete).
+# PassThru and NoNewWindow also relevant to ensure any installer console output is properly captured
+$SprocParms = @{'PassThru'=$true;
+                'NoNewWindow'=$true
+}
+
 # Function to download the packages we need - used in several scripts.
 
 function Download-File {
