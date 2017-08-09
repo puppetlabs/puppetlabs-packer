@@ -303,37 +303,44 @@ Function Install-PackerWindowsUpdates
 
 Function Remove-Win10Packages
 {
-  if (-not (Test-Path "A:\RemoveWin10Packages.installed"))
-  {
-    Write-Host "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+  Write-Host "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
-    Import-Module Appx
-    Import-Module Dism
+  Import-Module Appx
+  Import-Module Dism
 
-    Get-AppxPackage | % {if (!($_.IsFramework -or $_.PublisherId -eq "cw5n1h2txyewy")) {$_}} | Remove-AppxPackage -ErrorAction SilentlyContinue
-    Get-AppXProvisionedPackage -Online | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+  Write-Host "Removing AppxPackages"
+  Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
 
-    if ("$ARCH" -eq "x86_64") {
-      $SystemDir = "SysWOW64"
-    } else {
-      $SystemDir = "System32"
-    }
-    try {
-      Write-Host "Removing OneDrive"
-      taskkill /f /im OneDrive.exe
-      $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
-      $zproc.WaitForExit()
+  Write-Host "Removing Online Provisioned Packages"
+  Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
 
-      Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-    }
-    catch {
-      Write-Host "Ignoring OneDrive uninstall error"
-    }
-
-    Touch-File "A:\RemoveWin10Packages.installed"
-    if (Test-PendingReboot) { Invoke-Reboot }
+  if ("$ARCH" -eq "x86_64") {
+    $SystemDir = "SysWOW64"
+  } else {
+    $SystemDir = "System32"
   }
+
+  try {
+    Write-Host "Stopping OneDrive"
+    taskkill /f /im OneDrive.exe
+  }
+  catch {
+    Write-Host "Ignoring OneDrive taskkill error"
+  }
+
+  try {
+    Write-Host "Uninstalling OneDrive"
+    $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
+    $zproc.WaitForExit()
+
+    Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+  }
+  catch {
+    Write-Host "Ignoring OneDrive uninstall error"
+  }
+
+  if (Test-PendingReboot) { Invoke-Reboot }
 }
