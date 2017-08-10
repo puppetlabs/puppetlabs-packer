@@ -13,7 +13,7 @@ class packer::vmtools inherits packer::vmtools::params {
     }
 
     redhat: {
-      if $::operatingsystemmajrelease in ['25', '7'] {
+      if $::operatingsystemmajrelease in ['25', '26', '7'] {
         package { 'open-vm-tools':
           ensure => installed,
         }

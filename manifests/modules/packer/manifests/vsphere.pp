@@ -11,7 +11,7 @@ class packer::vsphere inherits packer::vsphere::params {
 
   case $::osfamily {
     redhat: {
-      if $::operatingsystemrelease in ['24', '25'] {
+      if $::operatingsystemrelease in ['24', '25', '26'] {
         Package {
           provider => 'dnf',
         }

@@ -23,7 +23,7 @@ class packer::networking::params {
           $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
         }
 
-        '23', '24', '25': {
+        '23', '24', '25', '26': {
           case $::provisioner {
             'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
             'libvirt': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens4' }
