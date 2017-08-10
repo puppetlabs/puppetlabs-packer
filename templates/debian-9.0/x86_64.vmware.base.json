@@ -15,7 +15,7 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_aio": "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.10.5-1jessie_amd64.deb",
+      "puppet_aio": "http://apt.puppetlabs.com/pool/stretch/PC1/p/puppet-agent/puppet-agent_1.10.6-1stretch_amd64.deb",
       "headless": "true",
 
       "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
@@ -71,7 +71,6 @@
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "./new_os_hacks/add_libreadline6.sh",
         "../../scripts/bootstrap-aio.sh"
       ]
     },
@@ -95,8 +94,7 @@
       ],
       "scripts": [
         "../../scripts/cleanup-aio.sh",
-        "../../scripts/cleanup-packer.sh",
-        "./new_os_hacks/remove_libreadline6.sh"
+        "../../scripts/cleanup-packer.sh"
       ]
     }
   ]
