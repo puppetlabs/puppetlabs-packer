@@ -4,6 +4,8 @@
     {
       "template_name": "fedora-26-x86_64",
       "template_os": "fedora-64",
+      "template_config": "base",
+
 
       "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/Fedora-Server-dvd-x86_64-26-1.5.iso",
       "iso_checksum": "fad18a43b9cec152fc8a1fd368950eaf59be66b1a15438149a0c3a509c56cf2f",
@@ -15,17 +17,18 @@
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
       "puppet_aio": "https://yum.puppetlabs.com/fedora/f25/PC1/x86_64/puppet-agent-1.10.6-1.fedoraf25.x86_64.rpm",
+      "headless": "true",
 
-      "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
+      "packer_output_dir": "{{env `PACKER_VM_OUT_DIR`}}"
 
     },
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
-      "output_directory": "{{user `output_directory`}}output-{{build_name}}",
+      "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "output_directory": "{{user `packer_output_dir`}}/output-{{build_name}}",
       "type": "vmware-iso",
-      "headless": true,
+      "headless": "{{user `headless`}}",
       "boot_command": [
         "<tab> <wait>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -49,7 +52,7 @@
       "tools_upload_flavor": "linux",
       "vmx_data": {
         "cpuid.coresPerSocket": "1",
-	"ethernet0.pciSlotNumber": "32",
+        "ethernet0.pciSlotNumber": "32",
         "memsize": "{{user `memory_size`}}",
         "numvcpus": "{{user `cpu_count`}}"
       }
