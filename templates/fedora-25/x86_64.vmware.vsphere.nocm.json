@@ -7,7 +7,7 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network",
-      "puppet_aio": "https://yum.puppetlabs.com/fedora/f24/PC1/x86_64/puppet-agent-1.8.1-1.fedoraf24.x86_64.rpm",
+      "puppet_aio": "https://yum.puppetlabs.com/fedora/f25/PC1/x86_64/puppet-agent-1.10.6-1.fedoraf25.x86_64.rpm",
       "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
       "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
       "packer_vcenter_username": "{{env `PACKER_VCENTER_USERNAME`}}",
