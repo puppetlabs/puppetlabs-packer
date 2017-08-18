@@ -90,6 +90,7 @@
   "provisioners": [
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/mkdir-packer-paths.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -103,6 +104,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-install-win-packages.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -114,6 +116,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-install-cygwin.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -138,6 +141,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-puppet-configure.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -149,6 +153,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-config-winsettings.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -160,6 +165,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-cleanup-host.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -181,6 +187,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-vmpooler-arm-host.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [
@@ -189,6 +196,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-shutdown-packer.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "inline": [

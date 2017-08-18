@@ -48,6 +48,7 @@
   "provisioners": [
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/mkdir-packer-paths.ps1",
       "inline": [
         "md -Path C:\\Packer\\puppet\\modules",
         "md -Path C:\\Packer\\Downloads",
@@ -59,12 +60,14 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-install-win-packages.ps1",
       "inline": [
         "A:\\install-win-packages.ps1"
       ]
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-install-cygwin.ps1",
       "inline": [
         "A:\\install-cygwin.ps1"
       ],
@@ -87,6 +90,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-puppet-configure.ps1",
       "inline": [
         "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vagrant'"
       ]
@@ -96,6 +100,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-config-winsettings.ps1",
       "inline": [
         "A:\\config-winsettings.ps1"
       ]
@@ -105,6 +110,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-cleanup-host.ps1",
       "inline": [
         "A:\\cleanup-host.ps1"
       ]
@@ -121,6 +127,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-queue-sysprep.ps1",
       "inline": [
         "Write-Host 'Initiate Sysprep'",
         "C:\\Windows\\System32\\sysprep\\sysprep /oobe /quit /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
@@ -133,6 +140,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-vagrant-arm-host.ps1",
       "inline": [
         "C:\\Packer\\Init\\vagrant-arm-host.ps1"
       ]

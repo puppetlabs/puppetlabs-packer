@@ -94,6 +94,7 @@
   "provisioners": [
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/script.ps1",
       "inline": [
         "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `os_name`}} -ImageIndex 1 -PatchSearch *.msu"
       ],

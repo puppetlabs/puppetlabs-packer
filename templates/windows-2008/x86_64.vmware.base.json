@@ -92,6 +92,7 @@
   "provisioners": [
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-clean-disk-dism.ps1",
       "inline": [
         "A:\\clean-disk-dism.ps1"
       ]
@@ -101,6 +102,7 @@
     },
     {
       "type": "powershell",
+      "remote_path": "c:/Windows/Temp/run-clean-disk-sdelete.ps1",
       "inline": [
         "A:\\clean-disk-sdelete.ps1"
       ]
