@@ -1,52 +1,32 @@
 # Generates Slipstream ISO from image
-$OSName = "Win-2008"
+$OSName = "Win-7"
 $ImageIndex = "1"
 
-$DismBase = "C:\DISM\Win-2008"
-$UpdateDirectory = "$DismBase\CABS-Merge"
+$DismBase = "C:\DISM\Win-7"
+$UpdateDirectory = "$DismBase\CABS"
 $MountPoint = "$DismBase\Mount"
 $WinIsoPath = "$DismBase\$OSName-SlipStream.iso"
 $WinDistPath = "$DismBase\$OSName"
 $WinImageFile = "$WinDistPath\sources\install.wim"
 $WinPS2Files = "$DismBase\Powershell"
 
-function Download-File {
-param (
-  [string]$url,
-  [string]$file
- )
-  $downloader = new-object System.Net.WebClient
-  $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
-
-  Write-Output "Downloading $url to $file"
-  $completed = $false
-  $retrycount = 0
-  $maxretries = 20
-  $delay = 10
-  while (-not $completed) {
-    try {
-      $downloader.DownloadFile($url, $file)
-      $completed = $true
-    } catch {
-      if ($retrycount -ge $maxretries) {
-        Write-Host "Max Attempts exceeded"
-        throw "Download aborting"
-      } else {
-        $retrycount++
-        Write-Host "Download Failed $retrycount of $maxretries - Sleeping $delay"
-        Start-Sleep -Seconds $delay
-      }
-    }
-  }
-}
-
 # Need extra disk for this bit.
 $IsoGen = "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
 
+Remove-Item -Force $DismBase\Updates-Sucessful.log
+Remove-Item -Force $DismBase\Updates-Failed.log
+Remove-Item -Force -Recurse .\Win-7
+& 'C:\Program Files\7-Zip\7z.exe' x .\Win-7.iso -owin-7
 
-# Read in the exclude list of CABS to be downloaded and applied.
 #
-
+# Read in the exclude list of CABS to be ignored.
+#
+$ExcludedCabs = @{}
+$Content = Get-Content $DismBase/slipstream-filter.txt
+foreach ($CabName in $Content)
+{
+  $ExcludedCabs.Add("$CabName", "Ignore")
+}
 
 # Search for all CAB Files in Date Order - exclude express cab files if present as they can't be applied in a DISM command
 
@@ -61,6 +41,11 @@ ForEach ($Cab in $Cabs) {
 	$CabCount++
   Write-Host "======================================================="
 	Write-Host "Working on CAB File ($CabCount of $Cabtotal)  $Cab"
+
+    if ($ExcludedCabs.ContainsKey($Cab.Name)) {
+      Write-Host "Ignoring CAB"
+      Continue
+    }
 
     $DismFile = $Cab
 
