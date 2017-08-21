@@ -19,6 +19,7 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
       "packer_sha": "{{env `PACKER_SHA`}}",
+      "beakerhost": "fedora26-64",
 
       "headless": "true",
 
