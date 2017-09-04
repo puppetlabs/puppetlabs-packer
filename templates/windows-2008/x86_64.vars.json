@@ -1,0 +1,12 @@
+{
+    "template_name"     : "windows-2008-x86_64",
+    "beakerhost"        : "windows2008-64",
+    "template_os"       : "TBD",
+    "guest_os_type"     : "longhorn-64",
+    "version"           : "0.0.2",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_with_sp2_x64_dvd_342336_SlipStream_03.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "ab418a455fea422d2582c660ee8cd8f1",
+    "firmware"          : "bios",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+}
