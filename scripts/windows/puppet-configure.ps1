@@ -11,6 +11,12 @@ $ErrorActionPreference = "Stop"
 
 . A:\windows-env.ps1
 
+# Pick up win-site.pp file from A: drive if present
+# Manifest needs to be in $PackerPuppet for configuration to be picked up.
+if ( Test-Path "A:\win-site.pp") {
+  Copy-Item "A:\win-site.pp" "$PackerPuppet\win-site.pp"
+}
+
 # TODO don't think these are needed here so move them into puppet code if still needed.
 Write-Output "Disabling Hibernation..."
 Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0

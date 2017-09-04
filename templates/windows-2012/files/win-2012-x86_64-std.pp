@@ -1,3 +1,0 @@
-include windows_template::local_group_policies
-include windows_template::chrome
-include windows_template::configure_services
