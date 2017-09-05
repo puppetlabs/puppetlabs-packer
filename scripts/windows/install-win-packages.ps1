@@ -62,32 +62,7 @@ $OldPath = (Get-ItemProperty -Path $RegPath -Name PATH).Path
 $NewPath = $OldPath + ';' + $SysInternals
 Set-ItemProperty -Path $RegPath -Name PATH -Value $NewPath
 
-# Update PATH to include sysinternals
-
 Write-Output "Sysinternal Tools Installed"
-
-# Put in registry keys to suppress the EULA popup on first use.
-# (since puppet modules don't support HKCU)
-
-reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
-
-Set-UserKey 'Software\Sysinternals\Process Explorer' 'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\Process Monitor'  'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsExec'           'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsFile'           'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsGetSid'         'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsInfo'           'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsKill'           'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsList'           'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsLoggedOn'       'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsLogList'        'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsPasswd'         'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsService'        'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsShutdown'       'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsSuspend'        'EulaAccepted'       'REG_DWORD' 1
-Set-UserKey 'Software\Sysinternals\PsTools'          'EulaAccepted'       'REG_DWORD' 1
-
-reg.exe unload HKLM\DEFUSER
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20

@@ -1,4 +1,4 @@
-class windows_template::local_group_policies ()
+class windows_template::policies::local_group_policies ()
 {
     # Search Group Policies and find their registry information
     # http://gpsearch.azurewebsites.net/
@@ -13,12 +13,6 @@ class windows_template::local_group_policies ()
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
-    registry::value { 'DebugPolicies':
-        key   => 'HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon',
-        value => 'UserEnvDebugLevel',
-        data  => 196610,
-        type  => 'dword'
-    }
     windows_group_policy::local::machine { 'PowerShellExecutionPolicyUnrestricted':
         key   => 'Software\Policies\Microsoft\Windows\PowerShell',
         value => 'ExecutionPolicy',
@@ -70,32 +64,6 @@ class windows_template::local_group_policies ()
         data  => 1,
         type  => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-
-    # Windows Error Reporting
-    registry::value { 'UserModeCrashDumpFolder':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
-        value => 'DumpFolder',
-        data  => 'C:\crash_dumps',
-        type  => 'expand'
-    }
-    registry::value { 'UserModeCrashDumpCount':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
-        value => 'DumpCount',
-        data  => 10,
-        type  => 'dword'
-    }
-    registry::value { 'UserModeCrashDumpType':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
-        value => 'DumpType',
-        data  => 2,
-        type  => 'dword'
-    }
-    file { 'c:/crash_dumps':
-      ensure => 'directory',
-      mode   => '0750',
-      owner  => 'Administrator',
-      group  => 'Administrators'
     }
 
     windows_group_policy::local::machine { 'DisableSystemRestore':
@@ -159,67 +127,6 @@ class windows_template::local_group_policies ()
 
     # TODO Update Start Menu 2008 only
 
-    # Power plan and high performance.
-    windows_group_policy::local::machine { 'HighPerformancePowerPlan':
-        key   => 'Software\Policies\Microsoft\Power\PowerSettings',
-        value => 'ActivePowerScheme',
-        data  => '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c',
-        type  => 'REG_SZ',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # Turn off the display (plugged in)
-    windows_group_policy::local::machine { 'DisableTurnOffDisplayPluggedIn':
-        key   => 'Software\Policies\Microsoft\Power\PowerSettings\3C0BC021-C8A8-4E07-A973-6B14CBCB2B7E',
-        value => 'ACSettingIndex',
-        data  => 0,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # Turn off the display (on battery)
-    windows_group_policy::local::machine { 'DisableTurnOffDisplayOnBattery':
-        key   => 'Software\Policies\Microsoft\Power\PowerSettings\3C0BC021-C8A8-4E07-A973-6B14CBCB2B7E',
-        value => 'DCSettingIndex',
-        data  => 0,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-
-    # Turn off hybrid sleep (on battery)
-    windows_group_policy::local::machine { 'DisableHibernationOnBattery':
-        key   => 'Software\Policies\Microsoft\Power\PowerSettings\94ac6d29-73ce-41a6-809f-6363ba21b47e',
-        value => 'DCSettingIndex',
-        data  => 0,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # Turn off hybrid sleep (plugged in)
-    windows_group_policy::local::machine { 'DisableHibernationPluggedIn':
-        key   => 'Software\Policies\Microsoft\Power\PowerSettings\94ac6d29-73ce-41a6-809f-6363ba21b47e',
-        value => 'ACSettingIndex',
-        data  => 0,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-
-    # Disable IE ESC for admins
-    registry::value { 'DisableIEESCForAdmins':
-        key   => 'HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}',
-        value => 'IsInstalled',
-        data  => 0,
-        type  => 'dword'
-    }
-    # Disable IE ESC for non-admins
-    registry::value { 'DisableIEESCForNonAdmins':
-        key   => 'HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}',
-        value => 'IsInstalled',
-        data  => 0,
-        type  => 'dword',
-    }
-
-    # Disable prompt for network search - key just has to exist
-    registry_key { 'HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff':
-        ensure => present,
-    }
     # Disable Windows Update
     windows_group_policy::local::machine { 'DisableWindowsUpdate':
         key   => 'Software\Policies\Microsoft\Windows\WindowsUpdate\AU',
@@ -287,42 +194,4 @@ class windows_template::local_group_policies ()
         type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-
-    # Disable UAC (Moved from boxstarter script)
-    registry::value { 'DisableUAC':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
-        value => 'EnableLUA',
-        data  => 0,
-        type  => 'dword',
-    }
-
-    # Set the following BGInfo Variables using facter provided variables from env
-    #VMPOOLER_Build_Date=Build-Date
-    #VMPOOLER_Packer_SHA=124214215215215235
-    #VMPOOLER_Packer_Template=Packer_Template_Name & type
-    registry::value { 'VMPOOLER_Build_Date':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-        value => 'VMPOOLER_Build_Date',
-        data  => "${build_date}",
-        type  => 'string'
-    }
-    registry::value { 'VMPOOLER_Packer_SHA':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-        value => 'VMPOOLER_Packer_SHA',
-        data  => "${packer_sha}",
-        type  => 'string'
-    }
-    registry::value { 'VMPOOLER_Packer_Template':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-        value => 'VMPOOLER_Packer_Template',
-        data  => "${packer_template_name}",
-        type  => 'string'
-    }
-    registry::value { 'VMPOOLER_Packer_Template_Type':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-        value => 'VMPOOLER_Packer_Template_Type',
-        data  => "${packer_template_type}",
-        type  => 'string'
-    }
-
 }
