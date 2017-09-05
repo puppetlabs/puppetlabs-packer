@@ -1,22 +1,5 @@
 {
   "variables": {
-<<<<<<< HEAD
-   "template_config"    : "base",
-   "provisioner"        : "vmware",
-    "headless"          : "true",
-    "tools_iso"         : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
-    "packer_output_dir" : "{{env `PACKER_VM_OUT_DIR`}}",
-    "shutdown_command"  : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-    "winrm_timeout"     : "4h",
-    "disk_size"         : "61440",
-    "memsize"           : "4096",
-    "numvcpus"          : "2",
-    "firmware"          : "efi",
-    "winrm_username"    : "Administrator",
-    "winrm_password"    : "PackerAdmin",
-    "image_arch"        : "{{env `IMAGE_ARCH`}}"
-=======
-
     "headless"            : "true",
    "template_config"      : "base",
    "provisioner"          : "{{env `IMAGE_TYPE`}}",
@@ -32,7 +15,6 @@
     "numvcpus"            : "2",
     "firmware"            : "efi",
     "packer_download_dir" : "C:/Packer/Downloads"
->>>>>>> d07d39d... Base fix
   },
 
   "description": "Builds a Windows base template VM for use in VMware",
@@ -60,7 +42,7 @@
       "disk_size"         : "{{user `disk_size`}}",
       "disk_type_id"      : "0",
       "floppy_files"      : [
-        "files/{{user `image_arch`}}/vmware/autounattend.xml",
+        "tmp/autounattend.xml",
         "files/{{user `image_arch`}}/platform-packages.ps1",
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",

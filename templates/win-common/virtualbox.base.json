@@ -30,7 +30,7 @@
         "headless"                : "{{user `headless`}}",
         "guest_os_type"           : "{{user `vbox_guest_os`}}",
         "guest_additions_mode"    : "attach",
-        "disk_size"               : 61440,
+        "disk_size"               : "{{user `disk_size`}}",
         "communicator"            : "winrm",
         "winrm_username"          : "{{user `winrm_username`}}",
         "winrm_password"          : "{{user `winrm_password`}}",
@@ -44,7 +44,7 @@
           ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
         ],
         "floppy_files": [
-          "./files/{{user `image_arch`}}/virtualbox/autounattend.xml",
+          "./tmp/autounattend.xml",
           "./files/{{user `image_arch`}}/platform-packages.ps1",
           "../../scripts/windows/bootstrap-base.bat",
           "../win-common/files/virtualbox/oracle-cert-1.cer",

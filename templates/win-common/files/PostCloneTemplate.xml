@@ -7,7 +7,7 @@
                 <ProductKey>
                     <!-- Do not uncomment the Key element if you are using trial ISOs -->
                     <!-- KMS Setup keys  https://technet.microsoft.com/en-us/library/jj612867.aspx -->
-                    <Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key>
+                    <Key>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</Key>
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
@@ -24,8 +24,16 @@
             <ComputerName>*</ComputerName>
             <TimeZone>UTC</TimeZone>
             <RegisteredOwner />
-            <ProductKey>NPPR9-FWDCX-D2C8J-H872K-2YT43</ProductKey>
+            <ShowWindowsLive>false</ShowWindowsLive>
             <CopyProfile>true</CopyProfile>
+            <ProductKey>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</ProductKey>
+        </component>
+        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
+        <component name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <IEHardenAdmin>false</IEHardenAdmin>
+            <IEHardenUser>false</IEHardenUser>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <RunSynchronous>
@@ -33,15 +41,21 @@
                     <Path>net user administrator /active:yes</Path>
                     <Order>1</Order>
                 </RunSynchronousCommand>
-                <RunSynchronousCommand wcm:action="add">
-                    <Path>reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableFirstLogonAnimation /t REG_DWORD /d 0 /f</Path>
-                    <Order>2</Order>
-                    <Description>Do not Show First Logon Animation</Description>
-                </RunSynchronousCommand>
             </RunSynchronous>
+            <!-- NB - only really needed for Win-8.1 but shouldn't harm rest of boots - needs regression -->
+            <RunSynchronousCommand wcm:action="add">
+                <Path>reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableFirstLogonAnimation /t REG_DWORD /d 0 /f</Path>
+                <Order>2</Order>
+                <Description>Do not Show First Logon Animation</Description>
+            </RunSynchronousCommand>
         </component>
         <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SkipAutoActivation>true</SkipAutoActivation>
+        </component>
+    </settings>
+    <settings pass="generalize">
+        <component name="Microsoft-Windows-PnpSysprep" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
         </component>
     </settings>
     <settings pass="oobeSystem">
@@ -52,37 +66,35 @@
             <UserLocale>en-US</UserLocale>
         </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <FirstLogonCommands>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
-                    <Description>Bootstrap for everything</Description>
-                    <Order>1</Order>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-boxstarter.ps1</CommandLine>
-                    <Description>Start BoxStarter</Description>
-                    <Order>4</Order>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
-                    <Order>2</Order>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
-                    <Order>3</Order>
-                </SynchronousCommand>
-            </FirstLogonCommands>
+            <PackerLogonSequence  ImageType="vmware">
+                <FirstLogonCommands>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vmpooler-post-clone-configuration.ps1</CommandLine>
+                        <Description>Post Clone configuration</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                </FirstLogonCommands>
+            </PackerLogonSequence>
+            <PackerLogonSequence  ImageType="virtualbox">
+                <FirstLogonCommands>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vagrant-post-clone-configuration.ps1</CommandLine>
+                        <Description>Post Clone configuration</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                </FirstLogonCommands>
+            </PackerLogonSequence>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
                 <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <NetworkLocation>Work</NetworkLocation>
                 <ProtectYourPC>1</ProtectYourPC>
             </OOBE>
             <RegisteredOwner />
-            <ProductKey>6XBNX-4JQGW-QX6QG-74P76-72V67</ProductKey>
+            <ProductKey>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</ProductKey>
             <UserAccounts>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
@@ -113,28 +125,5 @@
             </AutoLogon>
         </component>
     </settings>
-    <settings pass="offlineServicing">
-        <component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <EnableLUA>false</EnableLUA>
-        </component>
-        <!-- Added for driver injection. Typically for NICs and Mass Storage -->
-        <component name="Microsoft-Windows-PnpCustomizationsNonWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <DriverPaths>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="0">
-                    <Path>A:\</Path>
-                </PathAndCredentials>
-            </DriverPaths>
-        </component>
-    </settings>
-    <settings pass="auditUser">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RegisteredOwner />
-            <ProductKey>6XBNX-4JQGW-QX6QG-74P76-72V67</ProductKey>
-        </component>
-    </settings>
-    <settings pass="generalize">
-        <component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <SkipRearm>8</SkipRearm>
-        </component>
-    </settings>
 </unattend>
+

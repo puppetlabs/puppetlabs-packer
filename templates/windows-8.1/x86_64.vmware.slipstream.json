@@ -43,10 +43,8 @@
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
-        "../../scripts/windows/generalize-packer.bat",
         "../../scripts/windows/generate-slipstream.ps1",
         "files/slipstream-filter",
-        "files/generalize-packer.autounattend.xml",
         "../../scripts/windows/slipstream.package.ps1"
       ],
 

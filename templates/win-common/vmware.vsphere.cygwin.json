@@ -2,16 +2,16 @@
   "variables": {
      "template_config": "vsphere.cygwin",
 
-    "provisioner"              : "vmware",
     "headless"                 : "true",
+    "provisioner"              : "{{env `IMAGE_TYPE`}}",
 
     "firmware"                 : "efi",
-    "memsize"                  : "4096",
-    "numvcpus"                 : "2",
-    "post_memsize"             : "4096",
     "winrm_username"           : "Administrator",
     "winrm_password"           : "PackerAdmin",
     "winrm_timeout"            : "8h",
+    "memsize"                  : "4096",
+    "numvcpus"                 : "2",
+    "post_memsize"             : "4096",
     "shutdown_command"         : "A:\\shutdown-packer.bat",
     "shutdown_timeout"         : "1h",
 
