@@ -3,7 +3,7 @@
 # issues with Windows Core
 #
 try {
-     $startup = "$($env:APPDATA)\Microsoft\Windows\Start Menu\Programs\Startup\boxstarter-post-restart.bat"
+     $startup = "$($env:APPDATA)\Microsoft\Windows\Start Menu\Programs\Startup\packer-post-restart.bat"
      if (!$env:PACKER_STARTUP_WORKAROUND -and (Test-Path $startup)) {
          & cmd /c $startup
      }

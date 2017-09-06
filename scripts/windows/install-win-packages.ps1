@@ -13,13 +13,7 @@ if ("$ARCH" -eq "x86") {
   $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
 }
 
-# Define common Start-Process params appropriate for running the install setups.
-# Main one is -Wait (until setup is complete).
-# PassThru and NoNewWindow also relevant to ensure any installer console output is properly captured
-$SprocParms = @{'PassThru'=$true;
-                'NoNewWindow'=$true
-}
-
+# Install Puppet Agent
 Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
 Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
 Write-Output "Installed Puppet Agent..."

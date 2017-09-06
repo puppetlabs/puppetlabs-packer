@@ -288,6 +288,14 @@ class windows_template::local_group_policies ()
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
+    # Disable UAC (Moved from boxstarter script)
+    registry::value { 'DisableUAC':
+        key   => 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
+        value => 'EnableLUA',
+        data  => 0,
+        type  => 'dword',
+    }
+
     # Set the following BGInfo Variables using facter provided variables from env
     #VMPOOLER_Build_Date=Build-Date
     #VMPOOLER_Packer_SHA=124214215215215235

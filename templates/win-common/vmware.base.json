@@ -45,7 +45,7 @@
         "tmp/autounattend.xml",
         "files/{{user `image_arch`}}/platform-packages.ps1",
         "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/start-boxstarter.ps1",
+        "../../scripts/windows/start-pswindowsupdate.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/clean-disk-dism.ps1",
