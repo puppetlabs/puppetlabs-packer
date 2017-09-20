@@ -1,0 +1,12 @@
+    {
+      "template_name": "centos-6.9-x86_64",
+      "vmware_template_os": "rhel6-64",
+      "virtualbox_template_os": "RedHat_64",
+
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-6.9-x86_64-bin-DVD1.iso",
+      "iso_checksum": "d27cf37a40509c17ad70f37bc743f038c1feba00476fe6b69682aa424c399ea6",
+      "iso_checksum_type": "sha256",
+
+      "puppet_aio": "http://yum.puppetlabs.com/el/6/PC1/x86_64/puppet-agent-1.10.8-1.el6.x86_64.rpm"
+
+    }
