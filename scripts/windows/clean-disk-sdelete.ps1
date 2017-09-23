@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 # This is using a revised Disk Zero script instead of sdelete.
 # Script obtained and modified from: http://www.hurryupandwait.io/blog/how-can-we-most-optimally-shrink-a-windows-base-image
 
-Write-Host "Wiping empty space on disk..."
+Write-Output "Wiping empty space on disk..."
 $FilePath="c:\zero.tmp"
 $Volume = Get-WmiObject win32_logicaldisk -filter "DeviceID='C:'"
 $ArraySize= 64kb
@@ -29,7 +29,7 @@ finally {
 Remove-Item $FilePath -Force -ErrorAction SilentlyContinue
 
 # Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
+Write-Output "Removing page file.  Recreates on next boot"
 reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # Sleep to let console log catch up (and get captured by packer)

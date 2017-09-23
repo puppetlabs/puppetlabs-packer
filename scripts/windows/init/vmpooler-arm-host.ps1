@@ -28,7 +28,7 @@ If ($WindowsVersion -like $WindowsServer2008) {
 }
 
 # Arm machine using RunOnce Keys
-Write-Host "Arming machine for first-run"
+Write-Output "Arming machine for first-run"
 reg import C:\Packer\Init\vmpooler-clone-arm-runonce.reg
 
 # Make sure NetBios is disabled on the host to avoid netbios name collision at first boot.
@@ -38,7 +38,7 @@ Set-Service "netbt" -StartupType Disabled
 Set-Service "VMUSBArbService" -StartupType Disabled  -ErrorAction SilentlyContinue
 
 # Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
+Write-Output "Removing page file.  Recreates on next boot"
 reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # End

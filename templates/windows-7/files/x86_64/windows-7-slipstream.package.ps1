@@ -50,9 +50,9 @@ $Win7RollupMsu = "windows6.1-kb3125574-v4-x64_2dafb1d203c8964239af3048b5dd4b1264
 if (-not (Test-Path "A:\Win7MSU.installed"))
 {
   # Install Windows Rollup Update first.
-  Write-Host "Install Windows 7 Rollup update"
+  Write-Output "Install Windows 7 Rollup update"
   Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-7-msu/$Win7RollupMsu"  "$ENV:TEMP\$Win7RollupMsu"
-  Write-Host "Applying $Win7RollupMsu Patch"
+  Write-Output "Applying $Win7RollupMsu Patch"
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win7RollupMsu /quiet /norestart"
   Touch-File "A:\Win7MSU.installed"
   if (Test-PendingReboot) { Invoke-Reboot }

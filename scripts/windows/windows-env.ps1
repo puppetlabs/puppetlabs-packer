@@ -87,11 +87,11 @@ param (
       $completed = $true
     } catch {
       if ($retrycount -ge $maxretries) {
-        Write-Host "Max Attempts exceeded"
+        Write-Output "Max Attempts exceeded"
         throw "Download aborting"
       } else {
         $retrycount++
-        Write-Host "Download Failed $retrycount of $maxretries - Sleeping $delay"
+        Write-Output "Download Failed $retrycount of $maxretries - Sleeping $delay"
         Start-Sleep -Seconds $delay
       }
     }
@@ -103,7 +103,7 @@ param (
 # As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
 
 Function Set-UserKey($key,$valuename,$reg_type,$data) {
-  Write-Host "Setting Default User registry entry: $key\$valuename"
+  Write-Output "Setting Default User registry entry: $key\$valuename"
   reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
 }
 
@@ -131,7 +131,7 @@ Function Touch-File
 
 Function Disable-PC-Sleep
 {
-  Write-Host "Disabling all Sleep timers"
+  Write-Output "Disabling all Sleep timers"
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
   Try
@@ -166,11 +166,11 @@ Function Install_Win_Patch
 
   $PatchFilename = $PatchUrl.Substring($PatchUrl.LastIndexOf("/") + 1)
 
-  Write-Host "Downloading $PatchFilename"
+  Write-Output "Downloading $PatchFilename"
   Download-File "$PatchUrl"  "$ENV:TEMP\$PatchFilename"
-  Write-Host "Applying $PatchFilename Patch"
+  Write-Output "Applying $PatchFilename Patch"
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$PatchFilename /quiet /norestart"
-  Write-Host "Patch Installed"
+  Write-Output "Patch Installed"
 }
 
 # Helper function to delete file, with try/catch to ignore errors.
@@ -182,14 +182,14 @@ Function ForceFullyDelete-Paths
 
   try {
     if(Test-Path $filetodelete) {
-        Write-Host "Removing $filetodelete"
+        Write-Output "Removing $filetodelete"
         Takeown /d Y /R /f $filetodelete
         Icacls $filetodelete /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
         Remove-Item $filetodelete -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
       }
     }
     catch {
-        Write-Host "Ignoring Error deleting: $filetodelete - Continue"
+        Write-Output "Ignoring Error deleting: $filetodelete - Continue"
     }
 }
 
@@ -198,11 +198,10 @@ Function ForceFullyDelete-Paths
 Function Enable-UpdatesFromInternalWSUS
 {
   $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
-  Write-Host "Setting Windows Update Server to $WSUSServer"
+  Write-Output "Setting Windows Update Server to $WSUSServer"
 
   reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUServer"       /t REG_SZ /d "$WSUSServer" /f
   reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"    /v "WUStatusServer" /t REG_SZ /d "$WSUSServer" /f
-
   reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
   reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
   reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
@@ -230,16 +229,16 @@ Function Install-DotNetLatest
   {
     # Install .Net 4.7 for all platforms except Windows 2008 (.Net 4.6)
       if ($WindowsVersion -like $WindowsServer2008 ) {
-        Write-Host "Installing .Net 4.6"
+        Write-Output "Installing .Net 4.6"
         $DotNetInstaller = "NDP46-KB3045557-x86-x64-AllOS-ENU.exe"
       }
       else {
-        Write-Host "Installing .Net 4.7"
+        Write-Output "Installing .Net 4.7"
         $DotNetInstaller = "NDP47-KB3186497-x86-x64-AllOS-ENU.exe"
         if ($WindowsVersion -like $WindowsServer2008r2 -or $WindowsVersion -like $WindowsServer2012 ) {
           # Win-2008r2 & 2012 need this patch installed.
           # This will fail silently if the patch is already installed.
-          Write-Host "Installing Pre-Requisite for .Net 4.7"
+          Write-Output "Installing Pre-Requisite for .Net 4.7"
           if ("$ARCH" -eq "x86") {
             $PreReqPatch = "Windows6.1-KB4019990-x86.msu"
           }
@@ -266,8 +265,8 @@ Function Install-PackerWindowsUpdates
 
   # If DisableWUSA is set, then touch the "WUSA.redirect" file to disable it
   if ( $DisableWUSA ) {
-    Write-Host "Disable WUSA Re-direct"
-    Touch-File "A:\WSUS.redirect"
+    Write-Output "Disable WUSA Re-direct"
+    Touch-File "$PackerLogs\WSUS.redirect"
   }
 
   if (-not (Test-Path "A:\WSUS.redirect"))
@@ -282,7 +281,7 @@ Function Install-PackerWindowsUpdates
      Install-WindowsUpdate -AcceptEula
   }
   catch {
-     Write-Host "Ignoring first Update error."
+     Write-Output "Ignoring first Update error."
   }
   if (Test-PendingReboot) { Invoke-Reboot }
   # This is a sort of belt and braces approach - it may work better after we reboot it again.
@@ -303,15 +302,15 @@ Function Install-PackerWindowsUpdates
 
 Function Remove-Win10Packages
 {
-  Write-Host "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+  Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
   Import-Module Appx
   Import-Module Dism
 
-  Write-Host "Removing AppxPackages"
+  Write-Output "Removing AppxPackages"
   Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
 
-  Write-Host "Removing Online Provisioned Packages"
+  Write-Output "Removing Online Provisioned Packages"
   Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
 
   if ("$ARCH" -eq "x86_64") {
@@ -321,15 +320,15 @@ Function Remove-Win10Packages
   }
 
   try {
-    Write-Host "Stopping OneDrive"
+    Write-Output "Stopping OneDrive"
     taskkill /f /im OneDrive.exe
   }
   catch {
-    Write-Host "Ignoring OneDrive taskkill error"
+    Write-Output "Ignoring OneDrive taskkill error"
   }
 
   try {
-    Write-Host "Uninstalling OneDrive"
+    Write-Output "Uninstalling OneDrive"
     $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
     $zproc.WaitForExit()
 
@@ -339,7 +338,7 @@ Function Remove-Win10Packages
     Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
   }
   catch {
-    Write-Host "Ignoring OneDrive uninstall error"
+    Write-Output "Ignoring OneDrive uninstall error"
   }
 
   if (Test-PendingReboot) { Invoke-Reboot }

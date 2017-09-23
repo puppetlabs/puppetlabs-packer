@@ -132,9 +132,9 @@
       "type": "powershell",
       "remote_path": "c:/Windows/Temp/run-queue-sysprep.ps1",
       "inline": [
-        "Write-Host 'Initiate Sysprep'",
+        "Write-Output 'Initiate Sysprep'",
         "C:\\Windows\\System32\\sysprep\\sysprep /oobe /quit /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
-        "Write-Host 'Sysprep queued.'",
+        "Write-Output 'Sysprep queued.'",
         "Start-Sleep -Seconds 10"
       ]
     },

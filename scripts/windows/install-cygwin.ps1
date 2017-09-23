@@ -1,4 +1,4 @@
-Write-Host "Cygwin Installation Script"
+Write-Output "Cygwin Installation Script"
 # Install and configure Cygwin.
 # This is being done in a separate script to the windows packages deliberately, as the windows
 # packages are common to both Cygwin and and bitvise machines.
@@ -21,12 +21,12 @@ Write-Host "Cygwin Installation Script"
 #    --local-package-dir C:\\Packer\\Downloads\\cygwin\\packages
 
 $ErrorActionPreference = 'Stop'
-Write-Host "Loading Windows Environment"
+Write-Output "Loading Windows Environment"
 . A:\windows-env.ps1
 
 # Work out what CYGDIR is and set it as a Windows Environment Variable
 # Note - need seperate Prefix var for environment variables due to cygwin/git-for-win idiosyncrasies
-Write-Host "Setting CYGWINDIR"
+Write-Output "Setting CYGWINDIR"
 if ($ARCH -eq 'x86') {
   $CygWinDir = "C:\cygwin"
   $CygEnvPrefix = "C:/cygwin"
@@ -53,24 +53,24 @@ foreach ($line in $content)
     $CygWinPackageList = $splitUp[0]
   }
 }
-Write-Host "Package list is: $CygWinPackageList"
+Write-Output "Package list is: $CygWinPackageList"
 
 # Setup Password for later use
 if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
 $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
-Write-Host "Downloading Cygwin Packages"
+Write-Output "Downloading Cygwin Packages"
 Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
-Write-Host "Extracting $CygwinDownloads\packages_$ARCH.zip"
+Write-Output "Extracting $CygwinDownloads\packages_$ARCH.zip"
 $zproc = Start-Process "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
 $zproc.WaitForExit()
 
-Write-Host "Downloading Cygwin Setup"
+Write-Output "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
 Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
 # Install Cygwin from the download location.
 # Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
-Write-Host "Installing Cygwin"
+Write-Output "Installing Cygwin"
 $CygwinArguments = "--quiet-mode " + `
                    "--packages $CygWinPackageList " + `
                    "--no-verify --local-install " + `
@@ -79,11 +79,11 @@ $CygwinArguments = "--quiet-mode " + `
 Start-Process -Wait "$CygWinSetup" -PassThru -NoNewWindow -ArgumentList "$CygwinArguments"
 
 # Copy setup program to C:\Windows\system32 to deal with beaker issue (RE-7855)
-Write-Host "Copying $CygWinSetup to $ENV:WINDIR\system32"
+Write-Output "Copying $CygWinSetup to $ENV:WINDIR\system32"
 Copy-Item -Path "$CygWinSetup" -Destination "$ENV:WINDIR\system32\setup-$ARCH.exe"
 
 # Set GIT Related env variables to ensure correct editor is used etc.
-Write-Host "Set GIT Environment variables to use Cygwin utils"
+Write-Output "Set GIT Environment variables to use Cygwin utils"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name GIT_EDITOR -Value "$CygEnvPrefix/bin/vi.exe"
 

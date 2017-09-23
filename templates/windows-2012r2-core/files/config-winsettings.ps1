@@ -7,10 +7,10 @@ $ErrorActionPreference = "Stop"
 
 # Some other quick win settings provided by Boxstarter
 # Although this is no longer run under boxstarter, we are still able to use it's cmdlets.
-Write-Host "Other Stuff......."
+Write-Output "Other Stuff......."
 
 # Enable Bootlog
-Write-Host "Enable Bootlog"
+Write-Output "Enable Bootlog"
 cmd /c "bcdedit /set {current} bootlog yes"
 
 #######################################################################################################################
@@ -25,31 +25,31 @@ cmd /c "bcdedit /set {current} bootlog yes"
 reg.exe load HKLM\DEFUSER c:\users\default\ntuser.dat
 
 # Set IE Home Page for this and Default User.
-Write-Host "Setting IE Home Page"
+Write-Output "Setting IE Home Page"
 Set-UserKey 'Software\Microsoft\Internet Explorer\Main' 'Start Page' 'REG_SZ' 'about:blank'
 
 # UI and desktop settings (note classic is enforced by Group policy")
 # Set Visual Effects for Best Performance
-Write-Host "Setting Visual Effects to Best Performance"
+Write-Output "Setting Visual Effects to Best Performance"
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' 'VisualFXSetting' 'REG_DWORD' 2
 
 # Set solid color background - blueish
-Write-Host "Setting Solid background colour"
+Write-Output "Setting Solid background colour"
 Set-UserKey 'Control Panel\Colors' 'Background' 'REG_SZ' '"10 59 118"'
 Set-UserKey 'Control Panel\Colors' 'Wallpaper' 'REG_SZ' '""'
 
 # Start Menu Options
-Write-Host "Setting Start Menu Options"
+Write-Output "Setting Start Menu Options"
 # Control panel start-menu cascading doesn't appear to be available in W 2012
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel' 'AllItemsIconView' 'REG_DWORD' 1
 
 # Icon Notification Tray - enable all notifications for the moment.
 # Setting as per spec is tricky (see RE-7692)
-Write-Host "Enabling all notification icons"
+Write-Output "Enabling all notification icons"
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer' 'EnableAutoTray' 'REG_DWORD' 0
 
 # Set Explorer UI settings
-Write-Host "Setting Explorer and Taskbar UI Settings..."
+Write-Output "Setting Explorer and Taskbar UI Settings..."
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' 'AlwaysShowMenus'       'REG_DWORD' 1
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' 'AutoCheckSelect'       'REG_DWORD' 0
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' 'DisablePreviewDesktop' 'REG_DWORD' 1
@@ -83,11 +83,11 @@ Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' 'Taskb
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' 'WebView'               'REG_DWORD' 1
 
 # Set FullPath to be displayed in the window title bar
-Write-Host "Setting Full Path to be displayed on title bars..."
+Write-Output "Setting Full Path to be displayed on title bars..."
 Set-UserKey 'Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState' 'FullPath'          'REG_DWORD' 1
 
 # Set some UI acceleration features to tune down all of the fancy animations etc..
-Write-Host "Disabling fancy UI animations..."
+Write-Output "Disabling fancy UI animations..."
 Set-UserKey 'Control Panel\Desktop'               'DragFullWindows'           'REG_SZ'      '0'
 Set-UserKey 'Control Panel\Desktop'               'FontSmoothing'             'REG_SZ'      '0'
 Set-UserKey 'Control Panel\Desktop'               'UserPreferencesMask'       'REG_BINARY' '9000038010000000'
@@ -102,11 +102,11 @@ reg.exe unload HKLM\DEFUSER
 
 
 # Set the Security Policies
-Write-Host "Setting Low Security Password Policies"
+Write-Output "Setting Low Security Password Policies"
 secedit /configure /db secedit.sdb /cfg A:\Low-SecurityPasswordPolicy.inf /quiet
 
 # Configure WinRM - (Final configuration)
-Write-Host "Configuring WinRM"
+Write-Output "Configuring WinRM"
 winrm quickconfig -force
 winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="1024"}'
 winrm set winrm/config '@{MaxTimeoutms="1800000"}'
@@ -126,5 +126,14 @@ autologon -AcceptEula Administrator . PackerAdmin
 # Ticket https://tickets.puppetlabs.com/browse/IMAGES-577 has been raised for follow on investigation and work.
 #
 reg.exe ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Shell" /t REG_SZ /d "explorer.exe" /f
+
+##### SPECIAL
+# WMF5 on 2008R2 causes an issue with sysprep, so set this registry key
+# https://social.technet.microsoft.com/Forums/en-US/a37d2158-1b8b-412e-ad49-02fe0ba573c2/sysprep-fails-on-windows-2008-r2-after-installing-windows-management-framework-50?forum=mdt
+Write-Output "Syspep fix for WMF5/Windows 2008R2"
+reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\StreamProvider"    /v "LastFullPayloadTime" /t REG_DWORD /d 0 /f
+
+# Re-Enable AutoAdminLogon
+autologon -AcceptEula Administrator . PackerAdmin
 
 # End

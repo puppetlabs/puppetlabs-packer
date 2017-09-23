@@ -13,9 +13,9 @@ Foreach ($Key in $SubKeys)
 
 # Cleanup Windows Update area after all that
 # Clean the WinSxS area - actual action depends on OS Level - full DISM commands only available from 2012R2 and later.
-Write-Host "Cleaning up WinxSx updates"
+Write-Output "Cleaning up WinxSx updates"
 If ($WindowsVersion -like $WindowsServer2008) {
-  Write-Host "Windows 2008 - Reduced cleanup"
+  Write-Output "Windows 2008 - Reduced cleanup"
   compcln /quiet
 }
 ElseIf ($WindowsVersion -like $WindowsServer2008R2 ) {
@@ -33,10 +33,10 @@ ElseIf ($WindowsVersion -like $WindowsServer2012) {
 }
 
 If ($WindowsVersion -like $WindowsServer2008) {
-  Write-Host "Skipping CleanMgr for Windows 2008"
+  Write-Output "Skipping CleanMgr for Windows 2008"
 }
 ElseIf ( $WindowsServerCore ) {
-  Write-Host "Skipping Clean-Mgr as GUI not installed (Core Installation)."
+  Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
 }
 else {
   # Set registry keys for all the other cleanup areas we want to address with cleanmgr - fairly comprehensive cleanup
@@ -64,19 +64,19 @@ else {
   $cleanmgrgroups | % { reg.exe ADD "$cleankeyprefix\$_" /v $CleanMgrStateFlags /t REG_DWORD /d $CleanMgrStateFlagClean /f }
 
   # Run Cleanmgr utility
-  Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
+  Write-Output "Running CleanMgr with Sagerun:$CleanMgrSageSet"
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 }
 
 # Now that all Update operations are complete, disable Windows Update and STOP it.
-Write-Host "Stopping and Disabling Windows Update"
+Write-Output "Stopping and Disabling Windows Update"
 net stop wuauserv
 Set-Service wuauserv -StartupType Disabled
 
 # Clean up files (including those not addressed by cleanmgr)
 # Use Try/Catch in preference to SilentlyContinue as this needs to be PS 2 compatible
 # to avoid aborting on locked files etc in Win-2008r2
-Write-Host "Clearing Files"
+Write-Output "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\temp\*",
     "$ENV:WINDIR\logs",
@@ -89,7 +89,7 @@ Write-Host "Clearing Files"
 ) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
-Write-Host "Clearing Logs"
+Write-Output "Clearing Logs"
 wevtutil clear-log Application
 wevtutil clear-log Security
 wevtutil clear-log Setup
@@ -99,10 +99,10 @@ wevtutil clear-log System
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 $SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
 
-Write-Host "Cleaning Complete"
-Write-Host "Starting Free Space $SpaceAtStart GB"
-Write-Host "Current Free Space $SpaceAtEnd GB"
-Write-Host "Reclaimed $SpaceReclaimed GB"
+Write-Output "Cleaning Complete"
+Write-Output "Starting Free Space $SpaceAtStart GB"
+Write-Output "Current Free Space $SpaceAtEnd GB"
+Write-Output "Reclaimed $SpaceReclaimed GB"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20

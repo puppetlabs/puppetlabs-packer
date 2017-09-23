@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 
 $SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 
-Write-Host "Uninstalling Puppet Agent..."
+Write-Output "Uninstalling Puppet Agent..."
 Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.msi /qn /norestart"
 
 # Remove Boxstarter
@@ -44,13 +44,13 @@ reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 
 # Run Cleanmgr again.
 If ($WindowsVersion -like $WindowsServer2008) {
-  Write-Host "Skipping CleanMgr for Windows 2008"
+  Write-Output "Skipping CleanMgr for Windows 2008"
 }
 ElseIf ( $WindowsServerCore ) {
-  Write-Host "Skipping Clean-Mgr as GUI not installed (Core Installation)."
+  Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
 }
 else {
-  Write-Host "Running CleanMgr with Sagerun:$CleanMgrSageSet"
+  Write-Output "Running CleanMgr with Sagerun:$CleanMgrSageSet"
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 }
 
@@ -60,7 +60,7 @@ reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
 
 # Clean up files (including those not addressed by cleanmgr)
 # This list is a bit different from that in the dism cleanup script.
-Write-Host "Clearing Files"
+Write-Output "Clearing Files"
 @(
     "$ENV:LOCALAPPDATA\Nuget",
     "$ENV:LOCALAPPDATA\temp\*",
@@ -76,7 +76,7 @@ Write-Host "Clearing Files"
 ) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs
-Write-Host "Clearing Logs"
+Write-Output "Clearing Logs"
 wevtutil clear-log Application
 wevtutil clear-log Security
 wevtutil clear-log Setup
@@ -86,10 +86,10 @@ wevtutil clear-log System
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 $SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
 
-Write-Host "Cleaning Complete"
-Write-Host "Starting Free Space $SpaceAtStart GB"
-Write-Host "Current Free Space $SpaceAtEnd GB"
-Write-Host "Reclaimed $SpaceReclaimed GB"
+Write-Output "Cleaning Complete"
+Write-Output "Starting Free Space $SpaceAtStart GB"
+Write-Output "Current Free Space $SpaceAtEnd GB"
+Write-Output "Reclaimed $SpaceReclaimed GB"
 
 # TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
 # extra space released by the delete commands above.
@@ -99,7 +99,7 @@ Write-Host "Reclaimed $SpaceReclaimed GB"
 # Need to add extra check for Win-2008r2 even with WMF 5 added as this still breaks.
 
 if ($psversiontable.psversion.major -eq 2 -or $WindowsVersion -like $WindowsServer2008R2) {
-  Write-Host "Using DiskPart to extend C: drive partition"
+  Write-Output "Using DiskPart to extend C: drive partition"
   $diskpartcommands=@"
 list disk
 select disk 0
@@ -115,12 +115,12 @@ exit
 else {
   $size = (Get-PartitionSupportedSize -DriveLetter C)
   $sizemax = $size.SizeMax
-  Write-Host "Setting Drive C partition size to $sizemax"
+  Write-Output "Setting Drive C partition size to $sizemax"
   Resize-Partition -DriveLetter C -Size $sizemax
 }
 
 # Remove the pagefile
-Write-Host "Removing page file.  Recreates on next boot"
+Write-Output "Removing page file.  Recreates on next boot"
 reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
 # Sleep to let console log catch up (and get captured by packer)
