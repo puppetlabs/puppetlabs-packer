@@ -48,7 +48,7 @@ $SysInternalsTools = @(
   'bginfo',
   'autologon'
 )
-$SysInternalsTools | % {
+$SysInternalsTools | ForEach-Object {
   Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/$_.zip $PackerDownloads\$_.zip
   # PS2 has a bug with "Start-Process -Wait" which can cause it to fail if the command finishes "too quickly", so using this
   # workaround to address random failures (especially with Win-2012)

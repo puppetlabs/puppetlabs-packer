@@ -123,12 +123,12 @@ Write-Output "Disabling Sleep timers"
 Disable-PC-Sleep
 
 # Run the (Optional) Installation Package File.
-$packageFile = Get-ChildItem -Path $PackageDir | ? { $_.Name -match '.package.ps1$'} | Select-Object -First 1
-if ($packageFile -eq $null) {
-  Write-Warning "No additional packages found in $PackageDir"
+if (Test-Path "A:\platform-packages.ps1")
+{
+  & "A:\platform-packages.ps1"
 }
-Else {
-  & ($packageFile.Fullname)
+else {
+  Write-Warning "No additional packages found in $PackageDir"
 }
 
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
@@ -183,10 +183,17 @@ catch {
 
 Write-Host "Enable WSMandCredSSP"
 Enable-WSManCredSSP -Force -Role Server
+
 # NOTE - This is insecure but can be shored up in later customisation.  Required for Vagrant and other provisioning tools
+Write-Host "WinRM Settings"
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+# Needed for Win-2008r2
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
+# Set service to start automatically (not delayed)
+Set-Service "WinRM" -StartupType Automatic
+
 Write-Host "WinRM setup complete"
 
 # Clear reboot files as control is now transferred to Packer to complete configuration.
