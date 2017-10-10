@@ -9,6 +9,10 @@ $SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.De
 Write-Output "Uninstalling Puppet Agent..."
 Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.msi /qn /norestart"
 
+# Clear Puppet Event Log & SOFTWARE registry keys
+reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Puppet"  /f
+reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
+
 # Run Cleanmgr again.
 If ($WindowsVersion -like $WindowsServer2008) {
   Write-Output "Skipping CleanMgr for Windows 2008"
@@ -20,10 +24,6 @@ else {
   Write-Output "Running CleanMgr with Sagerun:$CleanMgrSageSet"
   Start-Process -Wait "cleanmgr" -ArgumentList "/sagerun:$CleanMgrSageSet"
 }
-
-# Clear Puppet Event Log & SOFTWARE registry keys
-reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Puppet"  /f
-reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
 
 # Clean up files (including those not addressed by cleanmgr)
 # This list is a bit different from that in the dism cleanup script.
@@ -57,34 +57,6 @@ Write-Output "Cleaning Complete"
 Write-Output "Starting Free Space $SpaceAtStart GB"
 Write-Output "Current Free Space $SpaceAtEnd GB"
 Write-Output "Reclaimed $SpaceReclaimed GB"
-
-# TODO run sdelete a final time - only a suggestion as it may be useful to pare out the
-# extra space released by the delete commands above.
-
-# Extend C: partition to full extend - this is predicated on the existance of PS call.
-# So Powershell Version 2 and earlier must resort to diskpart.
-# Need to add extra check for Win-2008r2 even with WMF 5 added as this still breaks.
-
-if ($psversiontable.psversion.major -eq 2 -or $WindowsVersion -like $WindowsServer2008R2) {
-  Write-Output "Using DiskPart to extend C: drive partition"
-  $diskpartcommands=@"
-list disk
-select disk 0
-list partition
-select partition 3
-extend
-list partition
-exit
-"@
-
-  $diskpartcommands | diskpart
-}
-else {
-  $size = (Get-PartitionSupportedSize -DriveLetter C)
-  $sizemax = $size.SizeMax
-  Write-Output "Setting Drive C partition size to $sizemax"
-  Resize-Partition -DriveLetter C -Size $sizemax
-}
 
 # Remove the pagefile
 Write-Output "Removing page file.  Recreates on next boot"
