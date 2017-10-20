@@ -1,6 +1,7 @@
 packer_cache
 output-*
 output/
+tmp/
 vendor/*
 *.bak
 hiera/*

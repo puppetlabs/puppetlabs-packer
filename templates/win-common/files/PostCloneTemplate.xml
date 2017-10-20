@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <UserData>
+                <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
+                <ProductKey>
+                    <!-- Do not uncomment the Key element if you are using trial ISOs -->
+                    <!-- KMS Setup keys  https://technet.microsoft.com/en-us/library/jj612867.aspx -->
+                    <Key>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</Key>
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>Puppet Labs</FullName>
+                <Organization>Puppet Labs</Organization>
+            </UserData>
+        </component>
+    </settings>
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OEMInformation>
+                <HelpCustomized>false</HelpCustomized>
+            </OEMInformation>
+            <ComputerName>*</ComputerName>
+            <TimeZone>UTC</TimeZone>
+            <RegisteredOwner />
+            <ShowWindowsLive>false</ShowWindowsLive>
+            <CopyProfile>true</CopyProfile>
+            <ProductKey>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</ProductKey>
+        </component>
+        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
+        <component name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <IEHardenAdmin>false</IEHardenAdmin>
+            <IEHardenUser>false</IEHardenUser>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>net user administrator /active:yes</Path>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+            <!-- NB - only really needed for Win-8.1 but shouldn't harm rest of boots - needs regression -->
+            <RunSynchronousCommand wcm:action="add">
+                <Path>reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableFirstLogonAnimation /t REG_DWORD /d 0 /f</Path>
+                <Order>2</Order>
+                <Description>Do not Show First Logon Animation</Description>
+            </RunSynchronousCommand>
+        </component>
+        <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SkipAutoActivation>true</SkipAutoActivation>
+        </component>
+    </settings>
+    <settings pass="generalize">
+        <component name="Microsoft-Windows-PnpSysprep" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>en-US</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-US</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <PackerLogonSequence  ImageType="vmware">
+                <FirstLogonCommands>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vmpooler-post-clone-configuration.ps1</CommandLine>
+                        <Description>Post Clone configuration</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                </FirstLogonCommands>
+            </PackerLogonSequence>
+            <PackerLogonSequence  ImageType="virtualbox">
+                <FirstLogonCommands>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vagrant-post-clone-configuration.ps1</CommandLine>
+                        <Description>Post Clone configuration</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                </FirstLogonCommands>
+            </PackerLogonSequence>
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideLocalAccountScreen>true</HideLocalAccountScreen>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <NetworkLocation>Work</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+            </OOBE>
+            <RegisteredOwner />
+            <ProductKey>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</ProductKey>
+            <UserAccounts>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>PackerAdmin</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Description>Local Administrator</Description>
+                        <DisplayName>Administrator</DisplayName>
+                        <Group>Administrators</Group>
+                        <Name>Administrator</Name>
+                    </LocalAccount>
+                </LocalAccounts>
+                <AdministratorPassword>
+                    <Value>PackerAdmin</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
+            <AutoLogon>
+                <Password>
+                    <Value>PackerAdmin</Value>
+                    <PlainText>true</PlainText>
+                </Password>
+                <Domain>.</Domain>
+                <Enabled>true</Enabled>
+                <LogonCount>99999</LogonCount>
+                <Username>Administrator</Username>
+            </AutoLogon>
+        </component>
+    </settings>
+</unattend>
+

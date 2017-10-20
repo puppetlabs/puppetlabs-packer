@@ -41,7 +41,7 @@ Function Disable-OSCNetAdapterPnPCaptitlies
 		$KeyPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\$AdapterDeviceNumber"
 		If(Test-Path -Path $KeyPath)
 		{
-			Write-Host "Working on Device $AdapterDeviceNumber at $KeyPath"
+			Write-Output "Working on Device $AdapterDeviceNumber at $KeyPath"
 			$PnPCapabilitiesValue = (Get-ItemProperty -Path $KeyPath).PnPCapabilities
 			If($PnPCapabilitiesValue -eq 24)
 			{
@@ -54,13 +54,13 @@ Function Disable-OSCNetAdapterPnPCaptitlies
 				{
 					#setting the value of properties of PnPCapabilites to 24, it will disable save power option.
 					Set-ItemProperty -Path $KeyPath -Name "PnPCapabilities" -Value 24 | Out-Null
-					Write-Host """$PhysicalAdapterName"" - The option ""Allow the computer to turn off this device to save power"" was disabled."
+					Write-Output """$PhysicalAdapterName"" - The option ""Allow the computer to turn off this device to save power"" was disabled."
 
 					Write-Warning "It will take effect after next reboot"
 				}
 				Catch
 				{
-					Write-Host "Setting the value of properties of PnpCapabilities failed." -ForegroundColor Red
+					Write-Output "Setting the value of properties of PnpCapabilities failed." -ForegroundColor Red
 				}
 			}
 			ElseIf($PnPCapabilitiesValue -eq $null)
@@ -68,18 +68,18 @@ Function Disable-OSCNetAdapterPnPCaptitlies
 				Try
 				{
 					New-ItemProperty -Path $KeyPath -Name "PnPCapabilities" -Value 24 -PropertyType DWord | Out-Null
-					Write-Host """$PhysicalAdapterName"" - The option ""Allow the computer to turn off this device to save power"" was disabled."
+					Write-Output """$PhysicalAdapterName"" - The option ""Allow the computer to turn off this device to save power"" was disabled."
 
 					Write-Warning "It will take effect after next reboot"
 				}
 				Catch
 				{
-					Write-Host "Setting the value of properties of PnpCapabilities failed." -ForegroundColor Red
+					Write-Output "Setting the value of properties of PnpCapabilities failed." -ForegroundColor Red
 				}
 			}
 			Else
 			{
-				Write-Host "Strange value PnPCapabilitiesValue: $PnPCapabilitiesValuefor for Device Adapter: $AdapterDeviceNumber"
+				Write-Output "Strange value PnPCapabilitiesValue: $PnPCapabilitiesValuefor for Device Adapter: $AdapterDeviceNumber"
 			}
 		}
 		Else

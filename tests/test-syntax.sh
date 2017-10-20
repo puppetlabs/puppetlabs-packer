@@ -1,7 +1,7 @@
 #!/bin/bash
 
 counter=0
-for file in $(find . -name "*.json" | egrep -v 'MAINTAINERS|metadata')
+for file in $(find . -name "*.json" | egrep -v '\.vars\.|MAINTAINERS|metadata')
 do
     if ! ./packer validate -syntax-only  "$file" &> /dev/null ; then
         echo "$file"

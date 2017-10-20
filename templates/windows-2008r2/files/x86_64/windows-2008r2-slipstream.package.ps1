@@ -39,9 +39,9 @@ $Win2008r2RollupMsu = "windows6.1-kb3125574-v4-x64_2dafb1d203c8964239af3048b5dd4
 if (-not (Test-Path "A:\Win2008r2MSU.installed"))
 {
   # Install Windows Rollup Update first.
-  Write-Host "Install Windows 2008r2 Rollup update"
+  Write-Output "Install Windows 2008r2 Rollup update"
   Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/$Win2008r2RollupMsu"  "$ENV:TEMP\$Win2008r2RollupMsu"
-  Write-Host "Applying $Win2008r2RollupMsu Patch"
+  Write-Output "Applying $Win2008r2RollupMsu Patch"
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win2008r2RollupMsu /quiet /norestart"
   Touch-File "A:\Win2008r2MSU.installed"
   Invoke-Reboot

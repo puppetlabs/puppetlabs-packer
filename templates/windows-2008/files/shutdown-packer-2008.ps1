@@ -4,10 +4,10 @@ $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 
-Write-Host "Packer Shutdown Script"
+Write-Output "Packer Shutdown Script"
 
-Write-Host "Disable WinRM"
+Write-Output "Disable WinRM"
 Set-Service "WinRM" -StartupType Disabled
 
-Write-Host "Initiating Shutdown"
+Write-Output "Initiating Shutdown"
 shutdown /s /t 20 /f /d p:4:1 /c "Packer Shutdown"

@@ -16,7 +16,7 @@ function ExitScript([int]$ExitCode){
 }
 
 #--- SCRIPT ---#
-Write-Host "Updating the Cygwin passwd file!"
+Write-Output "Updating the Cygwin passwd file!"
 
 #Snooze for a bit
 sleep -s 10
@@ -26,7 +26,7 @@ Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding 
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
 
 #Start the SSH server
-Write-Host "Starting SSH server!"
+Write-Output "Starting SSH server!"
 Start-Service "sshd"
 
 #Make sure WinRM is running

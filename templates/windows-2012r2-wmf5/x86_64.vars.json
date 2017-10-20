@@ -1,0 +1,14 @@
+{
+    "template_name"     : "windows-2012r2-wmf5-x86_64",
+    "beakerhost"        : "windows2012r2-64",
+    "vbox_guest_os"     : "Windows2012_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "windows_version"   : "Windows-2012r2",
+    "image_name"        : "Windows Server 2012 R2 SERVERSTANDARD",
+    "product_key"       : "D2N9P-3P6X9-2R39C-7RTCD-MDVJX",
+    "version"           : "0.0.2",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_r2_with_update_x64_dvd_6052708_SlipStream_02.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "3feae58c235f88126a1c099d58abfb8f",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+}
