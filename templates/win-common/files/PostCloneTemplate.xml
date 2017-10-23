@@ -41,13 +41,13 @@
                     <Path>net user administrator /active:yes</Path>
                     <Order>1</Order>
                 </RunSynchronousCommand>
+                <!-- NB - only really needed for Win-8.1 but shouldn't harm rest of boots - needs regression -->
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableFirstLogonAnimation /t REG_DWORD /d 0 /f</Path>
+                    <Order>2</Order>
+                    <Description>Do not Show First Logon Animation</Description>
+                </RunSynchronousCommand>
             </RunSynchronous>
-            <!-- NB - only really needed for Win-8.1 but shouldn't harm rest of boots - needs regression -->
-            <RunSynchronousCommand wcm:action="add">
-                <Path>reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableFirstLogonAnimation /t REG_DWORD /d 0 /f</Path>
-                <Order>2</Order>
-                <Description>Do not Show First Logon Animation</Description>
-            </RunSynchronousCommand>
         </component>
         <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SkipAutoActivation>true</SkipAutoActivation>

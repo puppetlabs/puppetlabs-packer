@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 . A:\windows-env.ps1
 
-Write-Host "Running Win-10 Package Customisation"
+Write-Host "Running Win-10 Package Customisationtemplates/windows-10/files/i386/platform-packages.ps1"
 
-# Remove Win-10 packages that break sysprep
-Remove-Win10Packages
+# Remove Store/Apps packages that break sysprep
+Remove-AppsPackages

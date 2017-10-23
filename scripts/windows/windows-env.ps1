@@ -295,9 +295,9 @@ Function Install-DotNetLatest
 }
 
 
-# Helper function to remove Windows-10 packages that break sysprep (packages are not needed in our test env)
+# Helper function to remove Store/Apps packages that break sysprep (packages are not needed in our test env)
 
-Function Remove-Win10Packages
+Function Remove-AppsPackages
 {
   Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
