@@ -112,7 +112,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-install-win-packages.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-install-win-packages.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-install-win-packages.ps1'",
           "A:\\install-win-packages.ps1"
@@ -123,7 +123,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-install-cygwin.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-install-cygwin.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-install-cygwin.ps1'",
           "A:\\install-cygwin.ps1"
@@ -137,7 +137,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-puppet-configure.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-puppet-configure.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-puppet-configure.ps1'",
           "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vmpooler'"
@@ -148,7 +148,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-config-winsettings.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-config-winsettings.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-config-winsettings.ps1'",
           "A:\\config-winsettings.ps1"
@@ -159,7 +159,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-cleanup-host.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-cleanup-host.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-cleanup-host.ps1'",
           "A:\\cleanup-host.ps1"
@@ -170,7 +170,7 @@
       },
       {
         "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-vmpooler-arm-host.ps1",
+        "remote_path": "{{user `packer_download_dir`}}/run-vmpooler-arm-host.ps1",
         "inline": [
           "Write-Output 'Executing Powershell Script: run-vmpooler-arm-host.ps1'",
           "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
