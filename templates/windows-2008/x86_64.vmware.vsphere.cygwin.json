@@ -4,7 +4,6 @@
 
     "headless"                 : "true",
     "provisioner"              : "{{env `IMAGE_TYPE`}}",
-
     "firmware"                 : "efi",
     "winrm_username"           : "Administrator",
     "winrm_password"           : "PackerAdmin",
@@ -12,7 +11,6 @@
     "memsize"                  : "4096",
     "numvcpus"                 : "2",
     "post_memsize"             : "4096",
-    "shutdown_command"         : "A:\\shutdown-packer.bat",
     "shutdown_timeout"         : "1h",
 
     "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
@@ -31,7 +29,7 @@
     "packer_download_dir"      : "C:/Packer/Downloads"
   },
 
-  "description": "Builds a Windows template VM for use in VMware/cygwin",
+  "description": "Builds a Windows Server 2008 SP2 template VM for use in VMware. Custom spec needed for this platform",
 
   "builders": [
     {
@@ -51,7 +49,7 @@
       "shutdown_command"  : "{{user `shutdown_command`}}",
       "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
 
-      "floppy_files"      : [
+      "floppy_files": [
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/cleanup-host.ps1",
         "../../scripts/windows/install-win-packages.ps1",
@@ -63,7 +61,7 @@
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/Low-SecurityPasswordPolicy.inf",
         "../../scripts/windows/config-winsettings.ps1",
-        "../../scripts/windows/core-shutdown.ps1",
+        "files/shutdown-packer-2008.ps1",
         "../../scripts/windows/win-site.pp"
       ],
 
@@ -71,6 +69,8 @@
         "gui.fitguestusingnativedisplayresolution" : "FALSE",
         "annotation"                               : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
         "firmware"                                 : "{{user `firmware`}}",
+
+        "guest_os_type"                            : "longhorn-64",
         "memsize"                                  : "{{user `memsize`}}",
         "numvcpus"                                 : "{{user `numvcpus`}}",
         "ethernet0.virtualdev"                     : "vmxnet3",
@@ -79,6 +79,8 @@
         "devices.hotplug"                          : "false",
         "vcpu.hotadd"                              : "TRUE",
         "mem.hotadd"                               : "TRUE",
+
+
         "tools.syncTime"                           : "FALSE",
         "time.synchronize.continue"                : "FALSE",
         "time.synchronize.restore"                 : "FALSE",
@@ -87,10 +89,6 @@
         "time.synchronize.tools.startup"           : "FALSE",
         "time.synchronize.tools.enable"            : "FALSE",
         "time.synchronize.resume.host"             : "FALSE"
-      },
-      "vmx_data_post": {
-        "memsize"         : "{{user `post_memsize`}}",
-        "devices.hotplug" : "false"
       }
     }
   ],
@@ -110,72 +108,87 @@
         "source": "./tmp/post-clone.autounattend.xml",
         "destination": "C:\\Packer\\Init\\post-clone.autounattend.xml"
       },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-install-win-packages.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-install-win-packages.ps1'",
-          "A:\\install-win-packages.ps1"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-install-cygwin.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-install-cygwin.ps1'",
-          "A:\\install-cygwin.ps1"
-        ],
-        "environment_vars": [
-          "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-puppet-configure.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-puppet-configure.ps1'",
-          "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}' -PackerTemplateType 'vmpooler'"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-config-winsettings.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-config-winsettings.ps1'",
-          "A:\\config-winsettings.ps1"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-cleanup-host.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-cleanup-host.ps1'",
-          "A:\\cleanup-host.ps1"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/run-vmpooler-arm-host.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-vmpooler-arm-host.ps1'",
-          "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
-        ]
-      }
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-install-win-packages.ps1",
+      "inline": [
+        "A:\\install-win-packages.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-install-cygwin.ps1",
+      "inline": [
+        "A:\\install-cygwin.ps1"
+      ],
+      "environment_vars": [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-puppet-configure.ps1",
+      "inline": [
+        "A:\\puppet-configure.ps1 -PackerTemplateName {{user `template_name`}}-{{user `version`}} -PackerSHA '{{user `packer_sha`}}'"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-config-winsettings.ps1",
+      "inline": [
+        "A:\\config-winsettings.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-cleanup-host.ps1",
+      "inline": [
+        "A:\\cleanup-host.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-vmpooler-arm-host.ps1",
+      "inline": [
+        "C:\\Packer\\Init\\vmpooler-arm-host.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/run-shutdown-packer.ps1",
+      "inline": [
+        "A:\\shutdown-packer-2008.ps1"
+      ]
+    }
   ],
   "post-processors": [
     {

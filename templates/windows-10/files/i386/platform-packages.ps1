@@ -4,5 +4,5 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "Running Win-10 Package Customisation"
 
-# Remove Win-10 packages that break sysprep
-Remove-Win10Packages
+# Remove Store/Apps packages that break sysprep
+Remove-AppsPackages

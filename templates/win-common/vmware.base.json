@@ -93,7 +93,7 @@
   "provisioners": [
     {
       "type": "powershell",
-      "remote_path": "{{user `packer_downloads_dir`}}/print-pswindowslog.ps1",
+      "remote_path": "{{user `packer_download_dir`}}/print-pswindowslog.ps1",
       "inline": [
         "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
         "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
@@ -103,7 +103,7 @@
     
     {
       "type": "powershell",
-      "remote_path": "{{user `packer_downloads_dir`}}/run-clean-disk-dism.ps1",
+      "remote_path": "{{user `packer_download_dir`}}/run-clean-disk-dism.ps1",
       "inline": [
         "Write-Output 'Executing Powershell Script: run-clean-disk-dism.ps1'",
         "A:\\clean-disk-dism.ps1"
@@ -114,7 +114,7 @@
     },
     {
       "type": "powershell",
-      "remote_path": "{{user `packer_downloads_dir`}}/run-clean-disk-sdelete.ps1",
+      "remote_path": "{{user `packer_download_dir`}}/run-clean-disk-sdelete.ps1",
       "inline": [
         "Write-Output 'Executing Powershell Script: run-clean-disk-sdelete.ps1'",
         "A:\\clean-disk-sdelete.ps1"
