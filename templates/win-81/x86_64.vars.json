@@ -1,0 +1,14 @@
+{
+    "template_name"     : "win-81-x86_64",
+    "beakerhost"        : "windows81-64",
+    "vbox_guest_os"     : "Windows81_64",
+    "vmware_guest_os"   : "windows8-64",
+    "windows_version"   : "Windows-8.1",
+    "image_name"        : "Windows 8.1 Enterprise",
+    "product_key"       : "MHF9N-XY6XB-WVXMC-BTDCT-MKKG7",
+    "version"           : "0.0.2",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_8.1_enterprise_with_update_x64_dvd_6054382_SlipStream_01.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "ce996fb7136d55314747c5cef2602b27",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+}
