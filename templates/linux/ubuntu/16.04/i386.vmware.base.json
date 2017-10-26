@@ -15,7 +15,7 @@
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib saz-ssh",
-      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.9.2-1xenial_i386.deb",
+      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/puppet5/p/puppet-agent/puppet-agent_5.3.2-1xenial_i386.deb",
 
       "output_directory": "{{env `OUTPUT_DIRECTORY`}}"
     },

@@ -3,11 +3,11 @@
   "variables":
     {
       "template_name": "ubuntu-16.04-i386",
-      "version": "0.0.4",
+      "version": "0.0.5",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
-      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.9.2-1xenial_i386.deb",
+      "puppet_aio": "http://apt.puppetlabs.com/pool/xenial/puppet5/p/puppet-agent/puppet-agent_5.3.2-1xenial_i386.deb",
       "qa_root_passwd": "{{env `QA_ROOT_PASSWD`}}",
       "packer_vcenter_host": "{{env `PACKER_VCENTER_HOST`}}",
       "packer_vcenter_username": "{{env `PACKER_VCENTER_USERNAME`}}",
