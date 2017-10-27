@@ -1,6 +1,6 @@
 {
     "template_name"     : "win-2016-core-x86_64",
-    "beakerhost"        : "windows2016-core-64",
+    "beakerhost"        : "windows2016_core-64",
     "vbox_guest_os"     : "Windows2016_64",
     "vmware_guest_os"   : "windows8srv-64",
     "windows_version"   : "Windows-2016",
