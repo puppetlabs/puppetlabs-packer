@@ -1,6 +1,6 @@
 {
     "template_name"     : "win-2012r2-core-x86_64",
-    "beakerhost"        : "windows2012r2-core-64",
+    "beakerhost"        : "windows2012r2_core-64",
     "vbox_guest_os"     : "Windows2012_64",
     "vmware_guest_os"   : "windows8srv-64",
     "windows_version"   : "Windows-2012r2",
