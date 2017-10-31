@@ -1,6 +1,6 @@
 class packer::vsphere::params {
 
-  $repo_mirror = 'http://osmirror.delivery.puppetlabs.net'
+  $repo_mirror = 'https://artifactory.delivery.puppetlabs.net/artifactory'
   $loweros     = downcase($::operatingsystem)
 
   case $::operatingsystem {
@@ -21,9 +21,9 @@ class packer::vsphere::params {
       else {
         $ruby_package          = [ 'ruby', 'rubygems-integration' ]
       }
-      $repo_name             = 'ubuntu'
+      $repo_name             = 'ubuntu__remote'
       $repo_list             = 'main restricted universe multiverse'
-      $security_repo_name    = 'ubuntu'
+      $security_repo_name    = 'ubuntu__remote'
       $security_release      = "${lsbdistcodename}-security"
       $updates_release       = "${lsbdistcodename}-updates"
     }
