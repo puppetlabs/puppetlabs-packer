@@ -9,10 +9,6 @@ Param(
 
 if ($UseStartupWorkaround) {
     Write-Warning "Cleaning up PowerShell profile workaround for startup items"
-
-    Remove-ItemProperty `
-            -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" `
-            -Name Shell
     Remove-Item -Force $PROFILE
 }
 
