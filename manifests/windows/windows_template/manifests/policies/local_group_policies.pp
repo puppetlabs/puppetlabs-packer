@@ -1,3 +1,5 @@
+# Class to setup local_group_policies for the packer/windows builds
+#
 class windows_template::policies::local_group_policies ()
 {
     # Search Group Policies and find their registry information
@@ -14,125 +16,148 @@ class windows_template::policies::local_group_policies ()
     }
 
     windows_group_policy::local::machine { 'PowerShellExecutionPolicyUnrestricted':
-        key   => 'Software\Policies\Microsoft\Windows\PowerShell',
-        value => 'ExecutionPolicy',
-        data  => 'Unrestricted',
-        type  => 'REG_SZ',
+        key    => 'Software\Policies\Microsoft\Windows\PowerShell',
+        value  => 'ExecutionPolicy',
+        data   => 'Unrestricted',
+        type   => 'REG_SZ',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::machine { 'PowerShellExecutionPolicyEnableScripts':
-        key   => 'Software\Policies\Microsoft\Windows\PowerShell',
-        value => 'EnableScripts',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows\PowerShell',
+        value  => 'EnableScripts',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::machine { 'DisableServerManagerAtLogon2012':
-        key   => 'Software\Policies\Microsoft\Windows\Server\ServerManager',
-        value => 'DoNotOpenAtLogon',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows\Server\ServerManager',
+        value  => 'DoNotOpenAtLogon',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::machine { 'DisableServerManagerAtLogon2008':
-        key   => 'Software\Policies\Microsoft\Windows\Server\InitialConfigurationTasks',
-        value => 'DoNotOpenAtLogon',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows\Server\InitialConfigurationTasks',
+        value  => 'DoNotOpenAtLogon',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::machine { 'DisableShutdownTracker1':
-        key   => 'Software\Policies\Microsoft\Windows NT\Reliability',
-        value => 'ShutdownReasonOn',
-        data  => 0,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows NT\Reliability',
+        value  => 'ShutdownReasonOn',
+        data   => 0,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::machine { 'DisableShutdownTracker2':
-        key   => 'Software\Policies\Microsoft\Windows NT\Reliability',
-        value => 'ShutdownReasonUI',
-        data  => 0,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows NT\Reliability',
+        value  => 'ShutdownReasonUI',
+        data   => 0,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::machine { 'DisableWER':
-        key   => 'Software\Policies\Microsoft\Windows\Windows Error Reporting',
-        value => 'Disabled',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows\Windows Error Reporting',
+        value  => 'Disabled',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::machine { 'DisableSystemRestore':
-        key   => 'SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore',
-        value => 'DisableSR',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore',
+        value  => 'DisableSR',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::user { 'DisableScreenSaver':
-        key   => 'SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop',
-        value => 'ScreenSaveActive',
-        data  => 0,
-        type  => 'REG_SZ',
+        key    => 'SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop',
+        value  => 'ScreenSaveActive',
+        data   => 0,
+        type   => 'REG_SZ',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
     windows_group_policy::local::user { 'SetClassicDesktop':
-        key   => 'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
-        value => 'SetVisualStyle',
-        data  => '',
-        type  => 'REG_SZ',
+        key    => 'SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
+        value  => 'SetVisualStyle',
+        data   => '',
+        type   => 'REG_SZ',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::user { 'SetRunOnStartMenu':
-        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explore',
-        value => 'ForceRunOnStartMenu',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explore',
+        value  => 'ForceRunOnStartMenu',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::user { 'SetNoMusic':
-        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
-        value => 'NoStartMenuMyMusic',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value  => 'NoStartMenuMyMusic',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::user { 'SetNoPictures':
-        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
-        value => 'NoSMMyPictures',
-        data  => 1,
-        type  => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    windows_group_policy::local::user { 'SetNoWindowsStore':
-        key   => 'Software\Policies\Microsoft\Windows\Explorer',
-        value => 'ShowWindowsStoreAppsOnTaskbar',
-        data  => 2,
-        type  => 'REG_DWORD',
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value  => 'NoSMMyPictures',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
     windows_group_policy::local::user { 'ControlPanelAllItems':
-        key   => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
-        value => 'ForceClassicControlPanel',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value  => 'ForceClassicControlPanel',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-
+    # Settings to control notification area - some of these were attempted in the HKCU settings
+    # but are better defined as policy settings (e.g. show all systray notifications)
+    windows_group_policy::local::user { 'VolumeControlIcon':
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value  => 'NoAutoTrayNotify',
+        data   => 1,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'ValueHideSCAVolume':
+        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+        value  => 'HideSCAVolume',
+        data   => 1,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'NoPinningStoreToTaskbar':
+        key    => 'Software\Policies\Microsoft\Windows\Explorer',
+        value  => 'NoPinningStoreToTaskbar',
+        data   => 1,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+    windows_group_policy::local::user { 'NoShowWindowsStoreAppsOnTaskbar':
+        key    => 'Software\Policies\Microsoft\Windows\Explorer',
+        value  => 'ShowWindowsStoreAppsOnTaskbar',
+        data   => 2,
+        type   => 'REG_DWORD',
+        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    }
+ 
     # TODO Update Start Menu 2008 only
 
     # Disable Windows Update
     windows_group_policy::local::machine { 'DisableWindowsUpdate':
-        key   => 'Software\Policies\Microsoft\Windows\WindowsUpdate\AU',
-        value => 'NoAutoUpdate',
-        data  => 1,
-        type  => 'REG_DWORD',
+        key    => 'Software\Policies\Microsoft\Windows\WindowsUpdate\AU',
+        value  => 'NoAutoUpdate',
+        data   => 1,
+        type   => 'REG_DWORD',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
