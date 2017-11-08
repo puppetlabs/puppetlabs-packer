@@ -69,18 +69,54 @@
             <PackerLogonSequence  ImageType="vmware">
                 <FirstLogonCommands>
                     <SynchronousCommand wcm:action="add">
+                        <CommandLine>reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d 0 /f</CommandLine>
+                        <Description>Disable UAC</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
+                        <Order>2</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <Description>Disable Administrator Password reset</Description>
+                        <Order>3</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware</CommandLine>
+                        <Description>Start PSWindowsUpdate</Description>
+                        <Order>4</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vmpooler-post-clone-configuration.ps1</CommandLine>
                         <Description>Post Clone configuration</Description>
-                        <Order>1</Order>
+                        <Order>5</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
             <PackerLogonSequence  ImageType="virtualbox">
                 <FirstLogonCommands>
                     <SynchronousCommand wcm:action="add">
+                        <CommandLine>reg.exe ADD &quot;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v &quot;EnableLUA&quot; /t REG_DWORD /d 0 /f</CommandLine>
+                        <Description>Disable UAC</Description>
+                        <Order>1</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
+                        <Order>2</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <Order>3</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>wmic useraccount where &quot;name=&apos;vagrant&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <Order>4</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vagrant-post-clone-configuration.ps1</CommandLine>
                         <Description>Post Clone configuration</Description>
-                        <Order>1</Order>
+                        <Order>5</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
