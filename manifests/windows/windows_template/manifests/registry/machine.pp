@@ -54,7 +54,6 @@ class windows_template::registry::machine ()
         ensure => present,
     }
 
-
     # Disable UAC (Moved from boxstarter script)
     registry::value { 'DisableUAC':
         key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System',
@@ -62,6 +61,14 @@ class windows_template::registry::machine ()
         data  => 0,
         type  => 'dword',
     }
+    # Ensure Install MSI As Admin is NOT Disabled.
+    registry::value { 'AdminInstallMSI':
+        key   => 'HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer',
+        value => 'DisableMSI',
+        data  => 0,
+        type  => 'dword',
+    }
+    
 
     # Set the following BGInfo Variables using facter provided variables from env
     #VMPOOLER_Build_Date=Build-Date
