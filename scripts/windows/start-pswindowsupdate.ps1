@@ -102,9 +102,10 @@ Install-DotNetLatest
 
 if (-not (Test-Path "$PackerLogs\7zip.installed")) {
   # Download and install 7za now as its needed here and is useful going forward.
-  Write-Host "Installing 7zip"
-  Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$ARCH.exe  $Env:TEMP\7z1602-$ARCH.exe
-  Start-Process -Wait "$Env:TEMP\7z1602-$ARCH.exe" @SprocParms -ArgumentList "/S"
+  $SevenZipInstaller = "7z1604-$ARCH.exe"
+  Write-Host "Installing 7zip $SevenZipInstaller"
+  Download-File "http://buildsources.delivery.puppetlabs.net/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
+  Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
   Touch-File "$PackerLogs\7zip.installed"
   Write-Host "7zip Installed"
 }
