@@ -53,12 +53,12 @@ class windows_template::registry::user ()
     type  => 'dword',
   }
 
-  # Icon Notification Tray - enable all notifications for the moment.
-  # Setting as per spec is tricky (see RE-7692)
-  registry::value { 'Explorer_':
-    key   => 'HKLM\\DEFUSER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer',
-    value => 'EnableAutoTray',
-    data  => 0,
+  # Switch off Remove all Devices on Taskbar
+  # reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Applets\SysTray" /v "Services" /t reg_dword /d 29 /f
+  registry::value { 'Notifications_RemoveDevices':
+    key   => 'HKLM\\DEFUSER\\Software\\Microsoft\\Windows\\CurrentVersion\\Applets\\SysTray',
+    value => 'Services',
+    data  => 29,
     type  => 'dword',
   }
 

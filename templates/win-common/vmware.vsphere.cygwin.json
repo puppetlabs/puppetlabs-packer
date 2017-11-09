@@ -193,8 +193,10 @@
       "overwrite" : "true",
       "options": [
         "--X:logLevel=verbose",
-        "--X:logFile={{user `packer_output_dir`}}/ovftool-{{build_name}}.log"
-      ]
+        "--X:logFile={{user `packer_output_dir`}}/ovftool-{{build_name}}.log",
+        "--allowAllExtraConfig",
+        "--allowExtraConfig",
+        "--extraConfig:devices.hotplug=false"      ]
     }
   ]
 }

@@ -2,7 +2,7 @@ class windows_template::registry::machine ()
 {
 
     registry::value { 'DebugPolicies':
-        key   => 'HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon',
+        key   => 'HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',
         value => 'UserEnvDebugLevel',
         data  => 196610,
         type  => 'dword'
@@ -10,19 +10,19 @@ class windows_template::registry::machine ()
 
     # Windows Error Reporting
     registry::value { 'UserModeCrashDumpFolder':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps',
         value => 'DumpFolder',
-        data  => 'C:\crash_dumps',
+        data  => 'C:\\crash_dumps',
         type  => 'expand'
     }
     registry::value { 'UserModeCrashDumpCount':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps',
         value => 'DumpCount',
         data  => 10,
         type  => 'dword'
     }
     registry::value { 'UserModeCrashDumpType':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps',
         value => 'DumpType',
         data  => 2,
         type  => 'dword'
@@ -36,14 +36,14 @@ class windows_template::registry::machine ()
 
     # Disable IE ESC for admins
     registry::value { 'DisableIEESCForAdmins':
-        key   => 'HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}',
         value => 'IsInstalled',
         data  => 0,
         type  => 'dword'
     }
     # Disable IE ESC for non-admins
     registry::value { 'DisableIEESCForNonAdmins':
-        key   => 'HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}',
         value => 'IsInstalled',
         data  => 0,
         type  => 'dword',
@@ -54,39 +54,46 @@ class windows_template::registry::machine ()
         ensure => present,
     }
 
-
     # Disable UAC (Moved from boxstarter script)
     registry::value { 'DisableUAC':
-        key   => 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System',
+        key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System',
         value => 'EnableLUA',
         data  => 0,
         type  => 'dword',
     }
+    # Ensure Install MSI As Admin is NOT Disabled.
+    registry::value { 'AdminInstallMSI':
+        key   => 'HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer',
+        value => 'DisableMSI',
+        data  => 0,
+        type  => 'dword',
+    }
+    
 
     # Set the following BGInfo Variables using facter provided variables from env
     #VMPOOLER_Build_Date=Build-Date
     #VMPOOLER_Packer_SHA=124214215215215235
     #VMPOOLER_Packer_Template=Packer_Template_Name & type
     registry::value { 'VMPOOLER_Build_Date':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Build_Date',
         data  => "${build_date}",
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_SHA':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_SHA',
         data  => "${packer_sha}",
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template',
         data  => "${packer_template_name}",
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template_Type':
-        key   => 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+        key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template_Type',
         data  => "${packer_template_type}",
         type  => 'string'
@@ -102,17 +109,19 @@ class windows_template::registry::machine ()
     #
     if ( "${windows_install_option}" == 'Core' ) {
         registry::value { 'WinCoreLogon':
-          key   => 'HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon',
+          key   => 'HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',
           value => 'Shell',
           data  => 'explorer.exe',
-          type  => 'string'
+          type  => 'string',
+
         }
     }
+
     if ("$::operatingsystemrelease" == '2008R2') {
       # WMF5 on 2008R2 causes an issue with sysprep, so set this registry key
       # https://social.technet.microsoft.com/Forums/en-US/a37d2158-1b8b-412e-ad49-02fe0ba573c2/sysprep-fails-on-windows-2008-r2-after-installing-windows-management-framework-50?forum=mdt
       registry::value { 'WMFStreamProvider':
-          key   => 'HKLM\SOFTWARE\Microsoft\Windows\StreamProvider',
+          key   => 'HKLM\\SOFTWARE\\Microsoft\\Windows\\StreamProvider',
           value => 'LastFullPayloadTime',
           data  => 0,
           type  => 'dword'
