@@ -153,6 +153,13 @@ catch {
   # Code here to trap error and fall out of process dumping log.
 }
 
+# Rerun the Apps Package Cleaner again.
+
+if (Test-Path "$PackerLogs\AppsPackageRemove.Pass2.Required") {
+  Write-Output "Running second pass of the Apps Package Cleaner post windows update"
+  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
+}
+
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-Output "Enable Remote Desktop"
 Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
