@@ -83,14 +83,9 @@
                         <Order>3</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware</CommandLine>
-                        <Description>Start PSWindowsUpdate</Description>
-                        <Order>4</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vmpooler-post-clone-configuration.ps1</CommandLine>
                         <Description>Post Clone configuration</Description>
-                        <Order>5</Order>
+                        <Order>4</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
@@ -106,16 +101,15 @@
                         <Order>2</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <CommandLine>cmd /C start /wait NET User "Administrator" /Active:yes</CommandLine>
                         <Order>3</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>wmic useraccount where &quot;name=&apos;vagrant&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Order>4</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File C:\Packer\Init\vagrant-post-clone-configuration.ps1</CommandLine>
-                        <Description>Post Clone configuration</Description>
+                        <CommandLine>wmic useraccount where &quot;name=&apos;vagrant&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Order>5</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>

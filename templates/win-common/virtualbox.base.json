@@ -1,21 +1,22 @@
 {
   "variables": {
-        "headless"          : "true",
-        "template_config"   : "base",
-        "provisioner"       : "{{env `IMAGE_TYPE`}}",
-        "image_arch"        : "{{env `IMAGE_ARCH`}}",
-        "shutdown_command"  : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-        "winrm_username"    : "vagrant",
-        "winrm_password"    : "vagrant",
-        "winrm_timeout"     : "4h",
-        "disk_size"         : "61440",
-        "memory_size"       : "2048",
-        "cpu_count"         : "2",
+        "headless"                : "true",
+        "template_config"         : "base",
+        "provisioner"             : "{{env `IMAGE_TYPE`}}",
+        "image_arch"              : "{{env `IMAGE_ARCH`}}",
+        "shutdown_command"        : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+        "winrm_username"          : "vagrant",
+        "winrm_password"          : "vagrant",
+        "winrm_timeout"           : "4h",
+        "disk_size"               : "61440",
+        "memory_size"             : "2048",
+        "cpu_count"               : "2",
 
-        "packer_sha"               : "{{env `PACKER_SHA`}}",
-        "packer_source_dir"        : "{{env `PACKER_VM_SRC_DIR`}}",
-        "packer_output_dir"        : "{{env `PACKER_VM_OUT_DIR`}}",
-        "packer_download_dir" : "C:/Packer/Downloads"
+        "packer_sha"              : "{{env `PACKER_SHA`}}",
+        "packer_source_dir"       : "{{env `PACKER_VM_SRC_DIR`}}",
+        "packer_output_dir"       : "{{env `PACKER_VM_OUT_DIR`}}",
+        "current_pwd"             : "{{env `PWD`}}",
+        "packer_downloads_dir"    : "C:/Packer/Downloads"
     },
     "description": "Builds a Windows template VM for use in VirtualBox",
     "builders": [
@@ -39,6 +40,7 @@
         "shutdown_command"        : "{{user `shutdown_command`}}",
         "shutdown_timeout"        : "1h",
         "vboxmanage": [
+          ["setproperty","machinefolder","{{user `current_pwd`}}/output-vbox-machine"],
           ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
           ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"],
           ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
@@ -52,7 +54,8 @@
           "../../scripts/windows/windows-env.ps1",
           "../../scripts/windows/core-shutdown.ps1",
           "../../scripts/windows/clean-disk-dism.ps1",
-          "../../scripts/windows/clean-disk-sdelete.ps1"
+          "../../scripts/windows/clean-disk-sdelete.ps1",
+          "../../scripts/windows/startup-profile.ps1"
         ]
       }
     ],
