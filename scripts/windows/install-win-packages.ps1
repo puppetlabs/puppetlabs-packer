@@ -24,19 +24,21 @@ If ( $WindowsServerCore ) {
 else {
 
   Write-Output "Installing Google Chrome Browser"
-  Download-File http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe $PackerDownloads\ChromeSetup-$ARCH.exe
+  Download-File "http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe" "$PackerDownloads\ChromeSetup-$ARCH.exe"
   Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" @SprocParms -ArgumentList "/silent /install"
   Write-Output "Google Chrome Browser Installed"
 
-  Write-Output "Installing Notepad++"
-  Download-File http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/npp.7.2.2.Installer-$ARCH.exe $PackerDownloads\npp.7.2.2.Installer-$ARCH.exe
-  Start-Process -Wait "$PackerDownloads\npp.7.2.2.Installer-$ARCH.exe" @SprocParms -ArgumentList "/S"
+  $NotePadInstaller = "npp.7.5.1.Installer-$ARCH.exe"
+  Write-Output "Installing Notepad++ $NotePadInstaller"
+  Download-File "http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/$NotePadInstaller" "$PackerDownloads\$NotePadInstaller"
+  Start-Process -Wait "$PackerDownloads\$NotePadInstaller" @SprocParms -ArgumentList "/S"
   Write-Output "Notepad++ Installed"
 }
 
-Write-Output "Installing Git For Windows"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/gitforwin/Git-2.11.0-$ARCH.exe  $PackerDownloads\Git-2.11.0-$ARCH.exe
-Start-Process -Wait "$PackerDownloads\Git-2.11.0-$ARCH.exe" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
+$GitForWinInstaller = "Git-2.15.0-$ARCH.exe"
+Write-Output "Installing Git For Windows $GitForWinInstaller"
+Download-File "http://buildsources.delivery.puppetlabs.net/windows/gitforwin/$GitForWinInstaller"  "$PackerDownloads\$GitForWinInstaller"
+Start-Process -Wait "$PackerDownloads\$GitForWinInstaller" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
 Write-Output "Git For Windows Installed"
 
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey

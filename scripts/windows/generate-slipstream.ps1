@@ -31,27 +31,6 @@ if ("$ARCH" -eq "x86") {
   $IsoGen = "${ENV:ProgramFiles(X86)}\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
 }
 
-if ($psversiontable.psversion.major -gt 2) {
-  $size = (Get-PartitionSupportedSize -DriveLetter C)
-  $sizemax = $size.SizeMax
-  Write-Output "Setting Drive C partition size to $sizemax"
-  Resize-Partition -DriveLetter C -Size $sizemax
-}
-else {
-  Write-Output "Using DiskPart to extend C: drive partition"
-  $diskpartcommands=@"
-list disk
-select disk 0
-list partition
-select partition 3
-extend
-list partition
-exit
-"@
-
-  $diskpartcommands | diskpart
-}
-
 # Use Robocopy to make duplicate of Image ISO
 Write-Output "Copy Image ISO to $WinDistPath"
 robocopy /E /NP /NDL /NFL D:\ $WinDistPath *.*

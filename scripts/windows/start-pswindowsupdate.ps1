@@ -91,7 +91,7 @@ if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
   }
   else {
       # Use cmdlet to run through network interfacen and set them private.
-      New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" -Force
+      New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" -Force -ErrorAction SilentlyContinue
       Set-NetConnectionProfile  -InterfaceIndex (Get-NetConnectionProfile).InterfaceIndex -NetworkCategory Private
   }
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
@@ -102,9 +102,10 @@ Install-DotNetLatest
 
 if (-not (Test-Path "$PackerLogs\7zip.installed")) {
   # Download and install 7za now as its needed here and is useful going forward.
-  Write-Host "Installing 7zip"
-  Download-File http://buildsources.delivery.puppetlabs.net/windows/7zip/7z1602-$ARCH.exe  $Env:TEMP\7z1602-$ARCH.exe
-  Start-Process -Wait "$Env:TEMP\7z1602-$ARCH.exe" @SprocParms -ArgumentList "/S"
+  $SevenZipInstaller = "7z1604-$ARCH.exe"
+  Write-Host "Installing 7zip $SevenZipInstaller"
+  Download-File "http://buildsources.delivery.puppetlabs.net/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
+  Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
   Touch-File "$PackerLogs\7zip.installed"
   Write-Host "7zip Installed"
 }
@@ -135,22 +136,36 @@ else {
 # When no more reboots are needed, the script falls through to the end.
 Write-Output "Searching for Windows Updates"
 Import-Module "$PackerStaging\PSWindowsUpdate\PSWindowsUpdate.psd1"
-try {
-  # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
-  # present in PS2
-  if ($psversiontable.psversion.major -eq 2) {
-    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
-    Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
+# Repeat this command twice to ensure any interrupted downloads are re-attempted for install.
+# Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability
+$Attempt = 1
+do {
+  Write-Output "Windows Update Pass $Attempt"
+  try {
+    # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
+    # present in PS2
+    if ($psversiontable.psversion.major -eq 2) {
+      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
+      Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
+    }
+    else {
+      Write-Output "Running PSWindows Update"
+      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
+    }
+    if (Test-PendingReboot) { Invoke-Reboot }
   }
-  else {
-    Write-Output "Running PSWindows Update"
-    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
+  catch {
+    Write-Warning "ERROR updating Windows"
+    # Code here to trap error and fall out of process dumping log.
   }
-  if (Test-PendingReboot) { Invoke-Reboot }
-}
-catch {
-  Write-Warning "ERROR updating Windows"
-  # Code here to trap error and fall out of process dumping log.
+  $Attempt++
+} while ($Attempt -le 2)
+
+# Rerun the Apps Package Cleaner again.
+
+if (Test-Path "$PackerLogs\AppsPackageRemove.Pass2.Required") {
+  Write-Output "Running second pass of the Apps Package Cleaner post windows update"
+  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
 }
 
 # Enable Remote Desktop (with reduce authentication resetting here again)

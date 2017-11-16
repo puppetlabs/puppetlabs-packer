@@ -299,46 +299,55 @@ Function Install-DotNetLatest
 
 Function Remove-AppsPackages
 {
-  Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+  param( [String]$AppPackageCheckpoint = "AppsPackageRemove.Pass1")
 
-  Import-Module Appx
-  Import-Module Dism
+  if (-not (Test-Path "$PackerLogs\$AppPackageCheckpoint"))
+  {
+    Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
-  Write-Output "Removing AppxPackages"
-  Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+    Import-Module Appx
+    Import-Module Dism
 
-  Write-Output "Removing Online Provisioned Packages"
-  Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
+    Write-Output "Removing AppxPackages"
+    Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
 
-  if ("$ARCH" -eq "x86_64") {
-    $SystemDir = "SysWOW64"
-  } else {
-    $SystemDir = "System32"
+    Write-Output "Removing Online Provisioned Packages"
+    Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
+
+    if ("$ARCH" -eq "x86_64") {
+      $SystemDir = "SysWOW64"
+    } else {
+      $SystemDir = "System32"
+    }
+
+    try {
+      Write-Output "Stopping OneDrive"
+      taskkill /f /im OneDrive.exe
+    }
+    catch {
+      Write-Output "Ignoring OneDrive taskkill error"
+    }
+
+    try {
+      Write-Output "Uninstalling OneDrive"
+      $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
+      $zproc.WaitForExit()
+
+      Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+      Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    catch {
+      Write-Output "Ignoring OneDrive uninstall error"
+    }
+
+    # Flag that this operation needs to be re-run
+    Touch-File "$PackerLogs\AppsPackageRemove.Pass2.Required"
+
+    if (Test-PendingReboot) { Invoke-Reboot }
+    Touch-File "$PackerLogs\$AppPackageCheckpoint"
   }
-
-  try {
-    Write-Output "Stopping OneDrive"
-    taskkill /f /im OneDrive.exe
-  }
-  catch {
-    Write-Output "Ignoring OneDrive taskkill error"
-  }
-
-  try {
-    Write-Output "Uninstalling OneDrive"
-    $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
-    $zproc.WaitForExit()
-
-    Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-    Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-    Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-    Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-  }
-  catch {
-    Write-Output "Ignoring OneDrive uninstall error"
-  }
-
-  if (Test-PendingReboot) { Invoke-Reboot }
 }
 
 # Helper Function to test for Pending Reboot

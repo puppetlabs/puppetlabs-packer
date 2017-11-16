@@ -1,0 +1,128 @@
+{
+    "variables": {
+          "headless"            : "true",
+         "template_config"      : "base",
+         "provisioner"          : "{{env `IMAGE_TYPE`}}",
+          "image_arch"          : "{{env `IMAGE_ARCH`}}",
+          "tools_iso"           : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
+          "packer_output_dir"   : "{{env `PACKER_VM_OUT_DIR`}}",
+          "image_index"         : "2",
+          "winrm_username"      : "Administrator",
+          "winrm_password"      : "PackerAdmin",
+          "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+          "winrm_timeout"       : "4h",
+          "disk_size"           : "61440",
+          "memsize"             : "4096",
+          "numvcpus"            : "2",
+          "firmware"            : "efi",
+          "packer_download_dir" : "C:/Packer/Downloads"
+    }, 
+    "description": "Generic build to prepare slipstream ISO for Win2012r2+ platforms",
+  
+    "_comment": [
+        "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
+    ],
+    "builders": [
+      {
+        "name"              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+        "vm_name"           : "packer-{{build_name}}",
+        "type"              : "vmware-iso",
+        "iso_url"           : "{{user `iso_url`}}",
+        "iso_checksum_type" : "{{user `iso_checksum_type`}}",
+        "iso_checksum"      : "{{user `iso_checksum`}}",
+        "output_directory"  : "{{user `packer_output_dir`}}/output-{{build_name}}",
+        "headless"          : "{{user `headless`}}",
+  
+        "communicator"      : "winrm",
+        "winrm_username"    : "{{user `winrm_username`}}",
+        "winrm_password"    : "{{user `winrm_password`}}",
+        "winrm_timeout"     : "{{user `winrm_timeout`}}",
+        "shutdown_command"  : "{{user `shutdown_command`}}",
+        "shutdown_timeout": "1h",
+        "guest_os_type"     : "{{user `vmware_guest_os`}}",
+        "disk_size"         : "{{user `disk_size`}}",
+        "disk_type_id": "0",
+        "floppy_files": [
+         "tmp/autounattend.xml",
+         "files/{{user `image_arch`}}/platform-packages.ps1",
+          "files/slipstream-filter",
+          "../../scripts/windows/bootstrap-base.bat",
+          "../../scripts/windows/start-pswindowsupdate.ps1",
+          "../../scripts/windows/windows-env.ps1",
+          "../../scripts/windows/shutdown-packer.bat",
+          "../../scripts/windows/generate-slipstream.ps1",
+          "../../scripts/windows/slipstream.package.ps1",
+          "../../scripts/windows/core-shutdown.ps1",
+          "../../scripts/windows/startup-profile.ps1"
+      ],
+      "boot_command"     : [ "{{ user `boot_command`}}"],
+        "boot_wait": "1s",
+  
+        "vmx_data": {
+          "gui.fitguestusingnativedisplayresolution": "FALSE",
+  
+          "firmware"                        : "{{user `firmware`}}",
+          "memsize"                         : "{{user `memsize`}}",
+          "numvcpus"                        : "{{user `numvcpus`}}",
+          "ethernet0.virtualdev"            : "vmxnet3",
+          "scsi0.virtualdev"                : "lsisas1068",
+          "virtualHW.version"               : "10",
+          "devices.hotplug"                 : "false",
+  
+          "vcpu.hotadd"                     : "TRUE",
+          "mem.hotadd"                      : "TRUE",
+  
+          "tools.syncTime"                  : "FALSE",
+          "time.synchronize.continue"       : "FALSE",
+          "time.synchronize.restore"        : "FALSE",
+          "time.synchronize.resume.disk"    : "FALSE",
+          "time.synchronize.shrink"         : "FALSE",
+          "time.synchronize.tools.startup"  : "FALSE",
+          "time.synchronize.tools.enable"   : "FALSE",
+          "time.synchronize.resume.host"    : "FALSE",
+          "scsi0:1.present"                 : "TRUE",
+          "scsi0:1.autodetect"              : "TRUE",
+          "scsi0:1.deviceType"              : "cdrom-image",
+          "scsi0:1.fileName"                : "{{user `tools_iso`}}"
+        },
+        "vmx_data_post": {
+          "scsi0:1.present": "FALSE",
+          "scsi0:1.autodetect": "FALSE",
+          "scsi0:1.devicetype":  "",
+          "scsi0:1.filename": ""
+        }
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "powershell",
+        "remote_path": "{{user `packer_download_dir`}}/print-pswindowslog.ps1",
+        "inline": [
+          "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
+          "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
+          "Start-Sleep -Seconds 10"
+        ]
+      },
+      {
+        "type": "powershell",
+        "remote_path": "{{user `packer_download_dir`}}/init-slipstream.ps1",
+        "inline": [
+          "Write-Output 'Executing Powershell Script: init-slipstream.ps1'",
+          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism",
+          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Mount",
+          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Logs",
+          "Copy-Item A:\\windows-env.ps1 C:\\Packer\\Dism",
+          "Copy-Item A:\\generate-slipstream.ps1 C:\\Packer\\Dism",
+          "Copy-Item A:\\slipstream-filter C:\\Packer\\Dism"
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+          "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `template_name`}} -ImageIndex {{user `image_index`}}"
+        ],
+        "valid_exit_codes": [0,1]
+      }
+    ]
+  }
+  

@@ -38,6 +38,11 @@ If ($WindowsVersion -like $WindowsServer2008) {
 ElseIf ( $WindowsServerCore ) {
   Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
 }
+ElseIf ((Get-WmiObject Win32_OperatingSystem).operatingsystemsku -eq 48 )
+{
+  # SKU values: https://techontip.wordpress.com/tag/operatingsystemsku/
+  Write-Output "Professional Edition (on Windows-10) - Slip CleanMgr as it hangs"
+}
 else {
   # Set registry keys for all the other cleanup areas we want to address with cleanmgr - fairly comprehensive cleanup
   $cleankeyprefix = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"
