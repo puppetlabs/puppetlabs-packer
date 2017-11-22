@@ -59,3 +59,24 @@ xsltproc --stringparam ProcessorArchitecture "${PACKER_PROC_ARCH}" \
          --stringparam WinRmPassword "${PACKER_WINRM_PSWD}" \
          --stringparam Locale "${PACKER_LOCALE}" \
          -o tmp/post-clone.autounattend.xml ../win-common/files/Autounattend.xslt ../win-common/files/PostCloneTemplate.xml
+
+# Generate a Vagrant file template if doing virtual box
+
+if [ "${IMAGE_TYPE}" = "virtualbox" ] ;then
+    echo "Generating vagrantfile template"
+    # Beware - Names must not contain Underyscores.
+    export PACKER_VB_HOSTNAME=`jq -r .template_name ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json | tr '_' '-'`
+    export PACKER_BEAKER_NAME=`jq -r .beakerhost ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json`
+    export PACKER_BEAKER_NAME_TR=`jq -r .beakerhost ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json | tr '_' '-'`
+    if [[ ${PACKER_VB_HOSTNAME} == *core* ]] ;then
+       PACKER_VB_AUTOUPDATE=false
+    else
+       PACKER_VB_AUTOUPDATE=true
+    fi
+
+    erb vm_define=vagrant-${PACKER_BEAKER_NAME} \
+        vm_box=winpacker/${PACKER_BEAKER_NAME_TR} \
+        vm_hostname=vagrant-${PACKER_VB_HOSTNAME} \
+        vb_autoupdate=${PACKER_VB_AUTOUPDATE} \
+            ../win-common/files/virtualbox/vagrantfile-windows.template.erb > tmp/vagrantfile-windows.template
+fi
