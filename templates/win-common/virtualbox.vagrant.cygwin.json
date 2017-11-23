@@ -53,7 +53,6 @@
           "../../scripts/windows/win-site.pp"
         ],
         "vboxmanage": [
-          ["setproperty","machinefolder","{{user `current_pwd`}}/output-vbox-machine"],
           ["modifyvm","{{.Name}}","--memory","2048"],
           ["modifyvm","{{.Name}}","--cpus","2"]
         ]

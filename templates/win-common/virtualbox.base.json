@@ -40,7 +40,6 @@
         "shutdown_command"        : "{{user `shutdown_command`}}",
         "shutdown_timeout"        : "1h",
         "vboxmanage": [
-          ["setproperty","machinefolder","{{user `current_pwd`}}/output-vbox-machine"],
           ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
           ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"],
           ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
