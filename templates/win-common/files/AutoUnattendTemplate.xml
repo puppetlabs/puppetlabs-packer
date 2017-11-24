@@ -244,7 +244,7 @@
                         <Order>3</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <CommandLine>cmd.exe /c wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Description>Disable Administrator Password reset</Description>
                         <Order>4</Order>
                     </SynchronousCommand>
@@ -272,7 +272,7 @@
                         <Order>3</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>wmic useraccount where &quot;name=&apos;Administrator&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                        <CommandLine>wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Order>4</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
