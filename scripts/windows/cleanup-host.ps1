@@ -43,8 +43,8 @@ Write-Output "Clearing Files"
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue",
     "$ENV:WINDIR\winsxs\manifestcache",
-    "C:\ProgramData\PuppetLabs",
-    "C:\Program Files\Puppet Labs"
+    "$ENV:ProgramData\PuppetLabs",
+    "$ENV:ProgramFiles\Puppet Labs"
 ) | % { ForceFullyDelete-Paths "$_" }
 
 # Clearing Logs

@@ -30,8 +30,8 @@ class windows_template::registry::machine ()
     file { 'c:/crash_dumps':
       ensure => 'directory',
       mode   => '0750',
-      owner  => 'Administrator',
-      group  => 'Administrators'
+      owner  => "${::administrator_sid}",
+      group  => "${::administrator_grp_sid}"
     }
 
     # Disable IE ESC for admins
@@ -68,7 +68,6 @@ class windows_template::registry::machine ()
         data  => 0,
         type  => 'dword',
     }
-    
 
     # Set the following BGInfo Variables using facter provided variables from env
     #VMPOOLER_Build_Date=Build-Date

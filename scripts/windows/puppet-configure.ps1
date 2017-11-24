@@ -11,6 +11,18 @@ $ErrorActionPreference = "Stop"
 
 . A:\windows-env.ps1
 
+Write-Output "Installing Puppet Agent..."
+if ("$ARCH" -eq "x86") {
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x86-latest.msi"
+} else {
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
+}
+
+# Install Puppet Agent
+Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
+Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\puppet-agent.msi /qn /norestart PUPPET_AGENT_STARTUP_MODE=manual"
+Write-Output "Installed Puppet Agent..."
+
 # Pick up win-site.pp file from A: drive if present
 # Manifest needs to be in $PackerPuppet for configuration to be picked up.
 if ( Test-Path "A:\win-site.pp") {
@@ -106,6 +118,10 @@ $ENV:FACTER_build_date           = get-date -format "yyyy-MM-dd HH:mm zzz"
 $ENV:FACTER_packer_sha           = $PackerSHA
 $ENV:FACTER_packer_template_name = $PackerTemplateName
 $ENV:FACTER_packer_template_type = $PackerTemplateType
+# Pick Up user attributes as these could be localised.
+$ENV:FACTER_administrator_sid     =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").sid
+$ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"
+
 # Chrome root needs arch detection as under x86 on 64 bit boxen
 if ("$ARCH" -eq "x86") {
   $ENV:FACTER_chrome_root        = "$ENV:ProgramFiles\Google\Chrome"
@@ -118,6 +134,7 @@ If ( $WindowsServerCore ) {
 else {
   $ENV:FACTER_windows_install_option = "Normal"
 }
+
 
 # Loop through all Manifest Files in A:\ and process them
 # Keep reapplying until no resources are modified, or MaxAttempts is hit

@@ -218,8 +218,7 @@ Function ForceFullyDelete-Paths
   try {
     if(Test-Path $filetodelete) {
         Write-Output "Removing $filetodelete"
-        Takeown /d Y /R /f $filetodelete
-        Icacls $filetodelete /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+        Icacls $filetodelete /grant *S-1-5-32-545:(OI)(CI)F /T /c /q  2>&1 | Out-Null
         Remove-Item $filetodelete -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
       }
     }
