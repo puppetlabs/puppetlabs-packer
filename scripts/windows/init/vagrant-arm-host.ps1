@@ -6,7 +6,8 @@ $ErrorActionPreference = 'Stop'
 # Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
 $CygwinDownloads = $ENV:CYGWINDOWNLOADS
-$AdministratorHome = "$ENV:CYGWINDIR\home\Administrator"
+$AdministratorName =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").Name
+$AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
@@ -33,21 +34,20 @@ Write-Output "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
 Set-Service "sshd" -StartupType Manual
 
-# Make sure the C:/Users/Administrator directory is created by running a dummy-command to create the profile.
-Write-Output "Setting Administrator Account Password"
+# Make sure the C:/Users/$AdministratorName directory is created by running a dummy-command to create the profile.
+Write-Output "Setting $AdministratorName Account Password"
 $qa_root_passwd = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
-net user Administrator "$qa_root_passwd"
-$username = "Administrator"
+net user $AdministratorName "$qa_root_passwd"
 $password = "$qa_root_passwd"
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential $username, $securePassword
-Write-Output "Creating Administrator Profile"
+$credential = New-Object System.Management.Automation.PSCredential $AdministratorName, $securePassword
+Write-Output "Creating $AdministratorName Profile"
 Start-Process Powershell -Wait -Credential $Credential -LoadUserProfile "Exit"
 
-# Create Administrator cygwin as well
-Write-Output "Creating Administrator ssh/cygwin home directory"
-& $CygWinShell --login -c `'mkdir -p /home/Administrator`'
-& $CygWinShell --login -c `'chown Administrator /home/Administrator`'
+# Create $AdministratorName cygwin as well
+Write-Output "Creating $AdministratorName ssh/cygwin home directory"
+& $CygWinShell --login -c `'mkdir -p /home/$AdministratorName`'
+& $CygWinShell --login -c `'chown $AdministratorName /home/$AdministratorName`'
 
 # Set Startup script (starts sshd)
 Write-Output "Setting startup script"

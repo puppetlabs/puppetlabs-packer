@@ -60,7 +60,8 @@ Write-Output "vSphere VMname: $NewVMName`n"
 # Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
 $CygwinDownloads = $ENV:CYGWINDOWNLOADS
-$AdministratorHome = "$ENV:CYGWINDIR\home\Administrator"
+$AdministratorName =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").Name
+$AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
@@ -69,20 +70,20 @@ $qa_root_passwd = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
 
 # Generate ssh keys.
 Write-Output "Generate SSH Keys"
-& $CygWinShell --login -c `'rm -rf /home/Administrator/.ssh/id_rsa*`'
-& $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/Administrator/.ssh/id_rsa`'
+& $CygWinShell --login -c `'rm -rf /home/$AdministratorName/.ssh/id_rsa*`'
+& $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/$AdministratorName/.ssh/id_rsa`'
 
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
 Write-Output "Setup Authorised Keys"
-& $CygWinShell --login -c `'cp /home/Administrator/.ssh/id_rsa.pub /home/Administrator/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vmpooler" `>`> /home/Administrator/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cp /home/$AdministratorName/.ssh/id_rsa.pub /home/$AdministratorName/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vmpooler" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
 
 # Setup LSA Authentication
 Write-Output "Register the Cygwin LSA authentication package "
 & $CygWinShell --login -c `'auto_answer="yes" /usr/bin/cyglsa-config`'
 
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
-& $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/Administrator/.ssh/known_hosts`'
+& $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdministratorName/.ssh/known_hosts`'
 
 Write-Output "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
@@ -98,9 +99,9 @@ Write-Output "Setting startup script"
 reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
 
 # Update machine password (and reset autologin)
-Write-Output "Setting Administrator Password"
-net user Administrator "$qa_root_passwd"
-autologon -AcceptEula Administrator . "$qa_root_passwd"
+Write-Output "Setting $AdministratorName Password"
+net user $AdministratorName "$qa_root_passwd"
+autologon -AcceptEula $AdministratorName . "$qa_root_passwd"
 
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Output "Disabling NIC Power Management"
