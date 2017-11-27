@@ -119,7 +119,7 @@ $ENV:FACTER_packer_sha           = $PackerSHA
 $ENV:FACTER_packer_template_name = $PackerTemplateName
 $ENV:FACTER_packer_template_type = $PackerTemplateType
 # Pick Up user attributes as these could be localised.
-$ENV:FACTER_administrator_sid     =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").sid
+$ENV:FACTER_administrator_sid     =  $WindowsAdminSID
 $ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"
 
 # Chrome root needs arch detection as under x86 on 64 bit boxen
