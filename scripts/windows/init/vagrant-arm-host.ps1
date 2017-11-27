@@ -9,6 +9,9 @@ $CygwinDownloads = $ENV:CYGWINDOWNLOADS
 $AdministratorName =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").Name
 $AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
 
+# Make sure Adminstrator (whatever it is called is active)
+net user "$AdministratorName" /active:yes
+
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
 & $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd vagrant`'

@@ -123,6 +123,7 @@
                 <NetworkLocation>Work</NetworkLocation>
                 <ProtectYourPC>1</ProtectYourPC>
             </OOBE>
+            <TimeZone>UTC</TimeZone>
             <RegisteredOwner />
             <ProductKey>KKKKK-KKKKK-KKKKK-KKKKK-KKKKK</ProductKey>
             <UserAccounts>
