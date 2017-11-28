@@ -9,9 +9,9 @@ Param(
 
 if ($UseStartupWorkaround) {
     Write-Warning "Cleaning up PowerShell profile workaround for startup items"
-    Remove-Item -Force $PROFILE
+    Remove-Item -Force $PROFILE -ErrorAction SilentlyContinue
 }
 
-Remove-Item -Force -Recurse "$($env:APPDATA)\SetupFlags"
+Remove-Item -Force -Recurse "$($env:APPDATA)\SetupFlags" -ErrorAction SilentlyContinue
 
 Stop-Computer -Force

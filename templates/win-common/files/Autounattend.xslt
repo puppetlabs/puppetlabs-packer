@@ -127,9 +127,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Windows-10 and Windows-8.1 Need this component added -->
+  <!-- Windows-10 and Windows-8.1 & 7 Need this component added -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Deployment"]'>
-    <xsl:if test="($WindowsVersion='Windows-8.1') or ($WindowsVersion='Windows-10')" >
+    <xsl:if test="($WindowsVersion='Windows-7') or ($WindowsVersion='Windows-8.1') or ($WindowsVersion='Windows-10')" >
       <xsl:copy>
         <xsl:apply-templates select="@*|node()"/>
       </xsl:copy>
@@ -138,6 +138,15 @@
 
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:NetworkLocation'>
     <xsl:if test="not($WindowsVersion = 'Windows-10')">
+      <xsl:copy>
+        <xsl:apply-templates select="@*|node()"/>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template> 
+
+  <!-- Windows 7 Needs Timezone set in the OOBE phase too -->
+  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:TimeZone'>
+    <xsl:if test="$WindowsVersion = 'Windows-7'">
       <xsl:copy>
         <xsl:apply-templates select="@*|node()"/>
       </xsl:copy>

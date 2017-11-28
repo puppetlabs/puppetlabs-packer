@@ -12,6 +12,15 @@ Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
 Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
+# Get Administrator SID 
+$WindowsAdminSID =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").sid
+# Crude Code to chose appropriate resonse for YesNo
+$PrimaryLanguage = (Get-Culture).TwoLetterISOLanguageName
+Switch ($PrimaryLanguage) {
+  "fr"  {$AnswerPromptYes = "O"; break}
+  default {$AnswerPromptYes = "Y"; break}
+}
+
 # Test to see if we are Core Version or not.
 # Core installation (no GUI). While there is a more exact WMI query to determine this, checking to see
 # if windows explorer installed is an equally valid check for Windows-2012r2 etc.
@@ -218,8 +227,11 @@ Function ForceFullyDelete-Paths
   try {
     if(Test-Path $filetodelete) {
         Write-Output "Removing $filetodelete"
-        Takeown /d Y /R /f $filetodelete
-        Icacls $filetodelete /GRANT:r administrators:F /T /c /q  2>&1 | Out-Null
+        # TBD: Localisation Needed here
+        # 1. /D - Y/N for French
+        # 2. Translate Administrators
+        Takeown /d "$AnswerPromptYes" /R /f $filetodelete
+        Icacls $filetodelete /GRANT:r "$WindowsAdminSID:F" /T /c /q  2>&1 | Out-Null
         Remove-Item $filetodelete -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
       }
     }

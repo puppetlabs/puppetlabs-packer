@@ -53,7 +53,6 @@
           "../../scripts/windows/win-site.pp"
         ],
         "vboxmanage": [
-          ["setproperty","machinefolder","{{user `current_pwd`}}/output-vbox-machine"],
           ["modifyvm","{{.Name}}","--memory","2048"],
           ["modifyvm","{{.Name}}","--cpus","2"]
         ]
@@ -131,18 +130,9 @@
             ]
         },
         {
-            "type": "powershell",
-            "remote_path": "{{user `packer_downloads_dir`}}/run-queue-sysprep.ps1",
-            "inline": [
-                "Write-Output 'Executing Powershell Script: run-queue-sysprep.ps1'",
-                "Write-Output 'Initiate Sysprep'",
-                "C:\\Windows\\System32\\sysprep\\sysprep /oobe /quit /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
-                "Write-Output 'Sysprep queued.'",
-                "Start-Sleep -Seconds 10"
-            ]
-        },
-        {
-            "type": "windows-restart"
+            "type": "windows-restart",
+            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
+            "restart_timeout": "15m"
         },
         {
             "type": "powershell",
@@ -159,7 +149,7 @@
         "post-processors": [{
             "type"                : "vagrant",
             "output"              : "{{user `packer_shared_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
-            "vagrantfile_template": "../win-common/files/virtualbox/vagrantfile-windows.template"
+            "vagrantfile_template": "tmp/vagrantfile-windows.template"
         }
     ]
 }

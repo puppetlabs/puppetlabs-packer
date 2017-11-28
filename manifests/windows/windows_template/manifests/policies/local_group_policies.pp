@@ -220,134 +220,139 @@ class windows_template::policies::local_group_policies ()
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
-    # Mostly Win-10 policies.
-    #  1. Turn off Tile Notifications
-    windows_group_policy::local::user { 'NotileApplicationNotification':
-        key    => 'Software\Policies\Microsoft\Windows\CurrentVersion\Pushnotifications',
-        value  => 'NotileApplicationNotification',
-        data   => 0,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
+    # Screen out these policies for anything earlier than Win-2012r2
+    #
+    if ("$::kernelmajversion" > '6.1' ) {
+        # Mostly Win-10 policies.
+        #  1. Turn off Tile Notifications
+        windows_group_policy::local::user { 'NotileApplicationNotification':
+            key    => 'Software\Policies\Microsoft\Windows\CurrentVersion\Pushnotifications',
+            value  => 'NotileApplicationNotification',
+            data   => 0,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  2. Clear Tile Notifications at login
+        windows_group_policy::local::user { 'CleartilesOnExit':
+            key    => 'Software\Policies\Microsoft\Windows\Explorer',
+            value  => 'CleartilesOnExit',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  3. Computer Configuration > Administrative Templates > Windows Components > Cloud Content "Turn off Microsoft consumer Experience"
+        windows_group_policy::local::machine { 'DisableWindowsConsumerFeatures':
+            key    => 'Software\Policies\microsoft\Windows\CloudContent',
+            value  => 'DisableWindowsConsumerFeatures',
+            data   => 0,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  4. User - Cloud Content urn off the Windows Welcome Experience - Enabled
+        windows_group_policy::local::user { 'DisableWindowsSpotlightWindowswelcomeexperience':
+            key    => 'Software\Policies\Microsoft\Windows\CloudContent',
+            value  => 'DisableWindowsSpotlightWindowswelcomeexperience',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  5. User Cloud content Do not suggest Third-party-content
+        windows_group_policy::local::user { 'DisablethirdpartySuggestions':
+            key    => 'Software\Policies\Microsoft\Windows\CloudContent',
+            value  => 'DisablethirdpartySuggestions',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  6. Windows components - Prevent the usage of OneDrive for file storage
+        windows_group_policy::local::machine { 'DisableFileSyncNGSC':
+            key    => 'Software\Policies\Microsoft\Windows\onedrive',
+            value  => 'DisableFileSyncNGSC',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  7. Microsoft Edge - Configure Start Page About:blank
+        windows_group_policy::local::user { 'EdgeProvisionedHomePages':
+            key    => 'Software\Policies\microsoft\microsoftedge\Internet Settings',
+            value  => 'ProvisionedHomePages',
+            data   => 'about:blank',
+            type   => 'REG_SZ',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  8. Turn off Windows Defender Antivirus
+        windows_group_policy::local::machine { 'DisableWindowsDefender':
+            key    => 'Software\Policies\Microsoft\Windows Defender',
+            value  => 'DisableAntiSpyware',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        #  9. Turn off Desktop Gadgets
+        windows_group_policy::local::machine { 'DisableDesktopGadgets':
+            key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar',
+            value  => 'TurnOffSidebar',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 10. Use Solid colour for start background
+        windows_group_policy::local::machine { 'UseWindowsSolidColour':
+            key    => 'Software\Policies\Microsoft\Windows\DWM',
+            value  => 'DisableAccentGradient',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 11. Do not allow windows animations
+        windows_group_policy::local::machine { 'Disallowanimations':
+            key    => 'Software\Policies\Microsoft\Windows\DWM',
+            value  => 'Disallowanimations',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 12. Turn off Sync Updates
+        windows_group_policy::local::machine { 'DontSyncWindows8AppSettings':
+            key    => 'Software\Policies\Microsoft\UEV\Agent\Configuration',
+            value  => 'DontSyncWindows8AppSettings',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 13. Turn off location - Leave
+        # 14. Allow Cortana - DISABLE
+        windows_group_policy::local::machine { 'AllowCortana':
+            key    => 'Software\Policies\Microsoft\Windows\Windows Search',
+            value  => 'AllowCortana',
+            data   => 0,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 15. Turn off Store Application
+        windows_group_policy::local::machine { 'DisablestoreApps':
+            key    => 'Software\Policies\Microsoft\Windowsstore',
+            value  => 'DisablestoreApps',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 16. Turn off offer to update to latest version of windows
+        windows_group_policy::local::machine { 'DisableOSUpgrade':
+            key    => 'Software\Policies\Microsoft\WindowsStore',
+            value  => 'DisableOSUpgrade',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 17. Remove Games from Start Menu
+        windows_group_policy::local::user { 'NoStartMenuMyGames':
+            key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
+            value  => 'NoStartMenuMyGames',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
     }
-    #  2. Clear Tile Notifications at login
-    windows_group_policy::local::user { 'CleartilesOnExit':
-        key    => 'Software\Policies\Microsoft\Windows\Explorer',
-        value  => 'CleartilesOnExit',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  3. Computer Configuration > Administrative Templates > Windows Components > Cloud Content "Turn off Microsoft consumer Experience"
-    windows_group_policy::local::machine { 'DisableWindowsConsumerFeatures':
-        key    => 'Software\Policies\microsoft\Windows\CloudContent',
-        value  => 'DisableWindowsConsumerFeatures',
-        data   => 0,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  4. User - Cloud Content urn off the Windows Welcome Experience - Enabled
-    windows_group_policy::local::user { 'DisableWindowsSpotlightWindowswelcomeexperience':
-        key    => 'Software\Policies\Microsoft\Windows\CloudContent',
-        value  => 'DisableWindowsSpotlightWindowswelcomeexperience',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  5. User Cloud content Do not suggest Third-party-content
-    windows_group_policy::local::user { 'DisablethirdpartySuggestions':
-        key    => 'Software\Policies\Microsoft\Windows\CloudContent',
-        value  => 'DisablethirdpartySuggestions',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  6. Windows components - Prevent the usage of OneDrive for file storage
-    windows_group_policy::local::machine { 'DisableFileSyncNGSC':
-        key    => 'Software\Policies\Microsoft\Windows\onedrive',
-        value  => 'DisableFileSyncNGSC',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  7. Microsoft Edge - Configure Start Page About:blank
-    windows_group_policy::local::user { 'EdgeProvisionedHomePages':
-        key    => 'Software\Policies\microsoft\microsoftedge\Internet Settings',
-        value  => 'ProvisionedHomePages',
-        data   => 'about:blank',
-        type   => 'REG_SZ',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  8. Turn off Windows Defender Antivirus
-    windows_group_policy::local::machine { 'DisableWindowsDefender':
-        key    => 'Software\Policies\Microsoft\Windows Defender',
-        value  => 'DisableAntiSpyware',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    #  9. Turn off Desktop Gadgets
-    windows_group_policy::local::machine { 'DisableDesktopGadgets':
-        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar',
-        value  => 'TurnOffSidebar',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 10. Use Solid colour for start background
-    windows_group_policy::local::machine { 'UseWindowsSolidColour':
-        key    => 'Software\Policies\Microsoft\Windows\DWM',
-        value  => 'DisableAccentGradient',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 11. Do not allow windows animations
-    windows_group_policy::local::machine { 'Disallowanimations':
-        key    => 'Software\Policies\Microsoft\Windows\DWM',
-        value  => 'Disallowanimations',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 12. Turn off Sync Updates
-    windows_group_policy::local::machine { 'DontSyncWindows8AppSettings':
-        key    => 'Software\Policies\Microsoft\UEV\Agent\Configuration',
-        value  => 'DontSyncWindows8AppSettings',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 13. Turn off location - Leave
-    # 14. Allow Cortana - DISABLE
-    windows_group_policy::local::machine { 'AllowCortana':
-        key    => 'Software\Policies\Microsoft\Windows\Windows Search',
-        value  => 'AllowCortana',
-        data   => 0,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 15. Turn off Store Application
-    windows_group_policy::local::machine { 'DisablestoreApps':
-        key    => 'Software\Policies\Microsoft\Windowsstore',
-        value  => 'DisablestoreApps',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 16. Turn off offer to update to latest version of windows
-    windows_group_policy::local::machine { 'DisableOSUpgrade':
-        key    => 'Software\Policies\Microsoft\WindowsStore',
-        value  => 'DisableOSUpgrade',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
-    # 17. Remove Games from Start Menu
-    windows_group_policy::local::user { 'NoStartMenuMyGames':
-        key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
-        value  => 'NoStartMenuMyGames',
-        data   => 1,
-        type   => 'REG_DWORD',
-        notify => Windows_group_policy::Gpupdate['GPUpdate'],
-    }
+
 }
