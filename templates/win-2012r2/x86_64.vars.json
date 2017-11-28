@@ -4,6 +4,7 @@
     "vbox_guest_os"     : "Windows2012_64",
     "vmware_guest_os"   : "windows8srv-64",
     "windows_version"   : "Windows-2012r2",
+    "post_memsize"      : "6144",
     "image_name"        : "Windows Server 2012 R2 SERVERSTANDARD",
     "product_key"       : "D2N9P-3P6X9-2R39C-7RTCD-MDVJX",
     "version"           : "0.0.2",
