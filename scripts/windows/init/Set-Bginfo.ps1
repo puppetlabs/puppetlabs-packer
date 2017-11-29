@@ -1,10 +1,20 @@
 # User Script to display useful VMData in on the desktop using BGInfo
 
 $PoolerApiURL = "http://vmpooler.delivery.puppetlabs.net/api/v1/vm/"
+$VMHostname = hostname
 
 # Query the pooler to pick up attributes on this session.
-$VMHostname = hostname
-$PoolerData = Invoke-RestMethod -Uri "$PoolerApiURL/$VMHostname"
+# Using PS2 compatible code here (Invoke-Restmethod ins't available until PS3) 
+$WebRequest = [System.Net.WebRequest]::Create("$PoolerApiURL/$VMHostname")
+$WebRequest.Method = "GET"
+$WebRequest.ContentType = "application/json"
+$Response = $WebRequest.GetResponse()
+$ResponseStream = $Response.GetResponseStream()
+$ReadStream = New-Object System.IO.StreamReader $ResponseStream
+
+[System.Reflection.Assembly]::LoadWithPartialName("System.Web.Extensions")
+$ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+$PoolerData = $ser.DeserializeObject($ReadStream.ReadToEnd())
 
 $Lifetime = $PoolerData.$VMHostname.lifetime
 $ENV:VMPOOLER_Lifetime = "$Lifetime hours"
