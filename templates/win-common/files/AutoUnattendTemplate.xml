@@ -280,14 +280,10 @@
                         <CommandLine>wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Order>4</Order>
                     </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>wmic useraccount where &quot;name=&apos;vagrant&apos;&quot; set PasswordExpires=FALSE</CommandLine>
-                        <Order>5</Order>
-                    </SynchronousCommand>
                    <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor virtualbox</CommandLine>
                         <Description>Start PSWindowsUpdate</Description>
-                        <Order>6</Order>
+                        <Order>5</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
