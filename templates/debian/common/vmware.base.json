@@ -1,0 +1,103 @@
+{
+  "variables": {
+    "template_name"            : null,
+    "template_os"              : null,
+    "iso_url"                  : null,
+    "iso_checksum"             : null,
+    "iso_checksum_type"        : null,
+    "vmware_base_memory_size"  : null,
+    "vmware_base_cpu_count"    : null,
+    "puppet_aio"               : null,
+
+    "project_root"             : "../../../..",
+    "headless"                 : "true",
+    "template_config"          : "base",
+    "provisioner"              : "vmware",
+    "disk_size"                : "20480", 
+    "http_directory"           : "../common/files",
+    "required_modules"         : "puppetlabs-stdlib saz-ssh",
+    "packer_output_dir"        : "{{env `PACKER_VM_OUT_DIR`}}"
+  },
+
+  "description"                : "Builds a Debian base template VM for use in VMWare",
+
+  "builders": [
+    {
+      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "type"                   : "vmware-iso",
+      "iso_url"                : "{{user `iso_url`}}",
+      "iso_checksum"           : "{{user `iso_checksum`}}",
+      "iso_checksum_type"      : "{{user `iso_checksum_type`}}",
+      "output_directory"       : "{{user `packer_output_dir`}}/output-{{build_name}}",
+
+      "headless"               : "{{user `headless`}}",
+
+      "ssh_username"           : "root",
+      "ssh_password"           : "puppet",
+      "ssh_port"               : 22,
+      "ssh_wait_timeout"       : "10000s",
+      "ssh_pty"                : "true",
+
+      "shutdown_command"       : "/sbin/halt -h -p",
+
+      "guest_os_type"          : "{{user `template_os`}}",
+      "disk_size"              : "{{user `disk_size`}}",
+      "http_directory"         : "{{user `http_directory`}}",
+      "tools_upload_flavor"    : "linux",
+      "boot_wait"              : "45s",
+      "boot_command"           : [
+        "<esc><wait>",
+        "install <wait>",
+        "auto <wait>",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US <wait>",
+        "locale=en_US <wait>",
+        "keymap=us <wait>",
+        "netcfg/get_domain=vm <wait>",
+        "netcfg/get_hostname=localhost <wait>",
+        "<enter>"
+      ],
+
+      "vmx_data"               : {
+        "cpuid.coresPerSocket" : "1",
+        "ethernet0.virtualdev" : "vmxnet3",
+        "memsize"              : "{{user `vmware_base_memory_size`}}",
+        "numvcpus"             : "{{user `vmware_base_cpu_count`}}"
+      }
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                   : "shell",
+      "execute_command"        : "{{.Vars}} bash '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars"       : [
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts"                : [
+        "{{user `project_root`}}/scripts/bootstrap-aio.sh"
+      ]
+    },
+
+    {
+      "type"                   : "puppet-masterless",
+      "execute_command"        : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                 : {
+        "provisioner"          : "{{user `provisioner`}}"
+      },
+      "manifest_dir"           : "{{user `project_root`}}/manifests",
+      "manifest_file"          : "{{user `project_root`}}/manifests/base.pp"
+    },
+
+    {
+      "type"                   : "shell",
+      "environment_vars"       : [
+        "PUPPET_AIO={{user `puppet_aio`}}"
+      ],
+      "scripts"                : [
+        "{{user `project_root`}}/scripts/cleanup-aio.sh",
+        "{{user `project_root`}}/scripts/cleanup-packer.sh"
+      ]
+    }
+  ]
+}
