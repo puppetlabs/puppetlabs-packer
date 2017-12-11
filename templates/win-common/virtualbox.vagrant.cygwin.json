@@ -5,8 +5,8 @@
         "provisioner"          : "{{env `IMAGE_TYPE`}}",
         "image_arch"           : "{{env `IMAGE_ARCH`}}",
         "shutdown_command"     : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-        "winrm_username"       : "vagrant",
-        "winrm_password"       : "vagrant",
+        "winrm_username"       : "Administrator",
+        "winrm_password"       : "PackerAdmin",
         "winrm_timeout"        : "4h",
         "disk_size"            : "61440",
         "memory_size"          : "2048",
@@ -131,7 +131,7 @@
         },
         {
             "type": "windows-restart",
-            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
+            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /generalize /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
             "restart_timeout": "15m"
         },
         {
