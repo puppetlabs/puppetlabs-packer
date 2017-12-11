@@ -12,20 +12,20 @@ If ( $WindowsServerCore ) {
 else {
 
   Write-Output "Installing Google Chrome Browser"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/googlechrome/ChromeSetup-$ARCH.exe" "$PackerDownloads\ChromeSetup-$ARCH.exe"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/googlechrome/ChromeSetup-$ARCH.exe" "$PackerDownloads\ChromeSetup-$ARCH.exe"
   Start-Process -Wait "$PackerDownloads\ChromeSetup-$ARCH.exe" @SprocParms -ArgumentList "/silent /install"
   Write-Output "Google Chrome Browser Installed"
 
   $NotePadInstaller = "npp.7.5.1.Installer-$ARCH.exe"
   Write-Output "Installing Notepad++ $NotePadInstaller"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/notepadplusplus/$NotePadInstaller" "$PackerDownloads\$NotePadInstaller"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/notepadplusplus/$NotePadInstaller" "$PackerDownloads\$NotePadInstaller"
   Start-Process -Wait "$PackerDownloads\$NotePadInstaller" @SprocParms -ArgumentList "/S"
   Write-Output "Notepad++ Installed"
 }
 
 $GitForWinInstaller = "Git-2.15.0-$ARCH.exe"
 Write-Output "Installing Git For Windows $GitForWinInstaller"
-Download-File "http://buildsources.delivery.puppetlabs.net/windows/gitforwin/$GitForWinInstaller"  "$PackerDownloads\$GitForWinInstaller"
+Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/$GitForWinInstaller"  "$PackerDownloads\$GitForWinInstaller"
 Start-Process -Wait "$PackerDownloads\$GitForWinInstaller" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
 Write-Output "Git For Windows Installed"
 
@@ -39,7 +39,7 @@ $SysInternalsTools = @(
   'autologon'
 )
 $SysInternalsTools | ForEach-Object {
-  Download-File http://buildsources.delivery.puppetlabs.net/windows/sysinternals/$_.zip $PackerDownloads\$_.zip
+  Download-File https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/sysinternals/$_.zip $PackerDownloads\$_.zip
   # PS2 has a bug with "Start-Process -Wait" which can cause it to fail if the command finishes "too quickly", so using this
   # workaround to address random failures (especially with Win-2012)
   $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $PackerDownloads\$_.zip -y -o$SysInternals"

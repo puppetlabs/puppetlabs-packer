@@ -104,7 +104,7 @@ if (-not (Test-Path "$PackerLogs\7zip.installed")) {
   # Download and install 7za now as its needed here and is useful going forward.
   $SevenZipInstaller = "7z1604-$ARCH.exe"
   Write-Host "Installing 7zip $SevenZipInstaller"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
   Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
   Touch-File "$PackerLogs\7zip.installed"
   Write-Host "7zip Installed"
@@ -112,7 +112,7 @@ if (-not (Test-Path "$PackerLogs\7zip.installed")) {
 
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules.
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/pswindowsupdate/PSWindowsUpdate.zip" "$Env:TEMP/pswindowsupdate.zip"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.zip" "$Env:TEMP/pswindowsupdate.zip"
   mkdir -Path "$Env:TEMP\PSWindowsUpdate"
   $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerStaging"
   $zproc.WaitForExit()

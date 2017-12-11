@@ -11,7 +11,7 @@ if (-not (Test-Path "$PackerLogs\NET35.Installed"))
 {
   # Install .Net 3.5.1
   Write-Output ".Net 3.5.1"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/win-2008-ps2/dotnetfx35setup.exe"  "$ENV:TEMP\dotnetfx35setup.exe"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/win-2008-ps2/dotnetfx35setup.exe"  "$ENV:TEMP\dotnetfx35setup.exe"
   Start-Process -Wait "$ENV:TEMP\dotnetfx35setup.exe" -ArgumentList "/q"
   Write-Output ".Net 3.5.1 Installed"
   Touch-File "$PackerLogs\NET35.Installed"
@@ -22,7 +22,7 @@ if (-not (Test-Path "$PackerLogs\WinUpdate.Installed"))
 {
   # Install .Net 3.5.1
   Write-Output "Updating Windows Update agent"
-  Download-File "http://buildsources.delivery.puppetlabs.net/windows/win-2008-ps2/windowsupdateagent30-x64.exe"  "$ENV:TEMP\windowsupdateagent30-x64.exe"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/win-2008-ps2/windowsupdateagent30-x64.exe"  "$ENV:TEMP\windowsupdateagent30-x64.exe"
   Start-Process -Wait "$ENV:TEMP\windowsupdateagent30-x64.exe" -ArgumentList "/q"
   Write-Output "Updating Windows Update agent"
   Touch-File "$PackerLogs\WinUpdate.Installed"
