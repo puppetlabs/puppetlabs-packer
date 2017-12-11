@@ -40,7 +40,12 @@ $credential = New-Object System.Management.Automation.PSCredential "vagrant", $s
 Write-Output "Creating vagrant Profile"
 Start-Process Powershell -Wait -Credential $Credential -LoadUserProfile "Exit"
 
-# Rework password files.
+# Creating Home directories for vagrant
+Write-Output "Create vagrant directories now"
+& $CygWinShell --login -c `'mkdir /home/vagrant`'
+& $CygWinShell --login -c `'mkdir /home/vagrant/.ssh`'
+
+#Rework password files.
 $CygwinDir = "$ENV:CYGWINDIR"
 $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
 $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
@@ -50,11 +55,6 @@ $CygwinGroupFile = "$CygwinDir\etc\group"
 #Update the passwd file.
 Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
-
-# Another fix to see if we can fix French issues
-Write-Output "Create vagrant directories now"
-& $CygWinShell --login -c `'mkdir /home/vagrant`'
-& $CygWinShell --login -c `'mkdir /home/vagrant/.ssh`'
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
@@ -89,6 +89,10 @@ Write-Output "Register the Cygwin LSA authentication package "
 Write-Output "Add SSHD Process with Manual Startup"
 & $CygWinShell --login -c `'cygrunsrv -S sshd`'
 Set-Service "sshd" -StartupType Manual
+
+#Update the passwd file (Again).
+Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
+Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
 
 #Snooze for a bit
 sleep -s 10

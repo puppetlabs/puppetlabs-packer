@@ -131,7 +131,7 @@
         },
         {
             "type": "windows-restart",
-            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
+            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /generalize /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml",
             "restart_timeout": "15m"
         },
         {
