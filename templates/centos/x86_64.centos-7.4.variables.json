@@ -1,0 +1,12 @@
+    {
+      "template_name": "centos-7.4-x86_64",
+      "vmware_template_os": "rhel6-64",
+      "virtualbox_template_os": "RedHat_64",
+
+      "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7-x86_64-DVD-1708.iso",
+      "iso_checksum": "ec7500d4b006702af6af023b1f8f1b890b6c7ee54400bb98cef968b883cd6546",
+      "iso_checksum_type": "sha256",
+
+      "puppet_aio": "http://yum.puppetlabs.com/el/7/PC1/x86_64/puppet-agent-1.10.8-1.el7.x86_64.rpm"
+
+    }
