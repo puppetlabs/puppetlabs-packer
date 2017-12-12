@@ -66,17 +66,9 @@ if [ "${IMAGE_TYPE}" = "virtualbox" ] ;then
     echo "Generating vagrantfile template"
     # Beware - Names must not contain Underyscores.
     export PACKER_VB_HOSTNAME=`jq -r .template_name ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json | tr '_' '-'`
-    export PACKER_BEAKER_NAME=`jq -r .beakerhost ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json`
     export PACKER_BEAKER_NAME_TR=`jq -r .beakerhost ${TEMPLATE_DIR}/${IMAGE_ARCH}.vars.json | tr '_' '-'`
-    if [[ ${PACKER_VB_HOSTNAME} == *core* ]] ;then
-       PACKER_VB_AUTOUPDATE=false
-    else
-       PACKER_VB_AUTOUPDATE=true
-    fi
 
-    erb vm_define=vagrant-${PACKER_BEAKER_NAME} \
-        vm_box=winpacker/${PACKER_BEAKER_NAME_TR} \
-        vm_hostname=vagrant-${PACKER_VB_HOSTNAME} \
-        vb_autoupdate=${PACKER_VB_AUTOUPDATE} \
+    erb vm_box=winpacker/${PACKER_BEAKER_NAME_TR} \
+        vm_hostname=${PACKER_VB_HOSTNAME} \
             ../win-common/files/virtualbox/vagrantfile-windows.template.erb > tmp/vagrantfile-windows.template
 fi
