@@ -297,10 +297,10 @@ Function Install-DotNetLatest
           else {
             $PreReqPatch = "Windows6.1-KB4019990-x64.msu"
           }
-          Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/dotnet/$PreReqPatch"
+          Install_Win_Patch -PatchUrl "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/dotnet/$PreReqPatch"
         }
       }
-      Download-File "http://buildsources.delivery.puppetlabs.net/windows/dotnet/$DotNetInstaller" "$Env:TEMP/$DotNetInstaller"
+      Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/dotnet/$DotNetInstaller" "$Env:TEMP/$DotNetInstaller"
       Start-Process -Wait "$Env:TEMP/$DotNetInstaller" -NoNewWindow -PassThru -ArgumentList "/passive /norestart"
   }
   Touch-File "$PackerLogs\InstallDotNetLatest.installed"

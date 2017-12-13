@@ -60,14 +60,14 @@ if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
 $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
 Write-Output "Downloading Cygwin Packages"
-Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
+Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
 Write-Output "Extracting $CygwinDownloads\packages_$ARCH.zip"
 $zproc = Start-Process "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
 $zproc.WaitForExit()
 
 Write-Output "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
-Download-File "http://buildsources.delivery.puppetlabs.net/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
+Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
 # Install Cygwin from the download location.
 # Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
 Write-Output "Installing Cygwin"

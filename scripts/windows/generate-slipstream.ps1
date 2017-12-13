@@ -20,7 +20,7 @@ $WinImageFile = "$WinDistPath\sources\install.wim"
 
 # Install ADK
 Write-Output "Install Win ADK"
-Download-File http://buildsources.delivery.puppetlabs.net/windows/winadk/adksetup_win2012r2.exe  $PackerDownloads\adksetup_win2012r2.exe
+Download-File https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/winadk/adksetup_win2012r2.exe  $PackerDownloads\adksetup_win2012r2.exe
 Start-Process -Wait "$PackerDownloads\adksetup_win2012r2.exe" -ArgumentList "/quiet /norestart /features OptionId.DeploymentTools"
 Write-Output "Win ADK Installed"
 

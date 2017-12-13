@@ -18,7 +18,7 @@ if (-not (Test-Path "$PackerLogs\WMF5.installed"))
 {
   # Enable Desktop experience to get cleanmgr
   Write-Host "Install WMF5 Patch"
-  Install_Win_Patch -PatchUrl "http://buildsources.delivery.puppetlabs.net/windows/wmf5/Win8.1AndW2K12R2-KB3191564-x64.msu"
+  Install_Win_Patch -PatchUrl "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/wmf5/Win8.1AndW2K12R2-KB3191564-x64.msu"
   Touch-File "$PackerLogs\WMF5.installed"
   Invoke-Reboot
 }
