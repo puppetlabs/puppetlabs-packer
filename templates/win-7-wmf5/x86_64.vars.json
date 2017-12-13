@@ -1,0 +1,15 @@
+{
+    "template_name"     : "win-7-wmf5-x86_64",
+    "beakerhost"        : "windows7-64",
+    "vbox_guest_os"     : "Windows7_64",
+    "vmware_guest_os"   : "windows7-64",
+    "windows_version"   : "Windows-7",
+    "image_name"        : "Windows 7 Enterprise",
+    "product_key"       : "33PXH-7Y6KF-2VJC9-XBBR8-HVTHH",
+    "hypervisor"        : "VMWare",
+    "version"           : "0.0.2",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_03.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "4246cfa663a9a581d2da4ba784554308",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+}
