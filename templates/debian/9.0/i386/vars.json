@@ -1,0 +1,14 @@
+{
+    "template_name"                         : "debian-9.0-i386",
+    "template_os"                           : "debian9",
+    "beakerhost"                            : "debian9-32",
+    "version"                               : "0.0.4",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/debian-9.0.0-i386-netinst.iso",
+    "iso_checksum"                          : "3bf78f7b003203a6b771b05fa1790e74ee3ea15d6245a01683f90c02b95c0315",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_base_memory_size"               : "512",
+    "vmware_base_cpu_count"                 : "1",
+    "vmware_vsphere_nocm_memory_size"       : "4096",
+    "vmware_vsphere_nocm_cpu_count"         : "2",
+    "puppet_aio": "http://apt.puppetlabs.com/pool/stretch/PC1/p/puppet-agent/puppet-agent_1.10.6-1stretch_i386.deb"
+}
