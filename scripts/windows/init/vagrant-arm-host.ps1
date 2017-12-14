@@ -3,6 +3,13 @@
 
 $ErrorActionPreference = 'Stop'
 
+# If we are Windows-10/2016 need to set network adapters private.
+# Note - need longhand test as windows_env isn't available here.
+if ($WindowsVersion -like "10.*") {
+  # Setting Windows-10 network connections private.
+  Set-NetConnectionProfile  -InterfaceIndex (Get-NetConnectionProfile).InterfaceIndex -NetworkCategory Private
+}
+
 # Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
 $CygwinDownloads = $ENV:CYGWINDOWNLOADS
