@@ -85,8 +85,8 @@ Write-Output "Register the Cygwin LSA authentication package "
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
 & $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdministratorName/.ssh/known_hosts`'
 
-Write-Output "Add SSHD Process with Manual Startup"
-& $CygWinShell --login -c `'cygrunsrv -S sshd`'
+# Set sshd process to manual startup - the vmpooler-clone-startup script does the actual start.
+Write-Output "Set SSHD Process with Manual Startup"
 Set-Service "sshd" -StartupType Manual
 
 Write-Output "Re-enable NETBios and WinRM Services"
