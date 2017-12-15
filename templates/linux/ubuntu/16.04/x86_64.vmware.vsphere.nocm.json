@@ -3,7 +3,7 @@
   "variables":
     {
       "template_name": "ubuntu-16.04-x86_64",
-      "version": "0.0.5",
+      "version": "0.0.6",
 
       "provisioner": "vmware",
       "required_modules": "puppetlabs-stdlib example42-network puppetlabs-apt",
@@ -19,7 +19,7 @@
       "packer_vcenter_net": "{{env `PACKER_VCENTER_NET`}}",
       "packer_vcenter_insecure": "{{env `PACKER_VCENTER_INSECURE`}}",
 
-      "memory_size": "4096",
+      "memory_size": "6144",
       "cpu_count": "2",
 
       "output_directory": "{{env `OUTPUT_DIRECTORY`}}"

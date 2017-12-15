@@ -11,14 +11,14 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         source  => 'puppet:///modules/packer/vsphere/periodic',
       }
 
-      exec { "apt-update":
-        command => "/usr/bin/apt-get update"
-      }
+      # exec { "apt-update":
+      #   command => "/usr/bin/apt-get update"
+      # }
 
-      Apt::Key <| |> -> Exec["apt-update"]
-      Apt::Source <| |> -> Exec["apt-update"]
+      # Apt::Key <| |> -> Exec["apt-update"]
+      # Apt::Source <| |> -> Exec["apt-update"]
 
-      Exec["apt-update"] -> Package <| |>
+      Exec['apt_update'] -> Package <| |>
 
       class { 'apt':
         purge => {
