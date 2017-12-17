@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "fedora-26-x86_64",
+    "template_os"                           : "fedora-64",
+    "beakerhost"                            : "fedora26-64",
+    "version"                               : "0.0.2",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/Fedora-Server-dvd-x86_64-26-1.5.iso",
+    "iso_checksum"                          : "fad18a43b9cec152fc8a1fd368950eaf59be66b1a15438149a0c3a509c56cf2f",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "https://yum.puppetlabs.com/fedora/f25/PC1/x86_64/puppet-agent-1.10.6-1.fedoraf25.x86_64.rpm"
+}
