@@ -9,7 +9,7 @@ Currently, only Debian 7.8, 8.2 and 9.0 are supported for both the 64-bit and 32
 
 ### Building
 
-All templates must be built in the architecture directory.
+All templates must be built in the architecture directory. Make sure that the environment variable PACKER\_VM\_OUT\_DIR is set so that Packer knows where to copy the build artifacts (it is common to set it to ".", the current [architecture] directory). If you are building a template with a vmware-vmx builder, be sure to set the PACKER\_VM\_SRC\_DIR environment variable to the directory containing the directory containing the relevant vm files. It is common to set PACKER\_VM\_SRC\_DIR = PACKER\_VM\_OUT\_DIR to make it easy to build a vmware-vmx template from a previous vmware build. 
 
 To build the vmware.base image, type the following command:
 ```

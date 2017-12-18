@@ -1,0 +1,3 @@
+{
+    "boot_command" : "<tab> <wait>text ks=floppy <enter>"
+}
