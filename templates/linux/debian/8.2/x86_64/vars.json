@@ -6,9 +6,7 @@
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/debian-8.2.0-amd64-CD-1.iso",
     "iso_checksum"                          : "d3ac88ec064f9e941ee5d9cbfaa87ac48929b81471f96073305ccd7bd71ff521",
     "iso_checksum_type"                     : "sha256",
-    "vmware_base_memory_size"               : "512",
-    "vmware_base_cpu_count"                 : "1",
-    "vmware_vsphere_nocm_memory_size"       : "4096",
-    "vmware_vsphere_nocm_cpu_count"         : "2",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
     "puppet_aio"                            : "http://apt.puppetlabs.com/pool/jessie/PC1/p/puppet-agent/puppet-agent_1.8.2-1jessie_amd64.deb"
 }

@@ -1,0 +1,3 @@
+{
+    "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network puppetlabs-apt"
+}
