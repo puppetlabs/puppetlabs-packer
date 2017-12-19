@@ -1,0 +1,6 @@
+{
+  "floppy_dirs"                          : "",
+  "floppy_files"                         : "../../common/files/ks.cfg",
+  "boot_command"                         : "<tab> inst.text inst.ks=hd:fd0:/ks.cfg <enter>",
+  "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network"
+}
