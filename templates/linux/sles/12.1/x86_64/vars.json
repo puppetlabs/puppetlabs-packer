@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "sles-12-x86_64",
+    "template_os"                           : "linux",
+    "beakerhost"                            : "sles12-64a",
+    "version"                               : "0.0.3",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/SLE-12-SP1-Server-DVD-x86_64-GM-DVD1.iso",
+    "iso_checksum"                          : "e1c0ba860f593d60c2c138a0cd35e2a3c65304b4c988b4c9f6051bff89871f62",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/sles/12/PC1/x86_64/puppet-agent-1.8.3-1.sles12.x86_64.rpm"
+}
