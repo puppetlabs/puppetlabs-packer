@@ -1,0 +1,3 @@
+{
+    "boot_command" : "<esc><esc><enter><wait>/install/vmlinuz console-setup/ask_detect=false console-setup/layoutcode=us console-setup/modelcode=pc105 debconf/frontend=noninteractive debian-installer=en_US fb=false initrd=/install/initrd.gz kbd-chooser/method=us keyboard-configuration/layout=USA keyboard-configuration/variant=USA locale=en_US netcfg/get_domain=vm netcfg/get_hostname=localhost noapic preseed/file=/floppy/preseed.cfg -- <wait><enter>"
+}

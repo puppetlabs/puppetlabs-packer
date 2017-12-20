@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "ubuntu-16.04-x86_64",
+    "template_os"                           : "ubuntu-64",
+    "beakerhost"                            : "ubuntu1604-64",
+    "version"                               : "0.0.5",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-amd64.iso",
+    "iso_checksum"                          : "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.8.3-1xenial_amd64.deb"
+}
