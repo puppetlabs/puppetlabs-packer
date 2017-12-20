@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "scientific-6.5-x86_64",
+    "template_os"                           : "rhel6-64",
+    "beakerhost"                            : "scientific6-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/sci6latestserver-x86_64/iso/SL-65-x86_64-2013-12-16-Everything-DVD1.iso",
+    "iso_checksum"                          : "2371b2c9f64911ca076bd6a812e30e0899687f13e5c9bcc3b5ff80111f154429",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/el/6/PC1/x86_64/puppet-agent-1.10.9-1.el6.x86_64.rpm"
+}

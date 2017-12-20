@@ -19,7 +19,7 @@ class packer::networking::params {
           $udev_rule_gen = '/lib/udev/rules.d/75-persistent-net-generator.rules'
         }
 
-        '5.11': {
+        '5.10', '5.11': {
           $interface_script = '/etc/sysconfig/network-scripts/ifcfg-eth0'
           $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
         }
