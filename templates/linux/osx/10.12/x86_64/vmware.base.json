@@ -1,0 +1,98 @@
+{
+  "variables": {
+    "template_name"                                : "osx-1012-x86_64",
+    "template_os"                                  : "darwin12-64",
+    "iso_url"                                      : "http://osmirror.delivery.puppetlabs.net/iso/OSX_InstallESD_10.12_16A312a.dmg",
+    "iso_checksum"                                 : "c59b459b0473df2a3d66b47ea11c8d18",
+    "iso_checksum_type"                            : "md5",
+
+    "ssh_username"                                 : "osx",
+    "ssh_password"                                 : "{{env `QA_ROOT_PASSWD`}}", 
+    "install_xcode_cli_tools"                      : "false",
+    "update_system"                                : "true",
+
+    "project_root"                                 : "../../../../..",
+    "headless"                                     : "true",
+    "template_config"                              : "base",
+    "provisioner"                                  : "vmware",
+    "shutdown_command"                             : "echo 'osx' | sudo -S shutdown -h now",
+    "disk_size"                                    : "40960", 
+    "vmware_base_boot_wait"                        : "2s",
+    "packer_output_dir"                            : "{{env `PACKER_VM_OUT_DIR`}}",
+    "vmware_base_vmx_data_memsize"                 : "2048",
+    "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
+    "vmware_base_vmx_data_numvcpus"                : "1",
+    "vmware_base_vmx_data_ethernet0_virtualDev"    : "e1000",
+    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33"
+  },
+
+  "description"                                    : "Builds a OSX base template VM for use in VMWare",
+
+  "builders": [
+    {
+      "name"                                       : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "type"                                       : "vmware-iso",
+      "iso_url"                                    : "{{user `iso_url`}}",
+      "iso_checksum"                               : "{{user `iso_checksum`}}",
+      "iso_checksum_type"                          : "{{user `iso_checksum_type`}}",
+      "output_directory"                           : "{{user `packer_output_dir`}}/output-{{build_name}}",
+
+      "headless"                                   : "{{user `headless`}}",
+
+      "ssh_username"                               : "{{user `ssh_username`}}",
+      "ssh_password"                               : "{{user `ssh_password`}}",
+      "ssh_port"                                   : 22,
+      "ssh_wait_timeout"                           : "10000s",
+      "ssh_pty"                                    : "true",
+
+      "shutdown_command"                           : "{{user `shutdown_command`}}",
+
+      "guest_os_type"                              : "{{user `template_os`}}",
+      "disk_size"                                  : "{{user `disk_size`}}",
+      "tools_upload_flavor"                        : "darwin",
+      "boot_wait"                                  : "{{user `vmware_base_boot_wait`}}",
+
+      "vmx_data"                                   : {
+        "memsize"                                  : "{{user `vmware_base_vmx_data_memsize`}}",
+        "cpuid.coresPerSocket"                     : "{{user `vmware_base_vmx_data_cpuid_coresPerSocket`}}",
+        "numvcpus"                                 : "{{user `vmware_base_vmx_data_numvcpus`}}",
+
+        "ethernet0.virtualDev"                     : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
+        "ethernet0.pciSlotNumber"                  : "{{user `vmware_base_vmx_data_ethernet0_pciSlotNumber`}}",
+        "firmware"                                 : "efi",
+        "keyboardAndMouseProfile"                  : "macProfile",
+        "smc.present"                              : "TRUE",
+        "hpet0.present"                            : "TRUE",
+        "ich7m.present"                            : "TRUE",
+        "ehci.present"                             : "TRUE",
+        "usb.present"                              : "TRUE"
+      }
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                                       : "file",
+      "source"                                     : "{{user `project_root`}}/scripts/osx/support/set_kcpassword.py",
+      "destination"                                : "/private/tmp/set_kcpassword.py"
+    },
+
+    {
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "environment_vars"                           : [
+        "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
+        "PASSWORD={{user `ssh_password`}}",
+        "UPDATE_SYSTEM={{user `update_system`}}",
+        "USERNAME={{user `ssh_username`}}"
+      ],
+      "scripts"                                    : [
+        "{{user `project_root`}}/scripts/osx/vmware.sh",
+        "{{user `project_root`}}/scripts/osx/xcode-cli-tools.sh",
+        "{{user `project_root`}}/scripts/osx/add-network-interface-detection.sh",
+        "{{user `project_root`}}/scripts/osx/system-update.sh",
+        "{{user `project_root`}}/scripts/osx/shrink.sh"
+      ]
+    }
+  ]
+}
