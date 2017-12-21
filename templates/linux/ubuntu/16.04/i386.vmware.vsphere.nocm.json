@@ -68,13 +68,13 @@
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/bootstrap-aio.sh"
+        "../../../../scripts/bootstrap-aio.sh"
       ]
     },
 
     {
       "type": "file",
-      "source": "../../hiera",
+      "source": "../../../../hiera",
       "destination": "/tmp/packer-puppet-masterless"
     },
 
@@ -85,8 +85,8 @@
         "provisioner": "{{user `provisioner`}}",
         "qa_root_passwd": "{{user `qa_root_passwd`}}"
       },
-      "manifest_dir": "../../manifests",
-      "manifest_file": "../../manifests/vsphere/nocm.pp"
+      "manifest_dir": "../../../../manifests",
+      "manifest_file": "../../../../manifests/vsphere/nocm.pp"
     },
 
     {
@@ -96,9 +96,9 @@
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
       "scripts": [
-        "../../scripts/cleanup-aio.sh",
-        "../../scripts/cleanup-packer.sh",
-        "../../scripts/cleanup-scrub.sh"
+        "../../../../scripts/cleanup-aio.sh",
+        "../../../../scripts/cleanup-packer.sh",
+        "../../../../scripts/cleanup-scrub.sh"
       ]
     }
   ],
