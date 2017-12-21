@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "oracle-6.5-i386",
+    "template_os"                           : "rhel6",
+    "beakerhost"                            : "oracle6-32",
+    "version"                               : "0.0.2",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/oracle6latestserver-i386/iso/OracleLinux-R6-U5-Server-i386-dvd.iso",
+    "iso_checksum"                          : "b97572ea1f514a14ccb71c3bb06307b7119e02d77ac69e967893444bb61c3082",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/el/6/PC1/i386/puppet-agent-1.10.9-1.el6.i386.rpm"
+}

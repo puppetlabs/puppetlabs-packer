@@ -1,0 +1,7 @@
+{
+    "floppy_dirs"                               : "",
+    "floppy_files"                              : "../common/files/ks.cfg",
+    "boot_command"                              : "<tab> <wait>text <wait>ks=hd:fd0:/ks.cfg<wait><enter>",
+    "vmware_base_vmx_data_ethernet0_virtualDev" : "e1000",
+    "vmware_vsphere_nocm_required_modules"      : "puppetlabs-stdlib example42-network puppetlabs-firewall"
+}
