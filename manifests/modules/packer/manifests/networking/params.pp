@@ -8,7 +8,7 @@ class packer::networking::params {
 
     redhat: {
       case $::operatingsystemrelease {
-        '7.0.1406', '7.1.1503', '7.2.1511', '7.2', '7.3.1611': {
+        '7.0', '7.0.1406', '7.1.1503', '7.2.1511', '7.2', '7.3.1611': {
           case $::provisioner {
             'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
             'vmware':     { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens33' }
