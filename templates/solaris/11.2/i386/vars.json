@@ -1,0 +1,7 @@
+{
+    "template_name"                         : "solaris-11.2-i386",
+    "template_os"                           : "solaris11-64",
+    "iso_url"                               : "http://int-resources.ops.puppetlabs.net/ISO/Solaris/sol-11_2-ai-x86.iso",
+    "iso_checksum"                          : "2b3859bb7532cfe42214349dff9fcc23",
+    "iso_checksum_type"                     : "md5"
+}

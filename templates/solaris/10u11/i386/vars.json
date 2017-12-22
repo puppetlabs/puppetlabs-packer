@@ -1,0 +1,7 @@
+{
+    "template_name"                         : "solaris-10u11-i386",
+    "template_os"                           : "solaris10-64",
+    "iso_url"                               : "http://int-resources.ops.puppetlabs.net/ISO/Solaris/sol-10-u11-ga-x86-dvd.iso",
+    "iso_checksum"                          : "aae1452bb3d56baa3dcb8866ce7e4a08",
+    "iso_checksum_type"                     : "md5"
+}
