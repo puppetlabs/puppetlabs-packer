@@ -24,7 +24,9 @@
     "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
     "vmware_base_vmx_data_numvcpus"                : "1",
     "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
-    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33"
+    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
+
+    "vmware_base_provisioning_scripts"             : "../../../../../scripts/bootstrap-aio.sh"
   },
 
   "description"                                    : "Builds a Linux base template VM for use in VMWare",
@@ -74,9 +76,7 @@
       "environment_vars"                           : [
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
-      "scripts"                                    : [
-        "{{user `project_root`}}/scripts/bootstrap-aio.sh"
-      ]
+      "scripts"                                    : "{{user `vmware_base_provisioning_scripts`}}"
     },
 
     {
