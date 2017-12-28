@@ -2,7 +2,7 @@
 
 ### About
 
-This repository contains the [Packer](http://packer.io) and [Puppet](http://puppetlabs.com) manifests used to build boxes shipped to [Vmware Vsphere](UPDATE LINK TO POINT TO VSPHERE HOST, IF WE HAVE ONE).
+This repository contains the [Packer](http://packer.io) and [Puppet](http://puppetlabs.com) manifests used to build boxes shipped to VMware vsphere.
 
 The Packer templates are organized under the following directory structure inside the root `templates` directory:
 ```
