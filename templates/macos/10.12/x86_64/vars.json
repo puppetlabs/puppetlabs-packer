@@ -1,0 +1,11 @@
+{
+  "_comment"                : "Variable values specific to macOS 10.12 Sierra",
+  "beakerhost"              : "osx1012-64",
+  "install_xcode_cli_tools" : "true",
+  "iso_url"                 : "http://osmirror.delivery.puppetlabs.net/iso/macos/OSX_InstallESD_10.12_16A312a.dmg",
+  "iso_checksum"            : "c59b459b0473df2a3d66b47ea11c8d18",
+  "iso_checksum_type"       : "md5",
+  "template_name"           : "macos-1012-x86_64",
+  "guest_os_type"           : "darwin12-64",
+  "version"                 : "0.1.0"
+}

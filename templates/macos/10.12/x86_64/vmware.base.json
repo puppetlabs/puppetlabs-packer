@@ -1,0 +1,122 @@
+{
+  "description"                                    : "Builds a macOS 10.12 Sierra base template VM for use in VMWare",
+  "_comment"                                       : "This is a common image template for macOS platforms; It installs and customizes macOS 10.12; Since the 10.13 image is based on 10.12, this template is used as a basis for both. Null variables should be provided by vars.json files, or at the command line - see the main macOS README for examples.",
+
+  "variables"                                      : {
+    "common_files"                                 : null,
+    "headless"                                     : null,
+    "guest_os_type"                                : null,
+    "install_xcode_cli_tools"                      : null,
+    "iso_checksum"                                 : null,
+    "iso_checksum_type"                            : null,
+    "iso_url"                                      : null,
+    "shutdown_command"                             : null,
+    "ssh_username"                                 : null,
+    "template_name"                                : null,
+    "update_system"                                : null,
+    "output_directory"                             : "{{env `PACKER_VM_OUT_DIR`}}",
+    "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}"
+  },
+
+  "builders"                                       : [
+    {
+      "name"                                       : "{{user `template_name`}}-vmware-base",
+      "type"                                       : "vmware-iso",
+      "iso_url"                                    : "{{user `iso_url`}}",
+      "iso_checksum"                               : "{{user `iso_checksum`}}",
+      "iso_checksum_type"                          : "{{user `iso_checksum_type`}}",
+      "output_directory"                           : "{{user `output_directory`}}/{{build_name}}",
+
+      "ssh_username"                               : "{{user `ssh_username`}}",
+      "ssh_password"                               : "{{user `ssh_password`}}",
+      "ssh_port"                                   : "22",
+      "ssh_wait_timeout"                           : "10000s",
+      "ssh_pty"                                    : "false",
+
+      "headless"                                   : "{{user `headless`}}",
+      "guest_os_type"                              : "{{user `guest_os_type`}}",
+      "shutdown_command"                           : "{{user `shutdown_command`}}",
+      "disk_size"                                  : "{{user `disk_size`}}",
+      "tools_upload_flavor"                        : "darwin",
+      "boot_wait"                                  : "2s",
+
+      "vmx_data"                                   : {
+        "cpuid.coresPerSocket"                     : "1",
+        "ehci.present"                             : "TRUE",
+        "firmware"                                 : "efi",
+        "hpet0.present"                            : "TRUE",
+        "ich7m.present"                            : "TRUE",
+        "keyboardAndMouseProfile"                  : "macProfile",
+        "memsize"                                  : "2048",
+        "numvcpus"                                 : "1",
+        "scsi0.present"                            : "TRUE",
+        "smc.present"                              : "TRUE",
+        "usb.present"                              : "TRUE"
+      }
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                                       : "file",
+      "source": "{{user `common_files`}}/base/skip-icloud-setup.mobileconfig",
+      "destination": "/private/tmp/skip-icloud-setup.mobileconfig"
+    },
+    {
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "inline"                                     : [
+        "profiles -I -F /private/tmp/skip-icloud-setup.mobileconfig"
+      ]
+    },
+    {
+      "type"                                       : "file",
+      "source"                                     : "{{user `common_files`}}/base/set_kcpassword.py",
+      "destination"                                : "/private/tmp/set_kcpassword.py"
+    },
+    {
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "inline"                                     : [
+        "python /private/tmp/set_kcpassword.py {{ user `ssh_password` }}" ,
+        "/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser {{ user `ssh_username` }}"
+      ]
+    },
+    {
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "inline"                                     : [
+        "softwareupdate --clear-catalog             # Unenroll from the beta"
+      ]
+    },
+    {
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "expect_disconnect"                          : true,
+      "environment_vars"                           : [
+        "UPDATE_SYSTEM={{user `update_system`}}"
+      ],
+      "inline"                                     : [
+        "test $UPDATE_SYSTEM && softwareupdate -l && softwareupdate -ia && reboot"
+      ],
+      "skip_clean"                                 : true
+    },
+    {
+      "pause_before": "1m",
+      "type"                                       : "shell",
+      "execute_command"                            : "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "environment_vars"                           : [
+        "PASSWORD={{user `ssh_password`}}",
+        "USERNAME={{user `ssh_username`}}",
+        "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}"
+      ],
+      "scripts"                                    : [
+        "{{user `common_files`}}/base/xcode-cli-tools.sh",
+        "{{user `common_files`}}/base/vmware.sh",
+        "{{user `common_files`}}/base/add-network-interface-detection.sh",
+        "{{user `common_files`}}/base/cleanup.sh",
+        "{{user `common_files`}}/base/shrink.sh"
+      ]
+    }
+  ]
+}

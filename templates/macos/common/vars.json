@@ -1,0 +1,8 @@
+{
+  "_comment"                : "Variable values common to all macOS versions (see <version>/<arch>/vars.json for version-specific values)",
+  "common_files"            : "./common/files",
+  "headless"                : "true",
+  "shutdown_command"        : "echo 'osx' | sudo -S shutdown -h now",
+  "ssh_username"            : "osx",
+  "update_system"           : "true"
+}

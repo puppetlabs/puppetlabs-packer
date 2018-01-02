@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadIdentifier</key>
+	<string>puppet.C03DB334-EDE6-452A-A117-8526D414F6ED</string>
+	<key>PayloadOrganization</key>
+	<string>Puppet</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>HasRemovalPasscode</key>
+	<false/>
+	<key>PayloadDisplayName</key>
+	<string>Disable iCloud Setup</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>6BA9A908-431E-4098-B32C-A2528CD9831C</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.SetupAssistant.managed</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.puppet.F9B9265A-C84E-4941-BC0D-48F18C1A7575</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadUUID</key>
+			<string>F9B9265A-C84E-4941-BC0D-48F18C1A7575</string>
+			<key>PayloadDisplayName</key>
+			<string>Login Window</string>
+			<key>SkipCloudSetup</key>
+			<true/>
+		</dict>
+	</array>
+</dict>
+</plist>
