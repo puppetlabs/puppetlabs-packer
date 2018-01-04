@@ -11,6 +11,9 @@ function ExitScript([int]$ExitCode){
 	exit $ExitCode
 }
 
+# Used Frequently throughout
+$CygwinDir = "$ENV:CYGWINDIR"
+
 # Windows version checking logic is copied here as its not present by Default
 # on the installed system (might be an idea to change this in the future)
 Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
@@ -58,10 +61,9 @@ if ($p.ExitCode -ne 0){
 Write-Output "vSphere VMname: $NewVMName`n"
 
 # Pickup Env Variables defined in "install-cygwin.ps1"
-$CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
-$CygwinDownloads = $ENV:CYGWINDOWNLOADS
+$CygWinShell = "$CygwinDir\bin\sh.exe"
 $AdministratorName =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").Name
-$AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
+$AdministratorHome = "$CygwinDir\home\$AdministratorName"
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
@@ -85,16 +87,7 @@ Write-Output "Register the Cygwin LSA authentication package "
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
 & $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdministratorName/.ssh/known_hosts`'
 
-# Set sshd process to manual startup - the vmpooler-clone-startup script does the actual start.
-Write-Output "Set SSHD Process with Manual Startup"
-Set-Service "sshd" -StartupType Manual
-
-Write-Output "Re-enable NETBios and WinRM Services"
-Set-Service "lmhosts" -StartupType Automatic
-Set-Service "netbt" -StartupType Automatic
-Set-Service "WinRM" -StartupType Automatic
-
-# Set Startup script (starts sshd)
+# Set Startup script (does very little except run bkginfo and set passwd/group)
 Write-Output "Setting startup script"
 reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
 
@@ -102,6 +95,15 @@ reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
 Write-Output "Setting $AdministratorName Password"
 net user $AdministratorName "$qa_root_passwd"
 autologon -AcceptEula $AdministratorName . "$qa_root_passwd"
+
+# Generate passwd and group files.
+Write-Output "Generating Passwd Files"
+$CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
+$CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
+$CygwinPasswdFile = "$CygwinDir\etc\passwd"
+$CygwinGroupFile = "$CygwinDir\etc\group"
+Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
+Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
 
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Output "Disabling NIC Power Management"
@@ -111,6 +113,13 @@ try {
 	Write-Warning "Disable Power Management failed"
 }
 
+# Set Service startups following the reboot/rename operation.
+Write-Output "Re-enable NETBios and WinRM Services"
+Set-Service "lmhosts" -StartupType Automatic
+Set-Service "netbt" -StartupType Automatic
+Set-Service "WinRM" -StartupType Automatic
+Write-Output "Set SSHD to start after next boot"
+Set-Service "sshd" -StartupType Automatic
 
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
