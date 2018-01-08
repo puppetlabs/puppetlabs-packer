@@ -2,7 +2,7 @@ class packer::vmtools inherits packer::vmtools::params {
 
   case $::osfamily {
     debian: {
-      if ($::operatingsystemmajrelease in ['7', '8', '9', '16']) {
+      if ($::operatingsystemmajrelease in ['7', '8', '9', '16.04']) {
         package { 'open-vm-tools':
           ensure => installed,
         }

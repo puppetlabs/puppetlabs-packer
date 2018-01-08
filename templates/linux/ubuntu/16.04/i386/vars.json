@@ -2,11 +2,11 @@
     "template_name"                         : "ubuntu-16.04-i386",
     "template_os"                           : "ubuntu",
     "beakerhost"                            : "ubuntu1604-32",
-    "version"                               : "0.0.5",
-    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-16.04-server-i386.iso",
+    "version"                               : "0.0.7",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-16.04-server-i386.iso",
     "iso_checksum"                          : "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "2048",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/xenial/PC1/p/puppet-agent/puppet-agent_1.8.3-1xenial_i386.deb"
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/xenial/puppet5/p/puppet-agent/puppet-agent_5.3.2-1xenial_i386.deb"
 }
