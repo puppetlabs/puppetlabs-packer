@@ -1,4 +1,4 @@
 #!/bin/sh -eux
 
-# eject installer disc
+# Eject the installer disc
 drutil eject;

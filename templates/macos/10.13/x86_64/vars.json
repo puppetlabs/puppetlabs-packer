@@ -1,0 +1,10 @@
+{
+  "_comment"                : "Variable values specific to macOS 10.13 High Sierra; `apfs` is passed directly into the startosinstall command - it must be either YES or NO.",
+  "apfs"                    : "YES",
+  "installer_url"           : "http://osmirror.delivery.puppetlabs.net/iso/macos/macos_10.13_installer.tar.gz",
+  "install_xcode_cli_tools" : "true",
+  "beakerhost"              : "osx1013-64",
+  "template_name"           : "macos-1013-x86_64",
+  "guest_os_type"           : "darwin13-64",
+  "version"                 : "0.1.0"
+}
