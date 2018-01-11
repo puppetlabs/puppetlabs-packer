@@ -9,9 +9,9 @@ The Packer templates are organized under the following directory structure insid
 <os-family>/<os-distribution>/<os-variant>/<architecture>
 ```
 
-1. `<os-family>` is the OS family, i.e. `linux`, `windows`, or `macos`
+1. `<os-family>` is the OS family, i.e. `linux`, `windows`, `macos`, `solaris`
 1. `<os-distribution>` is the distribution, and is only used among linux templates, e.g. `redhat` or `ubuntu`
-1. `<os-variant>` is the version or variant, e.g. `7` for redhat, or `10.13` for macOS
+1. `<os-variant>` is the version or variant, e.g. `7` for redhat, `10.13` for macOS, or '11.2' for solaris
 1. `<architecture>` is the architecture, e.g. `x86_64` or `i386`
 
 The `architecture` directory can contain (1) and (2), and technically (3), but we do not recommend (3) (as it’s highly likely that scripts, patches, or pressed files can apply to multiple architectures of a specific OS variant so they might as well be in their own `common` directory). There is one caveat. If a `common` or `architecture` directory contains a particular template (e.g. like vmware.base.json) AND a `vars.json` file, then all variables for the template should be declared both in the template itself, and in any `vars.json` files found in sub-directories — the `vars.json` file in the current directory should not have variables for that specific template.

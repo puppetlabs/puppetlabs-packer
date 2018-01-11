@@ -3,7 +3,7 @@ Solaris 10
 
 Some notes about building Solaris 10:
 
-  - This template was created to build Solaris 10 update 11, a.k.a Solaris 10 1/13, a.k.a 10u11.
+  - The template in the common/ directory was created to build Solaris 10 update 11, a.k.a Solaris 10 1/13, a.k.a 10u11.
     Newer and older versions may or may not work.
     The installation media, `sol-10-u11-ga-x86-dvd.iso`, is not freely available but may be downloaded from Oracle after registering for a free account.
 
