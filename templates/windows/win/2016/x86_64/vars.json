@@ -1,0 +1,14 @@
+{
+    "template_name"     : "win-2016-x86_64",
+    "beakerhost"        : "windows2016-64",
+    "vbox_guest_os"     : "Windows2016_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "windows_version"   : "Windows-2016",
+    "image_name"        : "Windows Server 2016 SERVERSTANDARD",
+    "product_key"       : "WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
+    "version"           : "20180122_1800",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2016_x64_dvd_9718492_Slip_02.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "47993d89a256960eed2e58c9b394aa97",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+}
