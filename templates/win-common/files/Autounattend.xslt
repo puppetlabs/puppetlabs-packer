@@ -145,7 +145,7 @@
   </xsl:template> 
 
   <!-- Windows 7 Needs Timezone set in the OOBE phase too -->
-  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:TimeZone'>
+  <xsl:template match='u:unattend/u:settings[@pass="oobeSystem"]/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:TimeZone'>
     <xsl:if test="$WindowsVersion = 'Windows-7'">
       <xsl:copy>
         <xsl:apply-templates select="@*|node()"/>

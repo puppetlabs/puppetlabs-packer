@@ -30,6 +30,7 @@ If ($WindowsVersion -like $WindowsServer2008) {
 }
 else {
 	Write-Output "Resyncing Time"
+	net start w32time
 	w32tm /resync
 	w32tm /tz
 }

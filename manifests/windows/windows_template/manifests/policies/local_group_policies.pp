@@ -173,7 +173,7 @@ class windows_template::policies::local_group_policies ()
     windows_group_policy::local::machine { 'W32timeNTPServerList':
         key    => 'Software\Policies\Microsoft\W32time\Parameters',
         value  => 'NtpServer',
-        data   => 'opdx-net01-prod.ops.puppetlabs.net pdx-net01-prod.ops.puppetlabs.net opdx-net02.service.puppetlabs.net pdx-net02-prod.ops.puppetlabs.net',
+        data   => '10.240.0.10 10.240.1.10',
         type   => 'REG_SZ',
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
