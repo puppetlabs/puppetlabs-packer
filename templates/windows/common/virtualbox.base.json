@@ -2,8 +2,7 @@
   "variables": {
         "headless"                : "true",
         "template_config"         : "base",
-        "provisioner"             : "{{env `IMAGE_TYPE`}}",
-        "image_arch"              : "{{env `IMAGE_ARCH`}}",
+        "provisioner"             : "virtualbox",
         "shutdown_command"        : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
         "winrm_username"          : "Administrator",
         "winrm_password"          : "PackerAdmin",
@@ -16,7 +15,14 @@
         "packer_source_dir"       : "{{env `PACKER_VM_SRC_DIR`}}",
         "packer_output_dir"       : "{{env `PACKER_VM_OUT_DIR`}}",
         "current_pwd"             : "{{env `PWD`}}",
-        "packer_downloads_dir"    : "C:/Packer/Downloads"
+        "packer_downloads_dir"    : "C:/Packer/Downloads",
+
+        "template_name"           : null,
+        "vbox_guest_os"           : null,
+        "iso_url"                 : null,
+        "iso_checksum_type"       : null,
+        "iso_checksum"            : null,
+        "boot_command"            : null
     },
     "description": "Builds a Windows template VM for use in VirtualBox",
     "builders": [
@@ -46,15 +52,15 @@
         ],
         "floppy_files": [
           "./tmp/autounattend.xml",
-          "./files/{{user `image_arch`}}/platform-packages.ps1",
-          "../../scripts/bootstrap-base.bat",
-          "../win-common/files/virtualbox/oracle-cert-1.cer",
-          "../../scripts/start-pswindowsupdate.ps1",
-          "../../scripts/windows-env.ps1",
-          "../../scripts/core-shutdown.ps1",
-          "../../scripts/clean-disk-dism.ps1",
-          "../../scripts/clean-disk-sdelete.ps1",
-          "../../scripts/startup-profile.ps1"
+          "./files/platform-packages.ps1",
+          "../../../scripts/bootstrap-base.bat",
+          "../../../common/files/virtualbox/oracle-cert-1.cer",
+          "../../../scripts/start-pswindowsupdate.ps1",
+          "../../../scripts/windows-env.ps1",
+          "../../../scripts/core-shutdown.ps1",
+          "../../../scripts/clean-disk-dism.ps1",
+          "../../../scripts/clean-disk-sdelete.ps1",
+          "../../../scripts/startup-profile.ps1"
         ]
       }
     ],
