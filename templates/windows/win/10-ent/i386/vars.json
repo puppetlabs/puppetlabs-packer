@@ -1,5 +1,6 @@
 {
     "template_name"     : "win-10-ent-i386",
+    "win_proc_arch"     : "x86",
     "beakerhost"        : "windows10ent-32",
     "vbox_guest_os"     : "Windows10",
     "vmware_guest_os"   : "windows8",

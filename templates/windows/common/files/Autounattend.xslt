@@ -13,7 +13,7 @@
   <xsl:param name="ProcessorArchitecture" />
   <xsl:param name="ImageName" />
   <xsl:param name="Firmware" />
-  <xsl:param name="ImageType" />
+  <xsl:param name="ImageProvisioner" />
   <xsl:param name="WinRmUsername" />
   <xsl:param name="WinRmPassword" />
   <xsl:param name="Locale" />
@@ -38,21 +38,21 @@
 
   <!-- Rule to select disk configuration -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Setup"]/u:PackerDiskConfiguration'>
-       <xsl:if test="(@Firmware=$Firmware) and (@ImageType=$ImageType)">
+       <xsl:if test="(@Firmware=$Firmware) and (@ImageProvisioner=$ImageProvisioner)">
           <!-- Strip out PackerDiskConfiguration once selected to present valid Unattend.xml -->
           <xsl:copy-of select="node()" />
        </xsl:if>
   </xsl:template>
 
-  <!-- Install Image to correct Partition depending on ImageType/Firmware -->
+  <!-- Install Image to correct Partition depending on ImageProvisioner/Firmware -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Setup"]/u:ImageInstall/u:OSImage/u:InstallTo/u:PartitionID'>
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:choose>
-        <xsl:when test="($Firmware='bios') and ($ImageType='vmware')">
+        <xsl:when test="($Firmware='bios') and ($ImageProvisioner='vmware')">
           <xsl:value-of select="1"/>
         </xsl:when>
-        <xsl:when test="($Firmware='efi') and ($ImageType='virtualbox')">
+        <xsl:when test="($Firmware='efi') and ($ImageProvisioner='virtualbox')">
           <xsl:value-of select="2"/>
         </xsl:when>
         <xsl:otherwise>
@@ -64,7 +64,7 @@
 
   <!-- Rule to select appropriate logon sequence -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:PackerLogonSequence'>
-       <xsl:if test="@ImageType=$ImageType">
+       <xsl:if test="@ImageProvisioner=$ImageProvisioner">
           <!-- Strip out PackerLogonSequence once selected to present valid Unattend.xml -->
           <xsl:copy-of select="node()" />
        </xsl:if>

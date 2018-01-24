@@ -1,8 +1,8 @@
 {
     "variables": {
           "headless"            : "true",
-         "template_config"      : "base",
-         "provisioner"          : "vmware",
+          "template_config"      : "base",
+          "provisioner"          : "vmware",
           "tools_iso"           : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
           "packer_output_dir"   : "{{env `PACKER_VM_OUT_DIR`}}",
           "image_index"         : "2",

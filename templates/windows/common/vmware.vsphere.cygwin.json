@@ -3,7 +3,7 @@
      "template_config": "vsphere.cygwin",
 
     "headless"                 : "true",
-    "provisioner"              : "{{env `IMAGE_TYPE`}}",
+    "provisioner"              : "vmware",
 
     "firmware"                 : "efi",
     "winrm_username"           : "Administrator",

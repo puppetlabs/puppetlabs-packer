@@ -20,10 +20,10 @@
             <UserLocale>en-US</UserLocale>
         </component>
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <!-- Puppet/Packer extension - select appropriate disk configuration for Boot Type and ImageType -->
-            <PackerDiskConfiguration Firmware="bios" ImageType="vmware">
+            <!-- Puppet/Packer extension - select appropriate disk configuration for Boot Type and ImageProvisioner -->
+            <PackerDiskConfiguration Firmware="bios" ImageProvisioner="vmware">
                 <DiskConfiguration>
-                    <!-- Firmware: BIOS, ImageType: vmware -->
+                    <!-- Firmware: BIOS, ImageProvisioner: vmware -->
                     <Disk wcm:action="add">
                         <DiskID>0</DiskID>
                         <WillWipeDisk>true</WillWipeDisk>
@@ -48,9 +48,9 @@
                     <WillShowUI>OnError</WillShowUI>
                 </DiskConfiguration>
              </PackerDiskConfiguration>
-            <PackerDiskConfiguration Firmware="efi" ImageType="vmware">
+            <PackerDiskConfiguration Firmware="efi" ImageProvisioner="vmware">
                 <DiskConfiguration>
-                    <!-- Firmware: efi, ImageType: vmware -->
+                    <!-- Firmware: efi, ImageProvisioner: vmware -->
                     <Disk wcm:action="add">
                         <DiskID>0</DiskID>
                         <WillWipeDisk>true</WillWipeDisk>
@@ -95,9 +95,9 @@
                     <WillShowUI>OnError</WillShowUI>            
                 </DiskConfiguration>
             </PackerDiskConfiguration>
-            <PackerDiskConfiguration Firmware="efi" ImageType="virtualbox">
+            <PackerDiskConfiguration Firmware="efi" ImageProvisioner="virtualbox">
                 <DiskConfiguration>
-                    <!-- Firmware: efi, ImageType: virtualbox -->
+                    <!-- Firmware: efi, ImageProvisioner: virtualbox -->
                     <Disk wcm:action="add">
                         <DiskID>0</DiskID>
                         <WillWipeDisk>true</WillWipeDisk>
@@ -232,7 +232,7 @@
                 <LogonCount>99999</LogonCount>
                 <Username>Administrator</Username>
             </AutoLogon>
-            <PackerLogonSequence ImageType="vmware">
+            <PackerLogonSequence ImageProvisioner="vmware">
                 <FirstLogonCommands>
                     <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
@@ -260,7 +260,7 @@
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
-            <PackerLogonSequence ImageType="virtualbox">
+            <PackerLogonSequence ImageProvisioner="virtualbox">
                 <FirstLogonCommands>
                     <SynchronousCommand wcm:action="add">
                         <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
