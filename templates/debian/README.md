@@ -3,7 +3,7 @@
 ### About
 
 This contains the vmware.base image template for Debian platforms, as well as all of the var files
-required to build any of the other templates in the templates/linux/common directory.
+required to build any of the other templates in the `templates/common` directory.
 
 Currently, only Debian 7.8, 8.2 and 9.0 are supported for both the 64-bit and 32-bit architectures.
 
@@ -16,7 +16,7 @@ To build the vmware.base image, type the following command:
 packer build -var-file=vars.json ../../common/vmware.base.json
 ```
 
-To build any of the other templates in the templates/linux/common directory, type:
+To build any of the other templates in the `templates/common` directory, type:
 ```
 packer build -var-file=../../common/vars.json -var-file=vars.json ../../../common/<template-file>
 ```
@@ -38,8 +38,8 @@ The Confluence Documentation for the process is at [Linux/Packer Imaging Process
 Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/browse/CPR).
 
 ### Notes
-The vmware.base image template for Debian is identical to the one in templates/linux/common. The only reason there is a separate one here is because we could not figure out how to preseed Debian from the floppy disk -- the VM could not locate the preseed file despite it being inserted into the floppy disk by Packer. We want to preseed from floppy instead of an HTTP server, because in the latter case, Packer does not interpolate the {{ .HTTPIP }} and {{ .HTTPPort }} variables properly when substituting the boot command as a user variable instead of hard-coding it in the builder.
+The vmware.base image template for Debian is identical to the one in `templates/common`. The only reason there is a separate one here is because we could not figure out how to preseed Debian from the floppy disk -- the VM could not locate the preseed file despite it being inserted into the floppy disk by Packer. We want to preseed from floppy instead of an HTTP server, because in the latter case, Packer does not interpolate the {{ .HTTPIP }} and {{ .HTTPPort }} variables properly when substituting the boot command as a user variable instead of hard-coding it in the builder.
 
-Thus, if someone manages to get our Debian platforms to boot from floppy, then the vmware.base template for Debian platforms is not needed, and they can instead use the one in templates/linux/common.
+Thus, if someone manages to get our Debian platforms to boot from floppy, then the vmware.base template for Debian platforms is not needed, and they can instead use the one in `templates/common`.
 
-Further, any updates to the templates/linux/common vmware.base template should be applied to the vmware.base template in templates/linux/debian/common.
+Further, any updates to the `templates/common` vmware.base template should be applied to the vmware.base template in templates/debian/common.
