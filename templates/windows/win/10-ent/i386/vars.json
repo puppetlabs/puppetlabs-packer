@@ -1,0 +1,15 @@
+{
+    "template_name"     : "win-10-ent-i386",
+    "win_proc_arch"     : "x86",
+    "beakerhost"        : "windows10ent-32",
+    "vbox_guest_os"     : "Windows10",
+    "vmware_guest_os"   : "windows8",
+    "windows_version"   : "Windows-10",
+    "image_name"        : "Windows 10 Enterprise",
+    "product_key"       : "NPPR9-FWDCX-D2C8J-H872K-2YT43",
+    "version"           : "20180122_1800",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_10_enterprise_version_1703_updated_july_2017_x86_dvd_10926938.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "a5c289c26bbcc9165540960258dcef75",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+}

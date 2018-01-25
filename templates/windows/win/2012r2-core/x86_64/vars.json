@@ -1,0 +1,16 @@
+{
+    "template_name"     : "win-2012r2-core-x86_64",
+    "beakerhost"        : "windows2012r2_core-64",
+    "vbox_guest_os"     : "Windows2012_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "windows_version"   : "Windows-2012r2",
+    "image_index"       : "1",
+    "image_name"        : "Windows Server 2012 R2 SERVERSTANDARDCORE",
+    "product_key"       : "D2N9P-3P6X9-2R39C-7RTCD-MDVJX",
+    "version"           : "20180122_1800",
+    "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_r2_with_update_x64_dvd_6052708_SlipStream_03.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "8b30b370cfd32e2b90ab4e1b77a31bd3",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+    "shutdown_command"  : "cmd.exe /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File A:\\core-shutdown.ps1 -UseStartupWorkaround"
+}
