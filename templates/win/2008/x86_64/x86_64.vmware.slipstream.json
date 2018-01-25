@@ -38,11 +38,11 @@
       "disk_type_id": "0",
       "floppy_files": [
         "files/autounattend.xml",
-        "../../scripts/windows/bootstrap-base.bat",
-        "../../scripts/windows/start-boxstarter.ps1",
-        "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/shutdown-packer.bat",
-        "../../scripts/windows/generate-slipstream.ps1",
+        "../../common/scripts/windows/bootstrap-base.bat",
+        "../../common/scripts/windows/start-boxstarter.ps1",
+        "../../common/scripts/windows/windows-env.ps1",
+        "../../common/scripts/windows/shutdown-packer.bat",
+        "../../common/scripts/windows/generate-slipstream.ps1",
         "files/slipstream-filter",
         "files/windows-2008-slipstream.package.ps1"
       ],

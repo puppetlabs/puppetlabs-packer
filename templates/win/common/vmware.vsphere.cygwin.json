@@ -52,19 +52,19 @@
       "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
 
       "floppy_files"      : [
-        "../../../scripts/bootstrap-base.bat",
-        "../../../scripts/cleanup-host.ps1",
-        "../../../scripts/install-win-packages.ps1",
-        "../../../scripts/install-cygwin.ps1",
-        "../../../scripts/cygwin-packages",
-        "../../../scripts/gitforwin.inf",
-        "../../../scripts/puppet-configure.ps1",
-        "../../../scripts/shutdown-packer.bat",
-        "../../../scripts/windows-env.ps1",
-        "../../../scripts/Low-SecurityPasswordPolicy.inf",
-        "../../../scripts/config-winsettings.ps1",
-        "../../../scripts/core-shutdown.ps1",
-        "../../../scripts/win-site.pp"
+        "../../common/scripts/bootstrap-base.bat",
+        "../../common/scripts/cleanup-host.ps1",
+        "../../common/scripts/install-win-packages.ps1",
+        "../../common/scripts/install-cygwin.ps1",
+        "../../common/scripts/cygwin-packages",
+        "../../common/scripts/gitforwin.inf",
+        "../../common/scripts/puppet-configure.ps1",
+        "../../common/scripts/shutdown-packer.bat",
+        "../../common/scripts/windows-env.ps1",
+        "../../common/scripts/Low-SecurityPasswordPolicy.inf",
+        "../../common/scripts/config-winsettings.ps1",
+        "../../common/scripts/core-shutdown.ps1",
+        "../../common/scripts/win-site.pp"
       ],
 
       "vmx_data": {
@@ -97,12 +97,12 @@
   "provisioners": [
       {
         "type": "file",
-        "source": "../../../puppet/",
+        "source": "../../common/puppet/",
         "destination": "C:\\Packer\\puppet\\modules"
       },
       {
         "type": "file",
-        "source": "../../../scripts/init/",
+        "source": "../../common/scripts/init/",
         "destination": "C:\\Packer\\Init"
       },
       {
