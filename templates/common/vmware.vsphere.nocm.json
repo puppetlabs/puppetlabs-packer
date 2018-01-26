@@ -9,7 +9,7 @@
     "vmware_vsphere_nocm_vmx_data_memsize"  : null,
     "vmware_vsphere_nocm_vmx_data_numvcpus" : null,
 
-    "project_root"                          : "../../../../..",
+    "project_root"                          : "../../../..",
     "headless"                              : "true",
     "template_config"                       : "vsphere-nocm",
     "provisioner"                           : "vmware",

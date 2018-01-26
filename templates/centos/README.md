@@ -3,14 +3,14 @@
 ### About
 
 This contains all of the var files required to build any of the templates in the
-templates/linux/common directory for Centos platforms.
+`templates/common` directory for Centos platforms.
 
 ### Building
 
-All templates must be built in the architecture directory. Make sure that the environment variable PACKER\_VM\_OUT\_DIR is set so that Packer knows where to copy the build artifacts (it is common to set it to ".", the current [architecture] directory). If you are building a template with a vmware-vmx builder, be sure to set the PACKER\_VM\_SRC\_DIR environment variable to the directory containing the directory containing the relevant vm files. It is common to set PACKER\_VM\_SRC\_DIR = PACKER\_VM\_OUT\_DIR to make it easy to build a vmware-vmx template from a previous vmware build.
+All templates must be built in the `<os_dist>/<variant>/<arch>` directory. Make sure that the environment variable PACKER\_VM\_OUT\_DIR is set so that Packer knows where to copy the build artifacts (it is common to set it to ".", the current `<os_dist>/<variant>/<arch>` directory). If you are building a template with a vmware-vmx builder, be sure to set the PACKER\_VM\_SRC\_DIR environment variable to the directory containing the directory containing the relevant vm files. It is common to set PACKER\_VM\_SRC\_DIR = PACKER\_VM\_OUT\_DIR to make it easy to build a vmware-vmx template from a previous vmware build.
 
 ## Centos 5.11/6.6
-To build any template in the templates/linux/common directory for Centos 5.11/6.6, type:
+To build any template in the `templates/common` directory for Centos 5.11/6.6, type:
 ```
 packer build -var-file=../../common/vars.json -var-file=../common/vars.json -var-file=vars.json ../../../common/<template-file>
 ```
@@ -21,7 +21,7 @@ packer build -var-file=../../common/vars.json -var-file=../common/vars.json -var
 ```
 
 ## Centos 7.0/7.2
-To build any template in the templates/linux/common directory for Centos 7.0/7.2, type:
+To build any template in the `templates/common` directory for Centos 7.0/7.2, type:
 ```
 packer build -var-file=../../common/vars.json -var-file=vars.json ../../../common/<template-file>
 ```

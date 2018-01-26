@@ -7,11 +7,7 @@
     "iso_checksum_type"                            : null,
     "puppet_aio"                                   : null,
 
-    "floppy_dirs"                                  : null,
-    "floppy_files"                                 : null,
-    "boot_command"                                 : null,
-
-    "project_root"                                 : "../../../../..",
+    "project_root"                                 : "../../../..",
     "headless"                                     : "true",
     "template_config"                              : "base",
     "provisioner"                                  : "vmware",
@@ -24,9 +20,7 @@
     "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
     "vmware_base_vmx_data_numvcpus"                : "1",
     "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
-    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
-
-    "vmware_base_provisioning_scripts"             : "../../../../../scripts/bootstrap-aio.sh"
+    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33"
   },
 
   "description"                                    : "Builds a Linux base template VM for use in VMWare",
@@ -53,10 +47,20 @@
       "guest_os_type"                              : "{{user `template_os`}}",
       "disk_size"                                  : "{{user `disk_size`}}",
       "tools_upload_flavor"                        : "linux",
-      "floppy_dirs"                                : "{{user `floppy_dirs`}}",
-      "floppy_files"                               : "{{user `floppy_files`}}",
+      "http_directory"                             : "../common/files",
       "boot_wait"                                  : "{{user `vmware_base_boot_wait`}}",
-      "boot_command"                               : "{{user `boot_command`}}",
+      "boot_command"                               : [
+        "<esc><wait>",
+        "install <wait>",
+        "auto <wait>",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US <wait>",
+        "locale=en_US <wait>",
+        "keymap=us <wait>",
+        "netcfg/get_domain=vm <wait>",
+        "netcfg/get_hostname=localhost <wait>",
+        "<enter>"
+      ],
 
       "vmx_data"                                   : {
         "memsize"                                  : "{{user `vmware_base_vmx_data_memsize`}}",
@@ -76,7 +80,9 @@
       "environment_vars"                           : [
         "PUPPET_AIO={{user `puppet_aio`}}"
       ],
-      "scripts"                                    : "{{user `vmware_base_provisioning_scripts`}}"
+      "scripts"                                    : [
+        "{{user `project_root`}}/scripts/bootstrap-aio.sh"
+      ]
     },
 
     {
