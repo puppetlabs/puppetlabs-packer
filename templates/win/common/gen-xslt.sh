@@ -19,7 +19,7 @@ export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
 # PACKER_WIN_PROC_ARCH defaults to "amd64" unless specified
 # These values are specific to the Autounattend.xml files and differ from
 # the x86_64/i836 values used throughout the rest of the build system.
-export PACKER_WIN_PROC_ARCH`jq -r '.win_proc_arch //empty' vars.json`
+export PACKER_WIN_PROC_ARCH=`jq -r '.win_proc_arch //empty' vars.json`
 [ -z "${PACKER_WIN_PROC_ARCH}" ] && export PACKER_WIN_PROC_ARCH="amd64"
 
 # Locale or default to en-US (US English)
