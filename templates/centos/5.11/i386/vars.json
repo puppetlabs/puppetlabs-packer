@@ -1,7 +1,7 @@
 {
     "template_name"                         : "centos-5.11-i386",
     "template_os"                           : "rhel6",
-    "beakerhost"                            : "",
+    "beakerhost"                            : "centos5-32",
     "version"                               : "0.0.2",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/CentOS-5.11-i386-bin-DVD-1of2.iso",
     "iso_checksum"                          : "6ec9fd58d5e05ad9d336fa391928c5de",

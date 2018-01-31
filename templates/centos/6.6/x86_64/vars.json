@@ -1,7 +1,7 @@
 {
     "template_name"                         : "centos-6.6-x86_64",
     "template_os"                           : "rhel6-64",
-    "beakerhost"                            : "",
+    "beakerhost"                            : "centos6-64",
     "version"                               : "0.0.2",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/CentOS-6.6-x86_64-bin-DVD1.iso",
     "iso_checksum"                          : "7b1fb1a11499b31271ded79da6af8584",
