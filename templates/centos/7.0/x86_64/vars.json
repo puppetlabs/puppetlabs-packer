@@ -1,7 +1,7 @@
 {
     "template_name"                         : "centos-7.0-x86_64",
     "template_os"                           : "rhel7-64",
-    "beakerhost"                            : "",
+    "beakerhost"                            : "centos7-64",
     "version"                               : "0.0.2",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7.0-1406-x86_64-DVD.iso",
     "iso_checksum"                          : "713ea7847adcdd1700e92429f212721a",
