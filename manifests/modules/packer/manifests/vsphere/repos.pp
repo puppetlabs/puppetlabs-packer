@@ -79,34 +79,34 @@ class packer::vsphere::repos inherits packer::vsphere::params {
 
       # Fedora URLs do not use a '-' after the os name (i.e. they use fedora26, not fedora-26)
       if $::operatingsystem == 'Fedora' {
-        $base_url = "${repo_mirror}/${loweros}${::operatingsystemmajrelease}-${::architecture}"
+        $base_url = "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}"
       } else {
         $base_url = "${repo_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}"
       }
 
-      yumrepo { "localmirror-os":
-        descr    => "localmirror-os",
-        baseurl  => "${base_url}/RPMS.os",
-        gpgcheck => "1",
-        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-      }
+      if $::operatingsystem != 'Fedora' {
+        yumrepo { "localmirror-os":
+          descr    => "localmirror-os",
+          baseurl  => "${base_url}/RPMS.os",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
 
-      if $::operatingsystem == 'OracleLinux' {
-        $updates_ext = "all"
+        if $::operatingsystem == 'OracleLinux' {
+          $updates_ext = "all"
+        } else {
+          $updates_ext = "updates"
+        }
+        yumrepo { "localmirror-${updates_ext}":
+          descr    => "localmirror-${updates_ext}",
+          baseurl  => "${base_url}/RPMS.${updates_ext}",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
       } else {
-        $updates_ext = "updates"
-      }
-      yumrepo { "localmirror-${updates_ext}":
-        descr    => "localmirror-${updates_ext}",
-        baseurl  => "${base_url}/RPMS.${updates_ext}",
-        gpgcheck => "1",
-        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-      }
-
-      if $::operatingsystem == 'Fedora' {
         yumrepo { "localmirror-everything":
           descr    => "localmirror-everything",
-          baseurl  => "${base_url}/RPMS.everything",
+          baseurl  => "${base_url}/os",
           gpgcheck => "1",
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
