@@ -67,6 +67,21 @@
         "type": "file",
         "source": "{{user `appveyor_details`}}",
         "destination": "C:\\Packer\\Init\\appveyor.json"
+    },
+    {
+        "type": "file",
+        "source": "../../common/scripts/appveyor/",
+        "destination": "{{user `packer_scripts_dir`}}"
+    },
+    {
+      "type" : "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/install-appveyor-packages.ps1",
+      "environment_vars": [
+          "PACKER_SCRIPTS_DIR={{user `packer_scripts_dir`}}"
+        ]
     }
   ]
 }
