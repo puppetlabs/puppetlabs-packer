@@ -93,6 +93,8 @@ Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\add_ssh_kn
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_appveyor_build_agent.ps1 -Description 'Install Appveyor Build Agent'
 
+Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_ruby.ps1 -Description 'Install Ruby (multiple versions)'
+
 Write-Output "---------------------------"
 Write-Output "Install Autologon" 
 choco install -y autologon
