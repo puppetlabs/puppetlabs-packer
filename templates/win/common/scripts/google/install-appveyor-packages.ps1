@@ -3,6 +3,8 @@
 
 $PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
 
+.  $PackerScriptsDir/windows-env.ps1
+
 function Run-AppveyorProvisionScript (
 [string] $ScriptName,
 [string] $Description)
@@ -17,6 +19,8 @@ function Run-AppveyorProvisionScript (
     Write-Output ""
 
 }
+
+#Start-Sleep -Seconds 6000
 
 Write-Output "Importing some useful modules"
 Import-Module $PackerScriptsDir\path-utils.psm1
@@ -93,7 +97,7 @@ Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\add_ssh_kn
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_appveyor_build_agent.ps1 -Description 'Install Appveyor Build Agent'
 
-Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_ruby.ps1 -Description 'Install Ruby (multiple versions)'
+#Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_ruby.ps1 -Description 'Install Ruby (multiple versions)'
 
 Write-Output "---------------------------"
 Write-Output "Install Autologon" 
@@ -144,3 +148,5 @@ Write-Output "appveyor Autologon set"
 Write-Output "---------------------------"
 
 Write-Output "Appveyor Apps Installation Completed" 
+
+Start-Sleep -Seconds 50000
