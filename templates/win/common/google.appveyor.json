@@ -86,8 +86,11 @@
     },
     {
       "type": "powershell",
-      "script" : "../../common/scripts/google/init-gce-startup.ps1"
-    },
+      "script" : "../../common/scripts/google/init-gce-startup.ps1",
+      "environment_vars": [
+        "PACKER_SCRIPTS_DIR={{user `packer_scripts_dir`}}"
+      ]
+  },
     {
       "type": "powershell",
       "script" : "../../common/scripts/google/remove-wmf4.ps1"

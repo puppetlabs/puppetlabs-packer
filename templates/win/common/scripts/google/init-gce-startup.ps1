@@ -1,4 +1,11 @@
  
+$PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
+
+.  $PackerScriptsDir/windows-env.ps1
+
+# THis script handles a numer of workarounds mostly for PS2 downgrades, including setting up a specialised scheduled task
+# to fix the powershell settings and downloads related to github security issues that cobble PS2.
+#
 
 Write-Output "Collect Appveyor Password." 
 $appveyor_json = get-content -path c:\packer\init\appveyor.json

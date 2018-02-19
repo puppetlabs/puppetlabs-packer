@@ -25,11 +25,15 @@ switch ($PsVersionMajor) {
     "3" {
         Write-Output "Powershell 3 configuration" 2>&1 >> "$GceStartupLog"
         Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 5000 2>&1 >> "$GceStartupLog"
-        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxMemoryPerShellMB 5000 2>&1 >> "$GceStartupLog"
         Set-Item WSMan:\localhost\Shell\MaxShellsPerUser 100 2>&1 >> "$GceStartupLog"
         Set-Item WSMan:\localhost\Shell\MaxConcurrentUsers 30 2>&1 >> "$GceStartupLog"
         Set-Item WSMan:\localhost\Shell\MaxProcessesPerShell 100 2>&1 >> "$GceStartupLog"
         Set-Item WSMan:\localhost\Shell\MaxConcurrentOperationsPerUser 5000 2>&1 >> "$GceStartupLog"
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxMemoryPerShellMB 5000 2>&1 >> "$GceStartupLog"
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxShellsPerUser 100 2>&1 >> "$GceStartupLog"
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxConcurrentUsers 30 2>&1 >> "$GceStartupLog"
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxProcessesPerShell 100 2>&1 >> "$GceStartupLog"
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxConcurrentOperationsPerUser 5000 2>&1 >> "$GceStartupLog"
 
         Restart-Service winrm
         break

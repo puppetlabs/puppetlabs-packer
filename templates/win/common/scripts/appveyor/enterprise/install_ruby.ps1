@@ -1,8 +1,9 @@
 # Script obtained from Appveyor team and modified to support the ruby versions needed for the Puppet environment.
 # Some deprecated versions (e.g. 1.9.3) have been removed as they are no longer required.
+$PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
+. $PackerScriptsDir/windows-env.ps1
 
 # download SSL certificates
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 (New-Object Net.WebClient).DownloadFile('http://curl.haxx.se/ca/cacert.pem', "$env:temp\cacert.pem")
 $env:SSL_CERT_FILE = "$env:temp\cacert.pem"
 
@@ -28,6 +29,16 @@ $rubies = @(
         "version" = "Ruby 2.1.9 (x64)"
         "install_path" = "C:\Ruby21-x64"
         "download_url" = "http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.1.9-x64-mingw32.7z"
+    }
+    @{
+        "version" = "Ruby 2.2.6"
+        "install_path" = "C:\Ruby22"
+        "download_url" = "http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.2.6-i386-mingw32.7z"
+    }
+    @{
+        "version" = "Ruby 2.2.6 (x64)"
+        "install_path" = "C:\Ruby22-x64"
+        "download_url" = "http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.2.6-x64-mingw32.7z"
     }
     @{
         "version" = "Ruby 2.3.3"
@@ -70,16 +81,6 @@ $rubies = @(
         "download_url" = "https://github.com/oneclick/rubyinstaller2/releases/download/rubyinstaller-2.5.0-1/rubyinstaller-2.5.0-1-x64.exe"
         "devkit_url" = ""
         "devkit_paths" = @()
-    }
-    @{
-        "version" = "Ruby 2.2.6"
-        "install_path" = "C:\Ruby22"
-        "download_url" = "http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.2.6-i386-mingw32.7z"
-    }
-    @{
-        "version" = "Ruby 2.2.6 (x64)"
-        "install_path" = "C:\Ruby22-x64"
-        "download_url" = "http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.2.6-x64-mingw32.7z"
     }
 )
 
@@ -135,21 +136,25 @@ function Install-Ruby($ruby) {
         (New-Object Net.WebClient).DownloadFile($ruby.download_url, $exePath)
 
         Write-Host "Installing..." -ForegroundColor Gray
-        cmd /c start /wait $exePath /verysilent /dir="$($ruby.install_path.replace('\', '/'))" /tasks="noassocfiles,nomodpath,noridkinstall"
+        $zproc = Start-Process $exePath @SprocParms -ArgumentList "/verysilent /dir=`"$($ruby.install_path.replace('\', '/'))`" /tasks=`"noassocfiles,nomodpath,noridkinstall`""
+        $zproc.WaitForExit()
         del $exePath
         Write-Host "Installed" -ForegroundColor Green
 
         # setup Ruby
         $env:Path = "$($ruby.install_path)\bin;$($env:Path)"
         Write-Host "ruby --version" -ForegroundColor Gray
-        cmd /c ruby --version
+        $zproc = Start-Process ruby @SprocParms -ArgumentList "--version"
+        $zproc.WaitForExit()
 
         Write-Host "gem --version" -ForegroundColor Gray
-        cmd /c gem --version
+        $zproc = Start-Process gem @SprocParms -ArgumentList "--version"
+        $zproc.WaitForExit()
 
         # list installed gems
         Write-Host "gem list --local" -ForegroundColor Gray
-        cmd /c gem list --local
+        $zproc = Start-Process gem @SprocParms -ArgumentList "list --local"
+        $zproc.WaitForExit()
 
     } else {
         #########################
@@ -178,7 +183,8 @@ function Install-Ruby($ruby) {
 
         # extract archive to C:\
         Write-Host "  Extracting Ruby files..." -ForegroundColor Gray
-        cmd /c 7z x $distLocalFileName -o"C:\" | Out-Null
+        $zproc = Start-Process 7z.exe @SprocParms -ArgumentList "x $distLocalFileName -oC:\"
+        $zproc.WaitForExit()
 
         # rename
         Rename-Item "C:\$distName" $ruby.install_path
@@ -186,14 +192,17 @@ function Install-Ruby($ruby) {
         # setup Ruby
         $env:Path = "$($ruby.install_path)\bin;$($env:Path)"
         Write-Host "ruby --version" -ForegroundColor Gray
-        cmd /c ruby --version
+        $zproc = Start-Process ruby @SprocParms -ArgumentList "--version"
+        $zproc.WaitForExit()
 
         Write-Host "gem --version" -ForegroundColor Gray
-        cmd /c gem --version
+        $zproc = Start-Process gem @SprocParms -ArgumentList "list --local"
+        $zproc.WaitForExit()
 
         # list installed gems
         Write-Host "gem list --local" -ForegroundColor Gray
-        cmd /c gem list --local
+        $zproc = Start-Process gem @SprocParms -ArgumentList "list --local"
+        $zproc.WaitForExit()
 
         # download DevKit
         if($ruby.devkit_url) {
@@ -205,7 +214,8 @@ function Install-Ruby($ruby) {
             # extract DevKit
             $devKitPath = (Join-Path $ruby.install_path 'DevKit')
             Write-Host "  Extracting DevKit to $devKitPath..." -ForegroundColor Gray
-            cmd /c 7z x $devKitLocalFileName -o"$devKitPath" | Out-Null
+            $zproc = Start-Process 7z @SprocParms -ArgumentList "x $devKitLocalFileName -o`"$devKitPath`""
+            $zproc.WaitForExit()
 
             # create config.yml
             $configYamlPath = (Join-Path $devKitPath 'config.yml')
@@ -219,7 +229,8 @@ function Install-Ruby($ruby) {
             Write-Host "  Installing DevKit..." -ForegroundColor Gray
             $origPath = (pwd).Path
             cd $devKitPath
-            cmd /c ruby dk.rb install
+            $zproc = Start-Process ruby @SprocParms -ArgumentList "dk.rb install"
+            $zproc.WaitForExit()
             cd $origPath
         }
     }
@@ -240,26 +251,32 @@ function Update-Ruby($ruby) {
 
     if ($ruby.install_psych) {
         Write-Host "gem install psych -v 2.2.4" -ForegroundColor Gray
-        cmd /c gem install psych -v 2.2.4
+        $zproc = Start-Process gem @SprocParms -ArgumentList "install psych -v 2.2.4"
+        $zproc.WaitForExit()
     } elseif ($ruby.update_psych) {
         Write-Host "gem update psych" -ForegroundColor Gray
-        cmd /c gem update psych
+        $zproc = Start-Process gem @SprocParms -ArgumentList "update psych"
+        $zproc.WaitForExit()
     }
 
     Write-Host "gem update --system" -ForegroundColor Gray
-    cmd /c gem update --system
+    $zproc = Start-Process gem @SprocParms -ArgumentList "update --system"
+    $zproc.WaitForExit()
 
     # cleanup old gems
     Write-Host "gem cleanup" -ForegroundColor Gray
-    cmd /c gem cleanup
+    $zproc = Start-Process gem @SprocParms -ArgumentList "cleanup"
+    $zproc.WaitForExit()
 
     # list installed gems
     Write-Host "gem list --local" -ForegroundColor Gray
-    cmd /c gem list --local
+    $zproc = Start-Process gem @SprocParms -ArgumentList "list --local"
+    $zproc.WaitForExit()
 
     # install bundler package
     Write-Host "gem install bundler --force" -ForegroundColor Gray
-    cmd /c gem install bundler --force
+    $zproc = Start-Process gem @SprocParms -ArgumentList "install bundler --force"
+    $zproc.WaitForExit()
 
     Write-Host "  Done!" -ForegroundColor Green
 }

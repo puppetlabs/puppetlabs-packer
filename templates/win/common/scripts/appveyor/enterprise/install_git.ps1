@@ -1,16 +1,12 @@
+$PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
 . $PackerScriptsDir/windows-env.ps1
 
-Write-Output "Installing Git 2.14.1..."
+Write-Host "Downloading... Git"
+Download-File 'https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/Git-2.16.2-64-bit.exe' "$PackerDownloads\Git-64-bit.exe"
 
-$exePath = "$env:USERPROFILE\Git-2.14.1-64-bit.exe"
-
-Write-Host "Downloading..."
-Download-File 'https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/Git-2.14.1-64-bit.exe' $exePath
-
-Write-Host "Installing..."
-$zproc = Start-Process $exePath @SprocParms -ArgumentList "/VERYSILENT /NORESTART /NOCANCEL /SP- /NOICONS /COMPONENTS=`"icons,icons\quicklaunch,ext,ext\reg,ext\reg\shellhere,ext\reg\guihere,assoc,assoc_sh`" /LOG"
+Write-Output "Installing Git"
+$zproc = Start-Process $PackerDownloads\git-64-bit.exe @SprocParms -ArgumentList "/VERYSILENT /NORESTART /NOCANCEL /SP- /NOICONS /COMPONENTS=`"icons,icons\quicklaunch,ext,ext\reg,ext\reg\shellhere,ext\reg\guihere,assoc,assoc_sh`" /LOG"
 $zproc.WaitForExit()
-del $exePath
 
 Add-Path "$env:ProgramFiles\Git\cmd"
 $env:path = "$env:ProgramFiles\Git\cmd;$env:path"
