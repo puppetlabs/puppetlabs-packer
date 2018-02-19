@@ -1,0 +1,87 @@
+{
+  "variables": {
+ 
+    "provisioner"             : "google",
+    "template_config"         : "appveyor",
+    "instance_name"           : "packer-{{uuid}}",
+    "appveyor_details"        : "./tmp/appveyor.json",
+
+    "winrm_username"          : "packer_admin",
+    "packer_download_dir"     : "C:/Packer/Downloads",
+    "packer_scripts_dir"      : "C:\\Packer\\Scripts",
+
+    "gce_network"             : "default",
+    "gce_zone"                : "us-central1-a",
+    "gce_project_id"          : "appveyor-images",
+    "gce_account_file"        : "{{env `PACKER_GCE_ACCOUNT_FILE`}}",
+
+    "template_name"           : null,
+    "gce_source_image_family" : null,
+    "version"                 : null
+  },
+
+  "description": "Builds a Windows Server appveyor image on Google Compute Engine",
+
+  "_comment": [
+      ""
+  ],
+  "builders": [{
+    "type"                : "googlecompute",
+    "name"                : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+    "image_name"          : "packer-{{build_name | clean_image_name}}-{{user `version` | clean_image_name}}",
+    "network"             : "{{user `gce_network`}}",
+    "zone"                : "{{user `gce_zone`}}",
+    "account_file"        : "{{user `gce_account_file`}}",
+    "project_id"          : "{{user `gce_project_id`}}",
+    "instance_name"       : "{{user `instance_name`}}",
+    "source_image_family" : "{{user `gce_source_image_family`}}",
+    "disk_size"           : "50",
+    "machine_type"        : "{{user `gce_machine_type`}}",
+    "communicator"        : "winrm",
+    "winrm_username"      : "{{user `winrm_username`}}",
+    "winrm_insecure"      : true,
+    "winrm_use_ssl"       : true,
+    "omit_external_ip"    : false,
+    "metadata": {
+      "windows-startup-script-cmd": "winrm quickconfig -quiet & powershell -Command \"Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force\" & reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"ConsentPromptBehaviorAdmin\" /t REG_DWORD /d 0 /f & reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"EnableLUA\" /t REG_DWORD /d 0 /f & net localgroup administrators {{user `winrm_username`}} /add & winrm set winrm/config/service/auth @{Basic=\"true\"}"
+    }
+  }
+  ],
+  "provisioners": [
+    {
+      "type"    : "shell-local",
+      "command" : "rm -rf {{user `appveyor_details`}}"
+    },
+    {
+      "type"    : "shell-local",
+      "command" : "gcloud compute reset-windows-password {{user `instance_name`}} --project={{user `gce_project_id`}} --user=appveyor --zone={{user `gce_zone`}} --format=json --quiet > {{user `appveyor_details`}}"
+    },
+    {
+      "type" : "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/init-googlesetup.ps1"
+    },
+    {
+        "type": "file",
+        "source": "{{user `appveyor_details`}}",
+        "destination": "C:\\Packer\\Init\\appveyor.json"
+    },
+    {
+        "type": "file",
+        "source": "../../common/scripts/appveyor/",
+        "destination": "{{user `packer_scripts_dir`}}"
+    },
+    {
+      "type" : "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/install-appveyor-packages.ps1",
+      "environment_vars": [
+          "PACKER_SCRIPTS_DIR={{user `packer_scripts_dir`}}"
+        ]
+    }
+  ]
+}
