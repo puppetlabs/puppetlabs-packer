@@ -78,9 +78,10 @@ class packer::vsphere::repos inherits packer::vsphere::params {
       }
 
       $base_url = $::operatingsystem ? {
-        'Fedora' => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
-        'CentOS' => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}/os/${::architecture}",
-        'RedHat' => "http://osmirror.delivery.puppetlabs.net/rhel${::operatingsystemmajrelease}latestserver-${::architecture}/RPMS.all"
+        'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
+        'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}/os/${::architecture}",
+        'RedHat'      => "${os_mirror}/rhel${::operatingsystemmajrelease}latestserver-${::architecture}/RPMS.all",
+        'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all" 
       }
 
       yumrepo { "localmirror-everything":
