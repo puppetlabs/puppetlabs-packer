@@ -4,6 +4,7 @@ output/
 tmp/
 vendor/*
 *.bak
+*.iso
 hiera/*
 drivers/
 packer
