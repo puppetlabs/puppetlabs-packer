@@ -1,6 +1,9 @@
 class packer::vsphere::params {
 
+  # NOTE: The os_mirror parameter should be removed once all of the repos
+  # are moved over to artifactory
   $repo_mirror = 'https://artifactory.delivery.puppetlabs.net/artifactory'
+  $os_mirror = 'http://osmirror.delivery.puppetlabs.net'
   $loweros     = downcase($::operatingsystem)
 
   case $::operatingsystem {
