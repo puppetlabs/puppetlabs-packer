@@ -77,11 +77,19 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         purge => true,
       }
 
-      $base_url = $::operatingsystem ? {
-        'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
-        'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}/os/${::architecture}",
-        'RedHat'      => "${os_mirror}/rhel${::operatingsystemmajrelease}latestserver-${::architecture}/RPMS.all",
-        'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all" 
+      if $::operatingsystem == 'RedHat' {
+        # We don't have consistent mirror urls between RedHat versions:
+        $base_url = $::operatingsystemmajrelease ? {
+          '7' => "${repo_mirror}/rpm-rhel/7.2/${::architecture}",
+          '6' => "${repo_mirror}/rpm-rhel/6.8/${::architecture}",
+          '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
+        }
+      } else {
+        $base_url = $::operatingsystem ? {
+          'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
+          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}/os/${::architecture}",
+          'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all"
+        }
       }
 
       yumrepo { "localmirror-everything":
