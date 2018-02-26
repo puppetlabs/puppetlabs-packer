@@ -104,7 +104,8 @@
       "script" : "../../common/scripts/google/install-wmf3.ps1"
     },
     {
-      "type" : "windows-restart"
+      "type" : "windows-restart",
+      "restart_timeout" : "100m"
     },
     {
       "type": "powershell",

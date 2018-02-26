@@ -502,3 +502,54 @@ function Enable-RemoteDesktop {
      throw "There was a problem enabling Remote Desktop NLA. Make sure your operating system supports Remote Desktop NLA and there is no group policy preventing you from enabling it."
   }
 }
+
+Function Install-PSWindowsUpdate {
+
+  $webDeployURL="https://gallery.technet.microsoft.com/scriptcenter/2d191bcd-3308-4edd-9de2-88dff796b0bc/file/41459/47/PSWindowsUpdate.zip"
+  $zipPath="$($env:USERPROFILE)\Downloads\PSWindowsUpdate.zip"
+  $targetDir="C:\Windows\System32\WindowsPowerShell\v1.0\Modules\"
+  $explorerExe = "$env:windir\explorer.exe"
+  $FileExists = Test-Path $explorerExe
+
+  Write-Output "Starting PSWindowsUpdate module installation`n"
+
+  (New-Object System.Net.WebClient).DownloadFile($webDeployURL, $zipPath)
+
+  If ($FileExists -eq $False) {
+    Write-Output "We have Identified your OS as Server Core`n"
+    [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") > $null
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $targetDir)
+  }
+  Else {
+    Write-Output "We have Identified your OS as Server with graphical UI`n"
+    $shell = new-object -com shell.application
+    $zipFile = $shell.NameSpace($zipPath)
+    $destinationFolder = $shell.NameSpace($targetDir)
+    $copyFlags = 0x00
+    $copyFlags += 0x04 # Hide progress dialogs
+    $copyFlags += 0x10 # Overwrite existing files
+    $destinationFolder.CopyHere($zipFile.Items(), $copyFlags)
+  }
+
+  Write-Output "Ended PSWindowsUpdate Installation`n"
+}
+
+Function Install-WindowsUpdates {
+  Write-Output "Starting Windows updates installation. This may takes a lot of time..." 
+  
+  Import-Module PSWindowsUpdate
+  if ($psversiontable.psversion.major -eq 2) {
+    Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
+    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue 
+  }
+  else {
+    Write-Output "Running PSWindows Update" 
+    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
+  } 
+  
+  #Add-WUServiceManager -ServiceID 7971f918-a847-4430-9279-4a52d1efe18d -Confirm:$false > $null
+  #Get-WUInstall -WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
+  #Get-WUInstall -UpdateType Software -KBArticleID KB2939087 -AcceptAll -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
+  
+  Write-Output "Ended Windows updates installation."
+}

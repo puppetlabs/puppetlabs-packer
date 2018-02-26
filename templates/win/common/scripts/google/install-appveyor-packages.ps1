@@ -6,7 +6,6 @@ $PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
 .  $PackerScriptsDir/windows-env.ps1
 
 $PsVersionMajor = $PSVersionTable.PSVersion.Major
-Write-Output "Powershell Version $PsVersionMajor" 2>&1 >> "$GceStartupLog"
 
 function Run-AppveyorProvisionScript (
 [string] $ScriptName,
@@ -93,22 +92,15 @@ Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_we
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_nuget.ps1 -Description 'Install Nuget'
 
-if ($PsVersionMajor -eq "3") {
-    Exit 0 
-}
+#if ($PsVersionMajor -eq "3") {
+#    Exit 0 
+#}
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_git.ps1 -Description 'Git over here mon'
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_git_lfs.ps1 -Description 'Git over here Big mon' 
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\add_ssh_known_hosts.ps1 -Description 'Add Known SSH Hosts'
 
-
-$PsVersionMajor = $PSVersionTable.PSVersion.Major
-Write-Output "Powershell Version $PsVersionMajor" 2>&1 >> "$GceStartupLog"
-
-if ($PsVersionMajor -eq "2") {
-    Exit 0 
-}
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_appveyor_build_agent.ps1 -Description 'Install Appveyor Build Agent'
 
@@ -163,5 +155,3 @@ Write-Output "appveyor Autologon set"
 Write-Output "---------------------------"
 
 Write-Output "Appveyor Apps Installation Completed" 
-
-Start-Sleep -Seconds 50000
