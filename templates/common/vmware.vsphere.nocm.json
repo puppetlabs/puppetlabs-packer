@@ -1,13 +1,15 @@
 {
   "variables": {
-    "template_name"                         : null,
-    "beakerhost"                            : null,
-    "version"                               : null,
-    "puppet_aio"                            : null,
+    "template_name"                                        : null,
+    "beakerhost"                                           : null,
+    "version"                                              : null,
+    "puppet_aio"                                           : null,
 
-    "vmware_vsphere_nocm_required_modules"  : null,
-    "vmware_vsphere_nocm_vmx_data_memsize"  : null,
-    "vmware_vsphere_nocm_vmx_data_numvcpus" : null,
+    "vmware_vsphere_nocm_required_modules"                 : null,
+    "vmware_vsphere_nocm_vmx_data_memsize"                 : null,
+    "vmware_vsphere_nocm_vmx_data_numvcpus"                : null,
+    "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
+    "vmware_vsphere_nocm_vmx_data_ethernet0_pciSlotNumber" : "33",
 
     "project_root"                          : "../../../..",
     "headless"                              : "true",
@@ -62,7 +64,9 @@
       },
       "vmx_data_post"                       : {
         "memsize"                           : "{{user `vmware_vsphere_nocm_vmx_data_memsize`}}",
-        "numvcpus"                          : "{{user `vmware_vsphere_nocm_vmx_data_numvcpus`}}"
+        "numvcpus"                          : "{{user `vmware_vsphere_nocm_vmx_data_numvcpus`}}",
+        "ethernet0.virtualDev"              : "{{user `vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev`}}",
+        "ethernet0.pciSlotNumber"           : "{{user `vmware_vsphere_nocm_vmx_data_ethernet0_pciSlotNumber`}}"
       }
     }
   ],
