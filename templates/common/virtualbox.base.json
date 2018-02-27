@@ -1,0 +1,109 @@
+{
+  "variables":
+    {
+      "template_name"                        : null,
+      "iso_url"                              : null,
+      "iso_checksum"                         : null,
+      "iso_checksum_type"                    : null,
+      "puppet_aio"                           : null,
+      "floppy_dirs"                          : null,
+      "floppy_files"                         : null,
+      "http_directory"                       : null,
+      "boot_command"                         : null,
+      "project_root"                         : "../../../..",
+      "headless"                             : "true",
+      "template_config"                      : "base",
+      "provisioner"                          : "virtualbox",
+      "shutdown_command"                     : "/sbin/halt -h -p",
+      "disk_size"                            : "20480",
+      "virtualbox_base_template_os"          : null,
+      "virtualbox_base_boot_wait"            : "45s",
+      "virtualbox_base_required_modules"     : null,
+      "packer_output_dir"                    : "{{env `PACKER_VM_OUTPUT_DIR`}}",
+      "virtualbox_base_vboxmanage_mem_size"  : "512",
+      "virtualbox_base_vboxmanage_cpu_count" : "1",
+      "virtualbox_base_provisioning_scripts" : "../../../../scripts/bootstrap-aio.sh"
+    },
+
+    "description"                            : "Builds a Linux base template VM for use with virtualbox",
+
+    "builders": [
+    {
+      "vm_name"                              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "type"                                 : "virtualbox-iso",
+      "iso_url"                              : "{{user `iso_url`}}",
+      "iso_checksum"                         : "{{user `iso_checksum`}}",
+      "iso_checksum_type"                    : "{{user `iso_checksum_type`}}",
+
+      "output_directory"                     : "{{user `packer_output_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}-{{user `version`}}",
+
+      "headless"                             : "{{user `headless`}}",
+
+      "ssh_username"                         : "root",
+      "ssh_password"                         : "puppet",
+      "ssh_port"                             : "22",
+      "ssh_wait_timeout"                     : "10000s",
+
+      "shutdown_command"                     : "{{user `shutdown_command`}}",
+
+      "guest_os_type"                        : "{{user `virtualbox_base_template_os`}}",
+      "disk_size"                            : "{{user `disk_size`}}",
+      "http_directory"                       : "{{user `http_directory`}}",
+
+      "boot_wait"                            : "{{user `boot_wait`}}",
+      "boot_command"                         : [
+                                                  "<tab> <wait>",
+                                                  "text <wait>",
+                                                  "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
+                                                  "console=ttyS0,115200n8 <wait>",
+                                                  "console=tty0 <wait>",
+                                                  "ignore_loglevel <wait>",
+                                                  "<enter>"
+                                               ],
+      "virtualbox_version_file"              : ".vbox_version",
+      "vboxmanage"                           : [
+                                                  [
+                                                    "modifyvm",
+                                                    "{{.Name}}",
+                                                    "--memory",
+                                                    "{{user `virtualbox_base_vboxmanage_mem_size`}}"
+                                                  ],
+                                                  [
+                                                    "modifyvm",
+                                                    "{{.Name}}",
+                                                    "--cpus",
+                                                    "{{user `virtualbox_base_vboxmanage_cpu_count`}}"
+                                                  ]
+                                               ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type"                                 : "shell",
+      "execute_command"                      : "{{.Vars}} sh '{{.Path}}' {{user `virtualbox_base_required_modules`}}",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [ "{{user `virtualbox_base_provisioning_scripts`}}" ]
+    },
+
+    {
+      "type"                                 : "puppet-masterless",
+      "execute_command"                      : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                               : {
+                                                 "provisioner": "{{user `provisioner`}}"
+                                               },
+      "manifest_dir"                         : "{{user `project_root`}}/manifests",
+      "manifest_file"                        : "{{user `project_root`}}/manifests/base.pp"
+    },
+
+    {
+      "type"                                 : "shell",
+      "execute_command"                      : "{{.Vars}} sh '{{.Path}}' {{user `required_modules`}}",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [
+                                                 "{{user `project_root`}}/scripts/cleanup-aio.sh",
+                                                 "{{user `project_root`}}/scripts/cleanup-packer.sh"
+                                               ]
+    }
+  ]
+
+}

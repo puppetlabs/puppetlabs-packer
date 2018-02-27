@@ -1,0 +1,111 @@
+{
+  "variables":
+    {
+      "template_name"                        : null,
+      "beakerhost"                           : null,
+      "version"                              : null,
+      "puppet_aio"                           : null,
+
+      "vagrant_required_modules"             : null,
+      "libvirt_nocm_qemuargs_mem_size"       : "512",
+      "libvirt_nocm_qemuargs_cpu_count"      : "1",
+
+      "project_root"                         : "../../../..",
+      "headless"                             : "true",
+      "template_config"                      : "nocm",
+      "provisioner"                          : "virtualbox",
+      "shutdown_command"                     : "/sbin/halt -h -p",
+
+      "packer_output_dir"                    : "{{env `PACKER_VM_OUTPUT_DIR`}}",
+      "packer_source_dir"                    : "{{env `PACKER_VM_SRC_DIR`}}",
+      "virtualbox_nocm_vboxmanage_mem_size"  : "512",
+      "virtualbox_nocm_vboxmanage_cpu_count" : "1",
+      "virtualbox_nocm_provisioning_scripts" : "../../../../scripts/bootstrap-aio.sh"
+    },
+
+    "description"                            : "Builds a Linux vagrantbox nocm VM for use with virtualbox",
+
+    "builders": [
+    {
+      "name"                                 : "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name"                              : "packer-{{build_name}}",
+      "type"                                 : "virtualbox-ovf",
+      "format"                               : "ovf",
+      "source_path"                          : "{{user `packer_output_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base-{{user `version`}}/{{user `template_name`}}-{{user `provisioner`}}-base.ovf",
+      "output_directory"                     : "{{user `packer_output_dir`}}/output-{{build_name}}-{{user `template_config`}}-{{user `version`}}",
+
+      "headless"                             : "{{user `headless`}}",
+
+      "ssh_username"                         : "root",
+      "ssh_password"                         : "puppet",
+      "ssh_port"                             : "22",
+      "ssh_wait_timeout"                     : "10000s",
+
+      "shutdown_command"                     : "{{user `shutdown_command`}}",
+      "virtualbox_version_file"              : ".vbox_version",
+      "vboxmanage"                           : [
+                                                  [
+                                                    "modifyvm",
+                                                    "{{.Name}}",
+                                                    "--memory",
+                                                    "{{user `virtualbox_nocm_vboxmanage_mem_size`}}"
+                                                  ],
+                                                  [
+                                                    "modifyvm",
+                                                    "{{.Name}}",
+                                                    "--cpus",
+                                                    "{{user `virtualbox_nocm_vboxmanage_cpu_count`}}"
+                                                  ]
+                                               ],
+      "export_opts"                          : [
+                                                  "--manifest",
+                                                  "--vsys", "0",
+                                                  "--description", "{{user `provisioner`}} {{user `template_name`}} {{user `template_config`}} vagrant box.",
+                                                  "--version", "{{user `version`}}"
+                                               ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                                 : "shell",
+      "execute_command"                      : "{{.Vars}} sh '{{.Path}}' {{user `vagrant_required_modules`}}",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [ "{{user `virtualbox_nocm_provisioning_scripts`}}" ]
+    },
+
+    {
+      "type"                                 : "file",
+      "source"                               : "{{user `project_root`}}/hiera",
+      "destination"                          : "/tmp/packer-puppet-masterless"
+    },
+
+    {
+      "type"                                : "puppet-masterless",
+      "execute_command"                     : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/bin/puppet apply --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                              : {
+                                                 "provisioner": "{{user `provisioner`}}"
+                                              },
+      "manifest_dir"                        : "{{user `project_root`}}/manifests",
+      "manifest_file"                       : "{{user `project_root`}}/manifests/vagrant/{{user `template_config`}}.pp"
+    },
+
+    {
+      "type"                                 : "shell",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [
+                                                 "{{user `project_root`}}/scripts/cleanup-aio.sh",
+                                                 "{{user `project_root`}}/scripts/cleanup-packer.sh",
+                                                 "{{user `project_root`}}/scripts/cleanup-scrub.sh"
+                                               ]
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type"                                 : "vagrant",
+      "output"                               : "{{user `packer_output_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-{{user `version`}}/output-{{build_name}}-{{user `template_config`}}.box"
+    }
+  ]
+
+}

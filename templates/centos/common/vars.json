@@ -1,7 +1,13 @@
 {
   "floppy_dirs"                               : "",
   "floppy_files"                              : "../common/files/ks.cfg",
+  "http_directory"                            : "../common/files/",
   "boot_command"                              : "<tab> <wait>inst.text inst.ks=hd:fd0:/ks.cfg<wait><enter>",
+  "libvirt_disk_interface"                    : "virtio-scsi",
+  "libvirt_net_device"                        : "virtio-net-pci",
+  "libvirt_base_required_modules"             : "puppetlabs-stdlib saz-ssh saz-sudo",
+  "virtualbox_base_required_modules"          : "puppetlabs-stdlib saz-ssh saz-sudo",
+  "vagrant_required_modules"                  : "puppetlabs-stdlib saz-ssh saz-sudo",
   "vmware_base_vmx_data_ethernet0_virtualDev" : "e1000",
   "vmware_vsphere_nocm_required_modules"      : "puppetlabs-stdlib example42-network puppetlabs-firewall"
 }
