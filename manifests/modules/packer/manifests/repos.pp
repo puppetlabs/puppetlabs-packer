@@ -19,19 +19,33 @@ class packer::repos {
     }
 
     # We don't have consistent mirror urls between RedHat versions:
+    # TODO: RHEL 5 needs further refactoring
     $base_url = $::operatingsystemmajrelease ? {
-      '7' => "${repo_mirror}/rpm-rhel/7.2/${::architecture}",
-      '6' => "${repo_mirror}/rpm-rhel/6.8/${::architecture}",
+      '7' => "${repo_mirror}/rpm__remote_rhel-72",
+      '6' => "${repo_mirror}/rpm__remote_rhel-68/${::architecture}",
       '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
     }
 
-    yumrepo { "localmirror-everything":
-      descr    => "localmirror-everything",
-      baseurl  => "${base_url}",
+    yumrepo { "localmirror-os":
+      descr    => "localmirror-os",
+      baseurl  => "${base_url}/os",
       gpgcheck => "1",
       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
     }
 
+    yumrepo { "localmirror-optional":
+      descr    => "localmirror-optional",
+      baseurl  => "${base_url}/optional",
+      gpgcheck => "1",
+      gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+    }
+
+    yumrepo { "localmirror-extras":
+      descr    => "localmirror-extras",
+      baseurl  => "${base_url}/extras",
+      gpgcheck => "1",
+      gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+    }
   }
 
 }
