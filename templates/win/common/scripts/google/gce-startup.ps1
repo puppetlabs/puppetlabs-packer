@@ -73,23 +73,44 @@ switch ($PsVersionMajor) {
     "2" {
         Write-Output "Powershell 2 configuration" 
         Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 2048 
-        Get-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 
 
-        # TBD - Registry settings for TLS.
+        if (-not (Test-Path "$PackerLogs\TLS12.installed" )) {
+            
+            # Enable TLS 1.1/1.2 protocols to allow .Net 3.5/PS 2 to avail of it.
+            # This is important now that Github has disabled SSL/TLS 1.0
+            Write-Output "Enabling TLS 1.1/1.2 for WMF 2.0"
+            foreach($tlsversion in ("1","2") ){
+                New-Item -Path "HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.$tlsversion" -Force -ErrorAction Continue
+                foreach($item in ("Client","Server") ) {
+                    #Create a child-Key Called "Server" and other called "Client"
+                    New-Item -Path "HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.$tlsversion\$item" -Force -ErrorAction Continue
+                    #Create on each child-key 2 DWORD "DisabledByDefault" with value 0 and "Enabled" with value 1
+                    New-ItemProperty -Path  "HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.$tlsversion\$item" -Name DisabledByDefault -PropertyType DWord -Value 0 -Force -ErrorAction Continue
+                    New-ItemProperty -Path  "HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.$tlsversion\$item"  -Name Enabled -PropertyType DWord -Value 1 -Force -ErrorAction Continue
+                }
+            }
+            # These keys must be defined to enable PS2 to use the new registry defs above - the associated hotfixes to enable 1.2 for
+            # .Net 3.5 are already in place but are ineffective until this is enabled.
+            # https://support.microsoft.com/en-us/help/3154518/support-for-tls-system-default-versions-included-in-the-net-framework
+            New-ItemProperty -Path  "HKLM:SOFTWARE\Microsoft\.NETFramework\v2.0.50727" -Name SystemDefaultTlsVersions -PropertyType DWord -Value 1 -Force -ErrorAction Continue
+            New-ItemProperty -Path "HKLM:SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727" -Name SystemDefaultTlsVersions -PropertyType DWord -Value 1 -Force -ErrorAction Continue
+            Touch-File "$PackerLogs\TLS12.installed"
+        }
+        
         break
     }
     "3" {
         Write-Output "Powershell 3 configuration" 
-        Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 5000 
+        Set-Item WSMan:\localhost\Shell\MaxMemoryPerShellMB 2048 
         Set-Item WSMan:\localhost\Shell\MaxShellsPerUser 100 
         Set-Item WSMan:\localhost\Shell\MaxConcurrentUsers 30 
         Set-Item WSMan:\localhost\Shell\MaxProcessesPerShell 100 
-        Set-Item WSMan:\localhost\Shell\MaxConcurrentOperationsPerUser 5000 
-        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxMemoryPerShellMB 5000 
+        Set-Item WSMan:\localhost\Shell\MaxConcurrentOperationsPerUser 2048 
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxMemoryPerShellMB 2048 
         Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxShellsPerUser 100 
         Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxConcurrentUsers 30 
         Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxProcessesPerShell 100 
-        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxConcurrentOperationsPerUser 5000 
+        Set-Item WSMan:\localhost\Plugin\Microsoft.PowerShell\Quotas\MaxConcurrentOperationsPerUser 2048 
 
         Restart-Service winrm
         break
