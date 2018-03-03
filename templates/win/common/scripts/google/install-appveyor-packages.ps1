@@ -128,30 +128,4 @@ Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Ap
 Write-Output "Appveyor Agent AutoRun Key Set" 
 Write-Output "---------------------------"
 
-# Pick up Appveyor Password.
-Write-Output "---------------------------"
-Write-Output "Collect Appveyor Password." 
-$appveyor_json = get-content -path c:\packer\init\appveyor.json
-[System.Reflection.Assembly]::LoadWithPartialName("System.Web.Extensions") | Out-Null
-$ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
-$appveyor_data = $ser.DeserializeObject($appveyor_json)
-$appveyor_username = ($appveyor_data).username
-$appveyor_password = ($appveyor_data).password
-$securePassword = ConvertTo-SecureString "$appveyor_password" -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential "$appveyor_username", $securePassword
-Write-Output "---------------------------"
-
-# Create Profile for the appveyor account
-Write-Output "---------------------------"
-Write-Output "Creating $appveyor_username Profile" 
-Start-Process Powershell -Wait -Credential $Credential -LoadUserProfile "Exit"
-Write-Output "Appveyor profile created" 
-Write-Output "---------------------------"
-
-Write-Output "---------------------------"
-Write-Output "Setting Autologon for $appveyor_username"
-autologon "$appveyor_username" . "$appveyor_password"
-Write-Output "appveyor Autologon set" 
-Write-Output "---------------------------"
-
 Write-Output "Appveyor Apps Installation Completed" 
