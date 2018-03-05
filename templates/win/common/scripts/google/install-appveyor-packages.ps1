@@ -101,7 +101,6 @@ Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_gi
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\add_ssh_known_hosts.ps1 -Description 'Add Known SSH Hosts'
 
-
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_appveyor_build_agent.ps1 -Description 'Install Appveyor Build Agent'
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_ruby.ps1 -Description 'Install Ruby (multiple versions)'
