@@ -3,6 +3,10 @@
 
 $PackerScriptsDir = $Env:PACKER_SCRIPTS_DIR
 
+.  $PackerScriptsDir/windows-env.ps1
+
+$PsVersionMajor = $PSVersionTable.PSVersion.Major
+
 function Run-AppveyorProvisionScript (
 [string] $ScriptName,
 [string] $Description)
@@ -17,6 +21,8 @@ function Run-AppveyorProvisionScript (
     Write-Output ""
 
 }
+
+#Start-Sleep -Seconds 6000
 
 Write-Output "Importing some useful modules"
 Import-Module $PackerScriptsDir\path-utils.psm1
@@ -86,6 +92,10 @@ Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_we
 
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_nuget.ps1 -Description 'Install Nuget'
 
+#if ($PsVersionMajor -eq "3") {
+#    Exit 0 
+#}
+
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_git.ps1 -Description 'Git over here mon'
 Run-AppveyorProvisionScript -ScriptName  $PackerScriptsDir\enterprise\install_git_lfs.ps1 -Description 'Git over here Big mon' 
 
@@ -115,32 +125,6 @@ Write-Output "Setting Appveyor Agent to AutoRun"
 Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "AppVeyor.BuildAgent" `
 	-Value 'c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -noprofile -sta -WindowStyle Hidden  -File "C:\Packer\Scripts\start-appveyor-agent.ps1"'
 Write-Output "Appveyor Agent AutoRun Key Set" 
-Write-Output "---------------------------"
-
-# Pick up Appveyor Password.
-Write-Output "---------------------------"
-Write-Output "Collect Appveyor Password." 
-$appveyor_json = get-content -path c:\packer\init\appveyor.json
-[System.Reflection.Assembly]::LoadWithPartialName("System.Web.Extensions") | Out-Null
-$ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
-$appveyor_data = $ser.DeserializeObject($appveyor_json)
-$appveyor_username = ($appveyor_data).username
-$appveyor_password = ($appveyor_data).password
-$securePassword = ConvertTo-SecureString "$appveyor_password" -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential "$appveyor_username", $securePassword
-Write-Output "---------------------------"
-
-# Create Profile for the appveyor account
-Write-Output "---------------------------"
-Write-Output "Creating $appveyor_username Profile" 
-Start-Process Powershell -Wait -Credential $Credential -LoadUserProfile "Exit"
-Write-Output "Appveyor profile created" 
-Write-Output "---------------------------"
-
-Write-Output "---------------------------"
-Write-Output "Setting Autologon for $appveyor_username"
-autologon "$appveyor_username" . "$appveyor_password"
-Write-Output "appveyor Autologon set" 
 Write-Output "---------------------------"
 
 Write-Output "Appveyor Apps Installation Completed" 

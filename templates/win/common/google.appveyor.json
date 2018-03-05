@@ -43,8 +43,9 @@
     "winrm_use_ssl"       : true,
     "omit_external_ip"    : false,
     "metadata": {
-      "windows-startup-script-cmd": "winrm quickconfig -quiet & powershell -Command \"Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force\" & reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"ConsentPromptBehaviorAdmin\" /t REG_DWORD /d 0 /f & reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"EnableLUA\" /t REG_DWORD /d 0 /f & net localgroup administrators {{user `winrm_username`}} /add & winrm set winrm/config/service/auth @{Basic=\"true\"}"
-    }
+      "windows-startup-script-cmd": "if not exist C:\\Packer\\Scripts\\gce-startup.ps1 (reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"ConsentPromptBehaviorAdmin\" /t REG_DWORD /d 0 /f & reg.exe ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v \"EnableLUA\" /t REG_DWORD /d 0 /f & powershell -Command \"Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force\" & winrm quickconfig -quiet & winrm set winrm/config/service/auth @{Basic=\"true\"})",
+      "windows-shutdown-script-cmd" : "sc config winrm start= disabled"
+    } 
   }
   ],
   "provisioners": [
@@ -64,17 +65,47 @@
       "script" : "../../common/scripts/google/init-googlesetup.ps1"
     },
     {
-        "type": "file",
-        "source": "{{user `appveyor_details`}}",
-        "destination": "C:\\Packer\\Init\\appveyor.json"
+      "type": "file",
+      "source": "{{user `appveyor_details`}}",
+      "destination": "C:\\Packer\\Init\\appveyor.json"
     },
     {
-        "type": "file",
-        "source": "../../common/scripts/appveyor/",
-        "destination": "{{user `packer_scripts_dir`}}"
+      "type": "file",
+      "source": "../../common/scripts/windows-env.ps1",
+      "destination": "{{user `packer_scripts_dir`}}"
     },
     {
-      "type" : "windows-restart"
+      "type": "file",
+      "source": "../../common/scripts/google/gce-startup.ps1",
+      "destination": "{{user `packer_scripts_dir`}}"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/appveyor/",
+      "destination": "{{user `packer_scripts_dir`}}"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/init-gce-startup.ps1",
+      "environment_vars": [
+        "PACKER_SCRIPTS_DIR={{user `packer_scripts_dir`}}"
+      ]
+  },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/remove-wmf4.ps1"
+    },
+    {
+      "type" : "windows-restart",
+      "restart_timeout" : "100m"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/google/install-wmf3.ps1"
+    },
+    {
+      "type" : "windows-restart",
+      "restart_timeout" : "100m"
     },
     {
       "type": "powershell",

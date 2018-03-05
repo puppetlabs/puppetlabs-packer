@@ -25,5 +25,4 @@ function Create-PackerStagingDirectories {
     }
   }
 
-
 Create-PackerStagingDirectories
