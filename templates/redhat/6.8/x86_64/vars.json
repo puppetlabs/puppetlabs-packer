@@ -1,8 +1,8 @@
 {
     "template_name"                         : "redhat-6.8-x86_64",
     "template_os"                           : "rhel6-64",
-    "beakerhost"                            : "rhel6-64",
-    "version"                               : "0.0.1",
+    "beakerhost"                            : "redhat6-64",
+    "version"                               : "0.0.2",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-server-6.8-x86_64-dvd.iso",
     "iso_checksum"                          : "d35fd1af20f6adef9b11b46c2534ae8b6e18de7754889e2b51808b436dff2804",
     "iso_checksum_type"                     : "sha256",
