@@ -82,7 +82,7 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         # TODO: RHEL 5 needs further refactoring
         $base_url = $::operatingsystemmajrelease ? {
           '7' => "${repo_mirror}/rpm__remote_rhel-72",
-          '6' => "${repo_mirror}/rpm__remote_rhel-68/${::architecture}",
+          '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
           '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
         }
       } else {
