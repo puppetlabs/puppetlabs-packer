@@ -10,7 +10,7 @@ if [ ! -f packer ] ; then
         arch="amd64"
     fi
     os=$(uname |tr '[:upper:]' '[:lower:]')
-    version="0.12.0"
+    version="1.2.1"
 
     filename="$project_name"_"$version"_"$os"_"$arch".zip
     download_link="$baseurl"/"$project_name"/"$version"/"$filename"
