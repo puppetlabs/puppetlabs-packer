@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-2016",
     "image_name"        : "Windows Server 2016 SERVERSTANDARDCORE",
     "product_key"       : "WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
-    "version"           : "20180122_1800",
+    "version"           : "20180307_1800",
     "iso_url"           : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2016_x64_dvd_9718492_Slip_02.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "47993d89a256960eed2e58c9b394aa97",
