@@ -28,7 +28,7 @@
   "builders": [{
     "type"                : "googlecompute",
     "name"                : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
-    "image_name"          : "packer-{{build_name | clean_image_name}}-{{user `version` | clean_image_name}}",
+    "image_name"          : "packer-appveyor-{{user `template_name` | clean_image_name}}-{{user `provisioner` | clean_image_name}}-{{user `version` | clean_image_name}}",
     "network"             : "{{user `gce_network`}}",
     "zone"                : "{{user `gce_zone`}}",
     "account_file"        : "{{user `gce_account_file`}}",
