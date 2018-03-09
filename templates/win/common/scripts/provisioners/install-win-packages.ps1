@@ -4,7 +4,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 If ( $WindowsServerCore ) {
   Write-Output "Skipping Browser and Notepad++ installs for Windows Core"
@@ -26,7 +26,7 @@ else {
 $GitForWinInstaller = "Git-2.15.0-$ARCH.exe"
 Write-Output "Installing Git For Windows $GitForWinInstaller"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/$GitForWinInstaller"  "$PackerDownloads\$GitForWinInstaller"
-Start-Process -Wait "$PackerDownloads\$GitForWinInstaller" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=A:\gitforwin.inf"
+Start-Process -Wait "$PackerDownloads\$GitForWinInstaller" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=$PackerConfig\gitforwin.inf"
 Write-Output "Git For Windows Installed"
 
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey

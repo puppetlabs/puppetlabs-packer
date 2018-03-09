@@ -18,7 +18,7 @@ function Create-PackerStagingDirectories {
       mkdir -Path $PackerStaging\puppet\modules
       mkdir -Path $PackerStaging\Downloads
       mkdir -Path $PackerStaging\Downloads\Cygwin
-      mkdir -Path $PackerStaging\Init
+      mkdir -Path $PackerStaging\Config
       mkdir -Path $PackerStaging\Scripts
       mkdir -Path $PackerStaging\Logs
       mkdir -Path $PackerStaging\Sysinternals

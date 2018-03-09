@@ -53,14 +53,12 @@
         "floppy_files": [
           "./tmp/autounattend.xml",
           "./files/platform-packages.ps1",
-          "../../common/scripts/bootstrap-base.bat",
           "../../common/files/virtualbox/oracle-cert-1.cer",
-          "../../common/scripts/start-pswindowsupdate.ps1",
-          "../../common/scripts/windows-env.ps1",
-          "../../common/scripts/core-shutdown.ps1",
-          "../../common/scripts/clean-disk-dism.ps1",
-          "../../common/scripts/clean-disk-sdelete.ps1",
-          "../../common/scripts/startup-profile.ps1"
+          "../../common/scripts/common/windows-env.ps1",
+          "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+          "../../common/scripts/bootstrap/bootstrap-base.bat",
+          "../../common/scripts/bootstrap/core-shutdown.ps1",
+          "../../common/scripts/bootstrap/startup-profile.ps1"
         ]
       }
     ],
@@ -75,23 +73,15 @@
         ]
       },
       {
-        "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-clean-disk-dism.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-clean-disk-dism.ps1'",
-          "A:\\clean-disk-dism.ps1"
-        ]
+        "type"   : "powershell",
+        "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
       },
       {
         "type": "windows-restart"
       },
       {
-        "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/run-clean-disk-sdelete.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: run-clean-disk-sdelete.ps1'",
-          "A:\\clean-disk-sdelete.ps1"
-        ]
+        "type"   : "powershell",
+        "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1"
       }
     ]
   }

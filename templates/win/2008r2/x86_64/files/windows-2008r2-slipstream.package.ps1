@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 # Slipstream update process.
 # Use a rollup update.
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # Boxstarter options
 $Boxstarter.RebootOk=$true # Allow reboots?

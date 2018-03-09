@@ -55,7 +55,7 @@ $NewVMName = $p.StandardOutput.ReadToEnd().Trim()
 if ($p.ExitCode -ne 0){
 	Write-Warning "Could not find VM name in vSphere!`n"
 	Write-Warning "If this machine is the template VM, no rename necessary!!"
-	Write-Warning "Remember to reset the 'RunOnce' registry key by running C:\Packer\Init\vmpooler-arm-host.ps1"
+	Write-Warning "Remember to reset the 'RunOnce' registry key by Loading C:\Packer\Config\vmpooler-arm-host.reg"
 	ExitScript 1
 }
 
@@ -79,7 +79,7 @@ Write-Output "Generate SSH Keys"
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
 Write-Output "Setup Authorised Keys"
 & $CygWinShell --login -c `'cp /home/$AdministratorName/.ssh/id_rsa.pub /home/$AdministratorName/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vmpooler" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Config/authorized_keys.vmpooler" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
 
 # Setup LSA Authentication
 Write-Output "Register the Cygwin LSA authentication package "
@@ -90,7 +90,7 @@ Write-Output "Register the Cygwin LSA authentication package "
 
 # Set Startup script (does very little except run bkginfo and set passwd/group)
 Write-Output "Setting startup script"
-reg import C:\Packer\Init\vmpooler-clone-arm-startup.reg
+reg import C:\Packer\Config\vmpooler-clone-arm-startup.reg
 
 # Update machine password (and reset autologin)
 Write-Output "Setting $AdministratorName Password"
@@ -109,7 +109,7 @@ Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "A
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Output "Disabling NIC Power Management"
 try {
-	C:\Packer\Init\DisableNetworkAdapterPnPCapabilities.ps1
+	C:\Packer\Scripts\DisableNetworkAdapterPnPCapabilities.ps1
 } catch {
 	Write-Warning "Disable Power Management failed"
 }

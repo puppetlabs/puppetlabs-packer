@@ -2,7 +2,7 @@
 #
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # Enable Bootlog
 Write-Output "Enable Bootlog"
@@ -10,7 +10,7 @@ cmd /c "bcdedit /set {current} bootlog yes"
 
 # Set the Security Policies
 Write-Output "Setting Low Security Password Policies"
-secedit /configure /db secedit.sdb /cfg A:\Low-SecurityPasswordPolicy.inf /quiet
+secedit /configure /db secedit.sdb /cfg $PackerConfig\Low-SecurityPasswordPolicy.inf /quiet
 
 # Add Firewall rules - these may be moved to Puppet at a later stage.
 Write-Output "Enable permissive firewall rules"

@@ -59,6 +59,7 @@ $PackerPuppet = "$PackerStaging\puppet"
 $PackerScripts = "$PackerStaging\Scripts"
 $SysInternals = "$PackerStaging\SysInternals"
 $PackerLogs = "$PackerStaging\Logs"
+$PackerConfig = "$PackerStaging\Config"
 $CygwinDownloads = "$PackerDownloads\Cygwin"
 
 # For Puppet modules configuration
@@ -102,7 +103,7 @@ function Create-PackerStagingDirectories {
     mkdir -Path $PackerStaging\puppet\modules
     mkdir -Path $PackerStaging\Downloads
     mkdir -Path $PackerStaging\Downloads\Cygwin
-    mkdir -Path $PackerStaging\Init
+    mkdir -Path $PackerStaging\Config
     mkdir -Path $PackerStaging\Scripts
     mkdir -Path $PackerStaging\Logs
     mkdir -Path $PackerStaging\Sysinternals

@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # Boxstarter options
 $Boxstarter.RebootOk=$true # Allow reboots?

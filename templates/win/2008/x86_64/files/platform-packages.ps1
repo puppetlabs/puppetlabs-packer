@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # Make sure network connection is private
 Write-Output "Setting network adapters to private"

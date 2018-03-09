@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 $SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 

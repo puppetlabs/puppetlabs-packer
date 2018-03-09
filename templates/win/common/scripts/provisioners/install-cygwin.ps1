@@ -22,7 +22,7 @@ Write-Output "Cygwin Installation Script"
 
 $ErrorActionPreference = 'Stop'
 Write-Output "Loading Windows Environment"
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # Work out what CYGDIR is and set it as a Windows Environment Variable
 # Note - need seperate Prefix var for environment variables due to cygwin/git-for-win idiosyncrasies
@@ -43,7 +43,7 @@ Set-ItemProperty -Path $RegPath -Name CYGWINDOWNLOADS -Value $CygwinDownloads
 # The list is derived from "cygwin -c" on a Windows-2012 pooler VM wtih the initial lines removed.
 #
 $CygWinPackageList = ""
-$content = Get-Content A:\cygwin-packages
+$content = Get-Content $PackerConfig\cygwin-packages
 foreach ($line in $content)
 {
   $splitUp = $line -split "\s+"

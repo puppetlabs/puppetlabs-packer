@@ -67,7 +67,7 @@
     {
       "type": "file",
       "source": "{{user `appveyor_details`}}",
-      "destination": "C:\\Packer\\Init\\appveyor.json"
+      "destination": "C:\\Packer\\Config\\appveyor.json"
     },
     {
       "type": "file",

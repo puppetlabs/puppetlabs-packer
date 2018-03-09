@@ -39,8 +39,8 @@ $ENV:VMPOOLER_Cygwin_Version = & $CygWinShell --login -c "uname -r"
 #VMPOOLER_Packer_Template=Packer_Template_Name
 
 #
-# Run BGInfo to display data using bginfo file in C:\Packer\Init
+# Run BGInfo to display data using bginfo file in C:\Packer\Config
 
-bginfo.exe C:\Packer\Init\VMPooler.bgi /timer:0 /nolicprompt /silent
+bginfo.exe C:\Packer\Config\VMPooler.bgi /timer:0 /nolicprompt /silent
 
 # So long farewell, Auf Wiedersehn, Goodbye

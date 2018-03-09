@@ -43,7 +43,6 @@
         "../../scripts/windows/bootstrap-base.bat",
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
-        "../../scripts/windows/shutdown-packer.bat",
         "../../scripts/windows/generate-slipstream.ps1",
         "files/x86_64/windows-2012-slipstream.package.ps1"
       ],
