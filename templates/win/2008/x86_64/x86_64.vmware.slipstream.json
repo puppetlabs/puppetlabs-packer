@@ -42,8 +42,7 @@
         "../../common/scripts/windows/start-boxstarter.ps1",
         "../../common/scripts/windows/windows-env.ps1",
         "../../common/scripts/windows/generate-slipstream.ps1",
-        "files/slipstream-filter",
-        "files/windows-2008-slipstream.package.ps1"
+        "files/slipstream-filter"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],
