@@ -78,8 +78,8 @@ Write-Output "Generate SSH Keys"
 Write-Output "Setup Authorised Keys"
 & $CygWinShell --login -c `'cp /home/$AdministratorName/.ssh/id_rsa.pub /home/$AdministratorName/.ssh/authorized_keys`'
 & $CygWinShell --login -c `'cp /home/$AdministratorName/.ssh/id_rsa.pub /home/vagrant/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vagrant" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Init/authorized_keys.vagrant" `>`> /home/vagrant/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Config/authorized_keys.vagrant" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Config/authorized_keys.vagrant" `>`> /home/vagrant/.ssh/authorized_keys`'
 
 # Setup LSA Authentication
 Write-Output "Register the Cygwin LSA authentication package "

@@ -1,11 +1,6 @@
 # Main script to run puppet to configure host.
 # This script no longer runs under Boxstarter as the reboot sequence doesn't play well with packer once winrm is up
 #
-param (
-  [string]$PackerSHA = "UNKNOWN",
-  [string]$PackerTemplateName = "UNKNOWN",
-  [string]$PackerTemplateType = "UNKNOWN"
-)
 
 $ErrorActionPreference = "Stop"
 
@@ -115,9 +110,9 @@ Write-Output "Loading Default User hive to HKLM\DEFUSER..."
 # Set "facts" that we need for the Puppet Run
 $ENV:FACTER_modules_path         = "$ModulesPath"
 $ENV:FACTER_build_date           = get-date -format "yyyy-MM-dd HH:mm zzz"
-$ENV:FACTER_packer_sha           = $PackerSHA
-$ENV:FACTER_packer_template_name = $PackerTemplateName
-$ENV:FACTER_packer_template_type = $PackerTemplateType
+$ENV:FACTER_packer_sha           = $ENV:PackerSHA
+$ENV:FACTER_packer_template_name = $ENV:PackerTemplateName
+$ENV:FACTER_packer_template_type = $ENV:PackerTemplateType
 # Pick Up user attributes as these could be localised.
 $ENV:FACTER_administrator_sid     =  $WindowsAdminSID
 $ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"

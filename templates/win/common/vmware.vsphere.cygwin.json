@@ -91,6 +91,11 @@
       },
       {
         "type": "file",
+        "source": "../../common/scripts/vmpooler/",
+        "destination": "C:\\Packer\\Scripts"
+      },
+      {
+        "type": "file",
         "source": "../../common/scripts/config/",
         "destination": "C:\\Packer\\Config"
       },

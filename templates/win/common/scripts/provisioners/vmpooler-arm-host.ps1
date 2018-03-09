@@ -29,7 +29,7 @@ If ($WindowsVersion -like $WindowsServer2008) {
 
 # Arm machine using RunOnce Keys
 Write-Output "Arming machine for first-run"
-reg import C:\Packer\Init\vmpooler-clone-arm-runonce.reg
+reg import C:\Packer\Config\vmpooler-clone-arm-runonce.reg
 
 # Make sure NetBios is disabled on the host to avoid netbios name collision at first boot.
 # Also disable VMWare USB Arbitration service (ignore errors if it is not there)

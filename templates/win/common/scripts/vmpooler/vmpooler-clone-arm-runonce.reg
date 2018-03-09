@@ -1,4 +1,0 @@
-Windows Registry Editor Version 5.00
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
-"Sysprep Command"="C:\\Windows\\System32\\sysprep\\sysprep /generalize /oobe /reboot /quiet /unattend:C:\\Packer\\Init\\post-clone.autounattend.xml"
