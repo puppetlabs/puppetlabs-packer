@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 Write-Host "Running Win-10 Package Customisationtemplates/windows-10/files/i386/platform-packages.ps1"
 

@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 # This is using a revised Disk Zero script instead of sdelete.
 # Script obtained and modified from: http://www.hurryupandwait.io/blog/how-can-we-most-optimally-shrink-a-windows-base-image

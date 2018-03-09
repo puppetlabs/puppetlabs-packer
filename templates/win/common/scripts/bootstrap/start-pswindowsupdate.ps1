@@ -8,6 +8,9 @@ $PackageDir = 'A:\'
 
 # Create Packer Log Directories if they don't exist already.
 Create-PackerStagingDirectories
+if (-not (Test-Path "$PackerScripts\windows-env.ps1" )) {
+  Copy-Item A:\windows-env.ps1 $PackerScripts\windows-env.ps1
+}
 
 # Check if we are a Core platform-packages
 If ( $WindowsServerCore ) {

@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 Write-Output "Running Win-2008r2 Package Customisation"
 

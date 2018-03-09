@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 Write-Output "Packer Shutdown Script"
 

@@ -9,7 +9,7 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-. A:\windows-env.ps1
+. C:\Packer\Scripts\windows-env.ps1
 
 Write-Output "Installing Puppet Agent..."
 if ("$ARCH" -eq "x86") {
@@ -25,8 +25,8 @@ Write-Output "Installed Puppet Agent..."
 
 # Pick up win-site.pp file from A: drive if present
 # Manifest needs to be in $PackerPuppet for configuration to be picked up.
-if ( Test-Path "A:\win-site.pp") {
-  Copy-Item "A:\win-site.pp" "$PackerPuppet\win-site.pp"
+if ( Test-Path "$PackerConfig\win-site.pp") {
+  Copy-Item "$PackerConfig\win-site.pp" "$PackerPuppet\win-site.pp"
 }
 
 # TODO don't think these are needed here so move them into puppet code if still needed.
@@ -136,7 +136,7 @@ else {
 }
 
 
-# Loop through all Manifest Files in A:\ and process them
+# Loop through all Manifest Files in puppet base and process them
 # Keep reapplying until no resources are modified, or MaxAttempts is hit
 Write-Output "Puppet Manifest Processing Starting"
 Get-ChildItem -Path $PackerPuppet -Filter '*.pp' | ? { -not $_.PSIsContainer } | % {
