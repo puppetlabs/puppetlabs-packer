@@ -106,7 +106,7 @@
         },
         {
             "type"   : "powershell",
-            "script" : "../../common/scripts/provisioners/run-vagrant-arm-host.ps1"
+            "script" : "../../common/scripts/provisioners/vagrant-arm-host.ps1"
         },
         {
             "type": "windows-restart"
