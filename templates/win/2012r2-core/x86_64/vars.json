@@ -12,5 +12,5 @@
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "8b30b370cfd32e2b90ab4e1b77a31bd3",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
-    "shutdown_command"  : "cmd.exe /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File A:\\core-shutdown.ps1 -UseStartupWorkaround"
+    "shutdown_command"  : "cmd.exe /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File C:\\Packer\\Scripts\\core-shutdown.ps1 -UseStartupWorkaround"
 }

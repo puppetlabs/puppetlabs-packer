@@ -60,6 +60,11 @@
             "destination": "C:\\Packer\\puppet\\modules"
         },
         {
+            "type": "file",
+            "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
+            "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+        },
+        {
             "type"   : "powershell",
             "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
         },
