@@ -135,12 +135,6 @@ else {
   Write-Warning "No additional packages found in $PackageDir"
 }
 
-## Special for January 2018 Patch Tuesday update
-# Enable early update for the critical patches.
-# See https://support.microsoft.com/en-us/help/4072699/january-3-2018-windows-security-updates-and-antivirus-software
-Write-Output "Enabling January 2018 Early Patch Tuesday Updates"
-reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat"  /v "cadca5fe-87d3-4b96-b7fb-a231484277cc"       /t "REG_DWORD" /d "0x00000000" /f
-
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
 # When no more reboots are needed, the script falls through to the end.
 Write-Output "Searching for Windows Updates"
