@@ -4,7 +4,7 @@
     "os_name" : "Win-7",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_with_sp2_x64_dvd_342336.iso",
+    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2008_with_sp2_x64_dvd_342336.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "e94943ef484035b3288d8db69599a6b5",
     "headless": "false",

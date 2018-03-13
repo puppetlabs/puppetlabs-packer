@@ -23,7 +23,7 @@ if (-not (Test-Path "A:\KB2852386.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
-  Install_Win_Patch -PatchUrl "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
+  Install_Win_Patch -PatchUrl "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
   Touch-File "A:\KB2852386.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
@@ -31,7 +31,7 @@ if (-not (Test-Path "A:\KB3020369.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB3020369"
-  Install_Win_Patch -PatchUrl "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB3020369-x64.msu"
+  Install_Win_Patch -PatchUrl "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/Windows6.1-KB3020369-x64.msu"
   Touch-File "A:\KB3020369.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
@@ -39,7 +39,7 @@ if (-not (Test-Path "A:\KB3177467.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB3177467"
-  Install_Win_Patch -PatchUrl "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB3177467-x64.msu"
+  Install_Win_Patch -PatchUrl "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/Windows6.1-KB3177467-x64.msu"
   Touch-File "A:\KB3177467.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
@@ -51,7 +51,7 @@ if (-not (Test-Path "A:\Win7MSU.installed"))
 {
   # Install Windows Rollup Update first.
   Write-Output "Install Windows 7 Rollup update"
-  Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-7-msu/$Win7RollupMsu"  "$ENV:TEMP\$Win7RollupMsu"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-7-msu/$Win7RollupMsu"  "$ENV:TEMP\$Win7RollupMsu"
   Write-Output "Applying $Win7RollupMsu Patch"
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win7RollupMsu /quiet /norestart"
   Touch-File "A:\Win7MSU.installed"

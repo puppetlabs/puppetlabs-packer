@@ -5,7 +5,7 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2012_x64_dvd_915478.iso",
+    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2012_x64_dvd_915478.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "da91135483e24689bfdaf05d40301506",
     "headless": "false",
