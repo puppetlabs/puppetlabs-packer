@@ -20,10 +20,8 @@ If ($WindowsVersion -like $WindowsServer2008) {
 ElseIf ( $WindowsServerCore ) {
   Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
 }
-ElseIf ((Get-WmiObject Win32_OperatingSystem).operatingsystemsku -eq 48 )
-{
-  # SKU values: https://techontip.wordpress.com/tag/operatingsystemsku/
-  Write-Output "Professional Edition (on Windows-10) - Slip CleanMgr as it hangs"
+ElseIf ($WindowsVersion -like $WindowsServer2016) {
+  Write-Output "Skipping Clean-Mgr for Win-10/2016 as it tends to hang"
 }
 else {
   Write-Output "Running CleanMgr with Sagerun:$CleanMgrSageSet"
