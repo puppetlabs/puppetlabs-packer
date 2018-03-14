@@ -6,8 +6,8 @@
     "windows_version"           : "Windows-2008r2",
     "image_name"                : "Windows Server 2008 R2 SERVERSTANDARD",
     "product_key"               : "YC6KT-GKW9T-YTKYR-T4X34-R7VHC",
-    "version"                   : "20180307_1800",
-    "iso_url"                   : "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_03.iso",
+    "version"                   : "20180315_1800",
+    "iso_url"                   : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_03.iso",
     "iso_checksum_type"         : "md5",
     "iso_checksum"              : "f94011cfdc4e0498a01a86a0cafe403e",
     "boot_command"              : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"

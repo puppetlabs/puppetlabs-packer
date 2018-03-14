@@ -104,6 +104,11 @@
       ]
     },
     {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
+      "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+    },
+    {
       "type"   : "powershell",
       "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
     },

@@ -313,16 +313,21 @@ Function Remove-AppsPackages
 
   if (-not (Test-Path "$PackerLogs\$AppPackageCheckpoint"))
   {
-    Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+    try {
+      Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
-    Import-Module Appx
-    Import-Module Dism
+      Import-Module Appx
+      Import-Module Dism
 
-    Write-Output "Removing AppxPackages"
-    Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+      Write-Output "Removing AppxPackages"
+      Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
 
-    Write-Output "Removing Online Provisioned Packages"
-    Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
+      Write-Output "Removing Online Provisioned Packages"
+      Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
+    }
+    catch {
+      Write-Output "Ignoring errors in pkgremoval"
+    }
 
     if ("$ARCH" -eq "x86_64") {
       $SystemDir = "SysWOW64"

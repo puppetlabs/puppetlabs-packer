@@ -38,10 +38,8 @@ If ($WindowsVersion -like $WindowsServer2008) {
 ElseIf ( $WindowsServerCore ) {
   Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
 }
-ElseIf ((Get-WmiObject Win32_OperatingSystem).operatingsystemsku -eq 48 )
-{
-  # SKU values: https://techontip.wordpress.com/tag/operatingsystemsku/
-  Write-Output "Professional Edition (on Windows-10) - Slip CleanMgr as it hangs"
+ElseIf ($WindowsVersion -like $WindowsServer2016) {
+  Write-Output "Skipping Clean-Mgr for Win-10/2016 as it tends to hang"
 }
 else {
   # Set registry keys for all the other cleanup areas we want to address with cleanmgr - fairly comprehensive cleanup
@@ -102,7 +100,7 @@ wevtutil clear-log System
 
 # Display Free Space Statistics at end
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
-$SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
+$SpaceReclaimed = [Math]::Round( ($SpaceAtEnd - $SpaceAtStart),2)
 
 Write-Output "Cleaning Complete"
 Write-Output "Starting Free Space $SpaceAtStart GB"

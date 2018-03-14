@@ -115,7 +115,7 @@ if (-not (Test-Path "$PackerLogs\7zip.installed")) {
 
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules.
-  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.zip" "$Env:TEMP/pswindowsupdate.zip"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.1.6.1.1.zip" "$Env:TEMP/pswindowsupdate.zip"
   mkdir -Path "$Env:TEMP\PSWindowsUpdate"
   $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerStaging"
   $zproc.WaitForExit()
@@ -134,12 +134,6 @@ if (Test-Path "A:\platform-packages.ps1")
 else {
   Write-Warning "No additional packages found in $PackageDir"
 }
-
-## Special for January 2018 Patch Tuesday update
-# Enable early update for the critical patches.
-# See https://support.microsoft.com/en-us/help/4072699/january-3-2018-windows-security-updates-and-antivirus-software
-Write-Output "Enabling January 2018 Early Patch Tuesday Updates"
-reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat"  /v "cadca5fe-87d3-4b96-b7fb-a231484277cc"       /t "REG_DWORD" /d "0x00000000" /f
 
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
 # When no more reboots are needed, the script falls through to the end.

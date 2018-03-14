@@ -45,13 +45,12 @@
          "./tmp/autounattend.xml",
          "./files/platform-packages.ps1",
           "./files/slipstream-filter",
-          "../../common/scripts/windows-env.ps1",
-          "../../common/scripts/generate-slipstream.ps1",
-          "../../common/scripts/slipstream.package.ps1",
+          "../../common/scripts/common/windows-env.ps1",
+          "../../common/scripts/provisioners/generate-slipstream.ps1",
           "../../common/scripts/bootstrap/bootstrap-base.bat",
-          "../../common/scripts/bootstrap/bstart-pswindowsupdate.ps1",
-          "../../common/scripts/bootstrap/bcore-shutdown.ps1",
-          "../../common/scripts/bootstrap/bstartup-profile.ps1"
+          "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+          "../../common/scripts/bootstrap/core-shutdown.ps1",
+          "../../common/scripts/bootstrap/startup-profile.ps1"
       ],
       "boot_command"     : [ "{{ user `boot_command`}}"],
         "boot_wait": "1s",

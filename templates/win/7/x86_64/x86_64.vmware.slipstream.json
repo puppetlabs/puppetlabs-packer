@@ -5,7 +5,7 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "http://osmirror.delivery.puppetlabs.net/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651.iso",
+    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "6467c3875955df4514395f0afcaaa62a",
     "headless": "false",
@@ -43,8 +43,7 @@
         "../../scripts/windows/start-boxstarter.ps1",
         "../../scripts/windows/windows-env.ps1",
         "../../scripts/windows/generate-slipstream.ps1",
-        "files/slipstream-filter",
-        "files/x86_64/windows-7-slipstream.package.ps1"
+        "files/slipstream-filter"
       ],
 
       "boot_command": [ "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"],

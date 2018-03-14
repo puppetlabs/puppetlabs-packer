@@ -21,7 +21,7 @@ if (-not (Test-Path "A:\KB3020369.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
-  Install_Win_Patch "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB3020369-x64.msu"
+  Install_Win_Patch "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/Windows6.1-KB3020369-x64.msu"
   Touch-File "A:\KB3020369.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
@@ -30,7 +30,7 @@ if (-not (Test-Path "A:\KB2852386.installed"))
 {
   # Install the WinSxS cleanup patch
   Write-BoxstarterMessage "Installing Windows Update Cleanup Hotfix KB2852386"
-  Install_Win_Patch "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
+  Install_Win_Patch "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/Windows6.1-KB2852386-v2-x64.msu"
   Touch-File "A:\KB2852386.installed"
   if (Test-PendingReboot) { Invoke-Reboot }
 }
@@ -40,7 +40,7 @@ if (-not (Test-Path "A:\Win2008r2MSU.installed"))
 {
   # Install Windows Rollup Update first.
   Write-Output "Install Windows 2008r2 Rollup update"
-  Download-File "http://osmirror.delivery.puppetlabs.net/iso/windows/win-2008r2-msu/$Win2008r2RollupMsu"  "$ENV:TEMP\$Win2008r2RollupMsu"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/win-2008r2-msu/$Win2008r2RollupMsu"  "$ENV:TEMP\$Win2008r2RollupMsu"
   Write-Output "Applying $Win2008r2RollupMsu Patch"
   Start-Process -Wait "wusa.exe" -ArgumentList "$ENV:TEMP\$Win2008r2RollupMsu /quiet /norestart"
   Touch-File "A:\Win2008r2MSU.installed"
