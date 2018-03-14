@@ -115,7 +115,7 @@ if (-not (Test-Path "$PackerLogs\7zip.installed")) {
 
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules.
-  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.zip" "$Env:TEMP/pswindowsupdate.zip"
+  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.1.6.1.1.zip" "$Env:TEMP/pswindowsupdate.zip"
   mkdir -Path "$Env:TEMP\PSWindowsUpdate"
   $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerStaging"
   $zproc.WaitForExit()
