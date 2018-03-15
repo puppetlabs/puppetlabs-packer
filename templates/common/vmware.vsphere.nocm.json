@@ -139,7 +139,8 @@
       "vm_folder"                           : "{{user `packer_vcenter2_folder`}}",
       "vm_name"                             : "{{user `template_name`}}-{{user `version`}}",
       "vm_network"                          : "{{user `packer_vcenter2_net`}}",
-      "insecure"                            : "{{user `packer_vcenter2_insecure`}}"
+      "insecure"                            : "{{user `packer_vcenter2_insecure`}}",
+      "overwrite"                           : "true"
     }
   ]
 }
