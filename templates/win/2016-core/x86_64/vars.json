@@ -9,7 +9,7 @@
     "version"           : "20180315_1800",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "47993d89a256960eed2e58c9b394aa97",
+    "iso_checksum"      : "e8adeebcd8076702593469e33cc2d092",
     "shutdown_command"  : "cmd.exe /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File C:\\Packer\\Scripts\\core-shutdown.ps1 -UseStartupWorkaround",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
 }

@@ -1,5 +1,5 @@
 {
-    "template_name"     : "win-2016-x86_64",
+    "template_name"     : "win-2016-hyperv-x86_64",
     "beakerhost"        : "windows2016-64",
     "vbox_guest_os"     : "Windows2016_64",
     "vmware_guest_os"   : "windows8srv-64",

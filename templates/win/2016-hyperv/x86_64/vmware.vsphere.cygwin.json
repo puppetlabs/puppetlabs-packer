@@ -1,0 +1,187 @@
+{
+  "variables": {
+     "template_config": "vsphere.cygwin",
+
+    "headless"                 : "true",
+    "provisioner"              : "vmware",
+
+    "firmware"                 : "efi",
+    "winrm_username"           : "Administrator",
+    "winrm_password"           : "PackerAdmin",
+    "winrm_timeout"            : "8h",
+    "memsize"                  : "4096",
+    "numvcpus"                 : "2",
+    "post_memsize"             : "4096",
+    "shutdown_command"         : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+    "shutdown_timeout"         : "1h",
+
+    "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "packer_vcenter_host"      : "{{env `PACKER_VCENTER_HOST`}}",
+    "packer_vcenter_username"  : "{{env `PACKER_VCENTER_USERNAME`}}",
+    "packer_vcenter_password"  : "{{env `PACKER_VCENTER_PASSWORD`}}",
+    "packer_vcenter_dc"        : "{{env `PACKER_VCENTER_DC`}}",
+    "packer_vcenter_cluster"   : "{{env `PACKER_VCENTER_CLUSTER`}}",
+    "packer_vcenter_datastore" : "{{env `PACKER_VCENTER_DATASTORE`}}",
+    "packer_vcenter_folder"    : "{{env `PACKER_VCENTER_FOLDER`}}",
+    "packer_vcenter_net"       : "{{env `PACKER_VCENTER_NET`}}",
+    "packer_vcenter_insecure"  : "{{env `PACKER_VCENTER_INSECURE`}}",
+    "packer_sha"               : "{{env `PACKER_SHA`}}",
+    "packer_source_dir"        : "{{env `PACKER_VM_SRC_DIR`}}",
+    "packer_output_dir"        : "{{env `PACKER_VM_OUT_DIR`}}",
+    "packer_download_dir"      : "C:/Packer/Downloads"
+  },
+
+  "description": "ustom Windows 2016 Build to enable Hypervisor - needs extra VMX data, hence the copy/pasta",
+
+  "builders": [
+    {
+      "name"              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name"           : "packer-{{build_name}}",
+      "type"              : "vmware-vmx",
+      "source_path"       : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
+      "output_directory"  : "{{user `packer_output_dir`}}/output-{{build_name}}",
+
+      "headless"          : "{{user `headless`}}",
+
+      "communicator"      : "winrm",
+      "winrm_username"    : "{{user `winrm_username`}}",
+      "winrm_password"    : "{{user `winrm_password`}}",
+      "winrm_timeout"     : "{{user `winrm_timeout`}}",
+
+      "shutdown_command"  : "{{user `shutdown_command`}}",
+      "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
+
+      "vmx_data": {
+        "gui.fitguestusingnativedisplayresolution" : "FALSE",
+        "annotation"                               : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
+        "firmware"                                 : "{{user `firmware`}}",
+        "memsize"                                  : "{{user `memsize`}}",
+        "numvcpus"                                 : "{{user `numvcpus`}}",
+        "ethernet0.virtualdev"                     : "vmxnet3",
+        "scsi0.virtualdev"                         : "lsisas1068",
+        "virtualHW.version"                        : "10",
+        "devices.hotplug"                          : "false",
+        "vcpu.hotadd"                              : "TRUE",
+        "mem.hotadd"                               : "TRUE",
+        "tools.syncTime"                           : "FALSE",
+        "time.synchronize.continue"                : "FALSE",
+        "time.synchronize.restore"                 : "FALSE",
+        "time.synchronize.resume.disk"             : "FALSE",
+        "time.synchronize.shrink"                  : "FALSE",
+        "time.synchronize.tools.startup"           : "FALSE",
+        "time.synchronize.tools.enable"            : "FALSE",
+        "time.synchronize.resume.host"             : "FALSE",
+        "featMask.vm.hv.capable"                   : "Min:1",
+        "vhv.enable"                               : "TRUE"
+      },
+      "vmx_data_post": {
+        "memsize"         : "{{user `post_memsize`}}",
+        "devices.hotplug" : "false"
+      }
+    }
+  ],
+  "provisioners": [
+      {
+        "type": "file",
+        "source": "../../common/puppet/",
+        "destination": "C:\\Packer\\puppet\\modules"
+      },
+      {
+        "type": "file",
+        "source": "../../common/scripts/common/",
+        "destination": "C:\\Packer\\Scripts"
+      },
+      {
+        "type": "file",
+        "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
+        "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+      },
+      {
+        "type": "file",
+        "source": "../../common/scripts/vmpooler/",
+        "destination": "C:\\Packer\\Scripts"
+      },
+      {
+        "type": "file",
+        "source": "../../common/scripts/config/",
+        "destination": "C:\\Packer\\Config"
+      },
+      {
+        "type": "file",
+        "source": "./tmp/post-clone.autounattend.xml",
+        "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+      },
+      {
+        "type": "powershell",
+        "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
+      },
+      {
+        "type": "windows-restart"
+      },
+      {
+        "type"   : "powershell",
+        "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
+        "environment_vars" : [
+          "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+        ]
+      },
+      {
+        "type": "windows-restart"
+      },
+      {
+        "type": "powershell",
+        "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+        "environment_vars" : [
+          "QA_ROOT_PASSWD={{user `qa_root_passwd`}}",
+          "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
+          "PackerSHA={{user `packer_sha`}}",
+          "PackerTemplateType=vmpooler"
+        ]
+      },
+      {
+        "type": "windows-restart"
+      },
+      {
+        "type": "powershell",
+        "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+      },
+      {
+        "type": "windows-restart"
+      },
+      {
+        "type": "powershell",
+        "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
+      },
+      {
+        "type": "windows-restart"
+      },
+      {
+        "type": "powershell",
+        "script" : "../../common/scripts/provisioners/vmpooler-arm-host.ps1"
+      }
+  ],
+  "post-processors": [
+    {
+      "type": "vsphere",
+      "host": "{{user `packer_vcenter_host`}}",
+      "username": "{{user `packer_vcenter_username`}}",
+      "password": "{{user `packer_vcenter_password`}}",
+      "datacenter": "{{user `packer_vcenter_dc`}}",
+      "cluster": "{{user `packer_vcenter_cluster`}}",
+      "datastore": "{{user `packer_vcenter_datastore`}}",
+      "vm_folder": "{{user `packer_vcenter_folder`}}",
+      "vm_name": "{{user `template_name`}}-{{user `version`}}",
+      "vm_network": "{{user `packer_vcenter_net`}}",
+      "insecure" : "{{user `packer_vcenter_insecure`}}",
+      "overwrite" : "true",
+      "options": [
+        "--X:logLevel=verbose",
+        "--X:logFile={{user `packer_output_dir`}}/ovftool-{{build_name}}.log",
+        "--allowAllExtraConfig",
+        "--allowExtraConfig",
+        "--extraConfig:devices.hotplug=false",
+        "--extraConfig:featMask.vm.hv.capable=Min:1"
+      ]
+    }
+  ]
+}
