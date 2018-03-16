@@ -11,6 +11,7 @@
     "memsize"                  : "4096",
     "numvcpus"                 : "2",
     "post_memsize"             : "4096",
+    "shutdown_command"         : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
     "shutdown_timeout"         : "1h",
 
     "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
@@ -94,6 +95,11 @@
     },
     {
       "type": "file",
+      "source": "../../common/scripts/vmpooler/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
       "source": "./tmp/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
     },
@@ -146,7 +152,8 @@
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1",
+      "valid_exit_codes" : [0,1]
     },
     {
       "type": "windows-restart"
