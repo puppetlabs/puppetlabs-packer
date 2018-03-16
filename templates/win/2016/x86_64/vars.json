@@ -7,7 +7,7 @@
     "image_name"        : "Windows Server 2016 SERVERSTANDARD",
     "product_key"       : "WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
     "version"           : "20180315_1800",
-    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2016_x64_dvd_9718492_Slip_02.iso",
+    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "47993d89a256960eed2e58c9b394aa97",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
