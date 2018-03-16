@@ -1,14 +1,14 @@
 {
-    "template_name"     : "win-10-1607-x86_64",
+    "template_name"     : "win-10-1511-x86_64",
     "beakerhost"        : "windows10ent-64",
     "vbox_guest_os"     : "Windows81_64",
     "vmware_guest_os"   : "windows8-64",
     "windows_version"   : "Windows-10",
-    "image_name"        : "Windows 10 Enterprise 2016 LTSB",
-    "product_key"       : "DCPHK-NFMTC-H88MJ-PFHPY-QJ4BJ",
+    "image_name"        : "Windows 10 Enterprise 2015 LTSB",
+    "product_key"       : "WNMTR-4C88C-JK8YV-HQ7T2-76DF9",
     "version"           : "20180315_1800",
-    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_enterprise_2016_ltsb_x64_dvd_9059483.iso",
+    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_enterprise_2015_ltsb_x64_dvd_6848446.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "e39ea2af41b3710682fe3bbdac35ec9a",
+    "iso_checksum"      : "da938d65c548738900810181a78203f8",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
 }
