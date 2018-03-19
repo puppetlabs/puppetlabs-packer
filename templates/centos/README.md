@@ -9,8 +9,11 @@ This contains all of the var files required to build any of the templates in the
 
 All templates must be built in the `<os_dist>/<variant>/<arch>` directory. Make sure that the environment variable PACKER\_VM\_OUT\_DIR is set so that Packer knows where to copy the build artifacts (it is common to set it to ".", the current `<os_dist>/<variant>/<arch>` directory). If you are building a template with a vmware-vmx builder, be sure to set the PACKER\_VM\_SRC\_DIR environment variable to the directory containing the directory containing the relevant vm files. It is common to set PACKER\_VM\_SRC\_DIR = PACKER\_VM\_OUT\_DIR to make it easy to build a vmware-vmx template from a previous vmware build.
 
-## Centos 5.11/6.6
-To build any template in the `templates/common` directory for Centos 5.11/6.6, type:
+## Centos 5.11/6.8
+
+The boot command for Centos < 7 is slightly different, so we have an additional var file to include in the build process.
+
+To build any template in the `templates/common` directory for Centos 5.11/6.8, type:
 ```
 packer build -var-file=../../common/vars.json -var-file=../common/vars.json -var-file=vars.json ../../../common/<template-file>
 ```
