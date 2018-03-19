@@ -17,7 +17,6 @@ Write-Output "Enable permissive firewall rules"
 netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
 
-
 If ( ($WindowsVersion -like $WindowsServer2008R2) -and ($psversiontable.psversion.major -eq 5) ) {
 
     # WMF5/Win-2008r2 fails to sysprep without this fix.
@@ -27,6 +26,13 @@ If ( ($WindowsVersion -like $WindowsServer2008R2) -and ($psversiontable.psversio
     reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\StreamProvider"    /v "LastFullPayloadTime" /t REG_DWORD /d 0 /f
 }
 
+# Run the Application Package Cleaner again if required.
+if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
+    Write-Output "Running Apps Package Cleaner post windows update"
+    Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
+
+}
+  
 # Re-Enable AutoAdminLogon
 autologon -AcceptEula Administrator . PackerAdmin
 

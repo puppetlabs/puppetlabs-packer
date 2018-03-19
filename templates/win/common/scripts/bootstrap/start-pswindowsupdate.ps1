@@ -34,6 +34,13 @@ else {
 if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
   Write-Output "Installing HyperVisor ($HyperVisor) Extensions/Tools"
 
+  # This is a Windows 10 only workaround to make sure the trusted installer is actually running.
+  # This needs to be done early on in the initialisation sequence well before we apply updates.
+  # Not certain, but this appears to improve the reliability of the windows update.
+  if ($WindowsVersion -Like $WindowsServer2016) {
+    Set-Service "trustedinstaller" -StartupType Automatic -ErrorAction SilentlyContinue
+  }
+
   switch ($HyperVisor) {
     "vmware" {
       # VMWare installs only
@@ -164,11 +171,10 @@ do {
   $Attempt++
 } while ($Attempt -le 2)
 
-# Rerun the Apps Package Cleaner again.
-
-if (Test-Path "$PackerLogs\AppsPackageRemove.Pass2.Required") {
-  Write-Output "Running second pass of the Apps Package Cleaner post windows update"
-  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
+# Run the Application Package Cleaner
+if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
+  Write-Output "Running Apps Package Cleaner post windows update"
+  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass1
 }
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
