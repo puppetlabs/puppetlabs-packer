@@ -1,0 +1,104 @@
+{
+  "variables":
+    {
+      "template_name"                        : null,
+      "template_os"                          : null,
+      "iso_url"                              : null,
+      "iso_checksum"                         : null,
+      "iso_checksum_type"                    : null,
+      "puppet_aio"                           : null,
+      "floppy_dirs"                          : null,
+      "floppy_files"                         : null,
+      "http_directory"                       : null,
+      "boot_command"                         : null,
+      "project_root"                         : "../../../..",
+      "headless"                             : "true",
+      "template_config"                      : "base",
+      "provisioner"                          : "libvirt",
+      "shutdown_command"                     : "/sbin/halt -h -p",
+      "disk_size"                            : "20480",
+      "libvirt_base_boot_wait"               : "45s",
+      "libvirt_base_required_modules"        : null,
+      "packer_output_dir"                    : "{{env `PACKER_VM_OUTPUT_DIR`}}",
+      "libvirt_base_qemuargs_mem_size"       : "512",
+      "libvirt_base_qemuargs_cpu_count"      : "1",
+      "libvirt_net_device"                   : null,
+      "libvirt_disk_interface"               : null,
+      "libvirt_base_provisioning_scripts"    : "../../../../scripts/bootstrap-aio.sh"
+    },
+
+    "description"                            : "Builds a Linux base template VM for use with vagrant-libvirt",
+
+    "builders": [
+    {
+      "name"                                 : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "type"                                 : "qemu",
+      "iso_url"                              : "{{user `iso_url`}}",
+      "iso_checksum"                         : "{{user `iso_checksum`}}",
+      "iso_checksum_type"                    : "{{user `iso_checksum_type`}}",
+
+      "output_directory"                     : "{{user `packer_output_dir`}}/output-{{build_name}}-{{user `version`}}",
+
+      "headless"                             : "{{user `headless`}}",
+
+      "ssh_username"                         : "root",
+      "ssh_password"                         : "puppet",
+      "ssh_port"                             : "22",
+      "ssh_wait_timeout"                     : "10000s",
+
+      "shutdown_command"                     : "{{user `shutdown_command`}}",
+
+      "disk_size"                            : "{{user `disk_size`}}",
+      "http_directory"                       : "{{user `http_directory`}}",
+
+      "accelerator"                          : "kvm",
+      "format"                               : "qcow2",
+      "net_device"                           : "{{user `libvirt_net_device`}}",
+      "disk_interface"                       : "{{user `libvirt_disk_interface`}}",
+      "boot_wait"                            : "{{user `boot_wait`}}",
+      "boot_command"                         : [
+                                                  "<tab> <wait>",
+                                                  "text <wait>",
+                                                  "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
+                                                  "<enter>"
+                                               ],
+      "qemuargs"                             : [
+                                                 [ "-m", "{{user `libvirt_base_qemuargs_mem_size`}}" ],
+                                                 [ "-smp",
+                                                   "cpus={{user `libvirt_base_qemuargs_cpu_count`}},",
+                                                   "cores=1",
+                                                   ""
+                                                 ]
+                                               ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                                 : "shell",
+      "execute_command"                      : "{{.Vars}} sh '{{.Path}}' {{user `libvirt_base_required_modules`}}",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [ "{{user `libvirt_base_provisioning_scripts`}}" ]
+    },
+
+    {
+      "type"                                 : "puppet-masterless",
+      "execute_command"                      : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                               : {
+                                                 "provisioner": "{{user `provisioner`}}"
+                                               },
+      "manifest_dir"                         : "{{user `project_root`}}/manifests",
+      "manifest_file"                        : "{{user `project_root`}}/manifests/base.pp"
+    },
+
+    {
+      "type"                                 : "shell",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [
+                                                 "{{user `project_root`}}/scripts/cleanup-aio.sh",
+                                                 "{{user `project_root`}}/scripts/cleanup-packer.sh"
+                                               ]
+    }
+  ]
+
+}

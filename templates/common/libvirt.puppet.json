@@ -1,0 +1,101 @@
+{
+  "variables":
+    {
+      "template_name"                        : null,
+      "beakerhost"                           : null,
+      "version"                              : null,
+      "puppet_aio"                           : null,
+
+      "vagrant_required_modules"             : null,
+      "libvirt_nocm_qemuargs_mem_size"       : "512",
+      "libvirt_nocm_qemuargs_cpu_count"      : "1",
+
+      "project_root"                         : "../../../..",
+      "headless"                             : "true",
+      "template_config"                      : "puppet",
+      "provisioner"                          : "libvirt",
+      "shutdown_command"                     : "/sbin/halt -h -p",
+
+      "packer_output_dir"                    : "{{env `PACKER_VM_OUTPUT_DIR`}}",
+      "packer_source_dir"                    : "{{env `PACKER_VM_SRC_DIR`}}",
+      "libvirt_puppet_qemuargs_mem_size"     : "512",
+      "libvirt_puppet_qemuargs_cpu_count"    : "1",
+      "libvirt_puppet_provisioning_scripts"  : "../../../../scripts/bootstrap-aio.sh"
+    },
+
+    "description"                            : "Builds a Linux vagrantbox nocm VM for use with vagrant-libvirt",
+
+    "builders": [
+    {
+      "name"                                 : "{{user `template_name`}}-{{user `provisioner`}}",
+      "vm_name"                              : "packer-{{build_name}}-{{user `template_config`}}",
+      "type"                                 : "qemu",
+      "disk_image"                           : "true",
+      "iso_url"                              : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base-{{user `version`}}/packer-{{user `template_name`}}-{{user `provisioner`}}-base",
+      "iso_checksum_type"                    : "none",
+      "output_directory"                     : "{{user `packer_output_dir`}}/output-{{build_name}}-{{user `template_config`}}-{{user `version`}}",
+
+      "headless"                             : "{{user `headless`}}",
+
+      "ssh_username"                         : "root",
+      "ssh_password"                         : "puppet",
+      "ssh_port"                             : "22",
+      "ssh_wait_timeout"                     : "10000s",
+
+      "shutdown_command"                     : "{{user `shutdown_command`}}",
+
+      "accelerator"                          : "kvm",
+      "format"                               : "qcow2",
+      "qemuargs"                             : [
+                                                 [ "-m", "{{user `libvirt_puppet_qemuargs_mem_size`}}" ],
+                                                 [ "-smp",
+                                                   "cpus={{user `libvirt_puppet_qemuargs_cpu_count`}},",
+                                                   "cores=1",
+                                                   ""
+                                                 ]
+                                               ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type"                                 : "shell",
+      "execute_command"                      : "{{.Vars}} sh '{{.Path}}' {{user `vagrant_required_modules`}}",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [ "{{user `libvirt_puppet_provisioning_scripts`}}" ]
+    },
+
+    {
+      "type"                                 : "file",
+      "source"                               : "{{user `project_root`}}/hiera",
+      "destination"                          : "/tmp/packer-puppet-masterless"
+    },
+
+    {
+      "type"                                : "puppet-masterless",
+      "execute_command"                     : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/bin/puppet apply --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                              : {
+                                                 "provisioner": "{{user `provisioner`}}"
+                                              },
+      "manifest_dir"                        : "{{user `project_root`}}/manifests",
+      "manifest_file"                       : "{{user `project_root`}}/manifests/vagrant/{{user `template_config`}}.pp"
+    },
+
+    {
+      "type"                                 : "shell",
+      "environment_vars"                     : [ "PUPPET_AIO={{user `puppet_aio`}}" ],
+      "scripts"                              : [
+                                                 "{{user `project_root`}}/scripts/cleanup-packer.sh",
+                                                 "{{user `project_root`}}/scripts/cleanup-scrub.sh"
+                                               ]
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type"                                 : "vagrant",
+      "output"                               : "{{user `packer_output_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-{{user `version`}}/output-{{build_name}}-{{user `template_config`}}.box"
+    }
+  ]
+
+}
