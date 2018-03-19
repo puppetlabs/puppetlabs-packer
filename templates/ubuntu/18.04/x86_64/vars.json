@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "ubuntu-18.04-x86_64",
+    "template_os"                           : "ubuntu-64",
+    "beakerhost"                            : "ubuntu1804-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-18.04-daily-server-amd64.iso",
+    "iso_checksum"                          : "dc45b1bef1c699af16fde18688b38f81c1d559abc70ac92ca975baa7aaeed07a",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/stretch/puppet5/p/puppet-agent/puppet-agent_5.3.2-1stretch_amd64.deb"
+}
