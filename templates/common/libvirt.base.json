@@ -24,7 +24,10 @@
       "libvirt_base_qemuargs_cpu_count"      : "1",
       "libvirt_net_device"                   : null,
       "libvirt_disk_interface"               : null,
-      "libvirt_base_provisioning_scripts"    : "../../../../scripts/bootstrap-aio.sh"
+      "libvirt_base_provisioning_scripts"    : "../../../../scripts/bootstrap-aio.sh",
+      "redhat_os_repo"                       : "{{env `PACKER_REDHAT_OS_REPO`}}",
+      "redhat_optional_repo"                 : "{{env `PACKER_REDHAT_OPTIONAL_REPO`}}",
+      "redhat_extra_repo"                    : "{{env `PACKER_REDHAT_EXTRA_REPO`}}"
     },
 
     "description"                            : "Builds a Linux base template VM for use with vagrant-libvirt",
@@ -85,7 +88,10 @@
       "type"                                 : "puppet-masterless",
       "execute_command"                      : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/puppet/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter"                               : {
-                                                 "provisioner": "{{user `provisioner`}}"
+                                                 "provisioner":          "{{user `provisioner`}}",
+                                                 "redhat_os_repo":       "{{user `redhat_os_repo`}}",
+                                                 "redhat_optional_repo": "{{user `redhat_optional_repo`}}",
+                                                 "redhat_extra_repo":    "{{user `redhat_extra_repo`}}"                                                 
                                                },
       "manifest_dir"                         : "{{user `project_root`}}/manifests",
       "manifest_file"                        : "{{user `project_root`}}/manifests/base.pp"
