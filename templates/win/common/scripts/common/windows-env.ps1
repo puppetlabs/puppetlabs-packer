@@ -98,14 +98,14 @@ function ExitScript([int]$ExitCode){
 
 # Helper to create consistent staging directories.
 function Create-PackerStagingDirectories {
-  if (-not (Test-Path "$PackerStaging")) {
+  if (-not (Test-Path "$PackerStaging\puppet\modules")) {
     Write-Host "Creating $PackerStaging"
     mkdir -Path $PackerStaging\puppet\modules
     mkdir -Path $PackerStaging\Downloads
     mkdir -Path $PackerStaging\Downloads\Cygwin
     mkdir -Path $PackerStaging\Config
     mkdir -Path $PackerStaging\Scripts
-    mkdir -Path $PackerStaging\Logs
+    # mkdir -Path $PackerStaging\Logs
     mkdir -Path $PackerStaging\Sysinternals
   }
 }
@@ -441,6 +441,7 @@ Function Remove-AppsPackages
         "Microsoft.BingNews"
         "Microsoft.BingSports"
         "Microsoft.BingWeather"
+        "Microsoft.BingTranslator"
         #"Microsoft.FreshPaint"
         "Microsoft.Getstarted"
         "Microsoft.MicrosoftOfficeHub"
@@ -514,6 +515,7 @@ Function Remove-AppsPackages
         "SpotifyAB.SpotifyMusic"
         "A278AB0D.DisneyMagicKingdoms"
         "WinZipComputing.WinZipUniversal"
+        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
 
 
         # apps which cannot be removed using Remove-AppxPackage
@@ -621,7 +623,7 @@ function Test-PendingReboot {
 function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1`""
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log`""
     New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
 
 	  shutdown /t 0 /r /f

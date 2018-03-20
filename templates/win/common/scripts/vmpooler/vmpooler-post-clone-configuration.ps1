@@ -2,15 +2,6 @@
 #
 $ErrorActionPreference = "Stop"
 
-#--- Log Session ---#
-Start-Transcript -Path "C:\Packer\Logs\post-clone-run-once.log"
-
-#--- FUNCTIONS ---#
-function ExitScript([int]$ExitCode){
-	Stop-Transcript
-	exit $ExitCode
-}
-
 # Used Frequently throughout
 $CygwinDir = "$ENV:CYGWINDIR"
 
@@ -56,7 +47,7 @@ if ($p.ExitCode -ne 0){
 	Write-Warning "Could not find VM name in vSphere!`n"
 	Write-Warning "If this machine is the template VM, no rename necessary!!"
 	Write-Warning "Remember to reset the 'RunOnce' registry key by Loading C:\Packer\Config\vmpooler-arm-host.reg"
-	ExitScript 1
+	Exit 1
 }
 
 Write-Output "vSphere VMname: $NewVMName`n"
@@ -135,4 +126,4 @@ if ($WindowsVersion -like $WindowsServer2008R2 -or $WindowsVersion -like $Window
 else {
 	Rename-Computer -Newname $NewVMName -Restart
 }
-ExitScript 0
+Exit 0

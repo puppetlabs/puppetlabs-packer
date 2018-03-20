@@ -1,4 +1,4 @@
 Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
-"Sysprep Command"="C:\\Windows\\System32\\sysprep\\sysprep /generalize /oobe /reboot /quiet /unattend:C:\\Packer\\Config\\post-clone.autounattend.xml"
+"Sysprep Command"="c:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe -noprofile -sta -WindowStyle Hidden -file C:\\Packer\\Scripts\\vmpooler-sysprep.ps1"

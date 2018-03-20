@@ -254,9 +254,13 @@
                         <Order>4</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware</CommandLine>
-                        <Description>Start PSWindowsUpdate</Description>
+                        <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
                         <Order>5</Order>
+                    </SynchronousCommand>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log</CommandLine>
+                        <Description>Start PSWindowsUpdate</Description>
+                        <Order>6</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
@@ -280,10 +284,14 @@
                         <CommandLine>wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
                         <Order>4</Order>
                     </SynchronousCommand>
-                   <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor virtualbox</CommandLine>
-                        <Description>Start PSWindowsUpdate</Description>
+                    <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
                         <Order>5</Order>
+                    </SynchronousCommand>
+                   <SynchronousCommand wcm:action="add">
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor virtualbox &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log</CommandLine>
+                        <Description>Start PSWindowsUpdate</Description>
+                        <Order>6</Order>
                     </SynchronousCommand>
                 </FirstLogonCommands>
             </PackerLogonSequence>
