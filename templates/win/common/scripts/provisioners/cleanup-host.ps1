@@ -54,7 +54,7 @@ wevtutil clear-log System
 
 # Display Free Space Statistics at end
 $SpaceAtEnd = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
-$SpaceReclaimed = $SpaceAtEnd - $SpaceAtStart
+$SpaceReclaimed = [Math]::Round( ($SpaceAtEnd - $SpaceAtStart),2)
 
 Write-Output "Cleaning Complete"
 Write-Output "Starting Free Space $SpaceAtStart GB"
