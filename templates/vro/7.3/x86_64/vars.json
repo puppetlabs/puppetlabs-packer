@@ -1,0 +1,5 @@
+{
+    "template_name" : "vro-7.3-x86_64",
+    "beakerhost"    : "vro73-64",
+    "version"       : "0.0.6"
+}
