@@ -11,7 +11,7 @@ class packer::vsphere::networking inherits packer::networking::params {
           enable_dhcp   => true,
       }
     }
-      if ($::operatingsystemmajrelease in ['8', '9', '16.04']) {
+      if ($::operatingsystemmajrelease in ['8', '9', '16.04', '18.04']) {
         network::interface { 'ens160':
           enable_dhcp   => true,
       }

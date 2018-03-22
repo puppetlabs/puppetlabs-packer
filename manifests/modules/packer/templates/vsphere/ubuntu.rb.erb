@@ -19,7 +19,7 @@ Kernel.system('hostname -F /etc/hostname')
 dhc = File.read('/etc/dhcp/dhclient.conf')
  
 File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
-  <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
+  <% if ['15.10', '16.04', '16.10', '18.04'].include? @operatingsystemrelease -%>
   dhc.gsub!(/^(send host-name.*)/, "send host-name \"#{hostname}\";")
   <% else -%>
   dhc.gsub!(/^(#send host-name.*)/, "send host-name \"#{hostname}\";")
@@ -34,7 +34,7 @@ end
  
 puts '- Re-obtaining DHCP lease...'
  
-<% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
+<% if ['15.10', '16.04', '16.10', '18.04'].include? @operatingsystemrelease -%>
 Kernel.system('/usr/sbin/service networking restart')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
