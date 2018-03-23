@@ -2,7 +2,7 @@
     "template_name"                         : "scientific-6.8-x86_64",
     "template_os"                           : "rhel6-64",
     "beakerhost"                            : "scientific6-64",
-    "version"                               : "0.0.1",
+    "version"                               : "0.0.2",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/rpm__remote_scientific/6.8/x86_64/iso/SL-68-x86_64-2016-06-29-DVD-DL.iso",
     "iso_checksum"                          : "ada95b0e920612a5a9c56e268515a9965663377407a7897167be7a2efdade804",
     "iso_checksum_type"                     : "sha256",
