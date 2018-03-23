@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-10",
     "image_name"        : "Windows 10 Enterprise 2016 LTSB",
     "product_key"       : "DCPHK-NFMTC-H88MJ-PFHPY-QJ4BJ",
-    "version"           : "20180315_1800",
+    "version"           : "20180323_0000",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_enterprise_2016_ltsb_x64_dvd_9059483.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "e39ea2af41b3710682fe3bbdac35ec9a",

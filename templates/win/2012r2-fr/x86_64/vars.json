@@ -8,7 +8,7 @@
     "windows_version"   : "Windows-2012r2",
     "image_name"        : "Windows Server 2012 R2 SERVERSTANDARD",
     "product_key"       : "D2N9P-3P6X9-2R39C-7RTCD-MDVJX",
-    "version"           : "20180315_1800",
+    "version"           : "20180323_0000",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/fr_windows_server_2012_r2_with_update_x64_dvd_6052713_SlipStream_01.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "2aaeb548f739f417a33439fd6a614090",
