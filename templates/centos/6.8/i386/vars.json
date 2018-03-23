@@ -2,7 +2,7 @@
     "template_name"                         : "centos-6.8-i386",
     "template_os"                           : "rhel6",
     "beakerhost"                            : "centos6-32",
-    "version"                               : "0.0.1",
+    "version"                               : "0.0.2",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/CentOS-6.8-i386-bin-DVD1.iso",
     "iso_checksum"                          : "720d185fdf063383a4471657076b72fc162d3c3c3bca2e5e5ae13a25b3046519",
     "iso_checksum_type"                     : "sha256",

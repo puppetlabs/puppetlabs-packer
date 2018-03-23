@@ -88,21 +88,26 @@ class packer::vsphere::repos inherits packer::vsphere::params {
       } else {
         $base_url = $::operatingsystem ? {
           'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
-          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}/os/${::architecture}",
-          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${::operatingsystemmajrelease}/${::architecture}/os",
+          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}",
+          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${::operatingsystemmajrelease}/${::architecture}",
           'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all"
         }
       }
 
-      if $::operatingsystem != 'RedHat' {
-        # For OSes other than RedHat, we use a combined 'everything' repo:
+      if $::operatingsystem == 'Fedora' {
+        # For Fedora, we use a combined 'everything' repo:
         yumrepo { "localmirror-everything":
           descr    => "localmirror-everything",
           baseurl  => "${base_url}",
           gpgcheck => "1",
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
-      } else {
+      } 
+
+      # This could be a bit DRYer, but there are enough subtle differences
+      # between the url formats and repo names used by the other Redhat-based
+      # distros that I prefer to keep this more readable:
+      if $::operatingsystem == 'RedHat' {
         # Note: the os mirror includes updates:
         yumrepo { "localmirror-os":
           descr    => "localmirror-os",
@@ -125,6 +130,56 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
       }
+
+      if $::operatingsystem == 'CentOS' {
+        yumrepo { "localmirror-os":
+          descr    => "localmirror-os",
+          baseurl  => "${base_url}/os/${::architecture}",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+
+        yumrepo { "localmirror-updates":
+          descr    => "localmirror-updates",
+          baseurl  => "${base_url}/updates/${::architecture}",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+
+        yumrepo { "localmirror-extras":
+          descr    => "localmirror-extras",
+          baseurl  => "${base_url}/extras/${::architecture}",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+      }
+
+      if $::operatingsystem == 'Scientific' {
+        yumrepo { "localmirror-os":
+          descr    => "localmirror-os",
+          baseurl  => "${base_url}/os",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+
+        # Scientific Linux does things a bit differently and splits up
+        # their updates repo into separate 'fastbugs' (for bug
+        # fixes/enhancements) and 'security' (for security issues)
+        yumrepo { "localmirror-updates-fastbugs":
+          descr    => "localmirror-updates-fastbugs",
+          baseurl  => "${base_url}/updates/fastbugs",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+
+        yumrepo { "localmirror-updates-security":
+          descr    => "localmirror-updates-security",
+          baseurl  => "${base_url}/updates/security",
+          gpgcheck => "1",
+          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        }
+      }
+
     }
 
     suse: {
