@@ -34,8 +34,10 @@ end
  
 puts '- Re-obtaining DHCP lease...'
  
-<% if ['15.10', '16.04', '16.10', '18.04'].include? @operatingsystemrelease -%>
+<% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
 Kernel.system('/usr/sbin/service networking restart')
+<% elsif ['18.04'].include? @operatingsystemrelease -%>
+Kernel.system('/bin/systemctl restart systemd-networkd')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
 <% end -%>
