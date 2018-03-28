@@ -222,7 +222,7 @@ class windows_template::policies::local_group_policies ()
 
     # Screen out these policies for anything earlier than Win-2012r2
     #
-    if ("$::kernelmajversion" > '6.1' ) {
+    if ("$::kernelmajversion" == '10.0' ) {
         # Mostly Win-10 policies.
         #  1. Turn off Tile Notifications
         windows_group_policy::local::user { 'NotileApplicationNotification':
