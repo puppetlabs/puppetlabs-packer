@@ -89,15 +89,8 @@ $SprocParms = @{'PassThru'=$true;
 
 #--- FUNCTIONS ---#
 
-# Function to stop transcript
-
-function ExitScript([int]$ExitCode){
-	Stop-Transcript
-	exit $ExitCode
-}
-
 # Helper to create consistent staging directories.
-function Create-PackerStagingDirectories {
+Function Create-PackerStagingDirectories {
   if (-not (Test-Path "$PackerStaging\puppet\modules")) {
     Write-Host "Creating $PackerStaging"
     mkdir -Path $PackerStaging\puppet\modules
@@ -112,8 +105,7 @@ function Create-PackerStagingDirectories {
 
 
 # Function to download the packages we need - used in several scripts.
-
-function Download-File {
+Function Download-File {
 param (
   [string]$url,
   [string]$file
@@ -143,18 +135,16 @@ param (
   }
 }
 
-# Helper function to set both User and Default User registry key.
+# Helper Function to set both User and Default User registry key.
 # This assumes the default user hive has been mounted as HKLM\DEFUSER
 # As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
-
 Function Set-UserKey($key,$valuename,$reg_type,$data) {
   Write-Output "Setting Default User registry entry: $key\$valuename"
   reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
 }
 
 # Copy of Unix Touch command - useful for checkpointing w.r.t. Boxstarter
-Function Touch-File
-{
+Function Touch-File {
     $file = $args[0]
     if($file -eq $null) {
         throw "No filename supplied"
@@ -170,12 +160,11 @@ Function Touch-File
     }
 }
 
-# Helper function to disable all sleep timeouts on the windows box.
+# Helper Function to disable all sleep timeouts on the windows box.
 # Adding on the suspicion that the Cumulative Updates for Win-10 are allowing
 # standby sleep to activate during the long download.
 
-Function Disable-PC-Sleep
-{
+Function Disable-PC-Sleep {
   Write-Output "Disabling all Sleep timers"
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
@@ -199,11 +188,9 @@ Function Disable-PC-Sleep
   }
 }
 
-# Helper function to install Windows/MS Patch.
+# Helper Function to install Windows/MS Patch.
 # Downloads file to $TEMP and uses wusa to install it.
-
-Function Install_Win_Patch
-{
+Function Install_Win_Patch {
   param(
     [Parameter(Mandatory = $true)]
     [String]$PatchUrl
@@ -218,11 +205,10 @@ Function Install_Win_Patch
   Write-Output "Patch Installed"
 }
 
-# Helper function to delete file, with try/catch to ignore errors.
-# This function is used in both the clean host and clean-disk scripts.
+# Helper Function to delete file, with try/catch to ignore errors.
+# This Function is used in both the clean host and clean-disk scripts.
 # Leaving Verbose options on in all cases so we can be certain files are being removed (IMAGES-684)
-Function ForceFullyDelete-Paths
-{
+Function ForceFullyDelete-Paths {
   $filetodelete = $args[0]
 
   try {
@@ -239,9 +225,7 @@ Function ForceFullyDelete-Paths
 }
 
 # Helper Function set Windows Update to use the Internal Production WSUS Server
-
-Function Enable-UpdatesFromInternalWSUS
-{
+Function Enable-UpdatesFromInternalWSUS {
   if (-not (Test-Path "$PackerLogs\WSUSRedirect.installed")) {
 
     $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
@@ -259,12 +243,10 @@ Function Enable-UpdatesFromInternalWSUS
   }
 }
 
-# Helper function to perform a final reboot.
+# Helper Function to perform a final reboot.
 # This should help pick up any "trailing" windows updates as it appears that
 # There are still some missing updates.
-
-Function Do-Packer-Final-Reboot
-{
+Function Do-Packer-Final-Reboot {
   if (-not (Test-Path "$PackerLogs\Final.Reboot"))
   {
     Touch-File "$PackerLogs\Final.Reboot"
@@ -272,9 +254,8 @@ Function Do-Packer-Final-Reboot
   }
 }
 
-# Helper function to install latest .Net package appropriate for this platform
-Function Install-DotNetLatest
-{
+# Helper Function to install latest .Net package appropriate for this platform
+Function Install-DotNetLatest {
   if (-not (Test-Path "$PackerLogs\InstallDotNetLatest.installed"))
   {
     # Install .Net 4.7 for all platforms except Windows 2008 (.Net 4.6)
@@ -307,7 +288,7 @@ Function Install-DotNetLatest
 
 # This code lifted from https://github.com/W4RH4WK/Debloat-Windows-10
 # Windows-10 only ?
-function Takeown-Registry($key) {
+Function Takeown-Registry($key) {
   # TODO does not work for all root keys yet
   switch ($key.split('\')[0]) {
       "HKEY_CLASSES_ROOT" {
@@ -341,7 +322,7 @@ function Takeown-Registry($key) {
   $key.SetAccessControl($acl)
 }
 
-function Takeown-File($path) {
+Function Takeown-File($path) {
   takeown.exe /A /F $path
   $acl = Get-Acl $path
 
@@ -356,7 +337,7 @@ function Takeown-File($path) {
   Set-Acl -Path $path -AclObject $acl
 }
 
-function Takeown-Folder($path) {
+Function Takeown-Folder($path) {
   Takeown-File $path
   foreach ($item in Get-ChildItem $path) {
       if (Test-Path $item -PathType Container) {
@@ -367,7 +348,7 @@ function Takeown-Folder($path) {
   }
 }
 
-function Elevate-Privileges {
+Function Elevate-Privileges {
   param($Privilege)
   $Definition = @"
   using System;
@@ -408,21 +389,18 @@ function Elevate-Privileges {
   $type[0]::EnablePrivilege($processHandle, $Privilege)
 }
 
-
 # While `mkdir -force` works fine when dealing with regular folders, it behaves
 # strange when using it at registry level. If the target registry key is
 # already present, all values within that key are purged.
-function force-mkdir($path) {
+# This is because mkdir is actually an wrapper function which includes New-Item with parameters that may not transfer over well to registry.
+Function force-mkdir($path) {
   if (!(Test-Path $path)) {
-      #Write-Host "-- Creating full path to: " $path -ForegroundColor White -BackgroundColor DarkGreen
       New-Item -ItemType Directory -Force -Path $path
   }
 }
 
-# Helper function to remove Store/Apps packages that break sysprep (packages are not needed in our test env)
-
-Function Remove-AppsPackages
-{
+# Helper Function to remove Store/Apps packages that break sysprep (packages are not needed in our test env)
+Function Remove-AppsPackages {
   param( [String]$AppPackageCheckpoint = "AppsPackageRemove.Pass1")
 
   if (-not (Test-Path "$PackerLogs\$AppPackageCheckpoint"))
@@ -517,7 +495,6 @@ Function Remove-AppsPackages
         "WinZipComputing.WinZipUniversal"
         "AdobeSystemsIncorporated.AdobePhotoshopExpress"
 
-
         # apps which cannot be removed using Remove-AppxPackage
         #"Microsoft.BioEnrollment"
         #"Microsoft.MicrosoftEdge"
@@ -552,12 +529,10 @@ Function Remove-AppsPackages
   }
 }
 
-
 # Helper Function to test for Pending Reboot
 # This is modelled from: https://github.com/mwrock/boxstarter/blob/master/Boxstarter.Bootstrapper/Get-PendingReboot.ps1
 # but only tests the current system and is simplied for packer environment (e.g. Domain & SCCM not evaluated)
-
-function Test-PendingReboot {
+Function Test-PendingReboot {
 
   # Note - specifically use Write-Host here as output must be True/False
   Write-Host -ForegroundColor White "Testing for reboot conditions"
@@ -619,8 +594,8 @@ function Test-PendingReboot {
   return $false
 }
 
-# Helper function to perform a reboot and continue the windows update process.
-function Invoke-Reboot {
+# Helper Function to perform a reboot and continue the windows update process.
+Function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
     $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log`""
@@ -632,7 +607,7 @@ function Invoke-Reboot {
 }
 
 # Clear reboot files.
-function Clear-RebootFiles {
+Function Clear-RebootFiles {
   Remove-Item -Force -Path "$startup\packer-post-restart.bat"
   if ($WindowsServerCore ) {
     Remove-Item -Force -Path $PROFILE
@@ -640,8 +615,7 @@ function Clear-RebootFiles {
 }
 
 # Windows Core startup
-
-function Install-CoreStartupWorkaround {
+Function Install-CoreStartupWorkaround {
   if (-not (Test-Path "$PackerLogs\CoreStartupWorkaround.installed")) {
     Write-Output "Using Windows Core Reboot model"
     Set-ItemProperty `
@@ -657,8 +631,8 @@ function Install-CoreStartupWorkaround {
   }
 }
 
-# Helper function (from Boxstarter) to enable remote desktop
-function Enable-RemoteDesktop {
+# Helper Function (from Boxstarter) to enable remote desktop
+Function Enable-RemoteDesktop {
   param(
        [switch]$DoNotRequireUserLevelAuthentication
   )
@@ -697,6 +671,7 @@ function Enable-RemoteDesktop {
   }
 }
 
+# Helper Function to install PS Windows Update - mainly for Appveyor Installs
 Function Install-PSWindowsUpdate {
 
   $webDeployURL="https://gallery.technet.microsoft.com/scriptcenter/2d191bcd-3308-4edd-9de2-88dff796b0bc/file/41459/47/PSWindowsUpdate.zip"
@@ -728,6 +703,7 @@ Function Install-PSWindowsUpdate {
   Write-Output "Ended PSWindowsUpdate Installation`n"
 }
 
+# Helper to install Windows Updates.
 Function Install-WindowsUpdates {
   Write-Output "Starting Windows updates installation. This may takes a lot of time..." 
   
@@ -740,10 +716,6 @@ Function Install-WindowsUpdates {
     Write-Output "Running PSWindows Update" 
     Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
   } 
-  
-  #Add-WUServiceManager -ServiceID 7971f918-a847-4430-9279-4a52d1efe18d -Confirm:$false > $null
-  #Get-WUInstall -WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
-  #Get-WUInstall -UpdateType Software -KBArticleID KB2939087 -AcceptAll -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
   
   Write-Output "Ended Windows updates installation."
 }
