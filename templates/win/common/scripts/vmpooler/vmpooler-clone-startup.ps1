@@ -33,12 +33,6 @@ $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
 $CygwinPasswdFile = "$CygwinDir\etc\passwd"
 $CygwinGroupFile = "$CygwinDir\etc\group"
 
-#--- FUNCTIONS ---#
-function ExitScript([int]$ExitCode){
-	Stop-Transcript
-	exit $ExitCode
-}
-
 #Snooze for a bit
 sleep -s 10
 
@@ -48,5 +42,3 @@ Write-Output "Updating the Cygwin passwd file!"
 #Update the passwd file.
 Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
-
-ExitScript 0

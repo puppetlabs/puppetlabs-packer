@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-2016",
     "image_name"        : "Windows Server 2016 SERVERSTANDARDCORE",
     "product_key"       : "WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
-    "version"           : "20180315_1800",
+    "version"           : "20180323_0000",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "e8adeebcd8076702593469e33cc2d092",

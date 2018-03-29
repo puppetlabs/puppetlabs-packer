@@ -1,5 +1,5 @@
 # Placeholder Environment script for common variable definition.
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 
 # Defining set of constants for Windows version checking used throughout the code.
 # Using Major/Minor versions only as listed in:
@@ -89,31 +89,23 @@ $SprocParms = @{'PassThru'=$true;
 
 #--- FUNCTIONS ---#
 
-# Function to stop transcript
-
-function ExitScript([int]$ExitCode){
-	Stop-Transcript
-	exit $ExitCode
-}
-
 # Helper to create consistent staging directories.
-function Create-PackerStagingDirectories {
-  if (-not (Test-Path "$PackerStaging")) {
+Function Create-PackerStagingDirectories {
+  if (-not (Test-Path "$PackerStaging\puppet\modules")) {
     Write-Host "Creating $PackerStaging"
     mkdir -Path $PackerStaging\puppet\modules
     mkdir -Path $PackerStaging\Downloads
     mkdir -Path $PackerStaging\Downloads\Cygwin
     mkdir -Path $PackerStaging\Config
     mkdir -Path $PackerStaging\Scripts
-    mkdir -Path $PackerStaging\Logs
+    # mkdir -Path $PackerStaging\Logs
     mkdir -Path $PackerStaging\Sysinternals
   }
 }
 
 
 # Function to download the packages we need - used in several scripts.
-
-function Download-File {
+Function Download-File {
 param (
   [string]$url,
   [string]$file
@@ -143,18 +135,16 @@ param (
   }
 }
 
-# Helper function to set both User and Default User registry key.
+# Helper Function to set both User and Default User registry key.
 # This assumes the default user hive has been mounted as HKLM\DEFUSER
 # As noted elsewhere, the intention to to replace all Powershell registry calls with Puppet code
-
 Function Set-UserKey($key,$valuename,$reg_type,$data) {
   Write-Output "Setting Default User registry entry: $key\$valuename"
   reg.exe ADD "HKLM\DEFUSER\$key" /v "$valuename" /t $reg_type /d $data /f
 }
 
 # Copy of Unix Touch command - useful for checkpointing w.r.t. Boxstarter
-Function Touch-File
-{
+Function Touch-File {
     $file = $args[0]
     if($file -eq $null) {
         throw "No filename supplied"
@@ -170,12 +160,11 @@ Function Touch-File
     }
 }
 
-# Helper function to disable all sleep timeouts on the windows box.
+# Helper Function to disable all sleep timeouts on the windows box.
 # Adding on the suspicion that the Cumulative Updates for Win-10 are allowing
 # standby sleep to activate during the long download.
 
-Function Disable-PC-Sleep
-{
+Function Disable-PC-Sleep {
   Write-Output "Disabling all Sleep timers"
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateFileSizePercent' -Value 0
   Set-ItemProperty -Path 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Value 0
@@ -199,11 +188,9 @@ Function Disable-PC-Sleep
   }
 }
 
-# Helper function to install Windows/MS Patch.
+# Helper Function to install Windows/MS Patch.
 # Downloads file to $TEMP and uses wusa to install it.
-
-Function Install_Win_Patch
-{
+Function Install_Win_Patch {
   param(
     [Parameter(Mandatory = $true)]
     [String]$PatchUrl
@@ -218,11 +205,10 @@ Function Install_Win_Patch
   Write-Output "Patch Installed"
 }
 
-# Helper function to delete file, with try/catch to ignore errors.
-# This function is used in both the clean host and clean-disk scripts.
+# Helper Function to delete file, with try/catch to ignore errors.
+# This Function is used in both the clean host and clean-disk scripts.
 # Leaving Verbose options on in all cases so we can be certain files are being removed (IMAGES-684)
-Function ForceFullyDelete-Paths
-{
+Function ForceFullyDelete-Paths {
   $filetodelete = $args[0]
 
   try {
@@ -239,9 +225,7 @@ Function ForceFullyDelete-Paths
 }
 
 # Helper Function set Windows Update to use the Internal Production WSUS Server
-
-Function Enable-UpdatesFromInternalWSUS
-{
+Function Enable-UpdatesFromInternalWSUS {
   if (-not (Test-Path "$PackerLogs\WSUSRedirect.installed")) {
 
     $WSUSServer = "http://imagingwsusprod.delivery.puppetlabs.net:8530"
@@ -259,12 +243,10 @@ Function Enable-UpdatesFromInternalWSUS
   }
 }
 
-# Helper function to perform a final reboot.
+# Helper Function to perform a final reboot.
 # This should help pick up any "trailing" windows updates as it appears that
 # There are still some missing updates.
-
-Function Do-Packer-Final-Reboot
-{
+Function Do-Packer-Final-Reboot {
   if (-not (Test-Path "$PackerLogs\Final.Reboot"))
   {
     Touch-File "$PackerLogs\Final.Reboot"
@@ -272,9 +254,8 @@ Function Do-Packer-Final-Reboot
   }
 }
 
-# Helper function to install latest .Net package appropriate for this platform
-Function Install-DotNetLatest
-{
+# Helper Function to install latest .Net package appropriate for this platform
+Function Install-DotNetLatest {
   if (-not (Test-Path "$PackerLogs\InstallDotNetLatest.installed"))
   {
     # Install .Net 4.7 for all platforms except Windows 2008 (.Net 4.6)
@@ -305,62 +286,245 @@ Function Install-DotNetLatest
 }
 
 
-# Helper function to remove Store/Apps packages that break sysprep (packages are not needed in our test env)
+# This code lifted from https://github.com/W4RH4WK/Debloat-Windows-10
+# Windows-10 only ?
+Function Takeown-Registry($key) {
+  # TODO does not work for all root keys yet
+  switch ($key.split('\')[0]) {
+      "HKEY_CLASSES_ROOT" {
+          $reg = [Microsoft.Win32.Registry]::ClassesRoot
+          $key = $key.substring(18)
+      }
+      "HKEY_CURRENT_USER" {
+          $reg = [Microsoft.Win32.Registry]::CurrentUser
+          $key = $key.substring(18)
+      }
+      "HKEY_LOCAL_MACHINE" {
+          $reg = [Microsoft.Win32.Registry]::LocalMachine
+          $key = $key.substring(19)
+      }
+  }
 
-Function Remove-AppsPackages
-{
+  # get Admin group
+  $admins = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
+  $admins = $admins.Translate([System.Security.Principal.NTAccount])
+
+  # set owner
+  $key = $reg.OpenSubKey($key, "ReadWriteSubTree", "TakeOwnership")
+  $acl = $key.GetAccessControl()
+  $acl.SetOwner($admins)
+  $key.SetAccessControl($acl)
+
+  # set FullControl
+  $acl = $key.GetAccessControl()
+  $rule = New-Object System.Security.AccessControl.RegistryAccessRule($admins, "FullControl", "Allow")
+  $acl.SetAccessRule($rule)
+  $key.SetAccessControl($acl)
+}
+
+Function Takeown-File($path) {
+  takeown.exe /A /F $path
+  $acl = Get-Acl $path
+
+  # get Admin group
+  $admins = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-544")
+  $admins = $admins.Translate([System.Security.Principal.NTAccount])
+
+  # add NT Authority\SYSTEM
+  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($admins, "FullControl", "None", "None", "Allow")
+  $acl.AddAccessRule($rule)
+
+  Set-Acl -Path $path -AclObject $acl
+}
+
+Function Takeown-Folder($path) {
+  Takeown-File $path
+  foreach ($item in Get-ChildItem $path) {
+      if (Test-Path $item -PathType Container) {
+          Takeown-Folder $item.FullName
+      } else {
+          Takeown-File $item.FullName
+      }
+  }
+}
+
+Function Elevate-Privileges {
+  param($Privilege)
+  $Definition = @"
+  using System;
+  using System.Runtime.InteropServices;
+  public class AdjPriv {
+      [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
+          internal static extern bool AdjustTokenPrivileges(IntPtr htok, bool disall, ref TokPriv1Luid newst, int len, IntPtr prev, IntPtr rele);
+      [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
+          internal static extern bool OpenProcessToken(IntPtr h, int acc, ref IntPtr phtok);
+      [DllImport("advapi32.dll", SetLastError = true)]
+          internal static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
+      [StructLayout(LayoutKind.Sequential, Pack = 1)]
+          internal struct TokPriv1Luid {
+              public int Count;
+              public long Luid;
+              public int Attr;
+          }
+      internal const int SE_PRIVILEGE_ENABLED = 0x00000002;
+      internal const int TOKEN_QUERY = 0x00000008;
+      internal const int TOKEN_ADJUST_PRIVILEGES = 0x00000020;
+      public static bool EnablePrivilege(long processHandle, string privilege) {
+          bool retVal;
+          TokPriv1Luid tp;
+          IntPtr hproc = new IntPtr(processHandle);
+          IntPtr htok = IntPtr.Zero;
+          retVal = OpenProcessToken(hproc, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref htok);
+          tp.Count = 1;
+          tp.Luid = 0;
+          tp.Attr = SE_PRIVILEGE_ENABLED;
+          retVal = LookupPrivilegeValue(null, privilege, ref tp.Luid);
+          retVal = AdjustTokenPrivileges(htok, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
+          return retVal;
+      }
+  }
+"@
+  $ProcessHandle = (Get-Process -id $pid).Handle
+  $type = Add-Type $definition -PassThru
+  $type[0]::EnablePrivilege($processHandle, $Privilege)
+}
+
+# While `mkdir -force` works fine when dealing with regular folders, it behaves
+# strange when using it at registry level. If the target registry key is
+# already present, all values within that key are purged.
+# This is because mkdir is actually an wrapper function which includes New-Item with parameters that may not transfer over well to registry.
+Function force-mkdir($path) {
+  if (!(Test-Path $path)) {
+      New-Item -ItemType Directory -Force -Path $path
+  }
+}
+
+# Helper Function to remove Store/Apps packages that break sysprep (packages are not needed in our test env)
+Function Remove-AppsPackages {
   param( [String]$AppPackageCheckpoint = "AppsPackageRemove.Pass1")
 
   if (-not (Test-Path "$PackerLogs\$AppPackageCheckpoint"))
   {
-    try {
-      Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
+    Write-Output "Remove All Win-10 App/Packages to prevent Sysprep Issues"
 
-      Import-Module Appx
-      Import-Module Dism
+    Write-Output "Elevating privileges for this process"
+    do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
-      Write-Output "Removing AppxPackages"
-      Get-AppxPackage -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+    Write-Output "Uninstalling default apps"
+    $apps = @(
+        # default Windows 10 apps
+        "Microsoft.3DBuilder"
+        "Microsoft.Appconnector"
+        "Microsoft.BingFinance"
+        "Microsoft.BingNews"
+        "Microsoft.BingSports"
+        "Microsoft.BingWeather"
+        "Microsoft.BingTranslator"
+        #"Microsoft.FreshPaint"
+        "Microsoft.Getstarted"
+        "Microsoft.MicrosoftOfficeHub"
+        "Microsoft.MicrosoftSolitaireCollection"
+        #"Microsoft.MicrosoftStickyNotes"
+        "Microsoft.Office.OneNote"
+        #"Microsoft.OneConnect"
+        "Microsoft.People"
+        "Microsoft.SkypeApp"
+        #"Microsoft.Windows.Photos"
+        "Microsoft.WindowsAlarms"
+        #"Microsoft.WindowsCalculator"
+        "Microsoft.WindowsCamera"
+        "Microsoft.WindowsMaps"
+        "Microsoft.WindowsPhone"
+        "Microsoft.WindowsSoundRecorder"
+        #"Microsoft.WindowsStore"
+        "Microsoft.XboxApp"
+        "Microsoft.ZuneMusic"
+        "Microsoft.ZuneVideo"
+        "microsoft.windowscommunicationsapps"
+        "Microsoft.MinecraftUWP"
+        "Microsoft.MicrosoftPowerBIForWindows"
+        "Microsoft.NetworkSpeedTest"
+        "Microsoft.RemoteDesktop"
 
-      Write-Output "Removing Online Provisioned Packages"
-      Get-AppXProvisionedPackage -online | Remove-AppxProvisionedPackage -online -ErrorAction SilentlyContinue
+        # Threshold 2 apps
+        "Microsoft.CommsPhone"
+        "Microsoft.ConnectivityStore"
+        "Microsoft.Messaging"
+        "Microsoft.Office.Sway"
+        "Microsoft.OneConnect"
+        "Microsoft.WindowsFeedbackHub"
+
+        #Redstone apps
+        "Microsoft.BingFoodAndDrink"
+        "Microsoft.BingTravel"
+        "Microsoft.BingHealthAndFitness"
+        "Microsoft.WindowsReadingList"
+
+        # non-Microsoft
+        "9E2F88E3.Twitter"
+        "PandoraMediaInc.29680B314EFC2"
+        "Flipboard.Flipboard"
+        "ShazamEntertainmentLtd.Shazam"
+        "king.com.CandyCrushSaga"
+        "king.com.CandyCrushSodaSaga"
+        "king.com.*"
+        "ClearChannelRadioDigital.iHeartRadio"
+        "4DF9E0F8.Netflix"
+        "6Wunderkinder.Wunderlist"
+        "Drawboard.DrawboardPDF"
+        "2FE3CB00.PicsArt-PhotoStudio"
+        "D52A8D61.FarmVille2CountryEscape"
+        "TuneIn.TuneInRadio"
+        "GAMELOFTSA.Asphalt8Airborne"
+        #"TheNewYorkTimes.NYTCrossword"
+        "DB6EA5DB.CyberLinkMediaSuiteEssentials"
+        "Facebook.Facebook"
+        "flaregamesGmbH.RoyalRevolt2"
+        "Playtika.CaesarsSlotsFreeCasino"
+        "A278AB0D.MarchofEmpires"
+        "KeeperSecurityInc.Keeper"
+        "ThumbmunkeysLtd.PhototasticCollage"
+        "XINGAG.XING"
+        "89006A2E.AutodeskSketchBook"
+        "D5EA27B7.Duolingo-LearnLanguagesforFree"
+        "46928bounde.EclipseManager"
+        "ActiproSoftwareLLC.562882FEEB491" # next one is for the Code Writer from Actipro Software LLC
+        "DolbyLaboratories.DolbyAccess"
+        "SpotifyAB.SpotifyMusic"
+        "A278AB0D.DisneyMagicKingdoms"
+        "WinZipComputing.WinZipUniversal"
+        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
+
+        # apps which cannot be removed using Remove-AppxPackage
+        #"Microsoft.BioEnrollment"
+        #"Microsoft.MicrosoftEdge"
+        #"Microsoft.Windows.Cortana"
+        #"Microsoft.WindowsFeedback"
+        #"Microsoft.XboxGameCallableUI"
+        #"Microsoft.XboxIdentityProvider"
+        #"Windows.ContactSupport"
+    )
+
+    foreach ($app in $apps) {
+
+      Write-Output "Trying to remove $app"
+      try {
+        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+
+        Get-AppXProvisionedPackage -Online |
+            Where-Object DisplayName -EQ $app |
+            Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+      }
+      catch {
+        Write-Output "Ignoring errors in pkgremoval for $app"
+      }
     }
-    catch {
-      Write-Output "Ignoring errors in pkgremoval"
-    }
 
-    if ("$ARCH" -eq "x86_64") {
-      $SystemDir = "SysWOW64"
-    } else {
-      $SystemDir = "System32"
-    }
+    # Specials for the tricky ones
+    Get-AppXPackage -Name Microsoft.Windows.Cortana |
+        ForEach-Object {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"} -ErrorAction SilentlyContinue
 
-    try {
-      Write-Output "Stopping OneDrive"
-      taskkill /f /im OneDrive.exe
-    }
-    catch {
-      Write-Output "Ignoring OneDrive taskkill error"
-    }
-
-    try {
-      Write-Output "Uninstalling OneDrive"
-      $zproc = Start-Process "$env:SystemRoot\$SystemDir\OneDriveSetup.exe" -PassThru -NoNewWindow -ArgumentList "/uninstall"
-      $zproc.WaitForExit()
-
-      Remove-Item "$Env:UserProfile\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "$Env:LocalAppData\Microsoft\OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "$Env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-      Remove-Item "C:\OneDriveTemp" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
-    }
-    catch {
-      Write-Output "Ignoring OneDrive uninstall error"
-    }
-
-    # Flag that this operation needs to be re-run
-    Touch-File "$PackerLogs\AppsPackageRemove.Pass2.Required"
-
-    if (Test-PendingReboot) { Invoke-Reboot }
     Touch-File "$PackerLogs\$AppPackageCheckpoint"
   }
 }
@@ -368,8 +532,7 @@ Function Remove-AppsPackages
 # Helper Function to test for Pending Reboot
 # This is modelled from: https://github.com/mwrock/boxstarter/blob/master/Boxstarter.Bootstrapper/Get-PendingReboot.ps1
 # but only tests the current system and is simplied for packer environment (e.g. Domain & SCCM not evaluated)
-
-function Test-PendingReboot {
+Function Test-PendingReboot {
 
   # Note - specifically use Write-Host here as output must be True/False
   Write-Host -ForegroundColor White "Testing for reboot conditions"
@@ -431,11 +594,11 @@ function Test-PendingReboot {
   return $false
 }
 
-# Helper function to perform a reboot and continue the windows update process.
-function Invoke-Reboot {
+# Helper Function to perform a reboot and continue the windows update process.
+Function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1`""
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log`""
     New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
 
 	  shutdown /t 0 /r /f
@@ -444,7 +607,7 @@ function Invoke-Reboot {
 }
 
 # Clear reboot files.
-function Clear-RebootFiles {
+Function Clear-RebootFiles {
   Remove-Item -Force -Path "$startup\packer-post-restart.bat"
   if ($WindowsServerCore ) {
     Remove-Item -Force -Path $PROFILE
@@ -452,8 +615,7 @@ function Clear-RebootFiles {
 }
 
 # Windows Core startup
-
-function Install-CoreStartupWorkaround {
+Function Install-CoreStartupWorkaround {
   if (-not (Test-Path "$PackerLogs\CoreStartupWorkaround.installed")) {
     Write-Output "Using Windows Core Reboot model"
     Set-ItemProperty `
@@ -469,8 +631,8 @@ function Install-CoreStartupWorkaround {
   }
 }
 
-# Helper function (from Boxstarter) to enable remote desktop
-function Enable-RemoteDesktop {
+# Helper Function (from Boxstarter) to enable remote desktop
+Function Enable-RemoteDesktop {
   param(
        [switch]$DoNotRequireUserLevelAuthentication
   )
@@ -509,6 +671,7 @@ function Enable-RemoteDesktop {
   }
 }
 
+# Helper Function to install PS Windows Update - mainly for Appveyor Installs
 Function Install-PSWindowsUpdate {
 
   $webDeployURL="https://gallery.technet.microsoft.com/scriptcenter/2d191bcd-3308-4edd-9de2-88dff796b0bc/file/41459/47/PSWindowsUpdate.zip"
@@ -540,6 +703,7 @@ Function Install-PSWindowsUpdate {
   Write-Output "Ended PSWindowsUpdate Installation`n"
 }
 
+# Helper to install Windows Updates.
 Function Install-WindowsUpdates {
   Write-Output "Starting Windows updates installation. This may takes a lot of time..." 
   
@@ -552,10 +716,6 @@ Function Install-WindowsUpdates {
     Write-Output "Running PSWindows Update" 
     Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
   } 
-  
-  #Add-WUServiceManager -ServiceID 7971f918-a847-4430-9279-4a52d1efe18d -Confirm:$false > $null
-  #Get-WUInstall -WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
-  #Get-WUInstall -UpdateType Software -KBArticleID KB2939087 -AcceptAll -IgnoreReboot | Out-File C:\PSWindowsUpdate.log
   
   Write-Output "Ended Windows updates installation."
 }

@@ -17,9 +17,6 @@ If ( $WindowsServerCore ) {
   Install-CoreStartupWorkaround
 }
 
-# Record sessions in transcript
-Start-Transcript -Append -Path "$PackerLogs\start-pswindowsupdate.log"
-
 # Enable WSUS - this is being put at the top of the script deliberately as a recycle of wuauserv is
 # required - this most reliable way to do this is with a reboot so we want to get this out the way first
 # to prevent windows update starting anything.
@@ -33,6 +30,13 @@ else {
 
 if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
   Write-Output "Installing HyperVisor ($HyperVisor) Extensions/Tools"
+
+  # This is a Windows 10 only workaround to make sure the trusted installer is actually running.
+  # This needs to be done early on in the initialisation sequence well before we apply updates.
+  # Not certain, but this appears to improve the reliability of the windows update.
+  if ($WindowsVersion -Like $WindowsServer2016) {
+    Set-Service "trustedinstaller" -StartupType Automatic -ErrorAction SilentlyContinue
+  }
 
   switch ($HyperVisor) {
     "vmware" {
@@ -138,7 +142,16 @@ else {
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
 # When no more reboots are needed, the script falls through to the end.
 Write-Output "Searching for Windows Updates"
+if ($WindowsVersion -like $WindowsServer2016) {
+  Write-Output "Disabling some more Windows Update (10) parameters"
+  Write-Output "Disable seeding of updates to other computers via Group Policies"
+  force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
+  Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" "DODownloadMode" 0
+}
+
+Write-Output "Using PSWindowsUpdate module"
 Import-Module "$PackerStaging\PSWindowsUpdate\PSWindowsUpdate.psd1"
+
 # Repeat this command twice to ensure any interrupted downloads are re-attempted for install.
 # Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability
 $Attempt = 1
@@ -164,11 +177,10 @@ do {
   $Attempt++
 } while ($Attempt -le 2)
 
-# Rerun the Apps Package Cleaner again.
-
-if (Test-Path "$PackerLogs\AppsPackageRemove.Pass2.Required") {
-  Write-Output "Running second pass of the Apps Package Cleaner post windows update"
-  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
+# Run the Application Package Cleaner
+if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
+  Write-Output "Running Apps Package Cleaner post windows update"
+  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass1
 }
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
