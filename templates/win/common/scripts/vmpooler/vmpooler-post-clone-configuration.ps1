@@ -114,7 +114,7 @@ Write-Output "Set SSHD to start after next boot"
 Set-Service "sshd" -StartupType Automatic
 
 # Create BGINFO Scheduled Task to update the lifetime every 20 minutes
-schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\set-bginfo.ps1'
+schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden -NonInteractive -File C:\Packer\Scripts\set-bginfo.ps1'
 
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
