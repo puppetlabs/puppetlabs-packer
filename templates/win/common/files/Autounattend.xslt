@@ -177,6 +177,25 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Select correct OOBE elements depending on OS Version -->
+  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:SkipUserOOBE | 
+                       u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:SkipMachineOOBE'>
+    <xsl:choose>
+      <xsl:when test="$WindowsVersion = 'Windows-10'" >
+        <xsl:copy>
+          <!-- 
+            Copy Skip OOBE Elements for these Operating Systems.
+            Windows-10 only
+             -->
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
   <!-- Insert correct Administrator Password -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:UserAccounts/u:AdministratorPassword/u:Value |
                        u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:UserAccounts/u:LocalAccounts/u:LocalAccount/u:Password/u:Value | 
