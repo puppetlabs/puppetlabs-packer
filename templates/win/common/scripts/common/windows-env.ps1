@@ -468,8 +468,6 @@ Function Remove-AppsPackages {
         # Note - need to encase package removals in try catch to avoid loop fallout
         # For some reason, the SilentlyContinue doesn't always appear to be honoured.
 			  try {
-          Write-Output "Removing $AppName for User"
-          Remove-AppxPackage -Package $AppFullName -ErrorAction SilentlyContinue
           Write-Output "Removing $AppName for All Users"
           Remove-AppxPackage -Package $AppFullName -AllUsers -ErrorAction SilentlyContinue
         }
