@@ -3,7 +3,7 @@
     "template_os"                           : "rhel7-64",
     "beakerhost"                            : "centos7-64",
     "version"                               : "0.0.1",
-    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7-x86_64-DVD-1611.iso",
+    "iso_url"                               : "http://ftp.belnet.be/mirror/ftp.centos.org/7.3.1611/isos/x86_64/CentOS-7-x86_64-DVD-1611.iso",
     "iso_checksum"                          : "c455ee948e872ad2194bdddd39045b83634e8613249182b88f549bb2319d97eb",
     "iso_checksum_type"                     : "sha256",
     "docker_base_image"                     : "centos:7.3.1611",
