@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
- 
+
 hostname = `vmtoolsd --cmd "info-get guestinfo.hostname"`
 
 hostname = hostname.chomp
@@ -14,19 +14,23 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
  
+<% if ['18.04'].include? @operatingsystemrelease -%>
+# systemd-networkd
+Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
+<% else -%>
+# NetworkManager
 Kernel.system('hostname -F /etc/hostname')
- 
 dhc = File.read('/etc/dhcp/dhclient.conf')
- 
 File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
-  <% if ['15.10', '16.04', '16.10', '18.04'].include? @operatingsystemrelease -%>
+  <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
   dhc.gsub!(/^(send host-name.*)/, "send host-name \"#{hostname}\";")
   <% else -%>
   dhc.gsub!(/^(#send host-name.*)/, "send host-name \"#{hostname}\";")
   <% end -%>
   f.write(dhc)
 end
- 
+<% end -%>
+
 File.open('/etc/hosts', 'w') do |f|
   f.puts "127.0.0.1 localhost"
   f.puts "127.0.1.1 #{hostname}"
@@ -35,18 +39,29 @@ end
 puts '- Re-obtaining DHCP lease...'
  
 <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
+# NetworkManager
 Kernel.system('/usr/sbin/service networking restart')
 <% elsif ['18.04'].include? @operatingsystemrelease -%>
+# systemd-networkd's DHCP client uses /etc/machine-id instead of the link layer address (as dhclient does) to generate a client ID
+# /etc/machine-id will be the same on VMs cloned from the same template, so regenerate it:
+File.delete('/etc/machine-id')
+Kernel.system('/bin/systemd-machine-id-setup')
+Kernel.system('/bin/systemctl daemon-reload')
 Kernel.system('/bin/systemctl restart systemd-networkd')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
 <% end -%>
  
 puts '- Cleaning up...'
- 
-#Kernel.system('rm /etc/vsphere-bootstrap.rb')
+
+<% if ['18.04'].include? @operatingsystemrelease -%>
+# With systemd-networkd, disable the oneshot service that runs this script:
+Kernel.system('/bin/systemctl disable --now vsphere.bootstrap.service')
+<% else -%>
+# With NetworkManager, /etc/rc.local is what runs this script; Make it a noop after the first run:
 Kernel.system('echo "exit 0" > /etc/rc.local')
- 
+<% end -%>
+
 puts "\n"
  
 puts 'Done!'

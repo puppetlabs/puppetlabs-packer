@@ -24,6 +24,15 @@ class packer::vsphere inherits packer::vsphere::params {
         }
       }
     }
+    debian: {
+      if $::operatingsystemrelease in ['18.04'] {
+        # Enable systemd service for vsphere bootstrap instead of relying on rc.local
+        file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
+          ensure => 'link',
+          target => $startup_file,
+        }
+      }
+    }
   }
 
   package { $ruby_package:

@@ -8,10 +8,15 @@ class packer::vsphere::params {
 
   case $::operatingsystem {
     'Ubuntu': {
-      $startup_file          = '/etc/rc.local'
-      $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
+      if $::operatingsystemrelease in ['18.04'] {
+        $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
+        $startup_file_source   = 'vsphere.bootstrap.service'
+      } else {
+        $startup_file          = '/etc/rc.local'
+        $startup_file_source   = 'rc.local'
+      }
       if $facts[os][release] in ['12.04', '14.04'] {
         $periodic_file         = '/etc/apt/apt.conf.d/02periodic'
       }

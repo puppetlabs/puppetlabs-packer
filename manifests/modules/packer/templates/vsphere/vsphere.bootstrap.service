@@ -1,0 +1,9 @@
+[Unit]
+Description=puppetlabs-packer vsphere bootstrap script
+
+[Service]
+Type=oneshot
+ExecStart=/etc/vsphere-bootstrap.rb
+
+[Install]
+WantedBy=multi-user.target
