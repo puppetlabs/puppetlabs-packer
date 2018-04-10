@@ -13,6 +13,7 @@ class packer::vsphere::params {
       if $::operatingsystemrelease in ['18.04'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
+        $startup_file_perms    = '0644'
       } else {
         $startup_file          = '/etc/rc.local'
         $startup_file_source   = 'rc.local'
