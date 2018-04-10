@@ -56,12 +56,12 @@ puts '- Cleaning up...'
 
 <% if ['18.04'].include? @operatingsystemrelease -%>
 # With systemd-networkd, disable the oneshot service that runs this script:
-Kernel.system('/bin/systemctl disable --now vsphere.bootstrap.service')
+Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
 <% else -%>
 # With NetworkManager, /etc/rc.local is what runs this script; Make it a noop after the first run:
 Kernel.system('echo "exit 0" > /etc/rc.local')
 <% end -%>
 
 puts "\n"
- 
+
 puts 'Done!'

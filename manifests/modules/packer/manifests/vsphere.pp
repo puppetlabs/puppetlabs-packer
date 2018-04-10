@@ -49,7 +49,7 @@ class packer::vsphere inherits packer::vsphere::params {
   file { $startup_file:
     owner   => 'root',
     group   => 'root',
-    mode    => '0755',
+    mode    => pick($startup_file_perms, '0755'),
     content => template("packer/vsphere/${startup_file_source}"),
   }
 
