@@ -4,11 +4,11 @@
     "vbox_guest_os"     : "Windows2016_64",
     "vmware_guest_os"   : "windows8srv-64",
     "windows_version"   : "Windows-2016",
-    "image_name"        : "Windows Server 2016 SERVERSTANDARD",
-    "product_key"       : "WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
-    "version"           : "20180323_0000",
-    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
+    "image_name"        : "Windows Server 2016 SERVERSTANDARDACORE",
+    "product_key"       : "DPCNP-XQFKJ-BJF7R-FRC8D-GF6G4",
+    "version"           : "20180413_0000",
+    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_version_1709_updated_jan_2018_x64_dvd_100492040.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "e8adeebcd8076702593469e33cc2d092",
+    "iso_checksum"      : "3b93dbc1c13a223b543483f0dcb52587",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
 }
