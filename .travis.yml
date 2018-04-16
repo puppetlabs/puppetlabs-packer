@@ -2,12 +2,10 @@ language: bash
 
 # Use container-based infrastructure for quicker build start-up
 sudo: false
-dist: trusty
+dist: xenial
 
 addons:
   apt:
-    sources:
-    - debian-sid  # Grab shellcheck from the Debian repo (o_O)
     packages:
     - shellcheck
 
