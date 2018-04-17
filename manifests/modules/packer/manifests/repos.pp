@@ -46,6 +46,17 @@ class packer::repos {
       gpgcheck => "1",
       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
     }
+
+    # We add the lb (load balancer) repo for redhat-6-x86_64 which is
+    # used in puppet modules testing
+    if $::operatingsystemmajrelease == "6" and $::architecture == "x86_64" {
+      yumrepo { "localmirror-lb":
+        descr    => "localmirror-lb",
+        baseurl  => "${base_url}/lb",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+    }
   }
 
 }
