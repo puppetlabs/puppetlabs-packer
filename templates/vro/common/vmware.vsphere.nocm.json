@@ -10,6 +10,9 @@
     "provisioner"               : "vmware",
     "shutdown_command"          : "/sbin/halt -h -p",
 
+    "boot_wait"                 : "90s",
+    "boot_command"              : "{{env `QA_ROOT_PASSWD_PLAIN`}}<enter><wait5>{{env `QA_ROOT_PASSWD_PLAIN`}}<enter><wait10><wait10><wait10><wait10><wait10><wait10><wait10><enter><wait5>root<enter><wait5>{{env `QA_ROOT_PASSWD_PLAIN`}}<enter><wait5>sed -i 's/PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config<enter><wait5>/sbin/chkconfig sshd on<enter><wait5>/etc/init.d/sshd start<enter><wait5>",
+
     "qa_root_passwd_plain"      : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
     "packer_vcenter_host"       : "{{env `PACKER_VCENTER_HOST`}}",
     "packer_vcenter_username"   : "{{env `PACKER_VCENTER_USERNAME`}}",
@@ -45,12 +48,15 @@
       "headless"                : "{{user `headless`}}",
 
       "ssh_username"            : "root",
-      "ssh_password"            : "puppet",
+      "ssh_password"            : "{{user `qa_root_passwd_plain`}}",
       "ssh_port"                : 22,
       "ssh_wait_timeout"        : "10000s",
       "ssh_pty"                 : "true",
 
       "shutdown_command"        : "{{user `shutdown_command`}}",
+
+      "boot_wait" : "{{user `boot_wait`}}",
+      "boot_command" : "{{user `boot_command`}}",
 
       "vmx_data"                : {
         "annotation"            : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}"
@@ -109,7 +115,8 @@
       "vm_folder"               : "{{user `packer_vcenter2_folder`}}",
       "vm_name"                 : "{{user `template_name`}}-{{user `version`}}",
       "vm_network"              : "{{user `packer_vcenter2_net`}}",
-      "insecure"                : "{{user `packer_vcenter2_insecure`}}"
+      "insecure"                : "{{user `packer_vcenter2_insecure`}}",
+      "overwrite"               : "true"
     }
   ]
 }
