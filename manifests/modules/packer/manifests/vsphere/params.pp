@@ -75,8 +75,14 @@ class packer::vsphere::params {
     }
 
     'Fedora': {
-      $startup_file          = '/etc/rc.d/rc.local'
-      $startup_file_source   = 'rc.local'
+      if $::operatingsystemrelease in ['28'] {
+        $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
+        $startup_file_source   = 'vsphere.bootstrap.service'
+        $startup_file_perms    = '0644'
+      } else {
+        $startup_file          = '/etc/rc.d/rc.local'
+        $startup_file_source   = 'rc.local'
+      }
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'redhat.rb.erb'
       $ruby_package          = [ 'ruby', 'rubygems' ]

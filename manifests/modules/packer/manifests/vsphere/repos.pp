@@ -86,11 +86,17 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
         }
       } else {
-        $base_url = $::operatingsystem ? {
-          'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
-          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}",
-          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${::operatingsystemmajrelease}/${::architecture}",
-          'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all"
+        # When the final release of Fedora 28 drops, our normal mirror url
+        # should work for it and we can remove this special case:
+        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease == '28' {
+          $base_url = "${repo_mirror}/rpm__remote_fedora/development/28/Everything/${::architecture}/os"
+        } else {
+          $base_url = $::operatingsystem ? {
+            'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
+            'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}",
+            'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${::operatingsystemmajrelease}/${::architecture}",
+            'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all"
+          }
         }
       }
 
