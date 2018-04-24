@@ -2,8 +2,8 @@
 
 ### SSH CONFIG. ###
 
-# Change the root password to the QA_ROOT_PASSWD
-usermod -p `echo "${QA_ROOT_PASSWD_PLAIN}" | openssl passwd -stdin` root
+# This lets the user change root's password to a previous one
+sed -i 's/enforce_for_root//' /etc/pam.d/common-password
 
 # Turn off root password expiration
 chage -m 0 -M -1 -W -1 -I -1 root
