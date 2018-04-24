@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
 
-
 hostname = `vmtoolsd --cmd "info-get guestinfo.hostname"`
 
 hostname = hostname.chomp
@@ -15,7 +14,12 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
 
+<% if ['28'].include? @operatingsystemrelease -%>
+# systemd-networkd
+Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
+<% else -%>
 Kernel.system('hostname -F /etc/hostname')
+<% end -%>
 
 puts '- Re-obtaining DHCP lease...'
 
@@ -47,13 +51,31 @@ puts '- Re-obtaining DHCP lease...'
 <% end -%>
 
 <% if @operatingsystem == 'Fedora' -%>
-  Kernel.system('/sbin/service NetworkManager restart')
+  <% if ['28'].include? @operatingsystemrelease -%>
+# systemd-networkd's DHCP client uses /etc/machine-id instead of the
+# link layer address (as dhclient does) to generate a client ID.
+# /etc/machine-id will be the same on VMs cloned from the same template,
+# so regenerate it:
+File.delete('/etc/machine-id')
+Kernel.system('/bin/systemd-machine-id-setup')
+Kernel.system('/bin/systemctl daemon-reload')
+Kernel.system('/bin/systemctl restart systemd-networkd')
+  <% else -%>
+Kernel.system('/sbin/service NetworkManager restart')
+  <% end -%>
 <% end -%>
 
 puts '- Cleaning up...'
 
+<% if ['28'].include? @operatingsystemrelease -%>
+# With systemd-networkd, disable the oneshot service that runs this script:
+Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
+<% else -%>
+# With NetworkManager, /etc/rc.d/rc.local is what runs this script; Make
+# it a noop after the first run:
 Kernel.system('rm /etc/vsphere-bootstrap.rb')
 Kernel.system('echo "exit 0" > /etc/rc.d/rc.local')
+<% end -%>
 
 puts "\n"
 

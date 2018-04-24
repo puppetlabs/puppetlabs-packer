@@ -11,7 +11,7 @@ class packer::vsphere inherits packer::vsphere::params {
 
   case $::osfamily {
     redhat: {
-      if $::operatingsystemrelease in ['24', '25', '26', '27'] {
+      if $::operatingsystemrelease in ['24', '25', '26', '27', '28'] {
         Package {
           provider => 'dnf',
         }
@@ -21,6 +21,14 @@ class packer::vsphere inherits packer::vsphere::params {
           group   => 'root',
           mode    => '0644',
           source  => 'puppet:///modules/packer/vsphere/dhclient.conf',
+        }
+      }
+
+      if $::operatingsystemrelease in ['28'] {
+        # Enable systemd service for vsphere bootstrap instead of relying on rc.local
+        file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
+          ensure => 'link',
+          target => $startup_file,
         }
       }
     }
