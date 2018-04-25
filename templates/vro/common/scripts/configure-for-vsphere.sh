@@ -14,6 +14,13 @@ rm "${SSH_AUTHORIZED_KEYS_PATH}"
 
 ### VCLOUD BOOT-STRAPPING ###
 
+# These modifications to /etc/sysconfig/network/dhcp ensure that the
+# hostname changes made by the vcloud-bootstrap script persist whenever
+# the network is restarted
+sed -i 's/DHCPCD_USER_OPTIONS=.*/DHCPCD_USER_OPTIONS=""/' /etc/sysconfig/network/dhcp
+sed -i 's/DHCLIENT_SET_HOSTNAME=.*/DHCLIENT_SET_HOSTNAME="yes"/' /etc/sysconfig/network/dhcp
+sed -i 's/DHCLIENT_USE_LAST_LEASE=.*/DHCLIENT_USE_LAST_LEASE="yes"/' /etc/sysconfig/network/dhcp
+
 # Set-up vcloud boot-strapping
 mv ${VCLOUD_BOOTSTRAP_PATH} /etc/vcloud-bootstrap
 chmod 0700 /etc/vcloud-bootstrap

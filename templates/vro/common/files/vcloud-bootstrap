@@ -16,9 +16,3 @@ hostname $hostname
 
 echo "- Restarting network..."
 service network restart
-
-# Restarting the network service resets the hostname to
-# its fqdn form, which is not what "info-get guestinfo.hostname"
-# returns. We reset the hostname here so that vmpooler can detect
-# this VM and move it to the ready queue.
-hostname $hostname
