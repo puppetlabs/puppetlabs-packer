@@ -1,7 +1,7 @@
 {
     "template_name" : "vro-7.1-x86_64",
     "beakerhost"    : "vro71-64",
-    "version"       : "0.0.1",
+    "version"       : "0.0.2",
     "ova_url"       : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/VMware-vRO-Appliance-7.1.0.19044-4276164_OVF10.ova",
     "ova_md5"       : "09c6b977afe766a1b2549cb259f954e1"
 }
