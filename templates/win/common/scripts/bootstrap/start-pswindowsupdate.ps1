@@ -133,6 +133,7 @@ Disable-PC-Sleep
 # Run the (Optional) Installation Package File.
 if (Test-Path "A:\platform-packages.ps1")
 {
+  Write-Output "Platform Packages....."
   & "A:\platform-packages.ps1"
 }
 else {
