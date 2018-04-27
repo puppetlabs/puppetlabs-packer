@@ -32,5 +32,10 @@ Remove-Item $FilePath -Force -ErrorAction SilentlyContinue
 Write-Output "Removing page file.  Recreates on next boot"
 reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
 
+# Ensure pagefile is created again at reboot (and managed automatically)
+$System = GWMI Win32_ComputerSystem -EnableAllPrivileges
+$System.AutomaticManagedPagefile = $true
+$System.Put()
+
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
