@@ -1,5 +1,9 @@
 # puppetlabs-packer: macOS templates
 
+### Support Status
+
+This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
+
 ### Prerequisites
 
 Imaging for macOS has become particularly difficult after the release of 10.12.4. At this point, to build one of these templates, **you must have:**

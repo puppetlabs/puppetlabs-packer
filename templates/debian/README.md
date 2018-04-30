@@ -2,10 +2,13 @@
 
 ### About
 
-This contains the vmware.base image template for Debian platforms, as well as all of the var files
-required to build any of the other templates in the `templates/common` directory.
+This contains the vmware.base image template for Debian platforms, as well as all of the var files required to build any of the other templates in the `templates/common` directory.
 
-Currently, only Debian 7.8, 8.2 and 9.0 are supported for both the 64-bit and 32-bit architectures.
+### Support Status
+
+This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
+
+Puppet maintained Debian versions include 7.8, 8.2, and 9.0. Any other versions of Debian here are community maintained.
 
 ### Building
 

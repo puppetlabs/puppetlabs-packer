@@ -8,6 +8,7 @@
 
     "boot_command"                                 : "e<wait>e<wait><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><wait>- nowin install -B install_media=cdrom<enter><wait>b<wait>",
 
+    "support_status"                               : "puppet_maintained",
     "headless"                                     : "true",
     "template_config"                              : "base",
     "provisioner"                                  : "vmware",

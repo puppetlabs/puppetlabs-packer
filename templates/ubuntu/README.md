@@ -2,8 +2,13 @@
 
 ### About
 
-This contains all of the var files required to build any of the templates in the
-`templates/common` directory for Ubuntu platforms.
+This contains all of the var files required to build any of the templates in the `templates/common` directory for Ubuntu platforms.
+
+### Support Status
+
+This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
+
+Puppet maintained Ubuntu versions include 14.04, 16.04, and 18.04. Any other versions of Ubuntu here are community maintained.
 
 ### Building
 
