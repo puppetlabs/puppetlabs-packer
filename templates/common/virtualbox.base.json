@@ -10,6 +10,7 @@
       "floppy_files"                         : null,
       "http_directory"                       : null,
       "boot_command"                         : null,
+      "support_status"                       : "community_maintained",
       "project_root"                         : "../../../..",
       "headless"                             : "true",
       "template_config"                      : "base",

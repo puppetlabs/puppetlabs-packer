@@ -11,6 +11,7 @@
     "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
     "vmware_vsphere_nocm_vmx_data_ethernet0_pciSlotNumber" : "33",
 
+    "support_status"                        : "puppet_maintained",
     "project_root"                          : "../../../..",
     "headless"                              : "true",
     "template_config"                       : "vsphere-nocm",
