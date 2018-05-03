@@ -10,6 +10,7 @@
       "libvirt_nocm_qemuargs_mem_size"       : "512",
       "libvirt_nocm_qemuargs_cpu_count"      : "1",
 
+      "support_status"                       : "community_maintained",
       "project_root"                         : "../../../..",
       "headless"                             : "true",
       "template_config"                      : "puppet",

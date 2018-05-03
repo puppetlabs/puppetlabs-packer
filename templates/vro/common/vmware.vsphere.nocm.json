@@ -4,6 +4,7 @@
     "beakerhost"                : null,
     "version"                   : null,
 
+    "support_status"            : "puppet_maintained",
     "project_root"              : "../../../..",
     "headless"                  : "true",
     "template_config"           : "vsphere-nocm",

@@ -11,6 +11,7 @@
     "floppy_files"                                 : null,
     "boot_command"                                 : null,
 
+    "support_status"                               : "puppet_maintained",
     "project_root"                                 : "../../../..",
     "headless"                                     : "true",
     "template_config"                              : "base",

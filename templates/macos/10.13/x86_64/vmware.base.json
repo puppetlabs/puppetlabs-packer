@@ -15,7 +15,8 @@
     "output_directory"                             : "{{env `PACKER_VM_OUT_DIR`}}",
     "source_directory"                             : "{{env `PACKER_VM_SRC_DIR`}}",
     "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}",
-    "base_template_name"                           : "macos-1012-x86_64-vmware-base"
+    "base_template_name"                           : "macos-1012-x86_64-vmware-base",
+    "support_status"                               : "puppet_maintained"
   },
 
   "builders"                                       : [

@@ -15,7 +15,8 @@
     "template_name"                                : null,
     "update_system"                                : null,
     "output_directory"                             : "{{env `PACKER_VM_OUT_DIR`}}",
-    "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}"
+    "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}",
+    "support_status"                               : "puppet_maintained"
   },
 
   "builders"                                       : [

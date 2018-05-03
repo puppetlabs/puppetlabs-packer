@@ -2,8 +2,13 @@
 
 ### About
 
-This contains all of the var files required to build any of the templates in the
-`templates/common` directory for Scientific Linux platforms.
+This contains all of the var files required to build any of the templates in the `templates/common` directory for Scientific Linux platforms.
+
+### Support Status
+
+This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
+
+Puppet maintained Scientific Linux versions include 5.10, 6.8, and 7.2. Any other versions of Scientific Linux here are community maintained.
 
 ### Building
 

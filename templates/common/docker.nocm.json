@@ -8,6 +8,7 @@
 
       "vagrant_required_modules"             : null,
 
+      "support_status"                       : "community_maintained",
       "project_root"                         : "../../../..",
       "headless"                             : "true",
       "template_config"                      : "nocm",

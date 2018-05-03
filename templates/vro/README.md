@@ -2,10 +2,13 @@
 
 ### About
 
-This contains the vmware.vsphere.nocm image template for VRO VMs, as well as all of the var files
-required to build it.
+This contains the vmware.vsphere.nocm image template for VRO VMs, as well as all of the var files required to build it.
 
-Currently, only VRO 7.3 is supported for the 64-bit architecture.
+### Support Status
+
+This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
+
+Puppet maintained VRO versions include 7.1, 7.3, 7.4.
 
 ### Building
 
