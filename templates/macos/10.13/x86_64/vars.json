@@ -6,5 +6,5 @@
   "beakerhost"              : "osx1013-64",
   "template_name"           : "macos-1013-x86_64",
   "guest_os_type"           : "darwin13-64",
-  "version"                 : "0.1.0"
+  "version"                 : "0.1.1"
 }
