@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-2012",
     "image_name"        : "Windows Server 2012 SERVERSTANDARD",
     "product_key"       : "XC9B7-NBPP2-83J2H-RHMBY-92BT4",
-    "version"           : "20180323_0000",
+    "version"           : "20180509_0000",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2012_x64_dvd_915478_SlipStream_03.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "8cc8b3f54bb56dce7936bb1e97e3fc31",
