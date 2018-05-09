@@ -411,115 +411,82 @@ Function Remove-AppsPackages {
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
     Write-Output "Uninstalling default apps"
-    $apps = @(
-        # default Windows 10 apps
-        "Microsoft.3DBuilder"
-        "Microsoft.Appconnector"
-        "Microsoft.BingFinance"
-        "Microsoft.BingNews"
-        "Microsoft.BingSports"
-        "Microsoft.BingWeather"
-        "Microsoft.BingTranslator"
-        #"Microsoft.FreshPaint"
-        "Microsoft.Getstarted"
-        "Microsoft.MicrosoftOfficeHub"
-        "Microsoft.MicrosoftSolitaireCollection"
-        #"Microsoft.MicrosoftStickyNotes"
-        "Microsoft.Office.OneNote"
-        #"Microsoft.OneConnect"
-        "Microsoft.People"
-        "Microsoft.SkypeApp"
-        #"Microsoft.Windows.Photos"
-        "Microsoft.WindowsAlarms"
-        #"Microsoft.WindowsCalculator"
-        "Microsoft.WindowsCamera"
-        "Microsoft.WindowsMaps"
-        "Microsoft.WindowsPhone"
-        "Microsoft.WindowsSoundRecorder"
-        #"Microsoft.WindowsStore"
-        "Microsoft.XboxApp"
-        "Microsoft.ZuneMusic"
-        "Microsoft.ZuneVideo"
-        "microsoft.windowscommunicationsapps"
-        "Microsoft.MinecraftUWP"
-        "Microsoft.MicrosoftPowerBIForWindows"
-        "Microsoft.NetworkSpeedTest"
-        "Microsoft.RemoteDesktop"
-
-        # Threshold 2 apps
-        "Microsoft.CommsPhone"
-        "Microsoft.ConnectivityStore"
-        "Microsoft.Messaging"
-        "Microsoft.Office.Sway"
-        "Microsoft.OneConnect"
-        "Microsoft.WindowsFeedbackHub"
-
-        #Redstone apps
-        "Microsoft.BingFoodAndDrink"
-        "Microsoft.BingTravel"
-        "Microsoft.BingHealthAndFitness"
-        "Microsoft.WindowsReadingList"
-
-        # non-Microsoft
-        "9E2F88E3.Twitter"
-        "PandoraMediaInc.29680B314EFC2"
-        "Flipboard.Flipboard"
-        "ShazamEntertainmentLtd.Shazam"
-        "king.com.CandyCrushSaga"
-        "king.com.CandyCrushSodaSaga"
-        "king.com.*"
-        "ClearChannelRadioDigital.iHeartRadio"
-        "4DF9E0F8.Netflix"
-        "6Wunderkinder.Wunderlist"
-        "Drawboard.DrawboardPDF"
-        "2FE3CB00.PicsArt-PhotoStudio"
-        "D52A8D61.FarmVille2CountryEscape"
-        "TuneIn.TuneInRadio"
-        "GAMELOFTSA.Asphalt8Airborne"
-        #"TheNewYorkTimes.NYTCrossword"
-        "DB6EA5DB.CyberLinkMediaSuiteEssentials"
-        "Facebook.Facebook"
-        "flaregamesGmbH.RoyalRevolt2"
-        "Playtika.CaesarsSlotsFreeCasino"
-        "A278AB0D.MarchofEmpires"
-        "KeeperSecurityInc.Keeper"
-        "ThumbmunkeysLtd.PhototasticCollage"
-        "XINGAG.XING"
-        "89006A2E.AutodeskSketchBook"
-        "D5EA27B7.Duolingo-LearnLanguagesforFree"
-        "46928bounde.EclipseManager"
-        "ActiproSoftwareLLC.562882FEEB491" # next one is for the Code Writer from Actipro Software LLC
-        "DolbyLaboratories.DolbyAccess"
-        "SpotifyAB.SpotifyMusic"
-        "A278AB0D.DisneyMagicKingdoms"
-        "WinZipComputing.WinZipUniversal"
-        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
-
+    $KeepAppList = @(
         # apps which cannot be removed using Remove-AppxPackage
-        #"Microsoft.BioEnrollment"
-        #"Microsoft.MicrosoftEdge"
-        #"Microsoft.Windows.Cortana"
-        #"Microsoft.WindowsFeedback"
-        #"Microsoft.XboxGameCallableUI"
-        #"Microsoft.XboxIdentityProvider"
-        #"Windows.ContactSupport"
+        # Put in a match-all for any GUID type app as they are all
+        # microsoft ones that should be left
+        "[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}"
+        "Microsoft\.BioEnrollment"
+        "Microsoft\.MicrosoftEdge"
+        "Microsoft\.Services\.Store\.Engagement"
+        "Microsoft\.XboxGameCallableUI"
+        "Microsoft\.XboxIdentityProvider"
+        "Microsoft\.AAD.BrokerPlugin"
+        "Microsoft\.AccountsControl"
+        "Microsoft\.CredDialogHost"
+        "Microsoft\.ECApp"
+        "Microsoft\.FreshPaint"
+        "Microsoft\.LockApp"
+        "Microsoft\.MicrosoftStickyNotes"
+        "Microsoft\.PPIProjection"
+        "Microsoft\.WindowsCalculator"
+        "Microsoft\.WindowsFeedback"
+        "Microsoft\.Windows\.Apprep.ChxApp"
+        "Microsoft\.Windows\.AssignedAccessLockApp"
+        "Microsoft\.Windows\.CloudExperienceHost"
+        "Microsoft\.Windows\.ContentDeliveryManager"
+        "Microsoft\.Windows\.Cortana"
+        "Microsoft\.Windows\.HolographicFirstRun"
+        "Microsoft\.Windows\.OOBE.*"
+        "Microsoft\.Windows\.ParentalControls"
+        "Microsoft\.Windows\.PeopleExperienceHost"
+        "Microsoft\.Windows\.Photos"
+        "Microsoft\.Windows\.PinningConfirmationDialog"
+        "Microsoft\.Windows\.SecHealthUI"
+        "Microsoft\.Windows\.SecondaryTileExperience"
+        "Microsoft\.Windows\.SecureAssessmentBrowser"
+        "Microsoft\.Windows\.ShellExperienceHost"
+        "Microsoft\.Windows\.Photos"
+        "Microsoft\.WindowsStore"
+        "Microsoft\.Net\..*"
+        "Microsoft\.VCLibs\..*"
+        "windows\.immersivecontrolpanel"
+        "Windows\.ContactSupport"
+        "Windows\.PrintDialog"
+        "Microsoft\.Advertising\.Xaml"
+        "InputApp"
     )
 
-    foreach ($app in $apps) {
+	  Get-AppXPackage -Allusers |
+	  	Where-Object {$_.Name -notmatch ($KeepAppList -join '|') -and -not $_.IsFramework} | 
+			ForEach-Object {
 
-      Write-Output "Trying to remove $app"
-      try {
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+			  $AppName = $_.Name
+			  $AppFullName = $_.PackageFullName
+        Write-Output "Trying to remove $AppName ($AppFullName)"
+        
+        # Note - need to encase package removals in try catch to avoid loop fallout
+        # For some reason, the SilentlyContinue doesn't always appear to be honoured.
+			  try {
+          Write-Output "Removing $AppName for User"
+          Remove-AppxPackage -Package $AppFullName -ErrorAction SilentlyContinue
+          Write-Output "Removing $AppName for All Users"
+          Remove-AppxPackage -Package $AppFullName -AllUsers -ErrorAction SilentlyContinue
+        }
+        catch {
+          Write-Output "Ingoring Package Removal error"
+        }
 
-        Get-AppXProvisionedPackage -Online |
-            Where-Object DisplayName -EQ $app |
+        try {
+          Write-Output "Removing Provisioned $AppName"
+          Get-AppXProvisionedPackage -Online |
+            Where-Object DisplayName -EQ $AppName |
             Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-      }
-      catch {
-        Write-Output "Ignoring errors in pkgremoval for $app"
-      }
-    }
+			  }
+			  catch {
+				  Write-Output "Ignoring errors in provisioned pkgremoval for $AppName"
+			  }		
+		}
 
     # Specials for the tricky ones
     Get-AppXPackage -Name Microsoft.Windows.Cortana |

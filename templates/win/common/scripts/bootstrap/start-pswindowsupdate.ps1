@@ -36,6 +36,11 @@ if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
   # Not certain, but this appears to improve the reliability of the windows update.
   if ($WindowsVersion -Like $WindowsServer2016) {
     Set-Service "trustedinstaller" -StartupType Automatic -ErrorAction SilentlyContinue
+
+    # Putting these keys back in again in frustration......
+    reg add HKLM\Software\Policies\Microsoft\Windows\CloudContent /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
+    reg add HKLM\Software\Policies\Microsoft\WindowsStore /v AutoDownload /t REG_DWORD /d 2 /f
+    reg add HKLM\Software\Policies\Microsoft\WindowsStore /v RemoveWindowsStore /t REG_DWORD /d 1 /f
   }
 
   switch ($HyperVisor) {

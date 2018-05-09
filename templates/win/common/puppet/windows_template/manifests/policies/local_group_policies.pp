@@ -228,7 +228,7 @@ class windows_template::policies::local_group_policies ()
         windows_group_policy::local::user { 'NotileApplicationNotification':
             key    => 'Software\Policies\Microsoft\Windows\CurrentVersion\Pushnotifications',
             value  => 'NotileApplicationNotification',
-            data   => 0,
+            data   => 1,
             type   => 'REG_DWORD',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
         }
@@ -244,7 +244,7 @@ class windows_template::policies::local_group_policies ()
         windows_group_policy::local::machine { 'DisableWindowsConsumerFeatures':
             key    => 'Software\Policies\microsoft\Windows\CloudContent',
             value  => 'DisableWindowsConsumerFeatures',
-            data   => 0,
+            data   => 1,
             type   => 'REG_DWORD',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
         }
@@ -349,6 +349,23 @@ class windows_template::policies::local_group_policies ()
         windows_group_policy::local::user { 'NoStartMenuMyGames':
             key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\Explorer',
             value  => 'NoStartMenuMyGames',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 18. Disable Store Completely.
+        windows_group_policy::local::user { 'DisableAllStoreApps':
+            key    => 'Software\Policies\Microsoft\Windows\WindowsStore',
+            value  => 'DisableStoreApps',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        # 19. Remove Store Completely.
+        # Note - duplicated in registry at startup to try and get round sysprep issues
+        windows_group_policy::local::user { 'RemoveWindowsStore':
+            key    => 'Software\Policies\Microsoft\Windows\WindowsStore',
+            value  => 'RemoveWindowsStore',
             data   => 1,
             type   => 'REG_DWORD',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
