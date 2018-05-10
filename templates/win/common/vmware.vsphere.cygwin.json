@@ -91,8 +91,8 @@
       },
       {
         "type": "file",
-        "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
-        "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+        "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+        "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
       },
       {
         "type": "file",

@@ -45,7 +45,10 @@ Stop-Service -Name "staterepository" -Force -Verbose -ErrorAction SilentlyContin
 
 $SysPrepDir = "C:\Windows\System32\sysprep\"
 $SysPrepArgs = "/generalize /oobe /quit /mode:vm /unattend:C:\Packer\Config\post-clone.autounattend.xml"
-
+if ( ($WindowsVersion -like $WindowsServer2008R2) -or ($WindowsVersion -like $WindowsServer2008) ) {
+    # /mode:vm was only introduced from win-2012 onwards
+    $SysPrepArgs = "/generalize /oobe /quit /unattend:C:\Packer\Config\post-clone.autounattend.xml"
+}
 Write-Output "Starting the Sysprep Process"
 $zproc = Start-Process "$SysPrepDir\sysprep.exe" @SprocParms -ArgumentList "$SysPrepArgs"
 $zproc.WaitForExit()
@@ -77,16 +80,8 @@ Elseif ($Shutdown) {
     Set-Service "netbt" -StartupType Disabled
     Set-Service "VMUSBArbService" -StartupType Disabled  -ErrorAction SilentlyContinue
 
-    # Remove the pagefile
-    Write-Output "Removing page file.  Recreates on next boot"
-    reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
-    # Ensure pagefile is created again at reboot (and managed automatically)
-    $System = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
-    $System.AutomaticManagedPagefile = $true
-    $System.Put()
-
     Write-Output "Shutting down - next boot will complete sysprep"
-    Stop-Computer -Force
+    Shutdown-PackerBuild
 }
 Write-Output "Fall-Thru - exit cleanly"
 Exit 0

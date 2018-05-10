@@ -684,3 +684,28 @@ Function Install-WindowsUpdates {
   
   Write-Output "Ended Windows updates installation."
 }
+
+
+#Helper Function to handle the various OS dependant shutdown conditions.
+Function Shutdown-PackerBuild {
+
+  # Check if we are a Core OS ?
+
+  if ($WindowsServerCore) {
+      Write-Warning "Core OS Shutdown - Cleaning up PowerShell profile workaround for startup items"
+      Remove-Item -Force $PROFILE -ErrorAction SilentlyContinue
+      
+      Remove-Item -Force -Recurse "$($env:APPDATA)\SetupFlags" -ErrorAction SilentlyContinue
+  }
+  # Remove the pagefile
+  Write-Output "Removing page file.  Recreates on next boot"
+  reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
+  # Ensure pagefile is created again at reboot (and managed automatically)
+  $System = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
+  $System.AutomaticManagedPagefile = $true
+  $System.Put()
+
+  Write-Output "Bye Bye"  
+  shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1
+
+}

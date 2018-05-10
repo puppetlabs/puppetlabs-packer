@@ -11,7 +11,7 @@
     "memsize"                  : "4096",
     "numvcpus"                 : "2",
     "post_memsize"             : "4096",
-    "shutdown_command"         : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+    "shutdown_command"         : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "shutdown_timeout"         : "1h",
 
     "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
@@ -157,18 +157,6 @@
     },
     {
       "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "elevated_user": "{{user `winrm_username`}}",
-      "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/vmpooler-arm-host.ps1"
-    },
-    {
-      "type": "powershell",
-      "elevated_user": "{{user `winrm_username`}}",
-      "elevated_password": "{{user `winrm_password`}}",
-      "script" : "files/shutdown-packer-2008.ps1"
     }
   ],
   "post-processors": [

@@ -3,7 +3,7 @@
         "headless"                : "true",
         "template_config"         : "base",
         "provisioner"             : "virtualbox",
-        "shutdown_command"        : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+        "shutdown_command"        : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\shutdown-packerbuild.ps1",
         "winrm_username"          : "Administrator",
         "winrm_password"          : "PackerAdmin",
         "winrm_timeout"           : "4h",
@@ -57,7 +57,7 @@
           "../../common/scripts/common/windows-env.ps1",
           "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
           "../../common/scripts/bootstrap/bootstrap-base.bat",
-          "../../common/scripts/bootstrap/core-shutdown.ps1",
+          "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
           "../../common/scripts/bootstrap/startup-profile.ps1"
         ]
       }
@@ -74,8 +74,8 @@
       },
       {
         "type": "file",
-        "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
-        "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+        "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+        "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
       },
       {
         "type"   : "powershell",
