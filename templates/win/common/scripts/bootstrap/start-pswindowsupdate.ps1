@@ -115,11 +115,11 @@ Install-DotNetLatest
 if (-not (Test-Path "$PackerLogs\7zip.installed")) {
   # Download and install 7za now as its needed here and is useful going forward.
   $SevenZipInstaller = "7z1604-$ARCH.exe"
-  Write-Host "Installing 7zip $SevenZipInstaller"
+  Write-Output "Installing 7zip $SevenZipInstaller"
   Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
   Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
   Touch-File "$PackerLogs\7zip.installed"
-  Write-Host "7zip Installed"
+  Write-Output "7zip Installed"
 }
 
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
@@ -194,11 +194,11 @@ Enable-RemoteDesktop -DoNotRequireUserLevelAuthentication
 netsh advfirewall firewall add rule name="Remote Desktop" dir=in localport=3389 protocol=TCP action=allow
 
 # Add WinRM Firewall Rule
-Write-Host "Setting up winrm"
+Write-Output "Setting up winrm"
 netsh advfirewall firewall add rule name="WinRM-HTTP" dir=in localport=5985 protocol=TCP action=allow
 
 # WinRM Configuration.
-Write-Host "Enable PS-Remoting -Force"
+Write-Output "Enable PS-Remoting -Force"
 $enableArgs=@{Force=$true}
 try {
  $command=Get-Command Enable-PSRemoting
@@ -213,14 +213,14 @@ try {
   Enable-PSRemoting @enableArgs
 }
 catch {
-  Write-Host "Ignoring PSRemoting Error"
+  Write-Output "Ignoring PSRemoting Error"
 }
 
-Write-Host "Enable WSMandCredSSP"
+Write-Output "Enable WSMandCredSSP"
 Enable-WSManCredSSP -Force -Role Server
 
 # NOTE - This is insecure but can be shored up in later customisation.  Required for Vagrant and other provisioning tools
-Write-Host "WinRM Settings"
+Write-Output "WinRM Settings"
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
@@ -229,7 +229,7 @@ winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 # Set service to start automatically (not delayed)
 Set-Service "WinRM" -StartupType Automatic
 
-Write-Host "WinRM setup complete"
+Write-Output "WinRM setup complete"
 
 # Clear reboot files as control is now transferred to Packer to complete configuration.
 Clear-RebootFiles

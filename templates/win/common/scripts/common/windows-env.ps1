@@ -92,7 +92,7 @@ $SprocParms = @{'PassThru'=$true;
 # Helper to create consistent staging directories.
 Function Create-PackerStagingDirectories {
   if (-not (Test-Path "$PackerStaging\puppet\modules")) {
-    Write-Host "Creating $PackerStaging"
+    Write-Output "Creating $PackerStaging"
     mkdir -Path $PackerStaging\puppet\modules
     mkdir -Path $PackerStaging\Downloads
     mkdir -Path $PackerStaging\Downloads\Cygwin

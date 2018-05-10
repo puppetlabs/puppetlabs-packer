@@ -73,7 +73,7 @@ Elseif ($Restart) {
     Restart-Computer -Force
 }
 Elseif ($Shutdown) {
-    Write-Host "Pre-Shutdown preparation - Disable Services"
+    Write-Output "Pre-Shutdown preparation - Disable Services"
     # Make sure NetBios is disabled on the host to avoid netbios name collision at first boot.
     # Also disable VMWare USB Arbitration service (ignore errors if it is not there)
     Set-Service "lmhosts" -StartupType Disabled
