@@ -12,10 +12,10 @@
     "ssh_username"                                 : null,
     "template_name"                                : null,
     "update_system"                                : null,
-    "output_directory"                             : "{{env `PACKER_VM_OUT_DIR`}}",
-    "source_directory"                             : "{{env `PACKER_VM_SRC_DIR`}}",
-    "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}",
-    "base_template_name"                           : "macos-1012-x86_64-vmware-base",
+    "packer_output_dir"                            : "{{env `PACKER_VM_OUT_DIR`}}",
+    "packer_source_dir"                            : "{{env `PACKER_VM_SRC_DIR`}}",
+    "ssh_password"                                 : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "base_image_vmx_rel_path"                      : "output-macos-1012-x86_64-vmware-base/packer-macos-1012-x86_64-vmware-base.vmx",
     "support_status"                               : "puppet_maintained"
   },
 
@@ -24,8 +24,8 @@
       "name"                                       : "{{user `template_name`}}-vmware-base",
       "type"                                       : "vmware-vmx",
       "vm_name"                                    : "packer-{{build_name}}",
-      "source_path"                                : "{{user `source_directory`}}/{{user `base_template_name`}}/packer-{{user `base_template_name`}}.vmx",
-      "output_directory"                           : "{{user `output_directory`}}/{{build_name}}",
+      "source_path"                                : "{{user `packer_source_dir`}}/{{user `base_image_vmx_rel_path`}}",
+      "output_directory"                           : "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "ssh_username"                               : "{{user `ssh_username`}}",
       "ssh_password"                               : "{{user `ssh_password`}}",
