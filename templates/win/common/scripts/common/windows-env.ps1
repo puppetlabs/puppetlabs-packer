@@ -31,12 +31,12 @@ if (Test-Path "$env:windir\explorer.exe") {
 else {
   Set-Variable -Option Constant -Name WindowsServerCore -Value $true
 }
-
-If ($WindowsVersion -like $WindowsServer2008) {
+If (($PSVersionTable.PSVersion.Major) -eq 2 ) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
   # Which seems to be necessary to get Puppet and other things to run correctly.
   # Suspect this is due to the early (mis)implementation of UAC in Vista/Win-2008
+  # BREAKING News - this is also breaking win-2008r2 (PS2)
   $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
   $objectRef = $host.GetType().GetField("externalHostRef", $bindingFlags).GetValue($host)
   $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetProperty"
@@ -563,7 +563,7 @@ Function Test-PendingReboot {
 Function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log`""
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log 2>&1`""
     New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
 
 	  shutdown /t 0 /r /f

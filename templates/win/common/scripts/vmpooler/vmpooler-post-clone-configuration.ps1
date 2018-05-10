@@ -1,15 +1,11 @@
 # This script is run immediately post-clone to configure the machine as a clone of the template.
 #
+. C:\Packer\Scripts\windows-env.ps1
+
 $ErrorActionPreference = "Stop"
 
 # Used Frequently throughout
 $CygwinDir = "$ENV:CYGWINDIR"
-
-# Windows version checking logic is copied here as its not present by Default
-# on the installed system (might be an idea to change this in the future)
-Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
-Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
 # One off registry fix for background which isn't copied correctly from Default User profile
 reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
