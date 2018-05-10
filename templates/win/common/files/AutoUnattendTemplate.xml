@@ -258,7 +258,7 @@
                         <Order>5</Order>
                     </SynchronousCommand>
                     <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log</CommandLine>
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor vmware &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log 2&gt;&amp;1</CommandLine>
                         <Description>Start PSWindowsUpdate</Description>
                         <Order>6</Order>
                     </SynchronousCommand>
@@ -289,7 +289,7 @@
                         <Order>5</Order>
                     </SynchronousCommand>
                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor virtualbox &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log</CommandLine>
+                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\start-pswindowsupdate.ps1 -HyperVisor virtualbox &gt;&gt; C:\Packer\Logs\start-pswindowsupdate.log 2&gt;&amp;1</CommandLine>
                         <Description>Start PSWindowsUpdate</Description>
                         <Order>6</Order>
                     </SynchronousCommand>
