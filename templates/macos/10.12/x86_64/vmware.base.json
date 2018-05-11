@@ -14,8 +14,8 @@
     "ssh_username"                                 : null,
     "template_name"                                : null,
     "update_system"                                : null,
-    "output_directory"                             : "{{env `PACKER_VM_OUT_DIR`}}",
-    "ssh_password"                                 : "{{env `QA_ROOT_PASSWORD`}}",
+    "packer_output_dir"                            : "{{env `PACKER_VM_OUT_DIR`}}",
+    "ssh_password"                                 : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
     "support_status"                               : "puppet_maintained"
   },
 
@@ -26,7 +26,7 @@
       "iso_url"                                    : "{{user `iso_url`}}",
       "iso_checksum"                               : "{{user `iso_checksum`}}",
       "iso_checksum_type"                          : "{{user `iso_checksum_type`}}",
-      "output_directory"                           : "{{user `output_directory`}}/{{build_name}}",
+      "output_directory"                           : "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "ssh_username"                               : "{{user `ssh_username`}}",
       "ssh_password"                               : "{{user `ssh_password`}}",
