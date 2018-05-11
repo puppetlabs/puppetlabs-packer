@@ -370,6 +370,13 @@ class windows_template::policies::local_group_policies ()
             type   => 'REG_DWORD',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
         }
+        # 20. Remove the My People Bar.
+        windows_group_policy::local::user { 'RemovePeopleBar':
+            key    => 'Software\Policies\Microsoft\Windows\Explorer',
+            value  => 'HidePeopleBar',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
     }
-
 }
