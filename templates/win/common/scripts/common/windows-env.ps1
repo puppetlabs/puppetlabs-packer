@@ -31,12 +31,12 @@ if (Test-Path "$env:windir\explorer.exe") {
 else {
   Set-Variable -Option Constant -Name WindowsServerCore -Value $true
 }
-
-If ($WindowsVersion -like $WindowsServer2008) {
+If (($PSVersionTable.PSVersion.Major) -eq 2 ) {
   # This delight was obtained from: http://www.leeholmes.com/blog/2008/07/30/workaround-the-os-handles-position-is-not-what-filestream-expected/
   # It is only relevant for Win-2008SP2 when running Powershell in elevated mode.
   # Which seems to be necessary to get Puppet and other things to run correctly.
   # Suspect this is due to the early (mis)implementation of UAC in Vista/Win-2008
+  # BREAKING News - this is also breaking win-2008r2 (PS2)
   $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetField"
   $objectRef = $host.GetType().GetField("externalHostRef", $bindingFlags).GetValue($host)
   $bindingFlags = [Reflection.BindingFlags] "Instance,NonPublic,GetProperty"
@@ -92,7 +92,7 @@ $SprocParms = @{'PassThru'=$true;
 # Helper to create consistent staging directories.
 Function Create-PackerStagingDirectories {
   if (-not (Test-Path "$PackerStaging\puppet\modules")) {
-    Write-Host "Creating $PackerStaging"
+    Write-Output "Creating $PackerStaging"
     mkdir -Path $PackerStaging\puppet\modules
     mkdir -Path $PackerStaging\Downloads
     mkdir -Path $PackerStaging\Downloads\Cygwin
@@ -411,115 +411,80 @@ Function Remove-AppsPackages {
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
     Write-Output "Uninstalling default apps"
-    $apps = @(
-        # default Windows 10 apps
-        "Microsoft.3DBuilder"
-        "Microsoft.Appconnector"
-        "Microsoft.BingFinance"
-        "Microsoft.BingNews"
-        "Microsoft.BingSports"
-        "Microsoft.BingWeather"
-        "Microsoft.BingTranslator"
-        #"Microsoft.FreshPaint"
-        "Microsoft.Getstarted"
-        "Microsoft.MicrosoftOfficeHub"
-        "Microsoft.MicrosoftSolitaireCollection"
-        #"Microsoft.MicrosoftStickyNotes"
-        "Microsoft.Office.OneNote"
-        #"Microsoft.OneConnect"
-        "Microsoft.People"
-        "Microsoft.SkypeApp"
-        #"Microsoft.Windows.Photos"
-        "Microsoft.WindowsAlarms"
-        #"Microsoft.WindowsCalculator"
-        "Microsoft.WindowsCamera"
-        "Microsoft.WindowsMaps"
-        "Microsoft.WindowsPhone"
-        "Microsoft.WindowsSoundRecorder"
-        #"Microsoft.WindowsStore"
-        "Microsoft.XboxApp"
-        "Microsoft.ZuneMusic"
-        "Microsoft.ZuneVideo"
-        "microsoft.windowscommunicationsapps"
-        "Microsoft.MinecraftUWP"
-        "Microsoft.MicrosoftPowerBIForWindows"
-        "Microsoft.NetworkSpeedTest"
-        "Microsoft.RemoteDesktop"
-
-        # Threshold 2 apps
-        "Microsoft.CommsPhone"
-        "Microsoft.ConnectivityStore"
-        "Microsoft.Messaging"
-        "Microsoft.Office.Sway"
-        "Microsoft.OneConnect"
-        "Microsoft.WindowsFeedbackHub"
-
-        #Redstone apps
-        "Microsoft.BingFoodAndDrink"
-        "Microsoft.BingTravel"
-        "Microsoft.BingHealthAndFitness"
-        "Microsoft.WindowsReadingList"
-
-        # non-Microsoft
-        "9E2F88E3.Twitter"
-        "PandoraMediaInc.29680B314EFC2"
-        "Flipboard.Flipboard"
-        "ShazamEntertainmentLtd.Shazam"
-        "king.com.CandyCrushSaga"
-        "king.com.CandyCrushSodaSaga"
-        "king.com.*"
-        "ClearChannelRadioDigital.iHeartRadio"
-        "4DF9E0F8.Netflix"
-        "6Wunderkinder.Wunderlist"
-        "Drawboard.DrawboardPDF"
-        "2FE3CB00.PicsArt-PhotoStudio"
-        "D52A8D61.FarmVille2CountryEscape"
-        "TuneIn.TuneInRadio"
-        "GAMELOFTSA.Asphalt8Airborne"
-        #"TheNewYorkTimes.NYTCrossword"
-        "DB6EA5DB.CyberLinkMediaSuiteEssentials"
-        "Facebook.Facebook"
-        "flaregamesGmbH.RoyalRevolt2"
-        "Playtika.CaesarsSlotsFreeCasino"
-        "A278AB0D.MarchofEmpires"
-        "KeeperSecurityInc.Keeper"
-        "ThumbmunkeysLtd.PhototasticCollage"
-        "XINGAG.XING"
-        "89006A2E.AutodeskSketchBook"
-        "D5EA27B7.Duolingo-LearnLanguagesforFree"
-        "46928bounde.EclipseManager"
-        "ActiproSoftwareLLC.562882FEEB491" # next one is for the Code Writer from Actipro Software LLC
-        "DolbyLaboratories.DolbyAccess"
-        "SpotifyAB.SpotifyMusic"
-        "A278AB0D.DisneyMagicKingdoms"
-        "WinZipComputing.WinZipUniversal"
-        "AdobeSystemsIncorporated.AdobePhotoshopExpress"
-
+    $KeepAppList = @(
         # apps which cannot be removed using Remove-AppxPackage
-        #"Microsoft.BioEnrollment"
-        #"Microsoft.MicrosoftEdge"
-        #"Microsoft.Windows.Cortana"
-        #"Microsoft.WindowsFeedback"
-        #"Microsoft.XboxGameCallableUI"
-        #"Microsoft.XboxIdentityProvider"
-        #"Windows.ContactSupport"
+        # Put in a match-all for any GUID type app as they are all
+        # microsoft ones that should be left
+        "[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}"
+        "Microsoft\.BioEnrollment"
+        "Microsoft\.MicrosoftEdge"
+        "Microsoft\.Services\.Store\.Engagement"
+        "Microsoft\.XboxGameCallableUI"
+        "Microsoft\.XboxIdentityProvider"
+        "Microsoft\.AAD.BrokerPlugin"
+        "Microsoft\.AccountsControl"
+        "Microsoft\.CredDialogHost"
+        "Microsoft\.ECApp"
+        "Microsoft\.FreshPaint"
+        "Microsoft\.LockApp"
+        "Microsoft\.MicrosoftStickyNotes"
+        "Microsoft\.PPIProjection"
+        "Microsoft\.WindowsCalculator"
+        "Microsoft\.WindowsFeedback"
+        "Microsoft\.Windows\.Apprep.ChxApp"
+        "Microsoft\.Windows\.AssignedAccessLockApp"
+        "Microsoft\.Windows\.CloudExperienceHost"
+        "Microsoft\.Windows\.ContentDeliveryManager"
+        "Microsoft\.Windows\.Cortana"
+        "Microsoft\.Windows\.HolographicFirstRun"
+        "Microsoft\.Windows\.OOBE.*"
+        "Microsoft\.Windows\.ParentalControls"
+        "Microsoft\.Windows\.PeopleExperienceHost"
+        "Microsoft\.Windows\.Photos"
+        "Microsoft\.Windows\.PinningConfirmationDialog"
+        "Microsoft\.Windows\.SecHealthUI"
+        "Microsoft\.Windows\.SecondaryTileExperience"
+        "Microsoft\.Windows\.SecureAssessmentBrowser"
+        "Microsoft\.Windows\.ShellExperienceHost"
+        "Microsoft\.Windows\.Photos"
+        "Microsoft\.WindowsStore"
+        "Microsoft\.Net\..*"
+        "Microsoft\.VCLibs\..*"
+        "windows\.immersivecontrolpanel"
+        "Windows\.ContactSupport"
+        "Windows\.PrintDialog"
+        "Microsoft\.Advertising\.Xaml"
+        "InputApp"
     )
 
-    foreach ($app in $apps) {
+	  Get-AppXPackage -Allusers |
+	  	Where-Object {$_.Name -notmatch ($KeepAppList -join '|') -and -not $_.IsFramework} | 
+			ForEach-Object {
 
-      Write-Output "Trying to remove $app"
-      try {
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+			  $AppName = $_.Name
+			  $AppFullName = $_.PackageFullName
+        Write-Output "Trying to remove $AppName ($AppFullName)"
+        
+        # Note - need to encase package removals in try catch to avoid loop fallout
+        # For some reason, the SilentlyContinue doesn't always appear to be honoured.
+			  try {
+          Write-Output "Removing $AppName for All Users"
+          Remove-AppxPackage -Package $AppFullName -AllUsers -ErrorAction SilentlyContinue
+        }
+        catch {
+          Write-Output "Ingoring Package Removal error"
+        }
 
-        Get-AppXProvisionedPackage -Online |
-            Where-Object DisplayName -EQ $app |
+        try {
+          Write-Output "Removing Provisioned $AppName"
+          Get-AppXProvisionedPackage -Online |
+            Where-Object DisplayName -EQ $AppName |
             Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-      }
-      catch {
-        Write-Output "Ignoring errors in pkgremoval for $app"
-      }
-    }
+			  }
+			  catch {
+				  Write-Output "Ignoring errors in provisioned pkgremoval for $AppName"
+			  }		
+		}
 
     # Specials for the tricky ones
     Get-AppXPackage -Name Microsoft.Windows.Cortana |
@@ -598,7 +563,7 @@ Function Test-PendingReboot {
 Function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log`""
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log 2>&1`""
     New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
 
 	  shutdown /t 0 /r /f
@@ -718,4 +683,29 @@ Function Install-WindowsUpdates {
   } 
   
   Write-Output "Ended Windows updates installation."
+}
+
+
+#Helper Function to handle the various OS dependant shutdown conditions.
+Function Shutdown-PackerBuild {
+
+  # Check if we are a Core OS ?
+
+  if ($WindowsServerCore) {
+      Write-Warning "Core OS Shutdown - Cleaning up PowerShell profile workaround for startup items"
+      Remove-Item -Force $PROFILE -ErrorAction SilentlyContinue
+      
+      Remove-Item -Force -Recurse "$($env:APPDATA)\SetupFlags" -ErrorAction SilentlyContinue
+  }
+  # Remove the pagefile
+  Write-Output "Removing page file.  Recreates on next boot"
+  reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
+  # Ensure pagefile is created again at reboot (and managed automatically)
+  $System = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
+  $System.AutomaticManagedPagefile = $true
+  $System.Put()
+
+  Write-Output "Bye Bye"  
+  shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1
+
 }

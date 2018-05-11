@@ -1,15 +1,11 @@
 # This script is run immediately post-clone to configure the machine as a clone of the template.
 #
+. C:\Packer\Scripts\windows-env.ps1
+
 $ErrorActionPreference = "Stop"
 
 # Used Frequently throughout
 $CygwinDir = "$ENV:CYGWINDIR"
-
-# Windows version checking logic is copied here as its not present by Default
-# on the installed system (might be an idea to change this in the future)
-Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
-Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
-$WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
 # One off registry fix for background which isn't copied correctly from Default User profile
 reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118" /f
@@ -105,6 +101,14 @@ try {
 	Write-Warning "Disable Power Management failed"
 }
 
+if (($PSVersionTable.PSVersion.Major) -ge 4 ) {
+	# Disable IPV6 on all network adapters (mainly to stop discovery pings causing firefall errors)
+	# The cmdlets are only available on PSVersion 4.0 or later, so only really doing this for win-2012+
+	Write-Output "Disabling IPV6 on network adapters"
+	Get-NetAdapter | ForEach-Object { Disable-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
+	Get-NetAdapter | ForEach-Object  { Get-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
+}
+
 # Set Service startups following the reboot/rename operation.
 Write-Output "Re-enable NETBios and WinRM Services"
 Set-Service "lmhosts" -StartupType Automatic
@@ -114,7 +118,8 @@ Write-Output "Set SSHD to start after next boot"
 Set-Service "sshd" -StartupType Automatic
 
 # Create BGINFO Scheduled Task to update the lifetime every 20 minutes
-schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden -NonInteractive -File C:\Packer\Scripts\set-bginfo.ps1'
+schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
+schtasks /run /tn UpdateBGInfo
 
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet

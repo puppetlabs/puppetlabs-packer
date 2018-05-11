@@ -3,7 +3,7 @@
         "headless"             : "true",
         "template_config"      : "vagrant.cygwin",
         "provisioner"          : "virtualbox",
-        "shutdown_command"     : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+        "shutdown_command"     : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\shutdown-packerbuild.ps1",
         "winrm_username"       : "Administrator",
         "winrm_password"       : "PackerAdmin",
         "winrm_timeout"        : "4h",
@@ -61,8 +61,18 @@
         },
         {
             "type": "file",
-            "source": "../../common/scripts/bootstrap/core-shutdown.ps1",
-            "destination": "C:\\Packer\\Scripts\\core-shutdown.ps1"
+            "source": "../../common/scripts/common/",
+            "destination": "C:\\Packer\\scripts"
+        },
+        {
+            "type": "file",
+            "source": "../../common/scripts/bootstrap/",
+            "destination": "C:\\Packer\\scripts"
+        },
+        {
+            "type": "file",
+            "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+            "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
         },
         {
             "type"   : "powershell",
@@ -98,23 +108,25 @@
             "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
         },
         {
-            "type": "windows-restart"
-        },
-        {
             "type"   : "powershell",
             "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
         },
         {
             "type": "windows-restart",
-            "restart_command": "C:\\Windows\\System32\\sysprep\\sysprep /oobe /reboot /generalize /unattend:C:\\Packer\\Config\\post-clone.autounattend.xml",
+            "restart_command": "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Restart\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
             "restart_timeout": "15m"
+        },
+        {
+            "type": "powershell",
+            "inline": [
+            "Write-Output 'SYSPREP Log output'",
+            "Get-Content C:\\Packer\\Logs\\Init-Sysprep.log | foreach {Write-Output $_}",
+            "Start-Sleep -Seconds 10"
+            ]
         },
         {
             "type"   : "powershell",
             "script" : "../../common/scripts/provisioners/vagrant-arm-host.ps1"
-        },
-        {
-            "type": "windows-restart"
         }
     ],
         "post-processors": [{

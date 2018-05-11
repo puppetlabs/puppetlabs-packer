@@ -61,15 +61,6 @@ Write-Output "Starting Free Space $SpaceAtStart GB"
 Write-Output "Current Free Space $SpaceAtEnd GB"
 Write-Output "Reclaimed $SpaceReclaimed GB"
 
-# Remove the pagefile
-Write-Output "Removing page file.  Recreates on next boot"
-reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
-
-# Ensure pagefile is created again at reboot (and managed automatically)
-$System = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
-$System.AutomaticManagedPagefile = $true
-$System.Put()
-
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
 #End

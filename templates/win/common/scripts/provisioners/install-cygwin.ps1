@@ -3,6 +3,7 @@ Write-Output "Cygwin Installation Script"
 # This is being done in a separate script to the windows packages deliberately, as the windows
 # packages are common to both Cygwin and and bitvise machines.
 #
+# Cygwin now installs directly from the Cygwin site - this documenation is retained for reference only.
 # NOTE  Cygwin Packages were grabbed from Cygwin timemachine hosted on Fruitbat:
 #         http://www.fruitbat.org/Cygwin/timemachine.html#cygwinmirror
 # Index of releases at: ftp://www.fruitbat.org/pub/cygwin/circa/index.html
@@ -59,21 +60,16 @@ Write-Output "Package list is: $CygWinPackageList"
 if ($ENV:QA_ROOT_PASSWD.length -le 0 ) {throw "QA_ROOT_PASSWD is not defined"}
 $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
-Write-Output "Downloading Cygwin Packages"
-Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
-Write-Output "Extracting $CygwinDownloads\packages_$ARCH.zip"
-$zproc = Start-Process "$7zip" -PassThru -NoNewWindow -ArgumentList "x $CygwinDownloads\packages_$ARCH.zip -y -o$CygwinDownloads"
-$zproc.WaitForExit()
-
 Write-Output "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
-# Install Cygwin from the download location.
+# Install Cygwin directly from the Cygwin site - so using latest version.
 # Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
 Write-Output "Installing Cygwin"
-$CygwinArguments = "--quiet-mode " + `
+$CygwinArguments = "--site http://cygwin.mirror.constant.com " + `
+                   "--quiet-mode " + `
                    "--packages $CygWinPackageList " + `
-                   "--no-verify --local-install " + `
+                   "--no-verify " + `
                    "--root $CygWinDir " + `
                    "--local-package-dir $CygwinDownloads\packages"
 Start-Process -Wait "$CygWinSetup" -PassThru -NoNewWindow -ArgumentList "$CygwinArguments"
