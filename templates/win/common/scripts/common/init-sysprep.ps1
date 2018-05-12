@@ -29,7 +29,7 @@ If ( ($WindowsVersion -like $WindowsServer2008R2) -and ($psversiontable.psversio
 # Run the Application Package Cleaner again if required.
 if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
     # Stop the tilemode service
-    net stop tiledatamodelsvc
+    Stop-Service -Name "tiledatamodelsvc" -Force -Verbose -ErrorAction SilentlyContinue
     Write-Output "Running Apps Package Cleaner post windows update"
     Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass2
 

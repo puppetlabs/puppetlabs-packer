@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Continue'
 Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
 Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
+Set-Variable -Option Constant -Name WindowsServer2012R2 -Value "6.3.*"
 Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
