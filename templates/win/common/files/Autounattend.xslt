@@ -156,7 +156,8 @@
   <!-- Select correct OOBE elements depending on OS Version -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:HideOnlineAccountScreens | 
                        u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:HideLocalAccountScreen | 
-                       u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:HideOEMRegistrationScreen'>
+                       u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:OOBE/u:HideOEMRegistrationScreen |
+                       u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:TaskbarLinks'>
     <xsl:choose>
       <xsl:when test="$WindowsVersion = 'Windows-2008'" />
       <xsl:when test="$WindowsVersion = 'Windows-2008r2'" />
