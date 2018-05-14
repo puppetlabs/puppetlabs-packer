@@ -123,7 +123,7 @@ Write-Output "---------------------------"
 Write-Output "---------------------------"
 Write-Output "Setting Appveyor Agent to AutoRun" 
 Set-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "AppVeyor.BuildAgent" `
-	-Value 'c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -noprofile -sta -WindowStyle Hidden  -File "C:\Packer\Scripts\start-appveyor-agent.ps1"'
+  -Value 'c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -noprofile -sta -WindowStyle Hidden  -File "C:\Packer\Scripts\start-appveyor-agent.ps1"'
 Write-Output "Appveyor Agent AutoRun Key Set" 
 Write-Output "---------------------------"
 

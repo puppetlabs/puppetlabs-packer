@@ -13,13 +13,13 @@ reg.exe ADD "HKCU\Control Panel\Colors" /v "Background" /t REG_SZ /d "10 59 118"
 # First things first - resync time to make sure we aren't using ESX/VMware time (RE-8033)
 
 If ($WindowsVersion -like $WindowsServer2008) {
-	Write-Output "Resync Time not done for Win-2008"
+  Write-Output "Resync Time not done for Win-2008"
 }
 else {
-	Write-Output "Resyncing Time"
-	net start w32time
-	w32tm /resync
-	w32tm /tz
+  Write-Output "Resyncing Time"
+  net start w32time
+  w32tm /resync
+  w32tm /tz
 }
 
 # Get VMPooler Guest name
@@ -40,10 +40,10 @@ $NewVMName = $p.StandardOutput.ReadToEnd().Trim()
 
 # Exit with error code if name not found - likely to be the template machine.
 if ($p.ExitCode -ne 0){
-	Write-Warning "Could not find VM name in vSphere!`n"
-	Write-Warning "If this machine is the template VM, no rename necessary!!"
-	Write-Warning "Remember to reset the 'RunOnce' registry key by Loading C:\Packer\Config\vmpooler-arm-host.reg"
-	Exit 1
+  Write-Warning "Could not find VM name in vSphere!`n"
+  Write-Warning "If this machine is the template VM, no rename necessary!!"
+  Write-Warning "Remember to reset the 'RunOnce' registry key by Loading C:\Packer\Config\vmpooler-arm-host.reg"
+  Exit 1
 }
 
 Write-Output "vSphere VMname: $NewVMName`n"
@@ -96,17 +96,17 @@ Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "A
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Output "Disabling NIC Power Management"
 try {
-	C:\Packer\Scripts\DisableNetworkAdapterPnPCapabilities.ps1
+  C:\Packer\Scripts\DisableNetworkAdapterPnPCapabilities.ps1
 } catch {
-	Write-Warning "Disable Power Management failed"
+  Write-Warning "Disable Power Management failed"
 }
 
 if (($PSVersionTable.PSVersion.Major) -ge 4 ) {
-	# Disable IPV6 on all network adapters (mainly to stop discovery pings causing firefall errors)
-	# The cmdlets are only available on PSVersion 4.0 or later, so only really doing this for win-2012+
-	Write-Output "Disabling IPV6 on network adapters"
-	Get-NetAdapter | ForEach-Object { Disable-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
-	Get-NetAdapter | ForEach-Object  { Get-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
+  # Disable IPV6 on all network adapters (mainly to stop discovery pings causing firefall errors)
+  # The cmdlets are only available on PSVersion 4.0 or later, so only really doing this for win-2012+
+  Write-Output "Disabling IPV6 on network adapters"
+  Get-NetAdapter | ForEach-Object { Disable-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
+  Get-NetAdapter | ForEach-Object  { Get-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
 }
 
 # Set Service startups following the reboot/rename operation.
@@ -125,10 +125,10 @@ schtasks /run /tn UpdateBGInfo
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
 Write-Output "Renaming Host to $NewVMName"
 if ($WindowsVersion -like $WindowsServer2008R2 -or $WindowsVersion -like $WindowsServer2008) {
-	$(gwmi win32_computersystem).Rename("$NewVMName")
-	shutdown /t 0 /r /f
+  $(gwmi win32_computersystem).Rename("$NewVMName")
+  shutdown /t 0 /r /f
 }
 else {
-	Rename-Computer -Newname $NewVMName -Restart
+  Rename-Computer -Newname $NewVMName -Restart
 }
 Exit 0

@@ -54,9 +54,9 @@ dism /mount-wim /wimfile:$WinImageFile /index:$ImageIndex /mountdir:$MountPoint
 
 $Cabtotal = $Cabs.Count
 ForEach ($Cab in $Cabs) {
-	$CabCount++
+  $CabCount++
   Write-Output "======================================================="
-	Write-Output "Working on CAB File ($CabCount of $Cabtotal)  $Cab"
+  Write-Output "Working on CAB File ($CabCount of $Cabtotal)  $Cab"
 
     if ($ExcludedCabs.ContainsKey($Cab.Name)) {
       Write-Output "Ignoring CAB"
@@ -66,9 +66,9 @@ ForEach ($Cab in $Cabs) {
     DISM /image:$MountPoint /add-package /packagepath:$Cab  /loglevel:1 /logpath=$DismBase\dism-slip.log
     if ($? -eq $TRUE){
       $Cab.Name | Out-File -FilePath $DismBase\Updates-Sucessful.log -Append
-		  Write-Output "Update $Cab Succeeded"
+      Write-Output "Update $Cab Succeeded"
     } else {
-		  Write-Output "***** Update $Cab FAILED *******"
+      Write-Output "***** Update $Cab FAILED *******"
       $Cab.Name | Out-File -FilePath $DismBase\Updates-Failed.log -Append
     }
 }
