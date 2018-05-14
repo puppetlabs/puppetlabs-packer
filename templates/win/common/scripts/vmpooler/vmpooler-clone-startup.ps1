@@ -14,9 +14,9 @@
 #--- Help ---#
 <#
 .SYNOPSIS
-	Update the passwd shadow file and start the SSH server.
+    Update the passwd shadow file and start the SSH server.
 .DESCRIPTION
-	Update the passwd shadow file and start the SSH server.
+    Update the passwd shadow file and start the SSH server.
 .PARAMETER
 .INPUTS
 .OUTPUTS
