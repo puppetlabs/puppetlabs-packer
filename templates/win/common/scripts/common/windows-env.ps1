@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Continue'
 Set-Variable -Option Constant -Name WindowsServer2008   -Value "6.0.*"
 Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
+Set-Variable -Option Constant -Name WindowsServer2012R2 -Value "6.3.*"
 Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
@@ -468,6 +469,12 @@ Function Remove-AppsPackages {
         # Note - need to encase package removals in try catch to avoid loop fallout
         # For some reason, the SilentlyContinue doesn't always appear to be honoured.
 			  try {
+          # Note - Deliberately removing first for the User then All users is intentional
+          # due to the unique way that Microsoft Handles Apps and Sysprep.
+          # Sarc aside - Windows.messaging doesn't remove correctly unless this is done.
+          Write-Output "Removing $AppName for User"
+          Remove-AppxPackage -Package $AppFullName -ErrorAction SilentlyContinue
+
           Write-Output "Removing $AppName for All Users"
           Remove-AppxPackage -Package $AppFullName -AllUsers -ErrorAction SilentlyContinue
         }
@@ -563,7 +570,7 @@ Function Test-PendingReboot {
 Function Invoke-Reboot {
     Write-Output "Starting Reboot sequence"
     Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -command `"& A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log 2>&1`""
+    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -File A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log 2>&1"
     New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
 
 	  shutdown /t 0 /r /f
