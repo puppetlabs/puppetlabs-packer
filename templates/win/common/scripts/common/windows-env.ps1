@@ -469,6 +469,12 @@ Function Remove-AppsPackages {
         # Note - need to encase package removals in try catch to avoid loop fallout
         # For some reason, the SilentlyContinue doesn't always appear to be honoured.
 			  try {
+          # Note - Deliberately removing first for the User then All users is intentional
+          # due to the unique way that Microsoft Handles Apps and Sysprep.
+          # Sarc aside - Windows.messaging doesn't remove correctly unless this is done.
+          Write-Output "Removing $AppName for User"
+          Remove-AppxPackage -Package $AppFullName -ErrorAction SilentlyContinue
+
           Write-Output "Removing $AppName for All Users"
           Remove-AppxPackage -Package $AppFullName -AllUsers -ErrorAction SilentlyContinue
         }
