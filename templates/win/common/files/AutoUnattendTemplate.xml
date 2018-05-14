@@ -168,8 +168,8 @@
             <ComputerName>*</ComputerName>
             <TimeZone>UTC</TimeZone>
             <RegisteredOwner />
-	    <CopyProfile>true</CopyProfile>
-	    <ShowWindowsLive>false</ShowWindowsLive>
+        <CopyProfile>true</CopyProfile>
+        <ShowWindowsLive>false</ShowWindowsLive>
         </component>
         <component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
@@ -300,7 +300,7 @@
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
                 <HideEULAPage>true</HideEULAPage>
-		        <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
                 <NetworkLocation>Work</NetworkLocation>
                 <ProtectYourPC>1</ProtectYourPC>
             </OOBE>
