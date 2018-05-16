@@ -1,0 +1,15 @@
+{
+    "A_Comment"         : "This is preview so not all 2019 defs are available below",
+    "template_name"     : "win-2019-x86_64",
+    "beakerhost"        : "windows2019-64",
+    "vbox_guest_os"     : "Windows2016_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "windows_version"   : "Windows-2019",
+    "image_name"        : "Windows Server 2016 SERVERSTANDARD",
+    "product_key"       : "MFY9F-XBN2F-TYFMP-CCV49-RMYVH",
+    "version"           : "20180511_0000",
+    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/Windows_2019_InsiderPreview_Server_vNext_en-us_17666.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "4091e78e812765c699acee271efdfc2f",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+}
