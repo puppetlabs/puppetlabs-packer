@@ -3,5 +3,5 @@
     
     "template_name"             : "win-2008r2-wmf3-x86_64",
     "gce_source_image_family"   : "windows-2008-r2",
-    "version"                   : "20180511_0000"
+    "version"                   : "20180518_0000"
 }
