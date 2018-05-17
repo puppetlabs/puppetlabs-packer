@@ -1,0 +1,10 @@
+# /etc/fstab
+#
+#    This file is read once by the first process in a Cygwin process tree.
+#    To pick up changes, restart all Cygwin processes.  For a description
+#    see https://cygwin.com/cygwin-ug-net/using.html#mount-table
+
+# This is default modified to set NOACL
+# see https://stackoverflow.com/questions/5828037/cygwin-sets-file-permission-to-000
+# and http://cygwin.1069669.n5.nabble.com/vim-and-file-permissions-on-Windows-7-td61390.html
+none /cygdrive cygdrive binary,noacl,posix=0,user 0 0

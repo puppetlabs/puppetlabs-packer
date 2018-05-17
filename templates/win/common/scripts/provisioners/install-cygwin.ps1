@@ -83,6 +83,10 @@ Write-Output "Set GIT Environment variables to use Cygwin utils"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name GIT_EDITOR -Value "$CygEnvPrefix/bin/vi.exe"
 
+# Update fstab to set NOACL across the board (IMAGES-825)
+Write-Output "Setting NOACL for all file creates"
+Copy-Item -Path "$PackerConfig\fstab" "$CygWinDir\etc\fstab"
+
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
 
