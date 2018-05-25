@@ -1,9 +1,7 @@
 {
   "variables": {
-    "template_config"          : "base",
-
-    "template_name"            : "test-win-10",
-    "version"                  : "0000",
+    "template_config"          : "vcenter",
+    "provisioner"              : "vmware",
 
     "guest_os_type"            : "windows9_64Guest",
 
@@ -45,6 +43,9 @@
     {
       "type": "vsphere-iso",
 
+      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name"                :  "{{user `template_name`}}-{{user `version`}}",
+
       "vcenter_server"         : "{{user `packer_vcenter_host`}}",
       "insecure_connection"    : "{{user `packer_vcenter_insecure`}}",
       "username"               : "{{user `packer_vcenter_username`}}",
@@ -52,9 +53,6 @@
       "datacenter"             : "{{user `packer_vcenter_dc`}}",
       "cluster"                : "{{user `packer_vcenter_cluster`}}",
       "host"                   : "{{user `packer_vcenter_build_host`}}",
-
-      "vm_version"             : "{{user `vm_version`}}",
-      "vm_name"                :  "{{user `template_name`}}-{{user `version`}}",
       "convert_to_template"    : "false",
       "folder"                 : "{{user `packer_vcenter_folder`}}",
       "CPUs"                   : "{{user `numvcpus`}}",
