@@ -21,10 +21,8 @@
     "shutdown_command"         : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "shutdown_timeout"         : "1h",
 
-  
-
     "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
-    
+
     "packer_vcenter_host"      : "{{env `PACKER_VCENTER_HOST`}}",
     "packer_vcenter_username"  : "{{env `PACKER_VCENTER_USERNAME`}}",
     "packer_vcenter_password"  : "{{env `PACKER_VCENTER_PASSWORD`}}",
@@ -38,7 +36,7 @@
 
     "packer_sha"               : "{{env `PACKER_SHA`}}",
     "packer_download_dir"      : "C:/Packer/Downloads"
- 
+
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
@@ -75,14 +73,17 @@
         "<down><down><enter><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar>"
       ],
 
+      "shutdown_command"  : "{{user `shutdown_command`}}",
+      "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
+
       "floppy_files": [
-         "./setup/autounattend.xml",
-         "./setup/bootstrap-base.bat",
-         "./setup/platform-packages.ps1",
-         "./setup/shutdown-packerbuild.ps1",
-         "./setup/start-pswindowsupdate.ps1",
-         "./setup/startup-profile.ps1",
-         "./setup/windows-env.ps1"
+        "./tmp/autounattend.xml",
+        "./files/platform-packages.ps1",
+        "../../common/scripts/common/windows-env.ps1",
+        "../../common/scripts/bootstrap/bootstrap-base.bat",
+        "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+        "../../common/scripts/bootstrap/startup-profile.ps1"
       ],
       "iso_paths": [
         "[AI_Insurgency_Test_Images] iso/en_windows_10_business_editions_version_1803_updated_march_2018_x64_dvd_12063333.iso",
@@ -113,15 +114,100 @@
       }
     }
   ],
-    "provisioners": [
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_downloads_dir`}}/print-pswindowslog.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
-          "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
-          "Start-Sleep -Seconds 10"
-        ]
-      }
-    ]
+  "provisioners": [
+    {
+      "type": "powershell",
+      "remote_path": "{{user `packer_downloads_dir`}}/print-pswindowslog.ps1",
+      "inline": [
+        "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
+        "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
+        "Start-Sleep -Seconds 10"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+    },
+
+    {
+      "type": "file",
+      "source": "../../common/puppet/",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/common/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/vmpooler/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/config/",
+      "destination": "C:\\Packer\\Config"
+    },
+    {
+      "type": "file",
+      "source": "./tmp/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type"   : "powershell",
+      "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}",
+        "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
+        "PackerSHA={{user `packer_sha`}}",
+        "PackerTemplateType=vmpooler"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
+    },
+    {
+      "type"   : "powershell",
+      "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type"   : "powershell",
+      "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1"
+    }
+  ]
 }
