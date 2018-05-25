@@ -127,7 +127,7 @@
       "vm_name"                             : "{{user `template_name`}}-{{user `version`}}",
       "vm_network"                          : "{{user `packer_vcenter_net`}}",
       "insecure"                            : "{{user `packer_vcenter_insecure`}}",
-      "overwrite"                           : "true"
+      "overwrite"                           : "false"
     },
     {
       "type"                                : "vsphere",
@@ -141,7 +141,7 @@
       "vm_name"                             : "{{user `template_name`}}-{{user `version`}}",
       "vm_network"                          : "{{user `packer_vcenter2_net`}}",
       "insecure"                            : "{{user `packer_vcenter2_insecure`}}",
-      "overwrite"                           : "true"
+      "overwrite"                           : "false"
     }
   ]
 }
