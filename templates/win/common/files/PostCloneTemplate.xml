@@ -150,12 +150,6 @@
                 <LogonCount>99999</LogonCount>
                 <Username>Administrator</Username>
             </AutoLogon>
-            <TaskbarLinks>
-                <Link0>%SYSTEMROOT%\Explorer.exe</Link0>
-                <Link1>%SYSTEMROOT%\System32\WindowsPowershell\v1.0\Powershell.exe</Link1>
-                <Link2>%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Google Chrome.lnk</Link2>
-                <Link3>%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Notepad++\Notepad++.lnk</Link3>
-            </TaskbarLinks>
         </component>
     </settings>
 </unattend>
