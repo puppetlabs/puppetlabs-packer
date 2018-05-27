@@ -125,6 +125,17 @@ Set-Service "sshd" -StartupType Automatic
 schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
 schtasks /run /tn UpdateBGInfo
 
+# Pin apps to taskbar as long as we aren't win-10/2016
+
+if ($WindowsVersioni -notlike $WindowsServer2016) {
+  try {
+    Write-Output "Pin Apps to Taskbar"
+    & $PackerScripts\Pin-AppsToTaskBar.ps1
+  }
+  catch {
+    Write-Output "Ignoring Pin App errors"
+  }
+}
 # Rename this machine to that of the VM name in vSphere
 # Windows 7/2008R2- and earlier doesn't use the Rename-Computer cmdlet
 Write-Output "Renaming Host to $NewVMName"
