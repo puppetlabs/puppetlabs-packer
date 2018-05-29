@@ -127,7 +127,7 @@ schtasks /run /tn UpdateBGInfo
 
 # Pin apps to taskbar as long as we aren't win-10/2016
 
-if ($WindowsVersioni -notlike $WindowsServer2016) {
+if ($WindowsVersion -notlike $WindowsServer2016) {
   try {
     Write-Output "Pin Apps to Taskbar"
     & $PackerScripts\Pin-AppsToTaskBar.ps1
