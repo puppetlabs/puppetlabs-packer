@@ -378,5 +378,20 @@ class windows_template::policies::local_group_policies ()
             type   => 'REG_DWORD',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
         }
+        # 21. Configure the Start Layour
+        windows_group_policy::local::user { 'StartLayoutConfigLock':
+            key    => 'Software\Policies\Microsoft\Windows\Explorer',
+            value  => 'LockedStartLayout',
+            data   => 1,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
+        windows_group_policy::local::user { 'StartLayoutConfig':
+            key    => 'Software\Policies\Microsoft\Windows\Explorer',
+            value  => 'StartLayoutFile',
+            data   => 'C:\\Packer\\Config\\StartMenuLayout.xml',
+            type   => 'REG_SZ',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
     }
 }
