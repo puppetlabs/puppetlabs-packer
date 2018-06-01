@@ -44,7 +44,6 @@ Once the 10.12 base build is finished, you can build and ship the 10.12 vsphere 
     - (The username is automatically set to `osx`)
 - `PACKER_VM_SRC_DIR`, the output directory from the 10.12 base build
 - `PACKER_VM_OUT_DIR`, the desired output directory for this build
-- All vcenter-related environment variables: `PACKER_VCENTER_HOST`, `PACKER_VCENTER_USERNAME`, `PACKER_VCENTER_PASSWORD`, `PACKER_VCENTER_DC`, `PACKER_VCENTER_CLUSTER`, `PACKER_VCENTER_DATASTORE`, `PACKER_VCENTER_FOLDER`, `PACKER_VCENTER_NET`, `PACKER_VCENTER_INSECURE`, `PACKER_SHA`
 
 Example:
 
@@ -52,7 +51,6 @@ Example:
 $ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
     PACKER_VM_OUT_DIR="./output" \
     PACKER_VM_SRC_DIR="./output" \
-    ... (vcenter environment variables) \
     packer build \
     -var-file=./common/vars.json \
     -var-file=./10.12/x86_64/vars.json \
@@ -92,7 +90,6 @@ Once the 10.13 base build is finished, you can build and ship the 10.13 vsphere 
     - (The username is automatically set to `osx`)
 - `PACKER_VM_SRC_DIR`, the output directory from the 10.12 base build
 - `PACKER_VM_OUT_DIR`, the desired output directory for this build
-- All vcenter-related environment variables: `PACKER_VCENTER_HOST`, `PACKER_VCENTER_USERNAME`, `PACKER_VCENTER_PASSWORD`, `PACKER_VCENTER_DC`, `PACKER_VCENTER_CLUSTER`, `PACKER_VCENTER_DATASTORE`, `PACKER_VCENTER_FOLDER`, `PACKER_VCENTER_NET`, `PACKER_VCENTER_INSECURE`, `PACKER_SHA`
 
 Example:
 
@@ -100,7 +97,6 @@ Example:
 $ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
     PACKER_VM_OUT_DIR="./output" \
     PACKER_VM_SRC_DIR="./output" \
-    ... (vcenter environment variables) \
     packer build \
     -var-file=./common/vars.json \
     -var-file=./10.13/x86_64/vars.json \
