@@ -62,7 +62,7 @@ $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
 Write-Output "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
-Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
+Download-File "https://cygwin.com/setup-$ARCH.exe" $CygWinSetup
 # Install Cygwin directly from the Cygwin site - so using latest version.
 # Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
 Write-Output "Installing Cygwin"
