@@ -7,7 +7,7 @@
     "image_name"        : "Windows 7 Enterprise",
     "product_key"       : "33PXH-7Y6KF-2VJC9-XBBR8-HVTHH",
     "hypervisor"        : "VMWare",
-    "version"           : "20180529_0000",
+    "version"           : "20180608_DEV",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_03.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "4246cfa663a9a581d2da4ba784554308",
