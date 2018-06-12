@@ -38,6 +38,8 @@ if ($ARCH -eq 'x86') {
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name CYGWINDIR -Value $CygWinDir
 Set-ItemProperty -Path $RegPath -Name CYGWINDOWNLOADS -Value $CygwinDownloads
+# Fix for IMAGES-855 - Defining NM as env var resolves the libool "syntax error near unexpected token `|`" eval error
+Set-ItemProperty -Path $RegPath -Name NM -Value "/usr/bin/nm"
 
 # Read list of packages to be installed.
 # This is a plain-text list of packages, where the first word on each line must be a single package name.
@@ -62,7 +64,7 @@ $ENV:QA_ROOT_PASSWD | Out-File "$CygwinDownloads\qapasswd"
 
 Write-Output "Downloading Cygwin Setup"
 $CygWinSetup = "$CygwinDownloads\setup-$ARCH.exe"
-Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/setup-$ARCH.exe" $CygWinSetup
+Download-File "https://cygwin.com/setup-$ARCH.exe" $CygWinSetup
 # Install Cygwin directly from the Cygwin site - so using latest version.
 # Start-Process -wait needed to address Win-2008 where the setup appears to run async and script exits before install has completed
 Write-Output "Installing Cygwin"
