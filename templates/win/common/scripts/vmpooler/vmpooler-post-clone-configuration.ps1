@@ -101,18 +101,6 @@ try {
   Write-Warning "Disable Power Management failed"
 }
 
-# Although Get-NetAdapter is availble in PS3/5 it is NOT available on Windows-7/2008R2
-if ((($PSVersionTable.PSVersion.Major) -ge 4) -and ($WindowsVersion -notlike $WindowsServer2008R2) ) {
-  # Disable IPV6 on all network adapters (mainly to stop discovery pings causing firefall errors)
-  # The cmdlets are only available on PSVersion 4.0 or later, so only really doing this for win-2012+
-  Write-Output "Disabling IPV6 on network adapters"
-  Get-NetAdapter | ForEach-Object { Disable-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
-  Get-NetAdapter | ForEach-Object  { Get-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 }
-}
-else {
-  Write-Output "Skipping IPV6 Disablement"
-}
-
 # Set Service startups following the reboot/rename operation.
 Write-Output "Re-enable NETBios and WinRM Services"
 Set-Service "lmhosts" -StartupType Automatic

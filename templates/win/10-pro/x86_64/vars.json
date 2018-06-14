@@ -6,9 +6,9 @@
     "windows_version"   : "Windows-10",
     "image_name"        : "Windows 10 Pro",
     "product_key"       : "W269N-WFGWX-YVC9B-4J6C9-T83GX",
-    "version"           : "20180608_DEV",
+    "version"           : "20180615_PROD",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_business_editions_version_1803_updated_march_2018_x64_dvd_12063333.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "70ea72fb3ff11771dcc0a36e2850e29e",
+    "iso_checksum"      : "c6dad7a55f8af7ae5e38b33d1d65805b",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
 }
