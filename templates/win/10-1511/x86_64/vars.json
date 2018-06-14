@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-10",
     "image_name"        : "Windows 10 Enterprise 2015 LTSB",
     "product_key"       : "WNMTR-4C88C-JK8YV-HQ7T2-76DF9",
-    "version"           : "20180608_DEV",
+    "version"           : "20180615_PROD",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_enterprise_2015_ltsb_x64_dvd_6848446.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "da938d65c548738900810181a78203f8",

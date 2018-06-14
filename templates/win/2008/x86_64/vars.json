@@ -6,7 +6,7 @@
     "windows_version"   : "Windows-2008",
     "image_name"        : "Windows Longhorn SERVERSTANDARD",
     "product_key"       : "TM24T-X9RMF-VWXK6-X8JC9-BFGM2",
-    "version"           : "20180608_DEV",
+    "version"           : "20180615_PROD",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2008_with_sp2_x64_dvd_342336_SlipStream_03.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "ab418a455fea422d2582c660ee8cd8f1",
