@@ -2,7 +2,7 @@
     "template_name"                         : "fedora-28-x86_64",
     "template_os"                           : "fedora-64",
     "beakerhost"                            : "fedora28-64",
-    "version"                               : "0.0.2",
+    "version"                               : "0.0.3",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/Fedora-Server-dvd-x86_64-28-1.1.iso",
     "iso_checksum"                          : "8d59a25052e05758c15fe9daa3bc472b5619791b442e752450bba7f1eeca9c1a",
     "iso_checksum_type"                     : "sha256",
