@@ -66,8 +66,14 @@ class packer::vsphere::params {
     }
 
     'SLES': {
-      $startup_file          = '/etc/rc.d/after.local'
-      $startup_file_source   = 'rc.local'
+      if $::operatingsystemmajrelease in ['15'] {
+        $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
+        $startup_file_source   = 'vsphere.bootstrap.service'
+        $startup_file_perms    = '0644'
+      } else {
+        $startup_file          = '/etc/rc.d/after.local'
+        $startup_file_source   = 'rc.local'
+      }
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'sles.rb.erb'
       $ruby_package          = [ 'ruby' ]

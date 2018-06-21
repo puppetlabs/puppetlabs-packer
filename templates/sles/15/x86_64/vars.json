@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "sles-15-x86_64",
+    "template_os"                           : "linux",
+    "beakerhost"                            : "",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/SLE-15-Installer-DVD-x86_64-GMC-DVD1.iso",
+    "iso_checksum"                          : "f649c1e92bfa62764d45fdbf24f73e2a58367ebb718b7ccc571405698c2dd807",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://buildsources.delivery.puppetlabs.net/sles-15-agent/puppet-agent-5.5.3.15.g3c4ced28-1.sles12.x86_64.rpm"
+}
