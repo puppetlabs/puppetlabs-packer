@@ -75,9 +75,6 @@ Write-Output "Register the Cygwin LSA authentication package "
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
 & $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdministratorName/.ssh/known_hosts`'
 
-# Set Startup script (does very little except run bkginfo and set passwd/group)
-Write-Output "Setting startup script"
-reg import C:\Packer\Config\vmpooler-clone-arm-startup.reg
 
 # Update machine password (and reset autologin)
 Write-Output "Setting $AdministratorName Password"
@@ -113,6 +110,10 @@ Set-Service "sshd" -StartupType Automatic
 If ( -not $WindowsServerCore ) {
   schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
 }
+
+# Queue startup script to run as scheduled task rather than as RunOnce (which stricly speaking isn't supported on Core)
+Write-Output "Setting startup script"
+schtasks /create /tn VMPoolerStartup /rl HIGHEST /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC ONSTART /IT /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\vmpooler-clone-startup.ps1 >> c:\Packer\Logs\vmpooler-clone-startup.log  2>&1'
 
 # Pin apps to taskbar as long as we aren't win-10/2016
 if ($WindowsVersion -notlike $WindowsServer2016) {
