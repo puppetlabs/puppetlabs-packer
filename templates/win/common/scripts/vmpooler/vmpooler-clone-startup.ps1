@@ -26,6 +26,11 @@
 #--- Log Session ---#
 Start-Transcript -Path "C:\Packer\Logs\vmpooler-clone-startup.log"
 
+# Run the BGInfo Task at startup, as scheduler will wait 5 mins.
+If ( -not $WindowsServerCore ) {
+    schtasks /run /tn UpdateBGInfo
+}
+
 # CYGWINDIR is set in the environment when Cygwin is installed
 $CygwinDir = "$ENV:CYGWINDIR"
 $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"

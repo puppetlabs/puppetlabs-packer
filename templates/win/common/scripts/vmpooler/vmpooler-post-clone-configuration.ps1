@@ -110,11 +110,11 @@ Write-Output "Set SSHD to start after next boot"
 Set-Service "sshd" -StartupType Automatic
 
 # Create BGINFO Scheduled Task to update the lifetime every 20 minutes
-schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
-schtasks /run /tn UpdateBGInfo
+If ( -not $WindowsServerCore ) {
+  schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
+}
 
 # Pin apps to taskbar as long as we aren't win-10/2016
-
 if ($WindowsVersion -notlike $WindowsServer2016) {
   try {
     Write-Output "Pin Apps to Taskbar"
