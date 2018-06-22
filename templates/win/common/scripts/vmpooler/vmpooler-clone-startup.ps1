@@ -1,30 +1,19 @@
-# #############################################################################
-# Puppet Labs - POWERSHELL
-#
-# NAME: vmpooler-clone-startup.ps1
-# AUTHOR:  Ryan Gard, John O'Connor
-# DATE:  29/07/2016 (proper dates apply :))
-# EMAIL: john.oconnor@puppet.com
-#
-# #############################################################################
+# VMPooler Startup Script
+# This is now run as a scheduled task at boot.
 
-#--- Script Params ---#
-#params ()
+. C:\Packer\Scripts\windows-env.ps1
 
-#--- Help ---#
-<#
-.SYNOPSIS
-    Update the passwd shadow file and start the SSH server.
-.DESCRIPTION
-    Update the passwd shadow file and start the SSH server.
-.PARAMETER
-.INPUTS
-.OUTPUTS
-.EXAMPLE
-#>
+$ErrorActionPreference = "Stop"
 
-#--- Log Session ---#
-Start-Transcript -Path "C:\Packer\Logs\vmpooler-clone-startup.log"
+# Run vmstoolsd
+Write-Output "Starting vmstoolsd"
+$VMToolsd = "$($env:ProgramFiles)\VMware\VMware Tools\vmtoolsd.exe"
+& $VMToolsd -n vmusr
+
+# Run the BGInfo Task at startup, as scheduler will wait 5 mins.
+If ( -not $WindowsServerCore ) {
+    schtasks /run /tn UpdateBGInfo
+}
 
 # CYGWINDIR is set in the environment when Cygwin is installed
 $CygwinDir = "$ENV:CYGWINDIR"
@@ -42,3 +31,5 @@ Write-Output "Updating the Cygwin passwd file!"
 #Update the passwd file.
 Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
+
+Write-Output "Bye"

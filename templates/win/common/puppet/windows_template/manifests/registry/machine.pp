@@ -105,6 +105,9 @@ class windows_template::registry::machine ()
     # operations to work, even though stricly speaking RunOnce is a function of explorer.exe and therefore should not
     # be supported on a Windows Core Installation.
     # Ticket https://tickets.puppetlabs.com/browse/IMAGES-577 has been raised for follow on investigation and work.
+    # Follow on investigation showed that this "hack" is also needed to allow the "FirstLogonCommands" run in the
+    # Sysprep Autounattend, so keeping the key in place even though we have moved to scheduled tasks for the startup
+    # script.
     #
     if ( "${windows_install_option}" == 'Core' ) {
         registry::value { 'WinCoreLogon':
