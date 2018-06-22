@@ -393,5 +393,13 @@ class windows_template::policies::local_group_policies ()
             type   => 'REG_SZ',
             notify => Windows_group_policy::Gpupdate['GPUpdate'],
         }
+        # 22. Disable the first logon animation
+        windows_group_policy::local::machine { 'DisableFirstLogonAnimation':
+            key    => 'Software\Microsoft\Windows\CurrentVersion\Policies\System',
+            value  => 'EnableFirstLogonAnimation',
+            data   => 0,
+            type   => 'REG_DWORD',
+            notify => Windows_group_policy::Gpupdate['GPUpdate'],
+        }
     }
 }
