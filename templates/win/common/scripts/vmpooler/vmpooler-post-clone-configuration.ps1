@@ -2,6 +2,9 @@
 #
 . C:\Packer\Scripts\windows-env.ps1
 
+$rundate = date
+write-output "Script: vmpooler-post-clone-configuration.ps1 Starting at: $rundate"
+
 $ErrorActionPreference = "Stop"
 
 # Used Frequently throughout
@@ -38,12 +41,11 @@ $p.Start() | Out-Null
 $p.WaitForExit()
 $NewVMName = $p.StandardOutput.ReadToEnd().Trim()
 
-# Exit with error code if name not found - likely to be the template machine.
+# Give warning but continue to allow testing.
 if ($p.ExitCode -ne 0){
-  Write-Warning "Could not find VM name in vSphere!`n"
-  Write-Warning "If this machine is the template VM, no rename necessary!!"
-  Write-Warning "Remember to reset the 'RunOnce' registry key by Loading C:\Packer\Config\vmpooler-arm-host.reg"
-  Exit 1
+  Write-Output "Could not find VM name in guestinfo"
+  Write-Output "If this machine is the template VM, no rename necessary!!"
+  $NewVMName = "testvm"
 }
 
 Write-Output "vSphere VMname: $NewVMName`n"

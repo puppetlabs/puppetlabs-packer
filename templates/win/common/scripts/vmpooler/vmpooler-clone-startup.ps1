@@ -3,6 +3,9 @@
 
 . C:\Packer\Scripts\windows-env.ps1
 
+$rundate = date
+write-output "Script: vmpooler-clone-startup.ps1 Starting at: $rundate"
+
 $ErrorActionPreference = "Stop"
 
 # Run vmstoolsd
