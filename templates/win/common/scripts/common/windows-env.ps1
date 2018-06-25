@@ -209,19 +209,23 @@ Function Install_Win_Patch {
 # Helper Function to delete file, with try/catch to ignore errors.
 # This Function is used in both the clean host and clean-disk scripts.
 # Leaving Verbose options on in all cases so we can be certain files are being removed (IMAGES-684)
-Function ForceFullyDelete-Paths {
-  $filetodelete = $args[0]
-
+Function ForceFullyDelete-Path {
+  param(
+  [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+  [String]$Path,
+  [String]$LogFile
+  )
+  
   try {
-    if(Test-Path $filetodelete) {
-        Write-Output "Removing $filetodelete"
-        Takeown /d "$AnswerPromptYes" /R /f $filetodelete
-        Icacls $filetodelete /grant:r "*${WindowsAdminSID}:(OI)(CI)F" /t /c  2>&1
-        Remove-Item $filetodelete -Recurse -Force -Verbose
+    if(Test-Path $Path) {
+        Write-Output "Removing $Path" >> $LogFile 2>&1
+        Takeown /d "$AnswerPromptYes" /R /f $Path >> $LogFile 2>&1
+        Icacls $Path /grant:r "*${WindowsAdminSID}:(OI)(CI)F" /t /c >> $LogFile 2>&1
+        Remove-Item $Path -Recurse -Force >> $LogFile 2>&1
       }
     }
     catch {
-        Write-Output "Ignoring Error deleting: $filetodelete - Continue"
+        Write-Output "Ignoring Error deleting: $Path - Continue" >> $LogFile 2>&1
     }
 }
 

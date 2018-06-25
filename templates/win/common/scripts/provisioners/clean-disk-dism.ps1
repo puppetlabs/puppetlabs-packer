@@ -89,7 +89,7 @@ Write-Output "Clearing Files"
     "$ENV:USERPROFILE\AppData\Local\Microsoft\Windows\WER\ReportQueue",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportArchive",
     "$ENV:ALLUSERSPROFILE\Microsoft\Windows\WER\ReportQueue"
-) | % { ForceFullyDelete-Paths "$_" }
+) | ForceFullyDelete-Path -LogFile "$PackerLogs\clean-basefiles.log"
 
 # Clearing Logs
 Write-Output "Clearing Logs"
