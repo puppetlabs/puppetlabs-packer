@@ -47,6 +47,7 @@
         "shutdown_timeout"        : "1h",
         "vboxmanage": [
           ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
+          ["modifyvm","{{.Name}}","--vram","128"],
           ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"],
           ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
         ],

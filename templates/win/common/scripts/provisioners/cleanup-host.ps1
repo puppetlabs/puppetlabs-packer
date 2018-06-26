@@ -43,7 +43,7 @@ Write-Output "Clearing Files"
     "$ENV:WINDIR\winsxs\manifestcache",
     "$ENV:ProgramData\PuppetLabs",
     "$ENV:ProgramFiles\Puppet Labs"
-) | % { ForceFullyDelete-Paths "$_" }
+) | ForceFullyDelete-Path -LogFile "$PackerLogs\clean-hostfiles.log"
 
 # Clearing Logs
 Write-Output "Clearing Logs"

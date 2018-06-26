@@ -39,6 +39,7 @@
         "guest_additions_mode" : "attach",
         "vboxmanage": [
           ["modifyvm","{{.Name}}","--memory","2048"],
+          ["modifyvm","{{.Name}}","--vram","128"],
           ["modifyvm","{{.Name}}","--cpus","2"]
         ]
       }

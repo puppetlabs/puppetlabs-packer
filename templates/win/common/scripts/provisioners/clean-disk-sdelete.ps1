@@ -5,6 +5,16 @@ $ErrorActionPreference = 'Stop'
 # This is using a revised Disk Zero script instead of sdelete.
 # Script obtained and modified from: http://www.hurryupandwait.io/blog/how-can-we-most-optimally-shrink-a-windows-base-image
 
+
+# Add in Optimize-Volume if this is present.
+if (Get-Command -ErrorAction SilentlyContinue Optimize-Volume ) {
+    Write-Output "Running Volume Optimizer"
+    Optimize-Volume -DriveLetter C -Verbose
+}
+else {
+    Write-Output "Optimization cmdlet not present - ignoring"
+}
+
 Write-Output "Wiping empty space on disk..."
 $FilePath="c:\zero.tmp"
 $Volume = Get-WmiObject win32_logicaldisk -filter "DeviceID='C:'"

@@ -6,6 +6,9 @@ $ErrorActionPreference = 'Stop'
 . A:\windows-env.ps1
 $PackageDir = 'A:\'
 
+$rundate = date
+write-output "Script: start-pswindowsupdate.ps1 Starting at: $rundate"
+
 # Create Packer Log Directories if they don't exist already.
 Create-PackerStagingDirectories
 if (-not (Test-Path "$PackerScripts\windows-env.ps1" )) {
