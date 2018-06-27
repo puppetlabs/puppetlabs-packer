@@ -1,6 +1,3 @@
 {
-    "floppy_dirs"                          : "",
-    "floppy_files"                         : "../common/files/autoinst.xml",
-    "boot_command"                         : "<esc><enter><wait>linux netdevice=eth0 netsetup=dhcp install=cd:/ lang=en_US autoyast=floppy textmode=1<wait><enter><wait>",
     "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network darin-zypprepo"
 }
