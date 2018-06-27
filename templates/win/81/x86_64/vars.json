@@ -6,7 +6,6 @@
     "windows_version"   : "Windows-8.1",
     "image_name"        : "Windows 8.1 Enterprise",
     "product_key"       : "MHF9N-XY6XB-WVXMC-BTDCT-MKKG7",
-    "version"           : "20180619_DEV",
     "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_8.1_enterprise_with_update_x64_dvd_6054382_SlipStream_01.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "ce996fb7136d55314747c5cef2602b27",
