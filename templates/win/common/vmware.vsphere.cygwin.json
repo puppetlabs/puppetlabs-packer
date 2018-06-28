@@ -1,25 +1,17 @@
 {
   "variables": {
-     "template_config": "vsphere.cygwin",
+    "template_config"   : "vsphere.cygwin",
+    "provisioner"       : "vmware",
 
-    "headless"                 : "true",
-    "provisioner"              : "vmware",
+    "memsize"           : "4096",
+    "numvcpus"          : "2",
+    "post_memsize"      : "4096",
+    "shutdown_command"  : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
 
-    "firmware"                 : "efi",
-    "winrm_username"           : "Administrator",
-    "winrm_password"           : "PackerAdmin",
-    "winrm_timeout"            : "8h",
-    "memsize"                  : "4096",
-    "numvcpus"                 : "2",
-    "post_memsize"             : "4096",
-    "shutdown_command"         : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
-    "shutdown_timeout"         : "1h",
-
-    "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
-    "packer_sha"               : "{{env `PACKER_SHA`}}",
-    "packer_source_dir"        : "{{env `PACKER_VM_SRC_DIR`}}",
-    "packer_output_dir"        : "{{env `PACKER_VM_OUT_DIR`}}",
-    "packer_download_dir"      : "C:/Packer/Downloads"
+    "qa_root_passwd_plain"    : null,
+    "packer_sha"        : null,
+    "packer_vm_src_dir" : null,
+    "packer_vm_out_dir" : null
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin",
@@ -29,8 +21,8 @@
       "name"              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name"           : "packer-{{build_name}}",
       "type"              : "vmware-vmx",
-      "source_path"       : "{{user `packer_source_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
-      "output_directory"  : "{{user `packer_output_dir`}}/output-{{build_name}}",
+      "source_path"       : "{{user `packer_vm_src_dir`}}/output-{{user `template_name`}}-{{user `provisioner`}}-base/packer-{{user `template_name`}}-{{user `provisioner`}}-base.vmx",
+      "output_directory"  : "{{user `packer_vm_out_dir`}}/output-{{build_name}}",
 
       "headless"          : "{{user `headless`}}",
 
@@ -70,76 +62,76 @@
     }
   ],
   "provisioners": [
-      {
-        "type": "file",
-        "source": "../../common/puppet/",
-        "destination": "C:\\Packer\\puppet\\modules"
-      },
-      {
-        "type": "file",
-        "source": "../../common/scripts/common/",
-        "destination": "C:\\Packer\\Scripts"
-      },
-      {
-        "type": "file",
-        "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-        "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
-      },
-      {
-        "type": "file",
-        "source": "../../common/scripts/vmpooler/",
-        "destination": "C:\\Packer\\Scripts"
-      },
-      {
-        "type": "file",
-        "source": "../../common/scripts/config/",
-        "destination": "C:\\Packer\\Config"
-      },
-      {
-        "type": "file",
-        "source": "./tmp/post-clone.autounattend.xml",
-        "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
-      },
-      {
-        "type": "powershell",
-        "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type"   : "powershell",
-        "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
-        "environment_vars" : [
-          "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
-        "environment_vars" : [
-          "QA_ROOT_PASSWD={{user `qa_root_passwd`}}",
-          "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
-          "PackerSHA={{user `packer_sha`}}",
-          "PackerTemplateType=vmpooler"
-        ]
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
-      },
-      {
-        "type": "windows-restart"
-      },
-      {
-        "type": "powershell",
-        "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
-      }
+    {
+      "type": "file",
+      "source": "../../common/puppet/",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/common/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/vmpooler/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/config/",
+      "destination": "C:\\Packer\\Config"
+    },
+    {
+      "type": "file",
+      "source": "./tmp/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type"   : "powershell",
+      "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
+        "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
+        "PackerSHA={{user `packer_sha`}}",
+        "PackerTemplateType=vmpooler"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
+    }
   ]
 }

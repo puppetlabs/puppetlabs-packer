@@ -65,8 +65,8 @@ Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "A
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
-$qa_root_passwd = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
-& $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd $qa_root_passwd`'
+$qa_root_passwd_plain = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
+& $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd $qa_root_passwd_plain`'
 
 # Generate ssh keys for both Administrator and vagrant
 Write-Output "Generate SSH Keys"

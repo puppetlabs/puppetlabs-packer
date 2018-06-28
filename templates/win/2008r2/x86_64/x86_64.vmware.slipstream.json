@@ -8,7 +8,6 @@
     "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2008_r2_with_sp1_x64_dvd_617601.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "8dcde01d0da526100869e2457aafb7ca",
-    "headless": "false",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
@@ -28,12 +27,12 @@
       "headless": "{{user `headless`}}",
 
       "communicator": "winrm",
-      "winrm_username": "Administrator",
-      "winrm_password": "PackerAdmin",
+      "winrm_username": "{{user `winrm_username`}}",
+      "winrm_password": "{{user `winrm_password`}}",
       "winrm_timeout": "48h",
 
       "shutdown_command": "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-      "shutdown_timeout": "1h",
+      "shutdown_timeout": "{{user `shutdown_timeout`}}",
       "guest_os_type": "windows8srv-64",
       "disk_size": 61440,
       "disk_type_id": "0",
@@ -52,7 +51,7 @@
       "vmx_data": {
         "gui.fitguestusingnativedisplayresolution": "FALSE",
 
-        "firmware": "efi",
+        "firmware": "{{user `firmware`}}",
         "memsize": "4096",
         "numvcpus": "2",
         "ethernet0.virtualdev" : "vmxnet3",
