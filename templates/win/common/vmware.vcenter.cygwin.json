@@ -1,40 +1,36 @@
 {
   "variables": {
-    "template_config"          : "vcenter",
-    "provisioner"              : "vmware",
+    "template_config"           : "vcenter",
+    "provisioner"               : "vmware",
 
-    "guest_os_type"            : "windows9_64Guest",
+    "vm_version"                : "10",
+    "disk_size"                 : "61440",
+    "memsize"                   : "4096",
+    "RAM_reserve_all"           : "true",
+    "numvcpus"                  : "2",
+    "disk_controller_type"      : "pvscsi",
+    "disk_thin_provisioned"     : "true",
+    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
-    "vm_version"               : "13",
-    "firmware"                 : "efi",
-    "winrm_username"           : "Administrator",
-    "winrm_password"           : "PackerAdmin",
-    "winrm_timeout"            : "8h",
-    "disk_size"                : "61440",
-    "memsize"                  : "4096",
-    "RAM_reserve_all"          : "true",
-    "numvcpus"                 : "2",
-    "disk_controller_type"     : "pvscsi",
-    "disk_thin_provisioned"    : "true",
-    "shutdown_command"         : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
-    "shutdown_timeout"         : "1h",
+    "packer_vcenter_host"       : null,
+    "packer_vcenter_username"   : null,
+    "packer_vcenter_password"   : null,
+    "packer_vcenter_dc"         : null,
+    "packer_vcenter_cluster"    : null,
+    "packer_vcenter_datastore"  : null,
+    "packer_vcenter_folder"     : null,
+    "packer_vcenter_net"        : null,
+    "packer_vcenter_insecure"   : null,
+    "packer_vcenter_build_host" : null,
 
-    "qa_root_passwd"           : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+    "qa_root_passwd_plain"      : null,
+    "packer_sha"                : null,
 
-    "packer_vcenter_host"      : "{{env `PACKER_VCENTER_HOST`}}",
-    "packer_vcenter_username"  : "{{env `PACKER_VCENTER_USERNAME`}}",
-    "packer_vcenter_password"  : "{{env `PACKER_VCENTER_PASSWORD`}}",
-    "packer_vcenter_dc"        : "{{env `PACKER_VCENTER_DC`}}",
-    "packer_vcenter_cluster"   : "{{env `PACKER_VCENTER_CLUSTER`}}",
-    "packer_vcenter_datastore" : "{{env `PACKER_VCENTER_DATASTORE`}}",
-    "packer_vcenter_folder"    : "{{env `PACKER_VCENTER_FOLDER`}}",
-    "packer_vcenter_net"       : "{{env `PACKER_VCENTER_NET`}}",
-    "packer_vcenter_insecure"  : "{{env `PACKER_VCENTER_INSECURE`}}",
-    "packer_vcenter_build_host": "{{env `PACKER_VCENTER_BUILD_HOST`}}",
-
-    "packer_sha"               : "{{env `PACKER_SHA`}}",
-    "packer_download_dir"      : "C:/Packer/Downloads"
-
+    "boot_wait"                 : "10s",
+    "convert_to_template"       : "false",
+    "network_card"              : "vmxnet3",
+    "boot_order"                : "disk,cdrom"
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
@@ -44,7 +40,8 @@
       "type": "vsphere-iso",
 
       "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
-      "vm_name"                :  "{{user `template_name`}}-{{user `version`}}",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
+      "vm_version"             : "{{user `vm_version`}}",
 
       "vcenter_server"         : "{{user `packer_vcenter_host`}}",
       "insecure_connection"    : "{{user `packer_vcenter_insecure`}}",
@@ -53,20 +50,20 @@
       "datacenter"             : "{{user `packer_vcenter_dc`}}",
       "cluster"                : "{{user `packer_vcenter_cluster`}}",
       "host"                   : "{{user `packer_vcenter_build_host`}}",
-      "convert_to_template"    : "false",
+      "convert_to_template"    : "{{user `convert_to_template`}}",
       "folder"                 : "{{user `packer_vcenter_folder`}}",
       "CPUs"                   : "{{user `numvcpus`}}",
       "RAM"                    : "{{user `memsize`}}",
       "RAM_reserve_all"        : "{{user `RAM_reserve_all`}}",
       "network"                : "{{user `packer_vcenter_net`}}",
-      "network_card"           : "vmxnet3",
-      "guest_os_type"          : "{{user `guest_os_type`}}",
+      "network_card"           : "{{user `network_card`}}",
+      "guest_os_type"          : "{{user `vsphere_guest_os`}}",
       "datastore"              : "{{user `packer_vcenter_datastore`}}",
       "disk_controller_type"   : "{{user `disk_controller_type`}}",
       "disk_thin_provisioned"  : "{{user `disk_thin_provisioned`}}",
       "disk_size"              : "{{user `disk_size`}}",
-      "boot_order"             : "disk,cdrom",
-      "boot_wait"              : "10s",
+      "boot_order"             : "{{user `boot_order`}}",
+      "boot_wait"              : "{{user `boot_wait`}}",
       "boot_command" : [
         "<down><down><enter><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar>"
       ],
@@ -84,8 +81,8 @@
         "../../common/scripts/bootstrap/startup-profile.ps1"
       ],
       "iso_paths": [
-        "[AI_Insurgency_Test_Images] iso/en_windows_10_business_editions_version_1803_updated_march_2018_x64_dvd_12063333.iso",
-        "[AI_Insurgency_Test_Images] iso/windows.iso"
+        "{{user `iso_disk`}}{{user `iso_name`}}",
+        "{{user `iso_disk`}}windows.iso"
       ],
 
       "communicator"      : "winrm",
@@ -169,7 +166,7 @@
       "type"   : "powershell",
       "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
       "environment_vars" : [
-        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}"
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
       ]
     },
     {
@@ -179,7 +176,7 @@
       "type": "powershell",
       "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
       "environment_vars" : [
-        "QA_ROOT_PASSWD={{user `qa_root_passwd`}}",
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
         "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
         "PackerSHA={{user `packer_sha`}}",
         "PackerTemplateType=vmpooler"
