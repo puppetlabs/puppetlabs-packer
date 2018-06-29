@@ -48,9 +48,9 @@ fi
 printf 'Puppet ' ; /opt/puppetlabs/puppet/bin/puppet --version
 
 # Installed required modules
-for i in "$@"
+for i in $@
 do
-  /opt/puppetlabs/puppet/bin/puppet module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules >/dev/null 2>&1
+  /opt/puppetlabs/puppet/bin/puppet module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
 done
 
 printf 'Modules installed in ' ; /opt/puppetlabs/puppet/bin/puppet module list --modulepath=/tmp/packer-puppet-masterless/manifests/modules
