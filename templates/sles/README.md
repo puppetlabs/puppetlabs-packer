@@ -17,9 +17,10 @@ All templates must be built in the `<os_dist>/<variant>/<arch>` directory. Make 
 To build the vmware.base image, type the following command:
 ```
 packer build -var-file=../../common/vars.json -var-file=vars.json ../../common/vmware.base.json
-
-To build any of the other templates in the `templates/common` directory, type:
 ```
+
+NOTE: If you're building the SLES 15 vmware.base image, copy ../common/files/autoinst.xml.stub to ../common/files/autoinst.xml, then substitute your own registration code in autoinst.xml inside the `<reg_code></reg_code>` tags.
+
 packer build -var-file=../../common/vars.json -var-file=vars.json ../../../common/<template-file>
 ```
 
