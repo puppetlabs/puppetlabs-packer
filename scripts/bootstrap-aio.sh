@@ -51,6 +51,11 @@ printf 'Puppet ' ; /opt/puppetlabs/puppet/bin/puppet --version
 for i in $@
 do
   /opt/puppetlabs/puppet/bin/puppet module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
+
+  # TODO: Check if this is still an issue once we switch over to the SLES 15 GA image
+  sleep_time=20
+  echo "Sleeping for ${sleep_time} seconds to avoid transient networking failures ..."
+  sleep ${sleep_time}
 done
 
 printf 'Modules installed in ' ; /opt/puppetlabs/puppet/bin/puppet module list --modulepath=/tmp/packer-puppet-masterless/manifests/modules
