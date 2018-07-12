@@ -41,6 +41,15 @@ class packer::vsphere inherits packer::vsphere::params {
         }
       }
     }
+    suse: {
+      if $::operatingsystemrelease in ['15.0'] {
+        # Enable systemd service for vsphere bootstrap instead of relying on rc.local
+        file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
+          ensure => 'link',
+          target => $startup_file,
+        }
+      }
+    }
   }
 
   package { $ruby_package:

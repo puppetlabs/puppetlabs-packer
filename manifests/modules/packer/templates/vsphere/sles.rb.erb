@@ -24,8 +24,20 @@ Kernel.system('systemctl restart wicked.service')
 puts '- Cleaning up...'
 
 Kernel.system('rm /etc/vsphere-bootstrap.rb')
-Kernel.system('rm /etc/zypp/repos.d/SLES*.repo')
-Kernel.system('echo "exit 0" > /etc/rc.d/after.local')
+
+# Our SLES 15 image uses a lot of additional repos that we will need to clean-up here.
+# This code removes all repos except our localmirrors. Note something like
+#   Kernel.system('rm /etc/zypp/repos.d/[A-Z]*.repo')
+# does not work for some reason (even if that works when running it in the shell).
+Kernel.system('find /etc/zypp/repos.d/ ! -name "local*" -type f -exec rm {} +')
+
+<% if ['15.0'].include? @operatingsystemrelease -%>
+# Disable the oneshot service that runs this script:
+Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
+<% else -%>
+# With NetworkManager, /etc/rc.local is what runs this script; Make it a noop after the first run:
+Kernel.system('echo "exit 0" > /etc/rc.local')
+<% end -%>
 
 puts "\n"
 

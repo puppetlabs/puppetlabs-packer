@@ -194,12 +194,17 @@ class packer::vsphere::repos inherits packer::vsphere::params {
     }
 
     suse: {
+      $base_url = $::operatingsystemrelease ? {
+        # TODO: Mirror this repo over to artifactory once the SLES 15 beta testing is finished.
+        '15.0'    => "http://osmirror.delivery.puppetlabs.net/sles-15-rc4-x86_64/RPMS.os",
+        default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
+      }
 
       zypprepo { "localmirror-os":
         descr       => "localmirror-os",
         enabled     => 1,
         autorefresh => 1,
-        baseurl     => "${repo_mirror}/${loweros}-${facts[os][release][major]}-sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os",
+        baseurl     => "${base_url}",
         gpgcheck    => "1",
         gpgkey      => "file:///etc/pki/rpm-gpg/${gpgkey}",
         type        => 'rpm-md'
