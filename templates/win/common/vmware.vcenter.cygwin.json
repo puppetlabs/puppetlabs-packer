@@ -27,7 +27,7 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
 
-    "boot_wait"                 : "10s",
+    "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
     "network_card"              : "vmxnet3",
     "boot_order"                : "disk,cdrom"
@@ -65,7 +65,7 @@
       "boot_order"             : "{{user `boot_order`}}",
       "boot_wait"              : "{{user `boot_wait`}}",
       "boot_command" : [
-        "<down><down><enter><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar><wait><spacebar>"
+        "<spacebar><wait><spacebar><wait><enter><wait><enter><wait><enter><wait><enter>"
       ],
 
       "shutdown_command"  : "{{user `shutdown_command`}}",
