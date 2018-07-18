@@ -27,8 +27,8 @@ export PACKER_LOCALE=`jq -r '.locale //empty' vars.json`
 [ -z "${PACKER_LOCALE}" ] && export PACKER_LOCALE="en-US"
 
 # Need to pick up Admin Password and winrm from Generic File.
-export PACKER_WINRM_USER=`jq -r '.variables.winrm_username //empty' ${WIN_COMMON_DIR}/${IMAGE_PROVISIONER}.base.json`
-export PACKER_WINRM_PSWD=`jq -r '.variables.winrm_password //empty' ${WIN_COMMON_DIR}/${IMAGE_PROVISIONER}.base.json`
+export PACKER_WINRM_USER=`jq -r '.winrm_username //empty' ${WIN_COMMON_DIR}/vars.json`
+export PACKER_WINRM_PSWD=`jq -r '.winrm_password //empty' ${WIN_COMMON_DIR}/vars.json`
 
 # Make sure tmp directory exists.
 mkdir -p tmp
