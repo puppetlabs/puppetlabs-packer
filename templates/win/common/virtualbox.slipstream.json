@@ -1,104 +1,101 @@
 {
-     "variables": {
-          "headless"            : "true",
-          "template_config"     : "base",
-          "provisioner"         : "virtualbox",
-          "winrm_username"      : "Administrator",
-          "winrm_password"      : "PackerAdmin",
-          "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-          "winrm_timeout"       : "4h",
-          "disk_size"           : "61440",
-          "memory_size"         : "4096",
-          "cpu_count"           : "2",
- 
-          "packer_sha"          : "{{env `PACKER_SHA`}}",
-          "packer_source_dir"   : "{{env `PACKER_VM_SRC_DIR`}}",
-          "packer_output_dir"   : "{{env `PACKER_VM_OUT_DIR`}}",
-          "current_pwd"         : "{{env `PWD`}}",
-          "packer_download_dir" : "C:/Packer/Downloads",
+  "variables": {
+    "template_config"     : "base",
+    "provisioner"         : "virtualbox",
+    "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+    "disk_size"           : "61440",
+    "memory_size"         : "4096",
+    "cpu_count"           : "2",
 
-          "image_index"         : "2",
+    "image_index"         : "2",
 
-          "template_name"           : null,
-          "vbox_guest_os"           : null,
-          "iso_url"                 : null,
-          "iso_checksum_type"       : null,
-          "iso_checksum"            : null,
-          "boot_command"            : null
-      }, 
-    "description": "Generic build to prepare slipstream ISO for Win2012r2+ platforms using virtualbox",
-  
-    "_comment": [
-        "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
-    ],
-    "builders": [
-      {
-        "type"                    : "virtualbox-iso",
-        "name"                    : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
-        "vm_name"                 : "packer-{{build_name}}",
-        "output_directory"        : "{{user `packer_output_dir`}}/output-{{build_name}}",
-        "iso_url"                 : "{{user `iso_url`}}",
-        "iso_checksum_type"       : "{{user `iso_checksum_type`}}",
-        "iso_checksum"            : "{{user `iso_checksum`}}",
-        "headless"                : "{{user `headless`}}",
-        "guest_os_type"           : "{{user `vbox_guest_os`}}",
-        "guest_additions_mode"    : "attach",
-        "disk_size"               : "{{user `disk_size`}}",
-        "communicator"            : "winrm",
-        "winrm_username"          : "{{user `winrm_username`}}",
-        "winrm_password"          : "{{user `winrm_password`}}",
-        "winrm_timeout"           : "{{user `winrm_timeout`}}",
-        "virtualbox_version_file" : ".vbox_version",
-        "shutdown_command"        : "{{user `shutdown_command`}}",
-        "shutdown_timeout"        : "1h",
-        "vboxmanage": [
-          ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
-          ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"],
-          ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
-        ],
-        "floppy_files": [
-         "./tmp/autounattend.xml",
-         "./files/platform-packages.ps1",
-          "./files/slipstream-filter",
-          "../../common/files/virtualbox/oracle-cert-1.cer",
-          "../../common/scripts/common/windows-env.ps1",
-          "../../common/scripts/provisioners/generate-slipstream.ps1",
-          "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
-          "../../common/scripts/bootstrap/bootstrap-base.bat",
-          "../../common/scripts/bootstrap/core-shutdown.ps1",
-          "../../common/scripts/bootstrap/startup-profile.ps1"
-      ]
-    }
-    ],
-    "provisioners": [
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/print-pswindowslog.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
-          "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
-          "Start-Sleep -Seconds 10"
-        ]
-      },
-      {
-        "type": "powershell",
-        "remote_path": "{{user `packer_download_dir`}}/init-slipstream.ps1",
-        "inline": [
-          "Write-Output 'Executing Powershell Script: init-slipstream.ps1'",
-          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism",
-          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Mount",
-          "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Logs",
-          "Copy-Item A:\\windows-env.ps1 C:\\Packer\\Dism",
-          "Copy-Item A:\\generate-slipstream.ps1 C:\\Packer\\Dism",
-          "Copy-Item A:\\slipstream-filter C:\\Packer\\Dism"
-        ]
-      },
-      {
-        "type": "powershell",
-        "inline": [
-          "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `template_name`}} -ImageIndex {{user `image_index`}}"
-        ],
-        "valid_exit_codes": [0,1]
-      }
+    "template_name"       : null,
+    "vbox_guest_os"       : null,
+    "iso_url"             : null,
+    "iso_checksum_type"   : null,
+    "iso_checksum"        : null,
+    "boot_command"        : null,
+
+    "qa_root_passwd_plain"      : null,
+    "packer_sha"          : null,
+    "packer_vm_src_dir"   : null,
+    "packer_vm_out_dir"   : null,
+    "current_pwd"         : null
+  }, 
+
+  "description": "Generic build to prepare slipstream ISO for Win2012r2+ platforms using virtualbox",
+
+  "_comment": [
+      "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
+  ],
+  "builders": [
+    {
+      "type"                    : "virtualbox-iso",
+      "name"                    : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name"                 : "packer-{{build_name}}",
+      "output_directory"        : "{{user `packer_vm_out_dir`}}/output-{{build_name}}",
+      "iso_url"                 : "{{user `iso_url`}}",
+      "iso_checksum_type"       : "{{user `iso_checksum_type`}}",
+      "iso_checksum"            : "{{user `iso_checksum`}}",
+      "headless"                : "{{user `headless`}}",
+      "guest_os_type"           : "{{user `vbox_guest_os`}}",
+      "guest_additions_mode"    : "attach",
+      "disk_size"               : "{{user `disk_size`}}",
+      "communicator"            : "winrm",
+      "winrm_username"          : "{{user `winrm_username`}}",
+      "winrm_password"          : "{{user `winrm_password`}}",
+      "winrm_timeout"           : "{{user `winrm_timeout`}}",
+      "virtualbox_version_file" : ".vbox_version",
+      "shutdown_command"        : "{{user `shutdown_command`}}",
+      "shutdown_timeout"        : "{{user `shutdown_timeout`}}",
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","{{user `memory_size`}}"],
+        ["modifyvm","{{.Name}}","--cpus","{{user `cpu_count`}}"],
+        ["modifyvm", "{{.Name}}", "--natpf1", "guestwinrm,tcp,127.0.0.1,5985,,5985"]
+      ],
+      "floppy_files": [
+        "./tmp/autounattend.xml",
+        "./files/platform-packages.ps1",
+        "./files/slipstream-filter",
+        "../../common/files/virtualbox/oracle-cert-1.cer",
+        "../../common/scripts/common/windows-env.ps1",
+        "../../common/scripts/provisioners/generate-slipstream.ps1",
+        "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+        "../../common/scripts/bootstrap/bootstrap-base.bat",
+        "../../common/scripts/bootstrap/core-shutdown.ps1",
+        "../../common/scripts/bootstrap/startup-profile.ps1"
     ]
   }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "remote_path": "{{user `packer_download_dir`}}/print-pswindowslog.ps1",
+      "inline": [
+        "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
+        "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
+        "Start-Sleep -Seconds 10"
+      ]
+    },
+    {
+      "type": "powershell",
+      "remote_path": "{{user `packer_download_dir`}}/init-slipstream.ps1",
+      "inline": [
+        "Write-Output 'Executing Powershell Script: init-slipstream.ps1'",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Mount",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Logs",
+        "Copy-Item A:\\windows-env.ps1 C:\\Packer\\Dism",
+        "Copy-Item A:\\generate-slipstream.ps1 C:\\Packer\\Dism",
+        "Copy-Item A:\\slipstream-filter C:\\Packer\\Dism"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\Packer\\Dism\\generate-slipstream.ps1 -OSName {{user `template_name`}} -ImageIndex {{user `image_index`}}"
+      ],
+      "valid_exit_codes": [0,1]
+    }
+  ]
+}
