@@ -11,7 +11,7 @@
 
     "template_name"       : null,
     "vmware_guest_os"     : null,
-    "iso_url"             : null,
+    "iso_name"            : null,
     "iso_checksum_type"   : null,
     "iso_checksum"        : null,
     "boot_command"        : null,
@@ -19,8 +19,7 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"          : null,
     "packer_vm_src_dir"   : null,
-    "packer_vm_out_dir"   : null,
-    "current_pwd"         : null
+    "packer_vm_out_dir"   : null
   },
 
   "description": "Builds a Windows base template VM for use in VMware",
@@ -33,7 +32,10 @@
       "name"              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name"           : "packer-{{build_name}}",
       "type"              : "vmware-iso",
-      "iso_url"           : "{{user `iso_url`}}",
+      "iso_urls"          : [
+                             "{{user `file_baseurl`}}/{{user `iso_name`}}",
+                             "{{user `artifactory_baseurl`}}/{{user `iso_name`}}"
+      ],
       "iso_checksum_type" : "{{user `iso_checksum_type`}}",
       "iso_checksum"      : "{{user `iso_checksum`}}",
       "output_directory"  : "{{user `packer_vm_out_dir`}}/output-{{build_name}}",

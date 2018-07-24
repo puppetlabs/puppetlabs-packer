@@ -3,10 +3,11 @@
     "beakerhost"        : "windows10pro-64",
     "vbox_guest_os"     : "Windows81_64",
     "vmware_guest_os"   : "windows8-64",
+    "vsphere_guest_os"  : "windows9_64Guest",
     "windows_version"   : "Windows-10",
     "image_name"        : "Windows 10 Pro",
     "product_key"       : "W269N-WFGWX-YVC9B-4J6C9-T83GX",
-    "iso_url"           : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_10_multi-edition_vl_version_1709_updated_dec_2017_x64_dvd_100406172.iso",
+    "iso_name"          : "en_windows_10_multi-edition_vl_version_1709_updated_dec_2017_x64_dvd_100406172.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "c6dad7a55f8af7ae5e38b33d1d65805b",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"

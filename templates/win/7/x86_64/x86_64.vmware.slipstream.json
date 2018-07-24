@@ -5,7 +5,7 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_7_enterprise_with_sp1_x64_dvd_u_677651.iso",
+    "iso_name": "en_windows_7_enterprise_with_sp1_x64_dvd_u_677651.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "6467c3875955df4514395f0afcaaa62a",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
@@ -21,7 +21,10 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
-      "iso_url": "{{user `iso_url`}}",
+      "iso_urls"          : [
+                             "{{user `file_baseurl`}}/{{user `iso_name`}}",
+                             "{{user `artifactory_baseurl`}}/{{user `iso_name`}}"
+      ],
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "headless": "{{user `headless`}}",
