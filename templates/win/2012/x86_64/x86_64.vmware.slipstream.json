@@ -5,7 +5,7 @@
     "template_config": "base",
 
     "provisioner": "vmware",
-    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2012_x64_dvd_915478.iso",
+    "iso_name": "en_windows_server_2012_x64_dvd_915478.iso",
     "iso_checksum_type": "md5",
     "iso_checksum": "da91135483e24689bfdaf05d40301506",
     "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
@@ -21,7 +21,10 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
-      "iso_url": "{{user `iso_url`}}",
+      "iso_urls"          : [
+                             "{{user `file_baseurl`}}/{{user `iso_name`}}",
+                             "{{user `artifactory_baseurl`}}/{{user `iso_name`}}"
+      ],
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "headless": "{{user `headless`}}",

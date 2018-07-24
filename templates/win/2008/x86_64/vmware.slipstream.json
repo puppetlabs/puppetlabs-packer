@@ -1,13 +1,13 @@
 {
   "variables": {
-    "template_name": "win-7-x86_64",
-    "os_name" : "Win-7",
+    "template_name"     : "win-7-x86_64",
+    "os_name"           : "Win-7",
 
-    "provisioner": "vmware",
-    "iso_url": "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/en_windows_server_2008_with_sp2_x64_dvd_342336.iso",
-    "iso_checksum_type": "md5",
-    "iso_checksum": "e94943ef484035b3288d8db69599a6b5",
-    "tools_iso": "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
+    "provisioner"       : "vmware",
+    "iso_name"          : "en_windows_server_2008_with_sp2_x64_dvd_342336.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "e94943ef484035b3288d8db69599a6b5",
+    "tools_iso"         : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso"
   },
 
   "description": "Customised Win-7 build to prepare slipstream ISO",
@@ -20,7 +20,10 @@
       "name": "{{user `template_name`}}-{{user `provisioner`}}",
       "vm_name": "packer-{{build_name}}",
       "type": "vmware-iso",
-      "iso_url": "{{user `iso_url`}}",
+      "iso_urls"          : [
+                             "{{user `file_baseurl`}}/{{user `iso_name`}}",
+                             "{{user `artifactory_baseurl`}}/{{user `iso_name`}}"
+      ],
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "headless": "{{user `headless`}}",
