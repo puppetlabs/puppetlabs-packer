@@ -1,20 +1,20 @@
 {
   "variables": {
-    "template_config"     : "base",
-    "provisioner"         : "vmware",
+    "template_config"      : "base",
+    "provisioner"          : "vmware",
 
-    "tools_iso"           : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
-    "image_index"         : "2",
-    "shutdown_command"    : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
-    "disk_size"           : "61440",
-    "memsize"             : "4096",
-    "numvcpus"            : "2",
+    "tools_iso"            : "{{env `VMWARE_TOOLS_ISO`}}/windows.iso",
+    "image_index"          : "2",
+    "shutdown_command"     : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
+    "disk_size"            : "61440",
+    "memsize"              : "4096",
+    "numvcpus"             : "2",
 
-    "qa_root_passwd_plain"      : null,
-    "packer_sha"          : null,
-    "packer_vm_src_dir"   : null,
-    "packer_vm_out_dir"   : null,
-    "current_pwd"         : null
+    "iso_name"             : null,
+    "qa_root_passwd_plain" : null,
+    "packer_sha"           : null,
+    "packer_vm_src_dir"    : null,
+    "packer_vm_out_dir"    : null
   },
   
   "description": "Generic build to prepare slipstream ISO for Win2012r2+ platforms",
@@ -27,7 +27,10 @@
       "name"              : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name"           : "packer-{{build_name}}",
       "type"              : "vmware-iso",
-      "iso_url"           : "{{user `iso_url`}}",
+      "iso_urls"          : [
+                             "{{user `file_baseurl`}}/{{user `iso_name`}}",
+                             "{{user `artifactory_baseurl`}}/{{user `iso_name`}}"
+      ],
       "iso_checksum_type" : "{{user `iso_checksum_type`}}",
       "iso_checksum"      : "{{user `iso_checksum`}}",
       "output_directory"  : "{{user `packer_vm_out_dir`}}/output-{{build_name}}",

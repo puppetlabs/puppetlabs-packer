@@ -13,6 +13,9 @@
     "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
+    "vsphere_guest_os"          : null,
+    "iso_name"                  : null,
+
     "packer_vcenter_host"       : null,
     "packer_vcenter_username"   : null,
     "packer_vcenter_password"   : null,

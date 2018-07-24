@@ -9,5 +9,8 @@
   "shutdown_timeout"    : "1h",
   "firmware"            : "efi",
 
-  "packer_download_dir" : "C:/Packer/Downloads"
+  "packer_download_dir" : "C:/Packer/Downloads",
+
+  "artifactory_baseurl" : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/windows/",
+  "file_baseurl"        : "file:///srv/packer/iso/"
 }
