@@ -1,0 +1,9 @@
+<config>
+  <include name="common.xml"/>
+
+  <addrconf>
+    <dhcp4>
+      <create-cid>disable</create-cid>
+    </dhcp4>
+  </addrconf>
+</config>
