@@ -18,6 +18,19 @@
   <xsl:param name="WinRmPassword" />
   <xsl:param name="Locale" />
 
+
+  <!-- Some logic to set the correct OSDriverPlatform variable so we can choose correct PE drivers to load -->
+  <xsl:variable name="OSDriverPlatform">
+    <xsl:choose>
+      <xsl:when test="$WindowsVersion = 'Windows-2008' or $WindowsVersion = 'Windows-2008r2' or $WindowsVersion = 'Windows-7' " >
+        <xsl:value-of select="'Vista'" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'Win8'" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
   <!-- General match everything unless matched by more specific rules below -->
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -34,6 +47,15 @@
       </xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
+  </xsl:template>
+
+  <!-- Rule to select correct driver paths for PE phase -->
+  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-PnpCustomizationsWinPE"]/u:DriverPaths/u:PackerDriversVersion |
+                       u:unattend/u:settings/u:component[@name="Microsoft-Windows-PnpCustomizationsNonWinPE"]/u:DriverPaths/u:PackerDriversVersion'>
+      <xsl:if test="@OSDriverPlatform=$OSDriverPlatform">
+        <!-- Strip out PackerLogonSequence once selected to present valid Unattend.xml -->
+        <xsl:copy-of select="node()" />
+      </xsl:if>
   </xsl:template>
 
   <!-- Rule to select disk configuration -->
