@@ -56,6 +56,7 @@
       "convert_to_template"    : "{{user `convert_to_template`}}",
       "folder"                 : "{{user `packer_vcenter_folder`}}",
       "CPUs"                   : "{{user `numvcpus`}}",
+      "CPU_limit"              : -1,
       "RAM"                    : "{{user `memsize`}}",
       "RAM_reserve_all"        : "{{user `RAM_reserve_all`}}",
       "network"                : "{{user `packer_vcenter_net`}}",
@@ -108,7 +109,12 @@
         "time.synchronize.shrink"                  : "FALSE",
         "time.synchronize.tools.startup"           : "FALSE",
         "time.synchronize.tools.enable"            : "FALSE",
-        "time.synchronize.resume.host"             : "FALSE"
+        "time.synchronize.resume.host"             : "FALSE",
+
+        "svga.vramSize"                            : "134217728",
+        "svga.autodetect"                          : "FALSE",
+        "svga.maxWidth"                            : "1680",
+        "svga.maxHeight"                           : "1050"
       }
     }
   ],
