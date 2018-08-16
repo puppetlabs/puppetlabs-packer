@@ -195,9 +195,16 @@ class packer::vsphere::repos inherits packer::vsphere::params {
 
     suse: {
       $base_url = $::operatingsystemrelease ? {
-        # TODO: Mirror this repo over to artifactory once the SLES 15 beta testing is finished.
-        '15.0'    => "http://osmirror.delivery.puppetlabs.net/sles-15-rc4-x86_64/RPMS.os",
+        # TODO: Mirror this repo over to artifactory
+        '15.0'    => "http://osmirror.delivery.puppetlabs.net/sles-15-gm-x86_64/RPMS.os",
         default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
+      }
+
+      $gpg_check = $::operatingsystemrelease ? {
+        # SLES 15 defaults to requiring signed repos, and we generate our
+        # own repo from the ISO images, which is unsigned
+        '15.0' => "0",
+        default => "1"
       }
 
       zypprepo { "localmirror-os":
@@ -205,9 +212,16 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         enabled     => 1,
         autorefresh => 1,
         baseurl     => "${base_url}",
-        gpgcheck    => "1",
+        gpgcheck    => "${gpg_check}",
         gpgkey      => "file:///etc/pki/rpm-gpg/${gpgkey}",
         type        => 'rpm-md'
+      }
+
+      if $::operatingsystemrelease == "15.0" {
+        exec { 'Un-register SLES from SUSEConnect':
+          command => '/usr/sbin/SUSEConnect --cleanup',
+          path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin', ]
+        }
       }
     }
 
