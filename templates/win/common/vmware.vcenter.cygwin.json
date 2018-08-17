@@ -3,7 +3,7 @@
     "template_config"           : "vcenter",
     "provisioner"               : "vmware",
 
-    "vm_version"                : "10",
+    "vm_version"                : "13",
     "disk_size"                 : "61440",
     "memsize"                   : "4096",
     "RAM_reserve_all"           : "true",
