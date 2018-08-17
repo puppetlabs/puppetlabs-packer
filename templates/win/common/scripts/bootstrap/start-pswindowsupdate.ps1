@@ -24,7 +24,8 @@ If ( $WindowsServerCore ) {
 # required - this most reliable way to do this is with a reboot so we want to get this out the way first
 # to prevent windows update starting anything.
 # Windows-10/2016 seem to consistenly break on WSUS, so disable WSUS completely for these.
-if ($WindowsVersion -like $WindowsServer2016) {
+# Same seems to apply to win-2012 so disabling for this too.
+if ($WindowsVersion -like $WindowsServer2016 -or $WindowsVersion -like $WindowsServer2012) {
   Write-Output "Bypassing WSUS - Go Direct to Microsoft for updates"
 }
 else {
