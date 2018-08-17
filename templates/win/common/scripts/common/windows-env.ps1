@@ -584,7 +584,7 @@ Function Invoke-Reboot {
 
 # Clear reboot files.
 Function Clear-RebootFiles {
-  Remove-Item -Force -Path "$startup\packer-post-restart.bat"
+  Remove-Item -Force -Path "$startup\packer-post-restart.bat" -ErrorAction SilentlyContinue
   if ($WindowsServerCore ) {
     Remove-Item -Force -Path $PROFILE -ErrorAction SilentlyContinue
   }
