@@ -14,7 +14,12 @@ export PACKER_WIN_VERSION=`jq -r .windows_version vars.json`
 
 # Firmware if needed - otherwise default to "efi"
 export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
-[ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE="efi"
+# This is A TEMPORARY HACK to handle an issue with the Esxi 6.7 upgrade
+# that isn't handling the firmware settings correctly on vCenter.
+# So for vmware only - set the firmware to BIOS to ensure non-GPT
+# partitions are built. Virtualbox remains the same.
+[ -z "${PACKER_FIRMWARE}" -a "${IMAGE_PROVISIONER}" = "vmware" ] && export PACKER_FIRMWARE="bios"
+[ -z "${PACKER_FIRMWARE}" -a "${IMAGE_PROVISIONER}" = "virtualbox" ] && export PACKER_FIRMWARE="efi"
 
 # PACKER_WIN_PROC_ARCH defaults to "amd64" unless specified
 # These values are specific to the Autounattend.xml files and differ from
