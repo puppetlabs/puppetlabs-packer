@@ -18,7 +18,8 @@
     "qa_root_passwd_plain" : null,
     "packer_sha"           : null,
     "packer_vm_src_dir"    : null,
-    "packer_vm_out_dir"    : null
+    "packer_vm_out_dir"    : null,
+    "packer_shared_dir"    : "/srv/packer/output" 
   },
 
   "description": "Builds a Windows template VM for use in VirtualBox with Vagrant",
@@ -177,7 +178,7 @@
   ],
     "post-processors": [{
         "type"                : "vagrant",
-        "output"              : "{{user `packer_vm_out_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
+        "output"              : "{{user `packer_shared_dir`}}/output-{{build_name}}/{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}.box",
         "vagrantfile_template": "tmp/vagrantfile-windows.template"
     }
   ]
