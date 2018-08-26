@@ -1,0 +1,233 @@
+{
+  "variables": {
+    "template_config"           : "vcenter",
+    "provisioner"               : "vmware",
+
+    "vm_version"                : "13",
+    "disk_size"                 : "61440",
+    "memsize"                   : "4096",
+    "RAM_reserve_all"           : "true",
+    "numvcpus"                  : "2",
+    "disk_controller_type"      : "pvscsi",
+    "disk_thin_provisioned"     : "true",
+    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
+
+    "vsphere_guest_os"          : null,
+    "iso_name"                  : null,
+
+    "packer_vcenter_host"       : null,
+    "packer_vcenter_username"   : null,
+    "packer_vcenter_password"   : null,
+    "packer_vcenter_dc"         : null,
+    "packer_vcenter_cluster"    : null,
+    "packer_vcenter_datastore"  : null,
+    "packer_vcenter_folder"     : null,
+    "packer_vcenter_net"        : null,
+    "packer_vcenter_insecure"   : null,
+    "packer_vcenter_build_host" : null,
+
+    "qa_root_passwd_plain"      : null,
+    "packer_sha"                : null,
+
+    "boot_wait"                 : "10ms",
+    "convert_to_template"       : "false",
+    "network_card"              : "vmxnet3",
+    "boot_order"                : "disk,cdrom"
+  },
+
+  "description": "Builds a Windows Server 2008 SP2 template VM for use in VMware. Custom spec needed for this platform",
+
+  "builders": [
+    {
+      "type": "vsphere-iso",
+
+      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
+      "vm_version"             : "{{user `vm_version`}}",
+
+      "vcenter_server"         : "{{user `packer_vcenter_host`}}",
+      "insecure_connection"    : "{{user `packer_vcenter_insecure`}}",
+      "username"               : "{{user `packer_vcenter_username`}}",
+      "password"               : "{{user `packer_vcenter_password`}}",
+      "datacenter"             : "{{user `packer_vcenter_dc`}}",
+      "cluster"                : "{{user `packer_vcenter_cluster`}}",
+      "host"                   : "{{user `packer_vcenter_build_host`}}",
+      "convert_to_template"    : "{{user `convert_to_template`}}",
+      "folder"                 : "{{user `packer_vcenter_folder`}}",
+      "CPUs"                   : "{{user `numvcpus`}}",
+      "CPU_limit"              : -1,
+      "RAM"                    : "{{user `memsize`}}",
+      "RAM_reserve_all"        : "{{user `RAM_reserve_all`}}",
+      "network"                : "{{user `packer_vcenter_net`}}",
+      "network_card"           : "{{user `network_card`}}",
+      "guest_os_type"          : "{{user `vsphere_guest_os`}}",
+      "datastore"              : "{{user `packer_vcenter_datastore`}}",
+      "disk_controller_type"   : "{{user `disk_controller_type`}}",
+      "disk_thin_provisioned"  : "{{user `disk_thin_provisioned`}}",
+      "disk_size"              : "{{user `disk_size`}}",
+      "boot_order"             : "{{user `boot_order`}}",
+      "boot_wait"              : "{{user `boot_wait`}}",
+      "boot_command" : [
+        "<spacebar><wait><spacebar><wait><enter><wait><enter><wait><enter><wait><enter>"
+      ],
+
+      "shutdown_command"  : "{{user `shutdown_command`}}",
+      "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
+
+      "floppy_files": [
+        "./tmp/autounattend.xml",
+        "./files/platform-packages.ps1",
+        "../../common/scripts/common/windows-env.ps1",
+        "../../common/scripts/bootstrap/bootstrap-base.bat",
+        "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+        "../../common/scripts/bootstrap/startup-profile.ps1"
+      ],
+      "iso_paths": [
+        "{{user `iso_disk`}}{{user `iso_name`}}",
+        "{{user `iso_disk`}}windows.iso"
+      ],
+
+      "communicator"      : "winrm",
+      "winrm_username"    : "{{user `winrm_username`}}",
+      "winrm_password"    : "{{user `winrm_password`}}",
+      "winrm_timeout"     : "{{user `winrm_timeout`}}",
+
+      "configuration_parameters": {
+        "firmware"                                 : "{{user `firmware`}}",
+
+        "gui.fitguestusingnativedisplayresolution" : "FALSE",
+        "devices.hotplug"                          : "false",
+        "vcpu.hotadd"                              : "TRUE",
+        "mem.hotadd"                               : "TRUE",
+
+        "tools.syncTime"                           : "FALSE",
+        "time.synchronize.continue"                : "FALSE",
+        "time.synchronize.restore"                 : "FALSE",
+        "time.synchronize.resume.disk"             : "FALSE",
+        "time.synchronize.shrink"                  : "FALSE",
+        "time.synchronize.tools.startup"           : "FALSE",
+        "time.synchronize.tools.enable"            : "FALSE",
+        "time.synchronize.resume.host"             : "FALSE",
+
+        "svga.vramSize"                            : "134217728",
+        "svga.autodetect"                          : "FALSE",
+        "svga.maxWidth"                            : "1680",
+        "svga.maxHeight"                           : "1050"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "remote_path": "{{user `packer_downloads_dir`}}/print-pswindowslog.ps1",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "inline": [
+        "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
+        "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
+        "Start-Sleep -Seconds 10"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../common/puppet/",
+      "destination": "C:\\Packer\\puppet\\modules"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/common/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
+      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/vmpooler/",
+      "destination": "C:\\Packer\\Scripts"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/config/",
+      "destination": "C:\\Packer\\Config"
+    },
+    {
+      "type": "file",
+      "source": "./tmp/post-clone.autounattend.xml",
+      "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
+        "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
+        "PackerSHA={{user `packer_sha`}}",
+        "PackerTemplateType=vmpooler"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1",
+      "valid_exit_codes" : [0,1]
+    },
+    {
+      "type"   : "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type"   : "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1"
+    }
+  ]
+}
