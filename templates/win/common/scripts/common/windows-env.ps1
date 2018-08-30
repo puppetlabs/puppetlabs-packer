@@ -215,18 +215,20 @@ Function ForceFullyDelete-Path {
   [String]$Path,
   [String]$LogFile
   )
-  
-  try {
-    if(Test-Path $Path) {
-        Write-Output "Removing $Path" >> $LogFile 2>&1
-        Takeown /d "$AnswerPromptYes" /R /f $Path >> $LogFile 2>&1
-        Icacls $Path /grant:r "*${WindowsAdminSID}:(OI)(CI)F" /t /c >> $LogFile 2>&1
-        Remove-Item $Path -Recurse -Force >> $LogFile 2>&1
+
+  process {
+    try {
+      if(Test-Path $Path) {
+          Write-Output "Removing $Path" >> $LogFile 2>&1
+          Takeown /d "$AnswerPromptYes" /R /f $Path >> $LogFile 2>&1
+          Icacls $Path /grant:r "*${WindowsAdminSID}:(OI)(CI)F" /t /c >> $LogFile 2>&1
+          Remove-Item $Path -Recurse -Force >> $LogFile 2>&1
+        }
       }
-    }
-    catch {
-        Write-Output "Ignoring Error deleting: $Path - Continue" >> $LogFile 2>&1
-    }
+      catch {
+          Write-Output "Ignoring Error deleting: $Path - Continue" >> $LogFile 2>&1
+      }
+  }
 }
 
 # Helper Function set Windows Update to use the Internal Production WSUS Server
