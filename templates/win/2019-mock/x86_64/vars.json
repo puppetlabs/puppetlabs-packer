@@ -1,0 +1,15 @@
+{
+    "A_Comment"         : "This is preview so not all 2019 defs are available below",
+    "template_name"     : "win-2019-mock-x86_64",
+    "beakerhost"        : "windows2019-64",
+    "vbox_guest_os"     : "Windows2016_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "vsphere_guest_os"  : "windows9Server64Guest",
+    "windows_version"   : "Windows-2019",
+    "image_name"        : "Windows Server 2019 SERVERSTANDARD",
+    "product_key"       : "MFY9F-XBN2F-TYFMP-CCV49-RMYVH",
+    "iso_name"          : "/Windows_InsiderPreview_Server_vNext_en-us_17723.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "593ef03364c7cd730f0ec89e322ab4ca",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+}

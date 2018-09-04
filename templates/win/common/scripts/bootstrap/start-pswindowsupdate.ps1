@@ -168,6 +168,10 @@ Import-Module "$PackerStaging\PSWindowsUpdate\PSWindowsUpdate.psd1"
 # Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability
 $Attempt = 1
 do {
+  if (Test-Path "$PackerLogs\Mock.Platform" ) {
+    Write-Output "Test Platform Build - exiting"
+    break
+  }
   Write-Output "Windows Update Pass $Attempt"
   try {
     # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
