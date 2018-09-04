@@ -4,6 +4,11 @@ $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
+if (Test-Path "$PackerLogs\Mock.Platform" ) {
+  Write-Output "Test Platform Build - exiting"
+  exit 0
+}
+
 $SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 
 Write-Output "Uninstalling Puppet Agent..."

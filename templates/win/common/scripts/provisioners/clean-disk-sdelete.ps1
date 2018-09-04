@@ -2,9 +2,13 @@ $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
+if (Test-Path "$PackerLogs\Mock.Platform" ) {
+    Write-Output "Test Platform Build - exiting"
+    exit 0
+}
+
 # This is using a revised Disk Zero script instead of sdelete.
 # Script obtained and modified from: http://www.hurryupandwait.io/blog/how-can-we-most-optimally-shrink-a-windows-base-image
-
 
 # Add in Optimize-Volume if this is present.
 if (Get-Command -ErrorAction SilentlyContinue Optimize-Volume ) {

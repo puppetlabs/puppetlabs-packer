@@ -2,6 +2,11 @@ $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
+if (Test-Path "$PackerLogs\Mock.Platform" ) {
+  Write-Output "Test Platform Build - exiting"
+  exit 0
+}
+
 $SpaceAtStart = [Math]::Round( ((Get-WmiObject win32_logicaldisk | where { $_.DeviceID -eq $env:SystemDrive }).FreeSpace)/1GB, 2)
 
 #Set all CleanMgr VolumeCache keys to StateFlags = 0 to prevent cleanup. After, set the proper keys to 2 to allow cleanup.

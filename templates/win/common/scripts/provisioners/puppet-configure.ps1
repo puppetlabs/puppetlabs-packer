@@ -6,6 +6,11 @@ $ErrorActionPreference = "Stop"
 
 . C:\Packer\Scripts\windows-env.ps1
 
+if (Test-Path "$PackerLogs\Mock.Platform" ) {
+  Write-Output "Test Platform Build - exiting"
+  exit 0
+}
+
 Write-Output "Installing Puppet Agent..."
 if ("$ARCH" -eq "x86") {
   $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x86-latest.msi"
