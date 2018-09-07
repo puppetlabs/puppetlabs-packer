@@ -33,7 +33,7 @@ class packer::vsphere inherits packer::vsphere::params {
       }
     }
     debian: {
-      if $::operatingsystemrelease in ['18.04'] {
+      if $::operatingsystemrelease in ['18.04', '18.10'] {
         # Enable systemd service for vsphere bootstrap instead of relying on rc.local
         file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
           ensure => 'link',
