@@ -4,6 +4,12 @@ $ErrorActionPreference = "Stop"
 
 Write-Output "Running Win-7 Package Customisation"
 
+# WMF5 requires .Net 4.5.2 as a min, so install latest .dotnet here and now.
+Install-DotNetLatest
+if (Test-PendingReboot) {
+  Invoke-Reboot
+}
+
 if (-not (Test-Path "$PackerLogs\KB2852386.installed"))
 {
   # Install the WinSxS cleanup patch
