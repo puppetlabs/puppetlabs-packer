@@ -80,7 +80,7 @@
         "./files/platform-packages.ps1",
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
-        "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+        "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
         "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
         "../../common/scripts/bootstrap/startup-profile.ps1"
       ],
@@ -121,14 +121,9 @@
   "provisioners": [
     {
       "type": "powershell",
-      "remote_path": "{{user `packer_downloads_dir`}}/print-pswindowslog.ps1",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "inline": [
-        "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
-        "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
-        "Start-Sleep -Seconds 10"
-      ]
+      "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
     },
     {
       "type": "file",
@@ -147,8 +142,8 @@
     },
     {
       "type": "file",
-      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+      "source": "../../common/scripts/bootstrap/",
+      "destination": "C:\\Packer\\Scripts"
     },
     {
       "type": "file",
@@ -164,6 +159,22 @@
       "type": "file",
       "source": "./tmp/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1"
+    },
+    {
+      "type" : "windows-restart",
+      "restart_timeout" : "{{user `winupdate_timeout`}}"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/test-windows-update.ps1"
     },
     {
       "type": "powershell",

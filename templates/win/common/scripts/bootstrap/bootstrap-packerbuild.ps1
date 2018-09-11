@@ -1,13 +1,21 @@
+# Script to perform the minimal actions needed to bring the host online with winrm
+# i.e, install the hypervisor tools, network adaptor mods and necessary reg fixes.
+# The windows update is deferred until a later stage.
+# This means that more immediate feedback is given to packer that the OS load itself
+# is sound.
+
 param (
-    [string]$HyperVisor = "vmware"
+    [string]$HyperVisor = "vmware",
+    [string]$AdminUser = "Administrator",
+    [string]$AdminPassword = "PackerAdmin"
 )
 $ErrorActionPreference = 'Stop'
 
 . A:\windows-env.ps1
 $PackageDir = 'A:\'
 
-$rundate = date
-write-output "Script: start-pswindowsupdate.ps1 Starting at: $rundate"
+$rundate = Get-Date
+Write-Output "Script: bootstrap-packerbuild.ps1 Starting at: $rundate"
 
 # Create Packer Log Directories if they don't exist already.
 Create-PackerStagingDirectories
@@ -15,9 +23,11 @@ if (-not (Test-Path "$PackerScripts\windows-env.ps1" )) {
   Copy-Item A:\windows-env.ps1 $PackerScripts\windows-env.ps1
 }
 
-# Check if we are a Core platform-packages
-If ( $WindowsServerCore ) {
-  Install-CoreStartupWorkaround
+# Create Scheduled Task so this repeatedly until we have finished.
+if (-not (Test-Path "$PackerLogs\BootstrapSchedTask.installed")) {
+  Write-Output "Create Bootstrap Scheduled Task"
+  schtasks /create /tn PackerBootstrap /rl HIGHEST /ru "$AdminUser" /RP "$AdminPassword" /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File A:\bootstrap-packerbuild.ps1 >> C:\Packer\Logs\bootstrap-packerbuild.log'
+  Touch-File "$PackerLogs\BootstrapSchedTask.installed"
 }
 
 # Enable WSUS - this is being put at the top of the script deliberately as a recycle of wuauserv is
@@ -116,88 +126,9 @@ if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
 }
 
-# Install latest .Net package prior to any windows updates.
-Install-DotNetLatest
-
-if (-not (Test-Path "$PackerLogs\7zip.installed")) {
-  # Download and install 7za now as its needed here and is useful going forward.
-  $SevenZipInstaller = "7z1604-$ARCH.exe"
-  Write-Output "Installing 7zip $SevenZipInstaller"
-  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
-  Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
-  Touch-File "$PackerLogs\7zip.installed"
-  Write-Output "7zip Installed"
-}
-
-if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
-  # Download and install PSWindows Update Modules.
-  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.1.6.1.1.zip" "$Env:TEMP/pswindowsupdate.zip"
-  mkdir -Path "$Env:TEMP\PSWindowsUpdate"
-  $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerStaging"
-  $zproc.WaitForExit()
-  Touch-File "$PackerLogs\PSWindowsUpdate.installed"
-}
-
 # Need to guard against system going into standby for long updates
 Write-Output "Disabling Sleep timers"
 Disable-PC-Sleep
-
-# Run the (Optional) Installation Package File.
-if (Test-Path "A:\platform-packages.ps1")
-{
-  & "A:\platform-packages.ps1"
-}
-else {
-  Write-Warning "No additional packages found in $PackageDir"
-}
-
-# Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
-# When no more reboots are needed, the script falls through to the end.
-Write-Output "Searching for Windows Updates"
-if ($WindowsVersion -like $WindowsServer2016) {
-  Write-Output "Disabling some more Windows Update (10) parameters"
-  Write-Output "Disable seeding of updates to other computers via Group Policies"
-  force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
-  Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" "DODownloadMode" 0
-}
-
-Write-Output "Using PSWindowsUpdate module"
-Import-Module "$PackerStaging\PSWindowsUpdate\PSWindowsUpdate.psd1"
-
-# Repeat this command twice to ensure any interrupted downloads are re-attempted for install.
-# Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability
-$Attempt = 1
-do {
-  if (Test-Path "$PackerLogs\Mock.Platform" ) {
-    Write-Output "Test Platform Build - exiting"
-    break
-  }
-  Write-Output "Windows Update Pass $Attempt"
-  try {
-    # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
-    # present in PS2
-    if ($psversiontable.psversion.major -eq 2) {
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
-      Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
-    }
-    else {
-      Write-Output "Running PSWindows Update"
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
-    }
-    if (Test-PendingReboot) { Invoke-Reboot }
-  }
-  catch {
-    Write-Warning "ERROR updating Windows"
-    # Code here to trap error and fall out of process dumping log.
-  }
-  $Attempt++
-} while ($Attempt -le 2)
-
-# Run the Application Package Cleaner
-if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
-  Write-Output "Running Apps Package Cleaner post windows update"
-  Remove-AppsPackages -AppPackageCheckpoint AppsPackageRemove.Pass1
-}
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-Output "Enable Remote Desktop"
@@ -240,7 +171,9 @@ winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
 # Set service to start automatically (not delayed)
 Set-Service "WinRM" -StartupType Automatic
 
-Write-Output "WinRM setup complete"
 
-# Clear reboot files as control is now transferred to Packer to complete configuration.
-Clear-RebootFiles
+# Bootstrap Cycle complete - delete this task.
+Write-Output "Deleting Bootstrap Scheduled Task"
+schtasks /Delete /tn PackerBootstrap /F
+
+Write-Output "WinRM setup complete"

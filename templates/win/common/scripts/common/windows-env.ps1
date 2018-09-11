@@ -250,17 +250,6 @@ Function Enable-UpdatesFromInternalWSUS {
   }
 }
 
-# Helper Function to perform a final reboot.
-# This should help pick up any "trailing" windows updates as it appears that
-# There are still some missing updates.
-Function Do-Packer-Final-Reboot {
-  if (-not (Test-Path "$PackerLogs\Final.Reboot"))
-  {
-    Touch-File "$PackerLogs\Final.Reboot"
-    Invoke-Reboot
-  }
-}
-
 # Helper Function to install latest .Net package appropriate for this platform
 Function Install-DotNetLatest {
   if (-not (Test-Path "$PackerLogs\InstallDotNetLatest.installed"))
@@ -512,8 +501,6 @@ Function Remove-AppsPackages {
 # but only tests the current system and is simplied for packer environment (e.g. Domain & SCCM not evaluated)
 Function Test-PendingReboot {
 
-  # Note - specifically use Write-Host here as output must be True/False
-  Write-Host -ForegroundColor White "Testing for reboot conditions"
   ## Setting pending values to false to cut down on the number of else statements
   $CompPendRen,$PendFileRename,$WUAURebootReq = $false,$false
   ## Setting CBSRebootPend to null since not all versions of Windows has this value
@@ -532,7 +519,6 @@ Function Test-PendingReboot {
     $RegSubKeysCBS = $WMI_Reg.EnumKey($HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\")
     if ($RegSubKeysCBS.sNames -contains "RebootPending") {
       $CBSRebootPend = $true
-      Write-Host -ForegroundColor Yellow "Component Based Servicing Needed"
     }
   }
 
@@ -540,7 +526,6 @@ Function Test-PendingReboot {
   $RegWUAURebootReq = $WMI_Reg.EnumKey($HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\")
   if ($RegWUAURebootReq.sNames -contains "RebootRequired") {
     $WUAURebootReq = $true
-    Write-Host -ForegroundColor Yellow "Windows Update Reboot needed"
   }
 
   ## Query PendingFileRenameOperations from the registry
@@ -553,60 +538,28 @@ Function Test-PendingReboot {
 
   If ($ActCompNm -ne $CompNm)  {
     $CompPendRen = $true
-    Write-Host -ForegroundColor Yellow "Computer Rename"
   }
 
   ## If PendingFileRenameOperations has a value set $RegValuePFRO variable to $true
   If ($RegValuePFRO) {
     $PendFileRename = $true
-    Write-Host -ForegroundColor Yellow "Pending File Rename"
   }
 
   $RebootPending = ($CompPendRen -or $CBSRebootPend -or $WUAURebootReq -or $PendFileRename)
   if ($RebootPending) {
-    Write-Host -ForegroundColor Yellow "Reboot is Pending"
     return $true
   }
   # Drop out and don't reboot.
-  Write-Host -ForegroundColor Green "Reboot is not needed"
+  Write-Host "Reboot is not needed"
   return $false
 }
 
 # Helper Function to perform a reboot and continue the windows update process.
 Function Invoke-Reboot {
-    Write-Output "Starting Reboot sequence"
-    Write-Output "writing restart file"
-    $restartScript="Call PowerShell -NoProfile -ExecutionPolicy bypass -File A:\start-pswindowsupdate.ps1 >> c:\Packer\Logs\start-pswindowsupdate.log 2>&1"
-    New-Item "$startup\packer-post-restart.bat" -type file -force -value $restartScript | Out-Null
-
-    shutdown /t 0 /r /f
-    # Sleep here to stop any further command execution.
-    Start-Sleep -Seconds 20
-}
-
-# Clear reboot files.
-Function Clear-RebootFiles {
-  Remove-Item -Force -Path "$startup\packer-post-restart.bat" -ErrorAction SilentlyContinue
-  if ($WindowsServerCore ) {
-    Remove-Item -Force -Path $PROFILE -ErrorAction SilentlyContinue
-  }
-}
-
-# Windows Core startup
-Function Install-CoreStartupWorkaround {
-  if (-not (Test-Path "$PackerLogs\CoreStartupWorkaround.installed")) {
-    Write-Output "Using Windows Core Reboot model"
-    Set-ItemProperty `
-             -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" `
-             -Name Shell -Value "PowerShell.exe -NoExit"
-
-    $profileDir = (Split-Path -Parent $PROFILE)
-    if (!(Test-Path $profileDir)) {
-      New-Item -Type Directory $profileDir
-    }
-    Copy-Item -Force A:\startup-profile.ps1 $PROFILE
-    Touch-File $PackerLogs\CoreStartupWorkaround.installed
-  }
+  Write-Output "Proceeding with Shutdown"
+  shutdown /t 0 /r /f
+  # Sleep here to stop any further command execution.
+  Start-Sleep -Seconds 20
 }
 
 # Helper Function (from Boxstarter) to enable remote desktop
@@ -698,18 +651,9 @@ Function Install-WindowsUpdates {
   Write-Output "Ended Windows updates installation."
 }
 
-
 #Helper Function to handle the various OS dependant shutdown conditions.
 Function Shutdown-PackerBuild {
 
-  # Check if we are a Core OS ?
-
-  if ($WindowsServerCore) {
-      Write-Warning "Core OS Shutdown - Cleaning up PowerShell profile workaround for startup items"
-      Remove-Item -Force $PROFILE -ErrorAction SilentlyContinue
-
-      Remove-Item -Force -Recurse "$($env:APPDATA)\SetupFlags" -ErrorAction SilentlyContinue
-  }
   # Remove the pagefile
   Write-Output "Removing page file.  Recreates on next boot"
   reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"    /v "PagingFiles" /t REG_MULTI_SZ /f /d """"
@@ -720,5 +664,4 @@ Function Shutdown-PackerBuild {
 
   Write-Output "Bye Bye"
   shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1
-
 }

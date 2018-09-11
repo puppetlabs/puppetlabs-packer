@@ -102,7 +102,7 @@ Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding 
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
 
 #Snooze for a bit
-sleep -s 10
+Start-Sleep -s 10
 
 #Ensure sshd and WinRM services start after next book
 Write-Output "Starting SSH server!"

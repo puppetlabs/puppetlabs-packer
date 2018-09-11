@@ -54,7 +54,7 @@
         "./files/platform-packages.ps1",
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
-        "../../common/scripts/bootstrap/start-pswindowsupdate.ps1",
+        "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
         "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
         "../../common/scripts/bootstrap/startup-profile.ps1"
       ],
@@ -98,12 +98,7 @@
   "provisioners": [
     {
       "type": "powershell",
-      "remote_path": "{{user `packer_download_dir`}}/print-pswindowslog.ps1",
-      "inline": [
-        "Write-Output 'Executing Powershell Script: print-pswindowslog.ps1'",
-        "Get-Content C:\\Packer\\Logs\\start-pswindowsupdate.log | foreach {Write-Output $_}",
-        "Start-Sleep -Seconds 10"
-      ]
+      "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
     },
     {
       "type": "file",
