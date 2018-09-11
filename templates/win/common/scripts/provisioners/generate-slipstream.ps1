@@ -49,7 +49,7 @@ foreach ($CabName in $Content)
 $Cabs = Get-ChildItem -Path $UpdateDirectory -Recurse -Include "$PatchSearch" -Exclude *Express*.cab | Sort LastWriteTime
 
 Write-Output "Mounting $WinImageFile"
-Set-ItemProperty $WinImageFile -name IsReadOnly -value $false
+Set-ItemProperty -Path $WinImageFile -Name IsReadOnly -Value $false
 dism /mount-wim /wimfile:$WinImageFile /index:$ImageIndex /mountdir:$MountPoint
 
 $Cabtotal = $Cabs.Count
