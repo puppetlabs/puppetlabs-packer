@@ -1,10 +1,9 @@
 <xsl:stylesheet version="1.0"
-            xmlns="http://www.w3.org/1999/xhtml"
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
             xmlns:u="urn:schemas-microsoft-com:unattend">
 
-  <xsl:output method="xml" indent="yes" encoding="utf-8" />
+  <xsl:output method="xml" indent="yes" encoding="utf-8" omit-xml-declaration="yes" doctype-system="about:legacy-compat"/>
 
   <xsl:strip-space elements="*"/>
 
@@ -18,6 +17,35 @@
   <xsl:param name="WinRmPassword" />
   <xsl:param name="Locale" />
 
+  <!-- 
+    Global Replace String Substitute Function used later in the transforms
+    From: https://stackoverflow.com/questions/47821701/xslt-to-find-and-replace-attributes-while-retaining-the-rest-of-the-tag
+  -->
+  <xsl:template name="globalReplace">
+      <xsl:param name="param.str"/>
+      <xsl:param name="param.target"/>
+      <xsl:param name="param.replacement"/>
+      <xsl:choose>
+          <xsl:when test="contains($param.str, $param.target)">
+              <xsl:value-of select="concat(substring-before($param.str, $param.target), $param.replacement, substring-after($param.str, $param.target))"/>
+          </xsl:when>
+          <xsl:otherwise>
+              <xsl:value-of select="$param.str"/>
+          </xsl:otherwise>
+      </xsl:choose>
+  </xsl:template>
+
+  <!-- General match everything unless matched by more specific rules below -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Pass all comments through to the output -->
+  <xsl:template match="comment()">
+    <xsl:copy />
+  </xsl:template>
 
   <!-- Some logic to set the correct OSDriverPlatform variable so we can choose correct PE drivers to load -->
   <xsl:variable name="OSDriverPlatform">
@@ -30,13 +58,6 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-
-  <!-- General match everything unless matched by more specific rules below -->
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
 
   <!-- Choose correct process architecture (32/64 bit) -->
   <xsl:template match='u:unattend/u:settings/u:component'>
@@ -53,7 +74,6 @@
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-PnpCustomizationsWinPE"]/u:DriverPaths/u:PackerDriversVersion |
                        u:unattend/u:settings/u:component[@name="Microsoft-Windows-PnpCustomizationsNonWinPE"]/u:DriverPaths/u:PackerDriversVersion'>
       <xsl:if test="@OSDriverPlatform=$OSDriverPlatform">
-        <!-- Strip out PackerLogonSequence once selected to present valid Unattend.xml -->
         <xsl:copy-of select="node()" />
       </xsl:if>
   </xsl:template>
@@ -84,13 +104,58 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Rule to select appropriate logon sequence -->
-  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:PackerLogonSequence'>
-       <xsl:if test="@ImageProvisioner=$ImageProvisioner">
-          <!-- Strip out PackerLogonSequence once selected to present valid Unattend.xml -->
-          <xsl:copy-of select="node()" />
-       </xsl:if>
+  <!-- Rule to select appropriate logon sequence and perform Administrator/Password substitutions by applying further templates -->
+  <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:FirstLogonCommands'>
+    <xsl:if test="@ImageProvisioner=$ImageProvisioner">
+      <!-- Strip out attributes and just present node as is -->
+      <xsl:copy>
+        <xsl:apply-templates select="*" />
+      </xsl:copy>
+    </xsl:if>
   </xsl:template>
+
+  <!-- 
+    "sub" Rule associated with above rule to add more specific processing for SynchronousCommand 
+    Switches mode to EditCommandLine for children of this element.
+  -->
+  <xsl:template match='u:SynchronousCommand'>
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="node()" mode="EditCommandLine" />
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- "sub" Rule to Match all for Synchronous commands -->
+  <xsl:template match='@*|node()' mode='EditCommandLine'>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- 
+    "sub" Rule to edit the CommandLine Element to insert correct Admin Username and Password 
+    Use two passes of the global replace function to translate each.
+    -->
+  <xsl:template match='u:CommandLine' mode='EditCommandLine'>
+    <xsl:variable name="CmdStr_B">
+      <xsl:call-template name="globalReplace">
+          <xsl:with-param name="param.str" select="."/>
+          <xsl:with-param name="param.target" select="'__ADMIN_USERNAME__'" />
+          <xsl:with-param name="param.replacement" select="$WinRmUsername"/> 
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="CmdStr_Final">
+      <xsl:call-template name="globalReplace">
+          <xsl:with-param name="param.str" select="$CmdStr_B"/>
+          <xsl:with-param name="param.target" select="'__ADMIN_PASSWORD__'" />
+          <xsl:with-param name="param.replacement" select="$WinRmPassword"/> 
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:copy>
+      <xsl:value-of select="$CmdStr_Final" />
+    </xsl:copy>
+  </xsl:template>
+  <!-- End of "sub" Rules -->
 
   <!-- Rule to replace image name -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Setup"]/u:ImageInstall/u:OSImage/u:InstallFrom/u:MetaData/u:Value'>
@@ -216,8 +281,5 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Pass all comments through to the output -->
-  <xsl:template match="comment()">
-    <xsl:copy />
-  </xsl:template>
+  <!-- Here endeth the transform -->
 </xsl:stylesheet>
