@@ -33,7 +33,7 @@ if ($WindowsVersion -like $WindowsServer2016) {
   Write-Output "Disabling some more Windows Update (10) parameters"
   Write-Output "Disable seeding of updates to other computers via Group Policies"
   force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
-  Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" "DODownloadMode" 0
+  Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Value 0
 }
 
 Write-Output "Using PSWindowsUpdate module"
