@@ -127,8 +127,8 @@
     },
     {
       "type": "file",
-      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+      "source": "../../common/scripts/bootstrap/",
+      "destination": "C:\\Packer\\Scripts"
     },
     {
       "type": "file",
