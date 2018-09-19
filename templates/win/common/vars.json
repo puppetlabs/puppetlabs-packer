@@ -1,12 +1,12 @@
 {
-  "version"             : "20180912_PROD",
+  "version"             : "20180918_PROD",
 
   "headless"            : "true",
 
   "winrm_username"      : "Administrator",
   "winrm_password"      : "PackerAdmin",
   "winrm_timeout"       : "1h",
-  "winupdate_timeout"   : "300m",
+  "winupdate_timeout"   : "400m",
   "shutdown_timeout"    : "1h",
   "firmware"            : "efi",
 
