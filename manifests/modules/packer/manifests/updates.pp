@@ -31,6 +31,11 @@ class packer::updates {
     'kernel',
   ]
 
+  $solaris_pkgs = [
+    'openssh',
+    'kernel',
+  ]
+
   if $::osfamily == 'Debian' {
     $pkgs_to_update = $linux_pkgs + $debian_pkgs
   } elsif $::osfamily == 'Redhat' and $::operatingsystemmajrelease == '6' {
@@ -39,6 +44,8 @@ class packer::updates {
     $pkgs_to_update = $linux_pkgs + $redhat_pkgs
   } elsif $::osfamily == 'Suse' {
     $pkgs_to_update = $linux_pkgs + $suse_pkgs
+  } elsif $::osfamily == 'Solaris'{
+    $pkgs_to_update = $linux_pkgs + $solaris_pkgs
   }
 
   package { $pkgs_to_update: ensure => latest; }

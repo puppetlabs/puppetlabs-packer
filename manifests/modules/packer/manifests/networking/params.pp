@@ -46,6 +46,12 @@ class packer::networking::params {
       $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
       $udev_rule_gen    = '/lib/udev/rules.d/75-persistent-net-generator.rules'
     }
+    solaris: {
+      $udev_rule        = undef
+      $udev_rule_gen    = undef
+      $interface_script = undef
+
+    }
     default: {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }

@@ -47,6 +47,6 @@ class packer::vsphere::networking inherits packer::networking::params {
           source => 'puppet:///modules/packer/vsphere/dhcp4.xml',
         }
       }
-    }
+    }    
   }
 }

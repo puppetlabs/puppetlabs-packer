@@ -1,0 +1,5 @@
+{ 
+	"boot_command": 
+        "e<wait><down><down><down><down><down><wait><end><wait><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><wait>false<wait><f10><wait><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10>root<enter><wait><wait>solaris<enter><wait10><enter>while (true);do test -f /a/etc/ssh/sshd_config && perl -pi -e 's/PermitRootLogin no/PermitRootLogin yes/' /a/etc/ssh/sshd_config && break;sleep 10;done &<enter><wait><enter>while (true);do grep \"The system can be rebooted now.\" \"/var/svc/log/application-auto-installer:default.log\" 2> /dev/null && reboot && break;sleep 10;done &<enter><wait> export PACKURL=%s<enter><wait10>curl http://$PACKURL/ai.xml -o /system/volatile/ai.xml<enter><wait>mkdir /system/volatile/profile<enter><wait>curl http://$PACKURL/profile.xml -o /system/volatile/profile/profile.xml<enter><wait>svcadm enable svc:/application/auto-installer:default<enter><wait><enter><wait10><wait><wait><enter><wait>tail -f /system/volatile/install_log<enter><wait>",
+	"vmware_base_boot_wait": "20s"
+}

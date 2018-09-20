@@ -57,9 +57,9 @@ class packer::vsphere inherits packer::vsphere::params {
   }
 
   file { $bootstrap_file:
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
     content => template("packer/vsphere/${bootstrap_file_source}"),
   }
 
@@ -71,9 +71,9 @@ class packer::vsphere inherits packer::vsphere::params {
   }
 
   file { '/root/.ssh':
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0755',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
     ensure => directory,
   }
 
@@ -83,6 +83,20 @@ class packer::vsphere inherits packer::vsphere::params {
     mode    => '0755',
     source  => 'puppet:///modules/packer/vsphere/authorized_keys',
     require => File[ '/root/.ssh' ]
+  }
+
+  #TODO check if this works with existing template for solaris 11
+  if $::operatingsystem == 'Solaris' {
+    if $::operatingsystemrelease in ['11.4'] {
+      file { "/etc/rc2.d/S99${startup_file_source}":
+          ensure => 'link',
+          target => $startup_file,
+        }
+      file { "/etc/rc0.d/K99${startup_file_source}":
+          ensure => 'link',
+          target => $startup_file,
+        }
+    }
   }
 
 }
