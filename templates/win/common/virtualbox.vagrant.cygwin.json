@@ -95,7 +95,11 @@
     },
     {
         "type": "powershell",
-        "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1"
+        "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1",
+        "environment_vars" : [
+          "ADMIN_USERNAME={{user `winrm_username`}}",
+          "ADMIN_PASSWORD={{user `winrm_password`}}"
+        ]
     },
     {
         "type" : "windows-restart",

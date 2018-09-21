@@ -1,5 +1,10 @@
 # This script is run immediately post-clone to configure the machine as a clone of the template.
 #
+
+param (
+    [string]$AdminUsername = "Administrator"
+)
+
 . C:\Packer\Scripts\windows-env.ps1
 
 $rundate = date
@@ -52,8 +57,7 @@ Write-Output "vSphere VMname: $NewVMName`n"
 
 # Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$CygwinDir\bin\sh.exe"
-$AdministratorName =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").Name
-$AdministratorHome = "$CygwinDir\home\$AdministratorName"
+$AdministratorHome = "$CygwinDir\home\$AdminUsername"
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
@@ -62,26 +66,26 @@ $qa_root_passwd_plain = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
 
 # Generate ssh keys.
 Write-Output "Generate SSH Keys"
-& $CygWinShell --login -c `'rm -rf /home/$AdministratorName/.ssh/id_rsa*`'
-& $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/$AdministratorName/.ssh/id_rsa`'
+& $CygWinShell --login -c `'rm -rf /home/$AdminUsername/.ssh/id_rsa*`'
+& $CygWinShell --login -c `'ssh-keygen -t rsa -N `"`" -f /home/$AdminUsername/.ssh/id_rsa`'
 
 # Setup Authorised keys (now that home directory exists - with nasty cygpath conversion
 Write-Output "Setup Authorised Keys"
-& $CygWinShell --login -c `'cp /home/$AdministratorName/.ssh/id_rsa.pub /home/$AdministratorName/.ssh/authorized_keys`'
-& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Config/authorized_keys.vmpooler" `>`> /home/$AdministratorName/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cp /home/$AdminUsername/.ssh/id_rsa.pub /home/$AdminUsername/.ssh/authorized_keys`'
+& $CygWinShell --login -c `'cat "/cygdrive/c/Packer/Config/authorized_keys.vmpooler" `>`> /home/$AdminUsername/.ssh/authorized_keys`'
 
 # Setup LSA Authentication
 Write-Output "Register the Cygwin LSA authentication package "
 & $CygWinShell --login -c `'auto_answer="yes" /usr/bin/cyglsa-config`'
 
 # Add github.com as a known host (needed for git@gihub:<repo> clone ops)
-& $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdministratorName/.ssh/known_hosts`'
+& $CygWinShell --login -c `'ssh-keyscan -t rsa github.com `>`> /home/$AdminUsername/.ssh/known_hosts`'
 
 
 # Update machine password (and reset autologin)
-Write-Output "Setting $AdministratorName Password"
-net user $AdministratorName "$qa_root_passwd_plain"
-autologon -AcceptEula $AdministratorName . "$qa_root_passwd_plain"
+Write-Output "Setting $AdminUsername Password"
+net user $AdminUsername "$qa_root_passwd_plain"
+autologon -AcceptEula $AdminUsername . "$qa_root_passwd_plain"
 
 # Generate passwd and group files.
 Write-Output "Generating Passwd Files"
@@ -110,12 +114,12 @@ Set-Service "sshd" -StartupType Automatic
 
 # Create BGINFO Scheduled Task to update the lifetime every 20 minutes
 If ( -not $WindowsServerCore ) {
-  schtasks /create /tn UpdateBGInfo /ru "$AdministratorName" /RP "$qa_root_passwd_plain" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
+  schtasks /create /tn UpdateBGInfo /ru "$AdminUsername" /RP "$qa_root_passwd_plain" /F /SC Minute /mo 20 /IT /TR 'C:\Packer\Scripts\sched-bginfo.vbs'
 }
 
 # Queue startup script to run as scheduled task rather than as RunOnce (which stricly speaking isn't supported on Core)
 Write-Output "Setting startup script"
-schtasks /create /tn VMPoolerStartup /rl HIGHEST /ru "$AdministratorName" /RP "$qa_root_passwd_plain" /F /SC ONSTART /IT /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\vmpooler-clone-startup.ps1 >> c:\Packer\Logs\vmpooler-clone-startup.log  2>&1'
+schtasks /create /tn VMPoolerStartup /rl HIGHEST /ru "$AdminUsername" /RP "$qa_root_passwd_plain" /F /SC ONSTART /IT /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\vmpooler-clone-startup.ps1 >> c:\Packer\Logs\vmpooler-clone-startup.log  2>&1'
 
 # Pin apps to taskbar as long as we aren't win-10/2016
 if ($WindowsVersion -notlike $WindowsServer2016) {
