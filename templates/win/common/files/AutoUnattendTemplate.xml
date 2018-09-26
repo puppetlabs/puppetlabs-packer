@@ -248,69 +248,65 @@
                 <LogonCount>99999</LogonCount>
                 <Username>Administrator</Username>
             </AutoLogon>
-            <PackerLogonSequence ImageProvisioner="vmware">
-                <FirstLogonCommands>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
-                        <Description>Bootstrap for everything</Description>
-                        <Order>1</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d 0 /f</CommandLine>
-                        <Description>Disable UAC</Description>
-                        <Order>2</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
-                        <Order>3</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
-                        <Description>Disable Administrator Password reset</Description>
-                        <Order>4</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
-                        <Order>5</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bootstrap-packerbuild.ps1 -HyperVisor vmware &gt;&gt; C:\Packer\Logs\bootstrap-packerbuild.log 2&gt;&amp;1</CommandLine>
-                        <Description>Start PSWindowsUpdate</Description>
-                        <Order>6</Order>
-                    </SynchronousCommand>
-                </FirstLogonCommands>
-            </PackerLogonSequence>
-            <PackerLogonSequence ImageProvisioner="virtualbox">
-                <FirstLogonCommands>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
-                        <Description>Bootstrap for everything</Description>
-                        <Order>1</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>reg.exe ADD &quot;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v &quot;EnableLUA&quot; /t REG_DWORD /d 0 /f</CommandLine>
-                        <Description>Disable UAC</Description>
-                        <Order>2</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
-                        <Order>3</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>wmic useraccount where &quot;sid like &apos;S-1-5-21-%-500&apos;&quot; set PasswordExpires=FALSE</CommandLine>
-                        <Order>4</Order>
-                    </SynchronousCommand>
-                    <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
-                        <Order>5</Order>
-                    </SynchronousCommand>
-                   <SynchronousCommand wcm:action="add">
-                        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bootstrap-packerbuild.ps1 -HyperVisor virtualbox &gt;&gt; C:\Packer\Logs\bootstrap-packerbuild.log 2&gt;&amp;1</CommandLine>
-                        <Description>Start PSWindowsUpdate</Description>
-                        <Order>6</Order>
-                    </SynchronousCommand>
-                </FirstLogonCommands>
-            </PackerLogonSequence>
+            <FirstLogonCommands ImageProvisioner="vmware">
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
+                    <Description>Bootstrap for everything</Description>
+                    <Order>1</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d 0 /f</CommandLine>
+                    <Description>Disable UAC</Description>
+                    <Order>2</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
+                    <Order>3</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c wmic useraccount where &quot;name=&apos;__ADMIN_USERNAME__&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                    <Description>Disable Administrator Password reset</Description>
+                    <Order>4</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
+                    <Order>5</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bootstrap-packerbuild.ps1 -HyperVisor vmware -AdminUsername &quot;__ADMIN_USERNAME__&quot; -AdminPassword &quot;__ADMIN_PASSWORD__&quot; &gt;&gt; C:\Packer\Logs\bootstrap-packerbuild.log 2&gt;&amp;1</CommandLine>
+                    <Description>Start PSWindowsUpdate</Description>
+                    <Order>6</Order>
+                </SynchronousCommand>
+            </FirstLogonCommands>
+            <FirstLogonCommands ImageProvisioner="virtualbox">
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c A:\bootstrap-base.bat</CommandLine>
+                    <Description>Bootstrap for everything</Description>
+                    <Order>1</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>reg.exe ADD &quot;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v &quot;EnableLUA&quot; /t REG_DWORD /d 0 /f</CommandLine>
+                    <Description>Disable UAC</Description>
+                    <Order>2</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd /C start /wait NET ACCOUNTS /MAXPWAGE:UNLIMITED</CommandLine>
+                    <Order>3</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c wmic useraccount where &quot;name=&apos;__ADMIN_USERNAME__&apos;&quot; set PasswordExpires=FALSE</CommandLine>
+                    <Order>4</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c mkdir C:\Packer\Logs</CommandLine>
+                    <Order>5</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bootstrap-packerbuild.ps1 -HyperVisor virtualbox -AdminUsername &quot;__ADMIN_USERNAME__&quot; -AdminPassword &quot;__ADMIN_PASSWORD__&quot; &gt;&gt; C:\Packer\Logs\bootstrap-packerbuild.log 2&gt;&amp;1</CommandLine>
+                    <Description>Start PSWindowsUpdate</Description>
+                    <Order>6</Order>
+                </SynchronousCommand>
+            </FirstLogonCommands>
             <OOBE>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>

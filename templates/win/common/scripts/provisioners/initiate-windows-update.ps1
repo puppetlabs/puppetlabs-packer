@@ -33,12 +33,9 @@ Write-Output "========== a log and update report   ========"
 Write-Output "========== will be given at the end  ========"
 Write-Output "========== of the update cycle       ========"
 
-
-# Temp fix to get French working
-$AdminUser = $ENV:UserName
-$AdminPassword = "PackerAdmin"
+# Need to pick up Admin Username/Password from Environment for sched task
 Write-Output "Create Bootstrap Scheduled Task"
-schtasks /create /tn PackerWinUpdate /rl HIGHEST /ru "$AdminUser" /RP "$AdminPassword" /IT /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\packer-windows-update.ps1 >> C:\Packer\Logs\windows-update.log'
+schtasks /create /tn PackerWinUpdate /rl HIGHEST /ru "$ENV:ADMIN_USERNAME" /RP "$ENV:ADMIN_PASSWORD" /IT /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\packer-windows-update.ps1 >> C:\Packer\Logs\windows-update.log'
 
 # Disable WinRM until further notice.
 Set-Service "WinRM" -StartupType Disabled

@@ -26,9 +26,11 @@ export PACKER_WIN_PROC_ARCH=`jq -r '.win_proc_arch //empty' vars.json`
 export PACKER_LOCALE=`jq -r '.locale //empty' vars.json`
 [ -z "${PACKER_LOCALE}" ] && export PACKER_LOCALE="en-US"
 
-# Need to pick up Admin Password and winrm from Generic File.
-export PACKER_WINRM_USER=`jq -r '.winrm_username //empty' ${WIN_COMMON_DIR}/vars.json`
-export PACKER_WINRM_PSWD=`jq -r '.winrm_password //empty' ${WIN_COMMON_DIR}/vars.json`
+# Need to pick up Admin Password and winrm either from local or common file - precedence with local
+export PACKER_WINRM_USER=`jq -r '.winrm_username //empty' vars.json`
+[ -z "${PACKER_WINRM_USER}" ] && export PACKER_WINRM_USER=`jq -r .winrm_username ${WIN_COMMON_DIR}/vars.json`
+export PACKER_WINRM_PSWD=`jq -r '.winrm_password //empty' vars.json`
+[ -z "${PACKER_WINRM_PSWD}" ] && export PACKER_WINRM_PSWD=`jq -r .winrm_password ${WIN_COMMON_DIR}/vars.json`
 
 # Make sure tmp directory exists.
 mkdir -p tmp

@@ -23,8 +23,6 @@ if (-not (Test-Path "$PackerScripts\windows-env.ps1" )) {
   Copy-Item A:\windows-env.ps1 $PackerScripts\windows-env.ps1
 }
 
-# Temp fix to get French working
-$AdminUser = $ENV:UserName
 # Create Scheduled Task so this repeatedly until we have finished.
 if (-not (Test-Path "$PackerLogs\BootstrapSchedTask.installed")) {
   Write-Output "Create Bootstrap Scheduled Task"
