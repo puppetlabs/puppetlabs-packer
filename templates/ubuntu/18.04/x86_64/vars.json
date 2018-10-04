@@ -2,7 +2,7 @@
     "template_name"                         : "ubuntu-18.04-x86_64",
     "template_os"                           : "ubuntu-64",
     "beakerhost"                            : "ubuntu1804-64",
-    "version"                               : "0.0.2",
+    "version"                               : "0.0.3",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-18.04-server-amd64.iso",
     "iso_checksum"                          : "a7f5c7b0cdd0e9560d78f1e47660e066353bb8a79eb78d1fc3f4ea62a07e6cbc",
     "iso_checksum_type"                     : "sha256",
