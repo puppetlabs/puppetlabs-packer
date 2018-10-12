@@ -1,0 +1,22 @@
+#!/usr/bin/ruby
+
+
+hostname = `vmtoolsd --cmd "info-get guestinfo.hostname"`
+
+hostname = hostname.chomp
+
+puts "Nice to meet you, my VM name is '#{hostname}'."
+
+puts "\n"
+
+puts '- Setting local hostname...'
+
+Kernel.system("svccfg -s system/identity:node setprop config/nodename=\"#{hostname}\"")
+
+Kernel.system("svcadm refresh system/identity:node")
+Kernel.system("svcadm restart system/identity:node")
+
+puts '- Re-obtaining DHCP lease...'
+Kernel.system("ifconfig net0 dhcp release && ifconfig net0 dhcp start")
+
+Kernel.system("ipadm delete-addr -r net0/v4a && ipadm create-addr -T dhcp -h #{hostname} net0/v4a")

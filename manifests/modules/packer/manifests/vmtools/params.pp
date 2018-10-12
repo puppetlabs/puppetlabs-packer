@@ -16,6 +16,11 @@ class packer::vmtools::params {
       $required_packages = [ 'kernel-devel', 'gcc' ]
     }
 
+    'Solaris' : {
+      $root_home = '/root'
+      $required_packages = []
+    }
+
     default : {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
@@ -28,8 +33,17 @@ class packer::vmtools::params {
     }
 
     vmware: {
-      $tools_iso   = 'linux.iso'
-      $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz -C /tmp/ && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
+      if $::osfamily == 'Solaris' {
+        $tools_iso   = 'solaris.iso'
+      } else {
+        $tools_iso   = 'linux.iso'
+      }
+
+      if $::osfamily == 'Solaris' {
+        $install_cmd = 'tar zxf /tmp/vmtools/vmware-solaris-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
+      } else {
+        $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
+      }
     }
 
     default: {

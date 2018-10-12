@@ -95,6 +95,17 @@ class packer::vsphere::params {
       $gpgkey                = "RPM-GPG-KEY-${::operatingsystemmajrelease}-${loweros}"
     }
 
+    # TODO check if this can work with Solaris 11 main template
+    'Solaris': {
+      if $::operatingsystemrelease in ['11.4'] {
+        $ruby_package       = [ 'ruby' ]
+        $bootstrap_file_source = 'solaris.rb.erb'
+        $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
+        $startup_file = '/etc/init.d/rc.local'
+        $startup_file_source   = 'rc.local'
+      }
+    }
+
     default: {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }

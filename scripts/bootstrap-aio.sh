@@ -22,6 +22,10 @@ if [ -n "${PC_REPO}" ]; then
     dpkg -i $tmp_dir/pc-repo.deb
     apt-get update
     apt-get install -y puppet-agent
+  elif type pkg >/dev/null ; then
+      pkg install puppet
+      svccfg -s puppet:agent setprop config/server=master.oracle.com
+      svccfg -s puppet:agent refresh
   else
     echo "Unsupported AIO package format" >&2
     exit 1
@@ -45,12 +49,17 @@ else
 fi
 
 # Show Puppet version
-printf 'Puppet ' ; /opt/puppetlabs/puppet/bin/puppet --version
+if which puppet ; then
+  PUPPET_CMD=puppet
+else
+  PUPPET_CMD=/opt/puppetlabs/puppet/bin/puppet
+fi
+printf 'Puppet ' ; $PUPPET_CMD --version
 
 # Installed required modules
 for i in $@
 do
-  /opt/puppetlabs/puppet/bin/puppet module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
+  $PUPPET_CMD module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
 
   # TODO: Check if this is still an issue once we switch over to the SLES 15 GA image
   sleep_time=20
@@ -58,4 +67,4 @@ do
   sleep ${sleep_time}
 done
 
-printf 'Modules installed in ' ; /opt/puppetlabs/puppet/bin/puppet module list --modulepath=/tmp/packer-puppet-masterless/manifests/modules
+printf 'Modules installed in ' ; $PUPPET_CMD module list --modulepath=/tmp/packer-puppet-masterless/manifests/modules

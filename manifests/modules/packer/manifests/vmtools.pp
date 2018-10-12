@@ -25,23 +25,50 @@ class packer::vmtools inherits packer::vmtools::params {
       ensure => directory,
     }
 
-    mount { '/tmp/vmtools':
-      ensure  => mounted,
-      device  => "${root_home}/${tools_iso}",
-      fstype  => 'iso9660',
-      options => 'ro,loop',
-      require => File[ '/tmp/vmtools' ],
+    if $::osfamily == 'Solaris' {
+      mount { '/tmp/vmtools':
+        ensure      => mounted,
+        device      => "${root_home}/${tools_iso}",
+        fstype      => 'hsfs',
+        remounts    => false,
+        blockdevice => '/dev/rdsk/c0d0s0',
+        atboot      => true,
+        options     => 'ro,loop',
+        require     => File[ '/tmp/vmtools' ],
+      }
+    } else {
+      mount { '/tmp/vmtools':
+        ensure  => mounted,
+        device  => "${root_home}/${tools_iso}",
+        fstype  => 'iso9660',
+        options => 'ro,loop',
+        require => File[ '/tmp/vmtools' ],
+      }
     }
 
     exec { 'install vmtools':
       command => $install_cmd,
-      path    => [ '/bin', '/usr/bin', ],
+      path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
+      cwd     => '/tmp/',
       require => Mount[ '/tmp/vmtools' ],
+    }
+
+    if $::osfamily == 'Solaris' {
+      # this is required because the vmware-tools installation fails with 0 exit code
+      # the next step tries to validate that the service is running.
+      service { 'vmware-tools':
+        ensure   => running,
+        require  => Exec[ 'install vmtools' ],
+        start    => '/etc/init.d/vmware-tools start && /etc/init.d/vmware-tools status',
+        stop     => '/etc/init.d/vmware-tools stop',
+        status   => '/etc/init.d/vmware-tools status',
+        provider => base
+      }
     }
 
     exec { 'remove /tmp/vmtools':
       command => 'umount /tmp/vmtools ; rmdir /tmp/vmtools',
-      path    => [ '/bin', '/usr/bin', ],
+      path    => [ '/sbin', '/usr/sbin', '/bin', '/usr/bin' ],
       onlyif  => 'test -d /tmp/vmtools',
       require => Exec[ 'install vmtools' ],
     }
@@ -51,8 +78,14 @@ class packer::vmtools inherits packer::vmtools::params {
       require => Exec[ 'remove /tmp/vmtools' ],
     }
 
-    file_line { "remove /etc/fstab /tmp/vmtools":
-      path    => '/etc/fstab',
+    if $::osfamily == 'Solaris' {
+      $fstab_path = '/etc/vfstab'
+    } else {
+      $fstab_path = '/etc/fstab'
+    }
+
+    file_line { 'remove fstab /tmp/vmtools':
+      path    => $fstab_path,
       line    => '#/tmp/vmtools removed',
       match   => '/tmp/vmtools',
       require => Exec[ 'remove /tmp/vmtools' ],

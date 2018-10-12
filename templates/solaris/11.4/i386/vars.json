@@ -1,0 +1,18 @@
+{
+    "template_name"                         : "solaris-11.4-i386",
+    "template_os"                           : "solaris11-64",
+    "beakerhost"                            : "solaris114-32",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/sol-11_4-ai-x86.iso",
+    "iso_checksum"                          : "e3a29507e583acbc0b912f371c8f328fea7cb6257d587cbc0a651477a52b0a29",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_base_vmx_data_memsize"          : "4096",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "pc_repo"                               : "default repository",
+    "puppet_aio"                            : "",
+    "shutdown_command"                      : "/usr/sbin/poweroff",
+    "inject_http_seed_in_boot_command"      : "true",
+    "tools_upload_flavor"                   : "solaris"
+    
+}

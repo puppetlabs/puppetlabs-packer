@@ -9,6 +9,8 @@ if [[ ${PUPPET_AIO} == *".rpm"* ]] ; then
   rpm -e puppet-agent
 elif [[ ${PUPPET_AIO} == *".deb"* ]] ; then
   dpkg -P puppet-agent
+elif type pkg >/dev/null ; then
+  pkg uninstall /system/management/puppet*
 else
   echo "Unsupported AIO package format" >&2
   exit 1

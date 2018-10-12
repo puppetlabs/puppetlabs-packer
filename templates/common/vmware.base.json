@@ -19,14 +19,14 @@
     "shutdown_command"                             : "/sbin/halt -h -p",
     "disk_size"                                    : "20480", 
     "vmware_base_boot_wait"                        : "45s",
-    "vmware_base_required_modules"                 : "puppetlabs-stdlib saz-ssh",
+    "vmware_base_required_modules"                 : "saz-ssh puppetlabs-stdlib",
     "packer_output_dir"                            : "{{env `PACKER_VM_OUT_DIR`}}",
     "vmware_base_vmx_data_memsize"                 : "512",
     "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
     "vmware_base_vmx_data_numvcpus"                : "1",
     "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
-    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
-
+    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",    
+    "inject_http_seed_in_boot_command"             : "false", 
     "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh"
   },
 
@@ -42,7 +42,6 @@
       "output_directory"                           : "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "headless"                                   : "{{user `headless`}}",
-
       "ssh_username"                               : "root",
       "ssh_password"                               : "puppet",
       "ssh_port"                                   : 22,
@@ -53,12 +52,12 @@
 
       "guest_os_type"                              : "{{user `template_os`}}",
       "disk_size"                                  : "{{user `disk_size`}}",
-      "tools_upload_flavor"                        : "linux",
+      "tools_upload_flavor"                        : "{{user `tools_upload_flavor`}}",      
       "floppy_dirs"                                : "{{user `floppy_dirs`}}",
       "floppy_files"                               : "{{user `floppy_files`}}",
       "boot_wait"                                  : "{{user `vmware_base_boot_wait`}}",
-      "boot_command"                               : "{{user `boot_command`}}",
-
+      "boot_command"                               : "{{$flag:= user `inject_http_seed_in_boot_command`}}{{$bootCmd:= user `boot_command`}}{{if eq $flag `true`}}{{$seed:= printf \"%s:%d\" .HTTPIP .HTTPPort}}{{$seed | printf $bootCmd}}{{else}}{{$bootCmd}}{{end}}",
+      "http_directory"                             : "{{user `http_directory`}}",
       "vmx_data"                                   : {
         "memsize"                                  : "{{user `vmware_base_vmx_data_memsize`}}",
         "cpuid.coresPerSocket"                     : "{{user `vmware_base_vmx_data_cpuid_coresPerSocket`}}",
@@ -75,14 +74,15 @@
       "type"                                       : "shell",
       "execute_command"                            : "{{.Vars}} bash '{{.Path}}' {{user `vmware_base_required_modules`}}",
       "environment_vars"                           : [
-        "PUPPET_AIO={{user `puppet_aio`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}",
+        "PC_REPO={{user `pc_repo`}}"
       ],
       "scripts"                                    : "{{user `vmware_base_provisioning_scripts`}}"
     },
 
     {
       "type"                                       : "puppet-masterless",
-      "execute_command"                            : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin /opt/puppetlabs/bin/puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "execute_command"                            : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter"                                     : {
         "provisioner"                              : "{{user `provisioner`}}"
       },
@@ -93,7 +93,8 @@
     {
       "type"                                       : "shell",
       "environment_vars"                           : [
-        "PUPPET_AIO={{user `puppet_aio`}}"
+        "PUPPET_AIO={{user `puppet_aio`}}",
+        "PC_REPO= {{user `pc_repo` }}"
       ],
       "scripts"                                    : [
         "{{user `project_root`}}/scripts/cleanup-aio.sh",

@@ -102,7 +102,7 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           gpgcheck => "1",
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
-      } 
+      }
 
       # This could be a bit DRYer, but there are enough subtle differences
       # between the url formats and repo names used by the other Redhat-based
@@ -138,8 +138,8 @@ class packer::vsphere::repos inherits packer::vsphere::params {
             baseurl  => "${base_url}/lb",
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }   
-        }   
+          }
+        }
       }
 
       if $::operatingsystem == 'CentOS' {
@@ -224,10 +224,9 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         }
       }
     }
-
-
-   default: {
-     fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
-   }
+    
+  default: {
+    fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
+    }
   }
 }
