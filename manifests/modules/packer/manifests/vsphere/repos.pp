@@ -224,7 +224,11 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         }
       }
     }
-    
+
+    solaris: {
+      # Solaris repo: http://solaris-11-reposync.delivery.puppetlabs.net:81 
+      # Added Solaris case so it wont execute default one & added solaris repo link in case we need it in the future.
+    }
   default: {
     fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
