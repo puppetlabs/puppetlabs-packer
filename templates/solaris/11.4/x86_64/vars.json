@@ -1,5 +1,5 @@
 {
-    "template_name"                         : "solaris-11.4-i386",
+    "template_name"                         : "solaris-114-x86_64",
     "template_os"                           : "solaris11-64",
     "beakerhost"                            : "solaris114-32",
     "version"                               : "0.0.1",
