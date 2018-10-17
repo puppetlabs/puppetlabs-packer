@@ -37,7 +37,7 @@ if ($WindowsVersion -like $WindowsServer2016) {
 }
 
 Write-Output "Using PSWindowsUpdate module"
-Import-Module "$PackerStaging\PSWindowsUpdate\PSWindowsUpdate.psd1"
+Import-Module "$PackerPsModules\PSWindowsUpdate\PSWindowsUpdate.psd1"
 
 # Repeat this command twice to ensure any interrupted downloads are re-attempted for install.
 # Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability

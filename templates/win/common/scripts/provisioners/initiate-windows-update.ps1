@@ -7,22 +7,11 @@ $ErrorActionPreference = 'Stop'
 
 Write-Output "Setting up Windows Update"
 
-# Important Pre-requisite right across the packer  including Windows Update.
-if (-not (Test-Path "$PackerLogs\7zip.installed")) {
-  # Download and install 7za now as its needed here and is useful going forward.
-  $SevenZipInstaller = "7z1604-$ARCH.exe"
-  Write-Output "Installing 7zip $SevenZipInstaller"
-  Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
-  Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
-  Touch-File "$PackerLogs\7zip.installed"
-  Write-Output "7zip Installed"
-}
-
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules.
   Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.1.6.1.1.zip" "$Env:TEMP/pswindowsupdate.zip"
   mkdir -Path "$Env:TEMP\PSWindowsUpdate"
-  $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerStaging"
+  $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/pswindowsupdate.zip -y -o$PackerPsModules"
   $zproc.WaitForExit()
   Touch-File "$PackerLogs\PSWindowsUpdate.installed"
 }

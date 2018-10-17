@@ -65,10 +65,6 @@
   ],
   "provisioners": [
     {
-        "type": "powershell",
-        "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
-    },
-    {
         "type": "file",
         "source": "../../common/scripts/config/",
         "destination": "C:\\Packer\\Config"
@@ -95,6 +91,12 @@
     },
     {
         "type": "powershell",
+        "inline" : [
+            "C:/Packer/Scripts/test-packerbuild -DoPrintLog -TestPhase bootstrap-packerbuild"
+        ]
+    },
+    {
+        "type": "powershell",
         "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1",
         "environment_vars" : [
           "ADMIN_USERNAME={{user `winrm_username`}}",
@@ -104,6 +106,12 @@
     {
         "type" : "windows-restart",
         "restart_timeout" : "{{user `winupdate_timeout`}}"
+    },
+    {
+        "type": "powershell",
+        "inline" : [
+          "C:/Packer/Scripts/test-packerbuild -DoPrintLog -TestPhase windows-update"
+        ]
     },
     {
         "type": "powershell",
