@@ -2,8 +2,7 @@
 # This is a multi-use script for several stages in the process.
 
 param (
-  [string]$TestPhase,
-  [switch]$DoPrintLog
+  [string]$TestPhase
  )
 
 $ErrorActionPreference = 'Stop'
@@ -16,15 +15,7 @@ $ErrorActionPreference = 'Stop'
 # on the image, so its imported as needed in this script only.
 
 # Important Pre-requisite right across the packer  including Windows Update adn the test framework.
-if (-not (Test-Path "$PackerLogs\7zip.installed")) {
-    # Download and install 7za now as its needed here and is useful going forward.
-    $SevenZipInstaller = "7z1604-$ARCH.exe"
-    Write-Output "Installing 7zip $SevenZipInstaller"
-    Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
-    Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
-    Touch-File "$PackerLogs\7zip.installed"
-    Write-Output "7zip Installed"
-}
+Install-7ZipPackage
 
 # And Download Pester.
 if (-not (Test-Path "$PackerLogs\Pester.installed")) {
@@ -41,9 +32,8 @@ if (-not (Test-Path "$PackerLogs\Pester.installed")) {
 Write-Output "Importing Pester Module"
 Import-Module "$PackerPsModules\Pester-4.4.2\Pester.psd1"
 
-# Print out Log for the phase with a prologue
-
-if ($DoPrintLog) {
+# Print out Log for the phase with a prologue if a log file exists
+if (Test-Path "C:\Packer\Logs\$TestPhase.log") {
     Write-Output "Printing Log for $TestPhase"
 
     Write-Output "==========  Log for: $TestPhase START ========"
@@ -53,8 +43,11 @@ if ($DoPrintLog) {
     Start-Sleep -Seconds 10
 }
 
-# Now for the Test Proper.
+# Now for the Test Proper - assuming they exist of course
 
+$PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru
 
-
-
+if ($PesterResults.FailedCount -gt 0) {
+    Write-Output "Failures detected - aborting build"
+    Exit 1
+}

@@ -13,6 +13,19 @@ Set-Variable -Option Constant -Name WindowsServer2012R2 -Value "6.3.*"
 Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
+# Collect additional Windows Installation Parameters - useful for various uses including platform verification
+# ReleaseID is tricky as it only appears in later Windows 10 builds.
+$NTVerKeyPath = "Registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+$WindowsProductName = (Get-ItemProperty -Path "$NTVerKeyPath" -Name ProductName).ProductName
+$WindowsEditionID = (Get-ItemProperty -Path "$NTVerKeyPath" -Name EditionID).EditionID
+$WindowsInstallationType = (Get-ItemProperty -Path "$NTVerKeyPath" -Name InstallationType).InstallationType
+$WindowsReleaseIDObj = Get-ItemProperty -ErrorAction SilentlyContinue -Path "$NTVerKeyPath" -Name ReleaseID
+if ($WindowsReleaseIDObj) {
+  $global:WindowsReleaseID = $WindowsReleaseIDObj.ReleaseID
+} else {
+  $global:WindowsReleaseID = "N/A"
+}
+
 # Get Administrator SID
 $WindowsAdminSID =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21-%-500'").sid
 # Crude Code to chose appropriate resonse for YesNo
@@ -63,6 +76,7 @@ $PackerLogs = "$PackerStaging\Logs"
 $PackerConfig = "$PackerStaging\Config"
 $CygwinDownloads = "$PackerDownloads\Cygwin"
 $PackerPsModules = "$PackerStaging\PsModules"
+$PackerAcceptance = "$PackerStaging\Acceptance"
 
 # For Puppet modules configuration
 $ModulesPath = ''
@@ -102,7 +116,7 @@ Function Create-PackerStagingDirectories {
     mkdir -Path $PackerStaging\Scripts
     mkdir -Path $PackerStaging\PsModules
     mkdir -Path $PackerStaging\Sysinternals
-
+    mkdir -Path $PackerStaging\Acceptance
   }
 }
 
@@ -249,6 +263,19 @@ Function Enable-UpdatesFromInternalWSUS {
     reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWUServer" /t REG_DWORD /d 1 /f
 
     Touch-File "$PackerLogs/WSUSRedirect.installed"
+  }
+}
+
+# Helper Function to install 7zip as a key package
+Function Install-7ZipPackage {
+  if (-not (Test-Path "$PackerLogs\7zip.installed")) {
+    # Download and install 7za now as its needed here and is useful going forward.
+    $SevenZipInstaller = "7z1604-$ARCH.exe"
+    Write-Output "Installing 7zip $SevenZipInstaller"
+    Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
+    Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
+    Touch-File "$PackerLogs\7zip.installed"
+    Write-Output "7zip Installed"
   }
 }
 

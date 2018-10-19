@@ -7,6 +7,7 @@ $ErrorActionPreference = 'Stop'
 
 Write-Output "Setting up Windows Update"
 
+Install-7ZipPackage
 if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules.
   Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/pswindowsupdate/PSWindowsUpdate.1.6.1.1.zip" "$Env:TEMP/pswindowsupdate.zip"

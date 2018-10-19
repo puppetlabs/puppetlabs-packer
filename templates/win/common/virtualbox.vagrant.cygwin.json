@@ -92,7 +92,7 @@
     {
         "type": "powershell",
         "inline" : [
-            "C:/Packer/Scripts/test-packerbuild -DoPrintLog -TestPhase bootstrap-packerbuild"
+            "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
         ]
     },
     {
@@ -110,7 +110,7 @@
     {
         "type": "powershell",
         "inline" : [
-          "C:/Packer/Scripts/test-packerbuild -DoPrintLog -TestPhase windows-update"
+          "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
         ]
     },
     {
