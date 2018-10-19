@@ -2,7 +2,7 @@
     "template_name"                         : "ubuntu-16.04-i386",
     "template_os"                           : "ubuntu",
     "beakerhost"                            : "ubuntu1604-32",
-    "version"                               : "0.0.7",
+    "version"                               : "0.0.8",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-16.04-server-i386.iso",
     "iso_checksum"                          : "8d52f3127f2b7ffa97698913b722e3219187476a9b936055d737f3e00aecd24d",
     "iso_checksum_type"                     : "sha256",
