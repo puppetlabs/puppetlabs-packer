@@ -10,5 +10,12 @@
     "iso_name"          : "en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "e8adeebcd8076702593469e33cc2d092",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows Server 2016 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "1607"
+
 }

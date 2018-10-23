@@ -11,5 +11,12 @@
     "iso_name"          : "/Windows_InsiderPreview_Server_vNext_en-us_17723.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "593ef03364c7cd730f0ec89e322ab4ca",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+
+    "CurrentVersion"    : "6.1",
+    "ProductName"       : "Windows Server 2019 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "N/A"
+
 }

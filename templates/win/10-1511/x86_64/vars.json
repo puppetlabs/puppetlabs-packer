@@ -10,5 +10,12 @@
     "iso_name"          : "en_windows_10_enterprise_2015_ltsb_x64_dvd_6848446.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "da938d65c548738900810181a78203f8",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 10 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "1511"
+
 }

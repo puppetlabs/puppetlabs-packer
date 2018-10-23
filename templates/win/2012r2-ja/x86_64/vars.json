@@ -11,5 +11,12 @@
     "iso_name"          : "ja_windows_server_2012_r2_with_update_x64_dvd_6052738_SlipStream_01.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "d06430e4ddc79330649b4b16d984a3d5",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows Server 2012 R2 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "N/A"
+
 }

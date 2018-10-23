@@ -11,5 +11,12 @@
     "iso_name"          : "en_windows_server_2019_x64_dvd_3c2cf1202.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "37c51cc09182237ae2c30c9d8ce3c41e",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+
+    "CurrentVersion"    : "6.1",
+    "ProductName"       : "Windows Server 2019 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "ServerCore",
+    "ReleaseID"         : "N/A"
+
 }

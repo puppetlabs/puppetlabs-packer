@@ -10,5 +10,12 @@
     "iso_name"          : "en_windows_8.1_enterprise_with_update_x64_dvd_6054382_SlipStream_01.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "ce996fb7136d55314747c5cef2602b27",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 8.1 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "N/A"
+
 }

@@ -10,5 +10,12 @@
     "iso_name"          : "en_windows_10_business_edition_version_1809_updated_sept_2018_x64_dvd_d57f2c0d.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "042cd8b6179e1a1e63bc633c9c744781",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.1",
+    "ProductName"       : "Windows 10 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "1809"
+
 }
