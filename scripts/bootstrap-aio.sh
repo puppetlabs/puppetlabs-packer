@@ -22,6 +22,7 @@ if [ -n "${PC_REPO}" ]; then
     dpkg -i $tmp_dir/pc-repo.deb
     apt-get update
     apt-get install -y puppet-agent
+  # Used for installing puppet for solaris
   elif type pkg >/dev/null ; then
       pkg install puppet
       svccfg -s puppet:agent setprop config/server=master.oracle.com
