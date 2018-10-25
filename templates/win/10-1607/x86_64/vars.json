@@ -10,5 +10,12 @@
     "iso_name"          : "en_windows_10_enterprise_2016_ltsb_x64_dvd_9059483.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "e39ea2af41b3710682fe3bbdac35ec9a",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 10 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "1607"
+
 }

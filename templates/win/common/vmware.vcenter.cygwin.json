@@ -120,15 +120,10 @@
   ],
   "provisioners": [
     {
-      "type": "powershell",
-      "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
-    },
-    {
       "type": "file",
       "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
       "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
     },
-
     {
       "type": "file",
       "source": "../../common/puppet/",
@@ -156,8 +151,27 @@
     },
     {
       "type": "file",
+      "source": "../../common/scripts/acceptance/",
+      "destination": "C:\\Packer\\Acceptance"
+    },
+    {
+      "type": "file",
       "source": "./tmp/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "inline" : [
+          "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
+        ],
+        "environment_vars" : [
+            "PBTEST_WindowsCurrentVersion={{user `CurrentVersion`}}",
+            "PBTEST_WindowsProductName={{user `ProductName`}}",
+            "PBTEST_WindowsEditionID={{user `EditionID`}}",
+            "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
+            "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
+            "PBTEST_WindowsMemorySize={{user `memsize`}}"
+          ]
     },
     {
       "type": "powershell",
@@ -173,7 +187,14 @@
     },
     {
       "type": "powershell",
-      "script" : "../../common/scripts/provisioners/test-windows-update.ps1"
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
+      ],
+      "environment_vars" : [
+          "PBTEST_OSName={{user `XXXX`}}",
+          "PBTEST_Edition={{user `XXXX`}}",
+          "PBTEST_Build={{user `XXXX`}}"
+      ]
     },
     {
       "type": "powershell",

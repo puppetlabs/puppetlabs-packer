@@ -115,7 +115,7 @@
         "type": "powershell",
         "inline": [
         "Write-Output 'SYSPREP Log output'",
-        "Get-Content C:\\Packer\\Logs\\Init-Sysprep.log | foreach {Write-Output $_}",
+        "Get-Content C:\\Packer\\Logs\\Init-Sysprep.log",
         "Start-Sleep -Seconds 10"
         ]
     },
