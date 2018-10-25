@@ -1,3 +1,11 @@
+<#
+  .SYNOPSIS
+	Helper Scripts for Packer Build
+  .DESCRIPTION
+  Sets up a consistent environment for the Packer/Windows build provisioners and provides
+  helpers as needed.
+#>
+
 # Placeholder Environment script for common variable definition.
 $ErrorActionPreference = 'Continue'
 

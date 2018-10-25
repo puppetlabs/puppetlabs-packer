@@ -1,3 +1,14 @@
+<#
+  .SYNOPSIS
+	Initiate the Windows Update Process
+  .DESCRIPTION
+  Creates a scheduled task to apply the windows updates.
+  Disables WinRM on reboot, so the scheduled task can reboot multiple times
+  until all updates are installed. (see packers-windows-update.ps1 for
+  further details on the actual update process)
+
+#>
+
 
 # Initiate the Windows Update operation.
 

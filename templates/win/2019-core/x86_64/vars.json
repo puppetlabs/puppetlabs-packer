@@ -16,7 +16,7 @@
     "CurrentVersion"    : "6.1",
     "ProductName"       : "Windows Server 2019 Standard",
     "EditionID"         : "ServerStandard",
-    "InstallationType"  : "ServerCore",
-    "ReleaseID"         : "N/A"
+    "InstallationType"  : "Server Core",
+    "ReleaseID"         : "1809"
 
 }

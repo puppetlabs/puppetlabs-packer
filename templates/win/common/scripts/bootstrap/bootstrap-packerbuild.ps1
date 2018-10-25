@@ -1,8 +1,17 @@
-# Script to perform the minimal actions needed to bring the host online with winrm
-# i.e, install the hypervisor tools, network adaptor mods and necessary reg fixes.
-# The windows update is deferred until a later stage.
-# This means that more immediate feedback is given to packer that the OS load itself
-# is sound.
+
+<#
+  .SYNOPSIS
+	Bootstrap the Packer build
+  .DESCRIPTION
+  First Logon script actions after the Windows ISO has been installed.
+  Script to perform the minimal actions needed to bring the host online with winrm
+  i.e, install the hypervisor tools, network adaptor mods and necessary reg fixes.
+  The windows update is deferred until a later stage.
+  This means that more immediate feedback is given to packer that the OS load itself
+  is sound.
+#>
+
+
 
 param (
     [string]$HyperVisor = "vmware",
