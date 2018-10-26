@@ -16,7 +16,7 @@
     "CurrentVersion"    : "6.3",
     "ProductName"       : "Windows Server 2012 R2 Standard",
     "EditionID"         : "ServerStandard",
-    "InstallationType"  : "ServerCore",
+    "InstallationType"  : "Server Core",
     "ReleaseID"         : "N/A"
 
 }

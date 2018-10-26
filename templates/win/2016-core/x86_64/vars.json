@@ -15,7 +15,7 @@
     "CurrentVersion"    : "6.3",
     "ProductName"       : "Windows Server 2016 Standard",
     "EditionID"         : "ServerStandard",
-    "InstallationType"  : "ServerCore",
-    "ReleaseID"         : "1607"
+    "InstallationType"  : "Server Core",
+    "ReleaseID"         : "N/A"
 
 }

@@ -9,7 +9,6 @@
 
 #>
 
-
 # Initiate the Windows Update operation.
 
 $ErrorActionPreference = 'Stop'
@@ -28,11 +27,15 @@ if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   Touch-File "$PackerLogs\PSWindowsUpdate.installed"
 }
 
-Write-Output "========== Initiating Windows Update ========"
-Write-Output "========== This will take some time  ========"
-Write-Output "========== a log and update report   ========"
-Write-Output "========== will be given at the end  ========"
-Write-Output "========== of the update cycle       ========"
+if ($WindowsVersion -like $WindowsServer2016) {
+  Write-Output "Disabling some more Windows Update (10) parameters"
+  Write-Output "Disable seeding of updates to other computers via Group Policies"
+  force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
+  Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Value 0
+}
+
+Write-Output "========== Initiating Windows Update This will take some time                   ========"
+Write-Output "========== A log and update report will be given at the end of the update cycle ========"
 
 # Need to pick up Admin Username/Password from Environment for sched task
 Write-Output "Create Bootstrap Scheduled Task"

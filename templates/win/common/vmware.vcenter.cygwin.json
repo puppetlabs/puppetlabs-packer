@@ -165,13 +165,14 @@
           "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
         ],
         "environment_vars" : [
-            "PBTEST_WindowsCurrentVersion={{user `CurrentVersion`}}",
-            "PBTEST_WindowsProductName={{user `ProductName`}}",
-            "PBTEST_WindowsEditionID={{user `EditionID`}}",
-            "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
-            "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
-            "PBTEST_WindowsMemorySize={{user `memsize`}}"
-          ]
+          "PBTEST_WindowsCurrentVersion={{user `CurrentVersion`}}",
+          "PBTEST_WindowsProductName={{user `ProductName`}}",
+          "PBTEST_WindowsEditionID={{user `EditionID`}}",
+          "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
+          "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
+          "PBTEST_WindowsMemorySize={{user `memsize`}}"
+        ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type": "powershell",
@@ -191,10 +192,11 @@
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
       "environment_vars" : [
-          "PBTEST_OSName={{user `XXXX`}}",
-          "PBTEST_Edition={{user `XXXX`}}",
-          "PBTEST_Build={{user `XXXX`}}"
-      ]
+        "PBTEST_OSName={{user `XXXX`}}",
+        "PBTEST_Edition={{user `XXXX`}}",
+        "PBTEST_Build={{user `XXXX`}}"
+      ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type": "powershell",
