@@ -1,8 +1,8 @@
 {
-    "template_name"                         : "ubuntu-14.04-x86_64",
+    "template_name"                         : "ubuntu-1404-x86_64",
     "template_os"                           : "ubuntu-64",
     "beakerhost"                            : "ubuntu1404-64",
-    "version"                               : "0.0.6",
+    "version"                               : "0.0.7",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.2-server-amd64.iso",
     "iso_checksum"                          : "8acd2f56bfcba2f7ac74a7e4a5e565ce68c024c38525c0285573e41c86ae90c0",
     "iso_checksum_type"                     : "sha256",

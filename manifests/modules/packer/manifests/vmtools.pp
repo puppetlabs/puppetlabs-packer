@@ -2,7 +2,7 @@ class packer::vmtools inherits packer::vmtools::params {
 
   # At some point it's going to become more worthwhile to flip this so
   # installing open-vm-tools is the default.
-  if ( ($::osfamily == 'debian' and $::operatingsystemmajrelease in ['7', '8', '9', '16.04', '14.04', '18.04', '18.10']) or
+  if ( ($::osfamily == 'debian' and $::operatingsystemmajrelease in ['7', '8', '9', '16.04', '18.04', '18.10']) or
         ($::osfamily == 'redhat' and $::operatingsystemmajrelease in ['7', '25', '26', '27', '28']) or
         ($::osfamily == 'suse' and $::operatingsystemmajrelease in ['15'])
     ) {

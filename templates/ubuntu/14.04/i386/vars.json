@@ -1,8 +1,8 @@
 {
-    "template_name"                         : "ubuntu-14.04-i386",
+    "template_name"                         : "ubuntu-1404-i386",
     "template_os"                           : "ubuntu",
     "beakerhost"                            : "ubuntu1404-32",
-    "version"                               : "0.0.6",
+    "version"                               : "0.0.7",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.2-server-i386.iso",
     "iso_checksum"                          : "76524ab9502a34b983ed56af2d5a72835ce41aec1e2b4c0cb7788ef596958ed6",
     "iso_checksum_type"                     : "sha256",

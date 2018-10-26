@@ -1,5 +1,6 @@
 {
     "floppy_dirs"                          : "",
     "floppy_files"                         : "../common/files/preseed.cfg",
-    "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network puppetlabs-apt"
+    "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network puppetlabs-apt",
+    "tools_upload_flavor"                  : "linux"
 }
