@@ -19,4 +19,6 @@ Kernel.system("svcadm restart system/identity:node")
 puts '- Re-obtaining DHCP lease...'
 Kernel.system("ifconfig net0 dhcp release && ifconfig net0 dhcp start")
 
-Kernel.system("ipadm delete-addr -r net0/v4a && ipadm create-addr -T dhcp -h #{hostname} net0/v4a")
+Kernel.system("ipadm delete-addr -r net0/v4 || true")
+Kernel.system("ipadm delete-addr -r net0/v4a || true")
+Kernel.system("ipadm create-addr -T dhcp -h #{hostname} net0/v4")
