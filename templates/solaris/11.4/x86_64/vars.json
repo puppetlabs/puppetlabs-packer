@@ -2,7 +2,7 @@
     "template_name"                         : "solaris-114-x86_64",
     "template_os"                           : "solaris11-64",
     "beakerhost"                            : "solaris114-32",
-    "version"                               : "0.0.2",
+    "version"                               : "0.0.4",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/sol-11_4-ai-x86.iso",
     "iso_checksum"                          : "e3a29507e583acbc0b912f371c8f328fea7cb6257d587cbc0a651477a52b0a29",
     "iso_checksum_type"                     : "sha256",
