@@ -4,7 +4,6 @@
     "beakerhost"                                           : null,
     "version"                                              : null,
     "puppet_aio"                                           : null,
-    "pc_repo"                                              : null,
 
     "vmware_vsphere_nocm_required_modules"                 : null,
     "vmware_vsphere_nocm_vmx_data_memsize"                 : null,

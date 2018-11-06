@@ -14,7 +14,7 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
 
-<% if ['28'].include? @operatingsystemrelease -%>
+<% if ['28', '29'].include? @operatingsystemrelease -%>
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 <% else -%>
@@ -51,7 +51,7 @@ puts '- Re-obtaining DHCP lease...'
 <% end -%>
 
 <% if @operatingsystem == 'Fedora' -%>
-  <% if ['28'].include? @operatingsystemrelease -%>
+  <% if ['28', '29'].include? @operatingsystemrelease -%>
 # systemd-networkd's DHCP client uses /etc/machine-id instead of the
 # link layer address (as dhclient does) to generate a client ID.
 # /etc/machine-id will be the same on VMs cloned from the same template,
@@ -67,7 +67,7 @@ Kernel.system('/sbin/service NetworkManager restart')
 
 puts '- Cleaning up...'
 
-<% if ['28'].include? @operatingsystemrelease -%>
+<% if ['28', '29'].include? @operatingsystemrelease -%>
 # With systemd-networkd, disable the oneshot service that runs this script:
 Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
 <% else -%>

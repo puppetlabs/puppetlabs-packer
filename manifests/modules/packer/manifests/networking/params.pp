@@ -33,6 +33,11 @@ class packer::networking::params {
           $udev_rule     = undef
           $udev_rule_gen = undef
         }
+        '29': {
+          $interface_script = undef
+          $udev_rule        = undef
+          $udev_rule_gen    = undef
+        }
 
         default: {
           $interface_script = '/etc/sysconfig/network-scripts/ifcfg-eth0'
