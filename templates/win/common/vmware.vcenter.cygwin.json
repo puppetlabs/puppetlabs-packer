@@ -40,7 +40,7 @@
 
   "builders": [
     {
-      "type": "vsphere-puppet-iso",
+      "type": "vsphere-iso",
 
       "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
       "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
