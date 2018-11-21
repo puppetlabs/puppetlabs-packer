@@ -55,6 +55,7 @@
       "host"                   : "{{user `packer_vcenter_build_host`}}",
       "convert_to_template"    : "{{user `convert_to_template`}}",
       "folder"                 : "{{user `packer_vcenter_folder`}}",
+      "firmware"               : "{{user `firmware`}}",
       "CPUs"                   : "{{user `numvcpus`}}",
       "CPU_limit"              : -1,
       "RAM"                    : "{{user `memsize`}}",
@@ -86,7 +87,7 @@
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
-        "{{user `iso_disk`}}windows.iso"
+        "{{user `iso_disk`}}windows-10.1.15.iso"
       ],
 
       "communicator"      : "winrm",
@@ -95,7 +96,6 @@
       "winrm_timeout"     : "{{user `winrm_timeout`}}",
 
       "configuration_parameters": {
-        "firmware"                                 : "{{user `firmware`}}",
 
         "gui.fitguestusingnativedisplayresolution" : "FALSE",
         "devices.hotplug"                          : "false",
@@ -119,12 +119,6 @@
     }
   ],
   "provisioners": [
-    {
-      "type": "powershell",
-      "elevated_user": "{{user `winrm_username`}}",
-      "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
-    },
     {
       "type": "file",
       "source": "../../common/scripts/bootstrap/",
@@ -157,8 +151,30 @@
     },
     {
       "type": "file",
+      "source": "../../common/scripts/acceptance/",
+      "destination": "C:\\Packer\\Acceptance"
+    },
+    {
+      "type": "file",
       "source": "./tmp/post-clone.autounattend.xml",
       "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "inline" : [
+          "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
+        ],
+        "environment_vars" : [
+          "PBTEST_WindowsCurrentVersion={{user `CurrentVersion`}}",
+          "PBTEST_WindowsProductName={{user `ProductName`}}",
+          "PBTEST_WindowsEditionID={{user `EditionID`}}",
+          "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
+          "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
+          "PBTEST_WindowsMemorySize={{user `memsize`}}"
+        ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type": "powershell",
@@ -178,7 +194,15 @@
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/test-windows-update.ps1"
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
+      ],
+      "environment_vars" : [
+        "PBTEST_OSName={{user `XXXX`}}",
+        "PBTEST_Edition={{user `XXXX`}}",
+        "PBTEST_Build={{user `XXXX`}}"
+      ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type": "powershell",

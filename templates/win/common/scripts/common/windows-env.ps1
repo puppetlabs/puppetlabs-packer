@@ -22,11 +22,18 @@ Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
 # Collect additional Windows Installation Parameters - useful for various uses including platform verification
-# ReleaseID is tricky as it only appears in later Windows 10 builds.
 $NTVerKeyPath = "Registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
 $WindowsProductName = (Get-ItemProperty -Path "$NTVerKeyPath" -Name ProductName).ProductName
 $WindowsEditionID = (Get-ItemProperty -Path "$NTVerKeyPath" -Name EditionID).EditionID
-$WindowsInstallationType = (Get-ItemProperty -Path "$NTVerKeyPath" -Name InstallationType).InstallationType
+
+# InstallationType does not appear in Windows 2008 (Assume Server)
+if ($WindowsVersion -Like $WindowsServer2008) {
+  $global:WindowsInstallationType = "Server"
+} else {
+  $global:WindowsInstallationType = (Get-ItemProperty -Path "$NTVerKeyPath" -Name InstallationType).InstallationType
+}
+
+# ReleaseID is tricky as it only appears in later Windows 10 builds.
 $WindowsReleaseIDObj = Get-ItemProperty -ErrorAction SilentlyContinue -Path "$NTVerKeyPath" -Name ReleaseID
 if ($WindowsReleaseIDObj) {
   $global:WindowsReleaseID = $WindowsReleaseIDObj.ReleaseID
