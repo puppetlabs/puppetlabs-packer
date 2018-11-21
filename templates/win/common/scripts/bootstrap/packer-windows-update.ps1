@@ -26,21 +26,14 @@ else {
   Write-Warning "No additional packages found in $PackageDir"
 }
 
+Import-PsWindowsUpdateModule
+
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.
 # When no more reboots are needed, the script falls through to the end.
-Write-Output "Searching for Windows Updates"
-if ($WindowsVersion -like $WindowsServer2016) {
-  Write-Output "Disabling some more Windows Update (10) parameters"
-  Write-Output "Disable seeding of updates to other computers via Group Policies"
-  force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
-  Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Value 0
-}
-
-Write-Output "Using PSWindowsUpdate module"
-Import-Module "$PackerPsModules\PSWindowsUpdate\PSWindowsUpdate.psd1"
-
 # Repeat this command twice to ensure any interrupted downloads are re-attempted for install.
 # Windows-10 in particular seems to be affected by intermittency here - so try and improve reliability
+Write-Output "Searching for Windows Updates"
+
 $Attempt = 1
 do {
   if (Test-Path "$PackerLogs\Mock.Platform" ) {
@@ -48,16 +41,18 @@ do {
     break
   }
   Write-Output "Windows Update Pass $Attempt"
+  # Note 'KB2267602' is screened out as it doesn't appear to install correctly.
+
   try {
     # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
     # present in PS2
     if ($psversiontable.psversion.major -eq 2) {
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
+      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue -NotKBArticleID 'KB2267602'
       Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
     }
     else {
       Write-Output "Running PSWindows Update"
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
+      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -NotKBArticleID 'KB2267602'
     }
     if (Test-PendingReboot) { 
       Invoke-Reboot 
@@ -85,5 +80,8 @@ Set-Service "WinRM" -StartupType Automatic
 Write-Output "WinRM Enabled - Packer will resume next reboot"
 
 # Restart computer using shutdown command (PS2/3 compatibility)
-Write-Output "Proceeding with Shutdown"
+$shutdate = Get-Date
+Write-Output "Proceeding with Shutdown at: $shutdate"
 shutdown /t 0 /r /f
+Start-Sleep -Seconds 10
+Exit 0

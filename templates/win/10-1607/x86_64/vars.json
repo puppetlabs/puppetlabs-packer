@@ -13,8 +13,8 @@
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
 
     "CurrentVersion"    : "6.3",
-    "ProductName"       : "Windows 10 Enterprise",
-    "EditionID"         : "Enterprise",
+    "ProductName"       : "Windows 10 Enterprise 2016 LTSB",
+    "EditionID"         : "EnterpriseS",
     "InstallationType"  : "Client",
     "ReleaseID"         : "1607"
 

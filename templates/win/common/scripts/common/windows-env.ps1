@@ -593,10 +593,13 @@ Function Test-PendingReboot {
 
 # Helper Function to perform a reboot and continue the windows update process.
 Function Invoke-Reboot {
-  Write-Output "Proceeding with Shutdown"
+  $shutdate = Get-Date
+  Write-Output "Proceeding with Shutdown at: $shutdate"
   shutdown /t 0 /r /f
   # Sleep here to stop any further command execution.
   Start-Sleep -Seconds 20
+  Write-Output "Ok - we havent shutdown lets exit gracefully."
+  Exit 0
 }
 
 # Helper Function (from Boxstarter) to enable remote desktop
@@ -671,21 +674,16 @@ Function Install-PSWindowsUpdate {
   Write-Output "Ended PSWindowsUpdate Installation`n"
 }
 
-# Helper to install Windows Updates.
-Function Install-WindowsUpdates {
-  Write-Output "Starting Windows updates installation. This may takes a lot of time..."
+# Helper to import PsWindowsUpdate Module.
+Function Import-PsWindowsUpdateModule {
+  Write-Output "Importing PSWindowsUpdate module"
 
-  Import-Module PSWindowsUpdate
-  if ($psversiontable.psversion.major -eq 2) {
-    Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
-    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
+  if ($psversiontable.psversion.major -eq 2)
+  {
+    # Setting this alias for PS2 removes a benign error that causes Pester to barf.
+    Set-Alias -Name Unblock-File -Scope Global -Value Get-ChildItem
   }
-  else {
-    Write-Output "Running PSWindows Update"
-    Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot
-  }
-
-  Write-Output "Ended Windows updates installation."
+  Import-Module -Global -Name "$PackerPsModules\PSWindowsUpdate\PSWindowsUpdate.psd1"
 }
 
 #Helper Function to handle the various OS dependant shutdown conditions.
