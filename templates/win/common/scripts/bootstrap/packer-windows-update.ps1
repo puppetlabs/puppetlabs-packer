@@ -47,18 +47,23 @@ do {
     break
   }
   Write-Output "Windows Update Pass $Attempt"
-  # Note 'KB2267602' is screened out as it doesn't appear to install correctly.
 
   try {
-    # Need to handle Powershell 2 compatibility issue here - Unblock-File is used but not
-    # present in PS2
-    if ($psversiontable.psversion.major -eq 2) {
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue -NotKBArticleID 'KB2267602'
+    # The format and command for windows update differs across windows versions.
+    # See below.
+    If ($WindowsVersion -like $WindowsServer2016) {
+      # Use Latest (2.0.0.4) for Win-10/2016 only
+      # Note 'KB2267602' is screened out as it doesn't appear to install correctly.
+      Write-Output "Running PSWindows Update - Verbose Mode"
+      Install-WindowsUpdate -Verbose -AcceptAll -UpdateType Software -IgnoreReboot -NotKBArticleID 'KB2267602'
+    } elseif ($psversiontable.psversion.major -eq 2) {
+      # Ignore errors on PS2 (in case of unblock file errors)
       Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
-    }
-    else {
-      Write-Output "Running PSWindows Update"
-      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -NotKBArticleID 'KB2267602'
+      Get-WUInstall -AcceptAll -UpdateType Software -IgnoreReboot -Erroraction SilentlyContinue
+    } else {
+      # All other versions - mainly 2012r2 use this version
+      Write-Output "Running PSWindows Update - Non Verbose Mode"
+      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
     }
     if (Test-PendingReboot) { 
       Invoke-Reboot 

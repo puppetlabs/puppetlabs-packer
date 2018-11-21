@@ -676,14 +676,26 @@ Function Install-PSWindowsUpdate {
 
 # Helper to import PsWindowsUpdate Module.
 Function Import-PsWindowsUpdateModule {
-  Write-Output "Importing PSWindowsUpdate module"
+
+  # Using PS Version checking here as need slightly different import methods for
+  # the version - see notes associated with each branch below.
 
   if ($psversiontable.psversion.major -eq 2)
   {
-    # Setting this alias for PS2 removes a benign error that causes Pester to barf.
+    # Powershell 2.0 requires the use of the "Import-Module" command, whereas later versions
+    # auto-import provided the PSModulePath env variable contains the module path.
+    # Also set this alias for PS2 removes a benign error that causes Pester to barf.
+    Write-Output "Importing PSWindowsUpdate module - PS2"
     Set-Alias -Name Unblock-File -Scope Global -Value Get-ChildItem
+    Import-Module -Global -Name "$PackerPsModules\PSWindowsUpdate\PSWindowsUpdate.psd1"
+  } else {
+    # PS3+ uses auto import based on the PSModulesPath
+    # Also because 2.0.0.4 uses an assembly .dll for the functionality, the update
+    # to PSModulesPath is essential - just using the import command gives a
+    # runtime reference error.
+    Write-Output "Adding $PackerPsModules to PsModulePath for this session PS3+"
+    $Env:PSModulePath += ";$PackerPsModules"
   }
-  Import-Module -Global -Name "$PackerPsModules\PSWindowsUpdate\PSWindowsUpdate.psd1"
 }
 
 #Helper Function to handle the various OS dependant shutdown conditions.
