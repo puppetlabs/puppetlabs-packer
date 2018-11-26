@@ -11,5 +11,11 @@
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "ab418a455fea422d2582c660ee8cd8f1",
     "firmware"          : "bios",
-    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>"
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+
+    "CurrentVersion"    : "6.0",
+    "ProductName"       : "Windows Server (R) 2008 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "N/A"
 }
