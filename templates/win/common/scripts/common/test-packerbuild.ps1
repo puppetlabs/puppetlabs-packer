@@ -21,6 +21,8 @@ $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
+Write-Output "========== Starting Packer Test Phase: $TestPhase ========"
+
 # Adding Validation here to ensure we have a test phase available.
 if (-not (Test-Path "$PackerAcceptance\$TestPhase\")) {
     Write-Error "Test Packages for $TestPhase not available aborting"
@@ -57,7 +59,7 @@ if ($WindowsVersion -NotLike $WindowsServer2016) {
 
 # Print out Log for the phase with a prologue if a log file exists
 if (Test-Path "C:\Packer\Logs\$TestPhase.log") {
-    Write-Output "Printing Log for $TestPhase"
+    Write-Output "========== Printing Log for $TestPhase ========"
 
     Write-Output "==========  Log for: $TestPhase START ========"
     Get-Content -Path "C:\Packer\Logs\$TestPhase.log"
@@ -68,9 +70,14 @@ if (Test-Path "C:\Packer\Logs\$TestPhase.log") {
 
 # Now for the Test Proper - assuming they exist of course
 
-$PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru
+If ( $WindowsServerCore ) {
+    $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'DesktopOnly'
+} else {
+    $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'CoreOnly'
+}
 
+Write-Output "========== Completed Packer Test Phase: $TestPhase ========"
 if ($PesterResults.FailedCount -gt 0) {
     Write-Output "Failures detected - aborting build"
     Exit 1
-}
+} 

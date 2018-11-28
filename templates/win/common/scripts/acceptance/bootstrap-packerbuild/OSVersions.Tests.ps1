@@ -10,8 +10,6 @@
     4. ReleaseID - the Windows 10/2016/2019 Build Version
 #>
 
-# Test that the correct OS Version and Edition has been installed.
-
 . C:\Packer\Scripts\windows-env.ps1
 
 describe 'Windows Platform Validation Tests' {

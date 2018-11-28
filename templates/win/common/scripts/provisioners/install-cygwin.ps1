@@ -24,16 +24,8 @@ $ErrorActionPreference = 'Stop'
 Write-Output "Loading Windows Environment"
 . C:\Packer\Scripts\windows-env.ps1
 
-# Work out what CYGDIR is and set it as a Windows Environment Variable
-# Note - need seperate Prefix var for environment variables due to cygwin/git-for-win idiosyncrasies
-Write-Output "Setting CYGWINDIR"
-if ($ARCH -eq 'x86') {
-  $CygWinDir = "C:\cygwin"
-  $CygEnvPrefix = "C:/cygwin"
-} else {
-  $CygWinDir = "C:\cygwin64"
-  $CygEnvPrefix = "C:/cygwin64"
-}
+# CygWinDir is platform dependant (moved to windows-env)
+Write-Output "Setting CYGWINDIR to $CygWinDir"
 $RegPath = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 Set-ItemProperty -Path $RegPath -Name CYGWINDIR -Value $CygWinDir
 Set-ItemProperty -Path $RegPath -Name CYGWINDOWNLOADS -Value $CygwinDownloads
