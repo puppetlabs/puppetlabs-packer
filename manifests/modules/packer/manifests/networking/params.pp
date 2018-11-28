@@ -57,6 +57,11 @@ class packer::networking::params {
       $interface_script = undef
 
     }
+    darwin: {
+      $udev_rule        = undef
+      $udev_rule_gen    = undef
+      $interface_script = undef
+    }
     default: {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }

@@ -1,4 +1,14 @@
 class packer::vmtools::params {
+  
+  case $::osfamily{
+    'Darwin' :{
+      $unmount_command = 'hdiutil unmount /tmp/vmtools ; rmdir /tmp/vmtools'
+    }
+    default : {
+      $unmount_command = 'umount /tmp/vmtools ; rmdir /tmp/vmtools' 
+    }
+  }
+
 
   case $::osfamily {
     'Redhat' : {
@@ -21,10 +31,15 @@ class packer::vmtools::params {
       $required_packages = []
     }
 
+    'Darwin' : {
+      $root_home = '/var/root'
+      $required_packages = []      
+    }
+
     default : {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
-  }
+  } 
 
   case $::provisioner {
     virtualbox: {
@@ -35,13 +50,22 @@ class packer::vmtools::params {
     vmware: {
       if $::osfamily == 'Solaris' {
         $tools_iso   = 'solaris.iso'
-      } else {
+      }
+      elsif $::osfamily == 'Darwin' {
+        $tools_iso = 'darwin.iso'
+      }
+
+      else {
         $tools_iso   = 'linux.iso'
       }
 
       if $::osfamily == 'Solaris' {
         $install_cmd = 'tar zxf /tmp/vmtools/vmware-solaris-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
-      } else {
+      }
+      elsif $::osfamily == 'Darwin' {
+        $install_cmd = 'installer -pkg /tmp/vmtools/Install\ VMware\ Tools.app/Contents/Resources/VMware\ Tools.pkg -target /'
+      }
+       else {
         $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
       }
     }

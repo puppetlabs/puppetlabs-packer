@@ -7,6 +7,21 @@ class packer::vsphere::params {
   $loweros     = downcase($::operatingsystem)
 
   case $::operatingsystem {
+    'Darwin': {
+      $group = 'admin'
+      $mode = '0644'
+      $ssh_path='/var/root/.ssh'
+      $authorized_keys_path='/var/root/.ssh/authorized_keys'
+    }
+    default: {
+       $group = 'root'
+       $mode = '0755'
+       $authorized_keys_path='/root/.ssh/authorized_keys'
+       $ssh_path='/root/.ssh'
+    }
+  }
+
+  case $::operatingsystem {
     'Ubuntu': {
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
@@ -104,6 +119,16 @@ class packer::vsphere::params {
         $startup_file = '/etc/init.d/rc.local'
         $startup_file_source   = 'rc.local'
       }
+    }
+
+    'Darwin' : {
+      $bootstrap_file_source = 'osx.rb.erb'
+      $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
+      $startup_file = '/etc/rc.local'
+      $startup_file_source   = 'rc.local'
+      $startup_file_perms    = '0644'
+      $startup_file_plist = '/Library/LaunchDaemons/local.localhost.startup.plist'
+      $startup_file_plist_source = 'local.localhost.startup.plist'      
     }
 
     default: {

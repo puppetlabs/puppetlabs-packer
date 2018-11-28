@@ -22,7 +22,7 @@ if [ -n "${PC_REPO}" ]; then
     dpkg -i $tmp_dir/pc-repo.deb
     apt-get update
     apt-get install -y puppet-agent
-  # Used for installing puppet for solaris
+    #used for installing puppet for solaris
   elif type pkg >/dev/null ; then
       pkg install puppet
       svccfg -s puppet:agent setprop config/server=master.oracle.com
@@ -40,6 +40,29 @@ elif [ -n "${PUPPET_AIO}" ]; then
   elif [[ ${PUPPET_AIO} == *".deb"* ]] ; then
     curl --silent "${PUPPET_AIO}" -o $tmp_dir/puppet-agent.deb
     dpkg -i $tmp_dir/puppet-agent.deb
+  elif [[ ${PUPPET_AIO} == *".dmg"* ]]; then
+    curl --silent "${PUPPET_AIO}" -o $tmp_dir/puppet-agent.dmg
+    hdiutil mount $tmp_dir/puppet-agent.dmg
+    # Add puppet to $PATH environment variable
+    export PATH=$PATH:/opt/puppetlabs/bin
+    # Change dir to point to /Volumes/
+    cd "/Volumes/"
+    # Find image path
+    export IMAGE_PATH=$(find . -name puppet-agent*)
+    cd "$IMAGE_PATH/"
+    # Find puppet agent .pkg 
+    export AGENT_NAME=$(find . -name puppet-agent*.pkg)
+    # Install pupet agent 
+    installer -pkg $AGENT_NAME -target / 
+    # Unmount disk    
+    cd "$HOME"
+    diskutil unmountDisk /dev/disk2 
+    # Software update & install xcode-commandline-tools
+    PLACEHOLDER="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+    touch $PLACEHOLDER
+    PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
+    softwareupdate -i "$PROD" --verbose
+    rm $PLACEHOLDER
   else
     echo "Unsupported AIO package format" >&2
     exit 1
@@ -60,8 +83,9 @@ printf 'Puppet ' ; $PUPPET_CMD --version
 # Installed required modules
 for i in $@
 do
+ 
   $PUPPET_CMD module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
-
+  
   # TODO: Check if this is still an issue once we switch over to the SLES 15 GA image
   sleep_time=20
   echo "Sleeping for ${sleep_time} seconds to avoid transient networking failures ..."

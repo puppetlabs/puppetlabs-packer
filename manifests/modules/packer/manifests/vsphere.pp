@@ -3,11 +3,22 @@ class packer::vsphere inherits packer::vsphere::params {
   include packer::vsphere::repos
   include packer::vsphere::networking
   include packer::vsphere::fw
-
-  user { root:
-    ensure   => present,
-    password => "$qa_root_passwd"
+  
+  # This was added because for macos only accepts salted sha-512 hash to change the password.
+  # We recieve qa_root_passwd_plain from platform-ci-utils
+  if $::osfamily == 'Darwin' {
+      exec { 'change_root_passwd':
+        command => "dscl . -passwd /Users/root ${qa_root_passwd_plain}",
+        path    => [ '/usr/bin' ],
+      }
+    }
+   else {
+    user { root:
+      ensure   => present,
+      password => "$qa_root_passwd",
+    }
   }
+
 
   case $::osfamily {
     redhat: {
@@ -51,40 +62,50 @@ class packer::vsphere inherits packer::vsphere::params {
       }
     }
   }
+  
+    if $::osfamily == 'Darwin' {
+       file { $startup_file_plist: 
+      owner   => 'root',
+      group   => "${group}",
+      mode    => "${mode}",
+      content => template("packer/vsphere/${startup_file_plist_source}")
+      }
+    }
+    else {
+      package { $ruby_package:
+      ensure => present,
+      }
+    }
+    
+    file { $bootstrap_file:
+      owner   => 'root',
+      group   => "${group}",
+      mode    => "${mode}",
+      content => template("packer/vsphere/${bootstrap_file_source}"),
+    }
 
-  package { $ruby_package:
-    ensure => present,
-  }
+    file { $startup_file:
+      owner   => 'root',
+      group   => "${group}",
+      mode    => pick($startup_file_perms, "${mode}"),
+      content => template("packer/vsphere/${startup_file_source}"),
+    }
 
-  file { $bootstrap_file:
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0755',
-    content => template("packer/vsphere/${bootstrap_file_source}"),
-  }
-
-  file { $startup_file:
-    owner   => 'root',
-    group   => 'root',
-    mode    => pick($startup_file_perms, '0755'),
-    content => template("packer/vsphere/${startup_file_source}"),
-  }
-
-  file { '/root/.ssh':
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    ensure => directory,
-  }
-
-  file { '/root/.ssh/authorized_keys':
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0755',
-    source  => 'puppet:///modules/packer/vsphere/authorized_keys',
-    require => File[ '/root/.ssh' ]
-  }
-
+    file { $ssh_path:
+      owner  => 'root',
+      group  => "${group}",
+      mode   => "${mode}",
+      ensure => directory,
+    }   
+  
+    file { $authorized_keys_path:
+      owner   => 'root',
+      group   => "${group}",
+      mode    => "${mode}",
+      source  => 'puppet:///modules/packer/vsphere/authorized_keys',
+      require => File[ $ssh_path ]
+    }
+    
   #TODO check if this works with existing template for solaris 11
   if $::operatingsystem == 'Solaris' {
     if $::operatingsystemrelease in ['11.4'] {

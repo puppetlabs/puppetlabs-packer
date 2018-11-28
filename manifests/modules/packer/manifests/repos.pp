@@ -58,5 +58,4 @@ class packer::repos {
       }
     }
   }
-
 }

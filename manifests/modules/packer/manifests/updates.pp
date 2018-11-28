@@ -47,9 +47,10 @@ class packer::updates {
   } elsif $::osfamily == 'Solaris'{
     $pkgs_to_update = $linux_pkgs + $solaris_pkgs
   }
-
-  package { $pkgs_to_update: ensure => latest; }
-
+  # Macos does not install any of the packages
+  if $::osfamily != 'Darwin' {
+    package { $pkgs_to_update: ensure => latest; }
+  }
   if $::osfamily == 'Suse' {
     file { '/etc/zypp/locks':
       ensure => absent
