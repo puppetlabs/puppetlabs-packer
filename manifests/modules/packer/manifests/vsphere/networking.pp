@@ -1,9 +1,10 @@
 class packer::vsphere::networking inherits packer::networking::params {
 
+  if $::osfamily != 'Darwin' {
   class { 'network':
     config_file_notify => '',
+    }
   }
-
   case $::osfamily {
     debian: {
       if $::operatingsystemrelease in ['15.10'] {

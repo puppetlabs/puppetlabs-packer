@@ -1,5 +1,6 @@
 class packer::vmtools inherits packer::vmtools::params {
 
+  $vmtools_mountpoint = '/tmp/vmtools'
   # At some point it's going to become more worthwhile to flip this so
   # installing open-vm-tools is the default.
   if ( ($::osfamily == 'debian' and $::operatingsystemmajrelease in ['7', '8', '9', '16.04', '14.04', '18.04', '18.10']) or
@@ -20,10 +21,11 @@ class packer::vmtools inherits packer::vmtools::params {
         before => File[ '/tmp/vmtools' ],
       }
     }
-
-    file { '/tmp/vmtools':
+    
+    file { $vmtools_mountpoint:
       ensure => directory,
-    }
+    }   
+    
 
     if $::osfamily == 'Solaris' {
       mount { '/tmp/vmtools':
@@ -34,15 +36,28 @@ class packer::vmtools inherits packer::vmtools::params {
         blockdevice => '/dev/rdsk/c0d0s0',
         atboot      => true,
         options     => 'ro,loop',
-        require     => File[ '/tmp/vmtools' ],
+        require     => File[ $vmtools_mountpoint ],
+        before      => Exec[ 'install vmtools' ],
       }
-    } else {
+    }
+    # For macos we do exec resource to mount vmtools iso 
+    elsif $::osfamily == 'Darwin'     { 
+      exec { 'mount cdrom':
+       command => "hdiutil mount ${root_home}/${tools_iso} -mountpoint ${vmtools_mountpoint}",
+       path    => [ '/bin', '/usr/bin' ],
+       cwd     => '/var/root',
+       require => File[ $vmtools_mountpoint ],
+       before   => Exec[ 'install vmtools' ],       
+     } 
+    }
+     else {
       mount { '/tmp/vmtools':
         ensure  => mounted,
         device  => "${root_home}/${tools_iso}",
         fstype  => 'iso9660',
         options => 'ro,loop',
-        require => File[ '/tmp/vmtools' ],
+        require => File[ $vmtools_mountpoint ],
+        before  => Exec[ 'install vmtools' ],
       }
     }
 
@@ -50,7 +65,6 @@ class packer::vmtools inherits packer::vmtools::params {
       command => $install_cmd,
       path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
       cwd     => '/tmp/',
-      require => Mount[ '/tmp/vmtools' ],
     }
 
     if $::osfamily == 'Solaris' {
@@ -65,9 +79,9 @@ class packer::vmtools inherits packer::vmtools::params {
         provider => base
       }
     }
-
+    
     exec { 'remove /tmp/vmtools':
-      command => 'umount /tmp/vmtools ; rmdir /tmp/vmtools',
+      command => $unmount_command,
       path    => [ '/sbin', '/usr/sbin', '/bin', '/usr/bin' ],
       onlyif  => 'test -d /tmp/vmtools',
       require => Exec[ 'install vmtools' ],
@@ -75,7 +89,7 @@ class packer::vmtools inherits packer::vmtools::params {
 
     file { "${root_home}/${tools_iso}":
       ensure  => absent,
-      require => Exec[ 'remove /tmp/vmtools' ],
+      require => Exec[ "remove ${vmtools_mountpoint}" ],
     }
 
     if $::osfamily == 'Solaris' {
@@ -83,12 +97,13 @@ class packer::vmtools inherits packer::vmtools::params {
     } else {
       $fstab_path = '/etc/fstab'
     }
-
+    if $::osfamily != 'Darwin'{
     file_line { 'remove fstab /tmp/vmtools':
       path    => $fstab_path,
       line    => '#/tmp/vmtools removed',
       match   => '/tmp/vmtools',
       require => Exec[ 'remove /tmp/vmtools' ],
+      }
     }
   }
 }

@@ -1,7 +1,6 @@
 {
   "variables": {
-    "template_name"                                : null,
-    "template_os"                                  : null,
+    "template_name"                                : null,    
     "iso_url"                                      : null,
     "iso_checksum"                                 : null,
     "iso_checksum_type"                            : null,
@@ -23,11 +22,22 @@
     "packer_output_dir"                            : "{{env `PACKER_VM_OUT_DIR`}}",
     "vmware_base_vmx_data_memsize"                 : "512",
     "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
-    "vmware_base_vmx_data_numvcpus"                : "1",
+    "vmware_base_vmx_data_numvcpus"                : "1",    
+    "vmware_base_vmx_ehci_present"                 : "FALSE",
+    "vmware_base_vm_usb_present"                   : "FALSE" ,
+    "vmware_base_vm_scsi0_present"                 : "TRUE",
+    "vmware_base_vm_smc_present"                   : "",    
+    "vmware_base_vm_hpet0_present"                 : "",
+    "vmware_base_vm_ich7m_present"                 : "",
+    "vmware_base_vm_firmware"                      : "",
+    "vmware_base_vmx_keyboard_and_mouse_profile"   : "",   
+    
     "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
     "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",    
     "inject_http_seed_in_boot_command"             : "false", 
-    "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh"
+    "ssh_username"                                 : "root",
+    "ssh_password"                                 : "puppet",
+    "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh"    
   },
 
   "description"                                    : "Builds a Linux base template VM for use in VMWare",
@@ -42,8 +52,8 @@
       "output_directory"                           : "{{user `packer_output_dir`}}/output-{{build_name}}",
 
       "headless"                                   : "{{user `headless`}}",
-      "ssh_username"                               : "root",
-      "ssh_password"                               : "puppet",
+      "ssh_username"                               : "{{user `ssh_username`}}",
+      "ssh_password"                               : "{{user `ssh_password`}}",
       "ssh_port"                                   : 22,
       "ssh_wait_timeout"                           : "10000s",
       "ssh_pty"                                    : "true",
@@ -62,9 +72,16 @@
         "memsize"                                  : "{{user `vmware_base_vmx_data_memsize`}}",
         "cpuid.coresPerSocket"                     : "{{user `vmware_base_vmx_data_cpuid_coresPerSocket`}}",
         "numvcpus"                                 : "{{user `vmware_base_vmx_data_numvcpus`}}",
-
+        "keyboardAndMouseProfile"                  : "{{user `vmware_base_vmx_keyboard_and_mouse_profile`}}",
         "ethernet0.virtualDev"                     : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
-        "ethernet0.pciSlotNumber"                  : "{{user `vmware_base_vmx_data_ethernet0_pciSlotNumber`}}"
+        "ethernet0.pciSlotNumber"                  : "{{user `vmware_base_vmx_data_ethernet0_pciSlotNumber`}}",
+        "ehci.present"                             : "{{user `vmware_base_vmx_ehci_present`}}",
+        "firmware"                                 : "{{user `vmware_base_vm_firmware`}}",
+        "hpet0.present"                            : "{{user `vmware_base_vm_hpet0_present`}}",
+        "ich7m.present"                            : "{{user `vmware_base_vm_ich7m_present`}}",
+        "scsi0.present"                            : "{{user `vmware_base_vm_scsi0_present`}}",
+        "smc.present"                              : "{{user `vmware_base_vm_smc_present`}}",
+        "usb.present"                              : "{{user `vmware_base_vm_usb_present`}}"
       }
     }
   ],

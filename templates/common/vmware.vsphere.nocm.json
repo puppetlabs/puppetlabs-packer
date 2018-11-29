@@ -19,6 +19,7 @@
     "shutdown_command"                      : "/sbin/halt -h -p",
 
     "qa_root_passwd"                        : "{{env `QA_ROOT_PASSWD`}}",
+    "qa_root_passwd_plain"                  : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
     "packer_sha"                            : "{{env `PACKER_SHA`}}",
     "packer_source_dir"                     : "{{env `PACKER_VM_SRC_DIR`}}",
     "packer_output_dir"                     : "{{env `PACKER_VM_OUT_DIR`}}"
@@ -78,7 +79,8 @@
       "execute_command"                     : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin puppet apply --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
       "facter"                              : {
         "provisioner"                       : "{{user `provisioner`}}",
-        "qa_root_passwd"                    : "{{user `qa_root_passwd`}}"
+        "qa_root_passwd"                    : "{{user `qa_root_passwd`}}",
+        "qa_root_passwd_plain"              : "{{user `qa_root_passwd_plain`}}"
       },
       "manifest_dir"                        : "{{user `project_root`}}/manifests",
       "manifest_file"                       : "{{user `project_root`}}/manifests/vsphere/nocm.pp"
