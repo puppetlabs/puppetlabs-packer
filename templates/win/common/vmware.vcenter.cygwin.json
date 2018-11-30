@@ -25,7 +25,6 @@
     "packer_vcenter_folder"     : null,
     "packer_vcenter_net"        : null,
     "packer_vcenter_insecure"   : null,
-    "packer_vcenter_build_host" : null,
 
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
@@ -52,7 +51,6 @@
       "password"               : "{{user `packer_vcenter_password`}}",
       "datacenter"             : "{{user `packer_vcenter_dc`}}",
       "cluster"                : "{{user `packer_vcenter_cluster`}}",
-      "host"                   : "{{user `packer_vcenter_build_host`}}",
       "convert_to_template"    : "{{user `convert_to_template`}}",
       "folder"                 : "{{user `packer_vcenter_folder`}}",
       "firmware"               : "{{user `firmware`}}",
