@@ -8,7 +8,5 @@
   "template_name"                                               : "osx-1012-x86_64",
   "guest_os_type"                                               : "darwin12-64",
   "version"                                                     : "0.0.2",
-  "template_os"                                                 : "darwin12-64",
-  "vmware_vsphere_nocm_required_modules"                        :"puppetlabs-stdlib"
-
+  "template_os"                                                 : "darwin12-64"
 }

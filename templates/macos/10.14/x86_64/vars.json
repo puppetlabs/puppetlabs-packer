@@ -1,0 +1,14 @@
+{
+    "_comment"                                                    : "Variable values specific to macOS 10.14 Mojave",  
+    "beakerhost"                                                  : "osx1014-64",
+    "install_xcode_cli_tools"                                     : "true",
+    "iso_url"                                                     : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/MacOS_10.14.iso",
+    "iso_checksum"                                                : "481568568ed3233d4da6980b1b0208d9",
+    "iso_checksum_type"                                           : "md5",
+    "template_name"                                               : "osx-1014-x86_64",
+    "guest_os_type"                                               : "darwin14-64",
+    "version"                                                     : "0.0.1",
+    "template_os"                                                 : "darwin14-64"
+  
+  }
+  

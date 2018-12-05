@@ -13,6 +13,7 @@
   "vmware_vsphere_nocm_vmx_data_numvcpus"                       : "2",
   "vmware_vsphere_nocm_vmx_data_memsize"                        : "4096",  
   "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"           : "e1000",
+  "vmware_vsphere_nocm_required_modules"                        :"puppetlabs-stdlib",
   
   "vmware_base_vmx_data_memsize"                                : "4096",
   "vmware_base_vmx_data_cpuid_coresPerSocket"                   : "2",
