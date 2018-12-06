@@ -82,6 +82,20 @@ $ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
     10.13/x86_64/vmware.base.json
 ```
 
+### 10.14 Mojave
+
+For 10.14 at boot command there is a problem focusing the language window with packer near the finish of os install
+to bypass this issue you have to manually select the last steps from installer
+the last tag from boot command is set to wait 45 minutes for macos to install and to be able execute the last steps described below.
+
+Manually select language input, keyboard set user to osx and password to puppet.
+
+When the install is done, open terminal execute following steps:
+1 change root passwd to puppet (sudo passwd root) command
+2 edit (/etc/ssh/sshd_config) and set (PermitRootLogin yes)
+3 execute: (systemsetup -setremotelogin on) to allow ssh connection
+4 reboot OS, this is needed because at first reboot some configuration .plist is generated that is needed in puppet manifests.
+
 **VSphere**
 
 Once the 10.13 base build is finished, you can build and ship the 10.13 vsphere image. You will need to supply the following environment variables:
