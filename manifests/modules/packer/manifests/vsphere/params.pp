@@ -9,19 +9,18 @@ class packer::vsphere::params {
   $repo_mirror = 'https://artifactory.delivery.puppetlabs.net/artifactory'
   $os_mirror = 'http://osmirror.delivery.puppetlabs.net'
   $loweros     = downcase($facts['operatingsystem'])
-
+  $mode = '0755'
+  
   case $facts['operatingsystem'] {
     'Darwin': {
       $group = 'admin'
-      $mode = '0644'
       $ssh_path='/var/root/.ssh'
       $authorized_keys_path='/var/root/.ssh/authorized_keys'
     }
     default: {
-      $group = 'root'
-      $mode = '0755'
-      $authorized_keys_path='/root/.ssh/authorized_keys'
-      $ssh_path='/root/.ssh'
+       $group = 'root'
+       $authorized_keys_path='/root/.ssh/authorized_keys'
+       $ssh_path='/root/.ssh'
     }
   }
 
