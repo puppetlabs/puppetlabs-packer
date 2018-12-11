@@ -13,12 +13,12 @@ class packer::vsphere::params {
   
   case $facts['operatingsystem'] {
     'Darwin': {
-      $group = 'admin'
+      $group = 'admin'      
       $ssh_path='/var/root/.ssh'
       $authorized_keys_path='/var/root/.ssh/authorized_keys'
     }
     default: {
-       $group = 'root'
+       $group = 'root'       
        $authorized_keys_path='/root/.ssh/authorized_keys'
        $ssh_path='/root/.ssh'
     }
@@ -129,8 +129,8 @@ class packer::vsphere::params {
       $bootstrap_file_source = 'osx.rb.erb'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $startup_file = '/etc/rc.local'
-      $startup_file_source   = 'rc.local'
-      $startup_file_perms    = '0644'
+      $startup_file_source   = 'rc.local'      
+      $startup_file_perms= '0777'
       $startup_file_plist = '/Library/LaunchDaemons/local.localhost.startup.plist'
       $startup_file_plist_source = 'local.localhost.startup.plist'
     }

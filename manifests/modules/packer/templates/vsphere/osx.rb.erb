@@ -24,8 +24,8 @@ Kernel.system('/usr/sbin/ipconfig set en0 dhcp')
 
 puts '- Cleaning up...'
 
-Kernel.system('rm /Library/LaunchDaemons/local.localhost.startup.plist')
-Kernel.system('rm /etc/rc.local')
+Kernel.system('rm -rf /Library/LaunchDaemons/local.localhost.startup.plist')
+Kernel.system('rm -rf /etc/rc.local')
 
 puts "\n"
 
