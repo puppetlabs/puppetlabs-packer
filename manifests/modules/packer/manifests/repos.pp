@@ -21,30 +21,49 @@ class packer::repos {
     # We don't have consistent mirror urls between RedHat versions:
     # TODO: RHEL 5 needs further refactoring
     $base_url = $::operatingsystemmajrelease ? {
+      # TODO: RHEL 8 is beta atm, we need to update with some local mirros when available
+      '8' => "https://downloads.redhat.com/redhat/rhel/rhel-8-beta",
       '7' => "${repo_mirror}/rpm__remote_rhel-72",
       '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
       '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
     }
 
-    yumrepo { "localmirror-os":
-      descr    => "localmirror-os",
-      baseurl  => "${base_url}/os",
-      gpgcheck => "1",
-      gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-    }
+    if $::operatingsystemmajrelease == "8" {
+      yumrepo { "rhel-8-for-x86_64-baseos-beta-rpms":
+        descr    => "rhel-8-for-x86_64-baseos-beta-rpms",
+        baseurl  => "${base_url}/baseos/${::architecture}",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+      }
 
-    yumrepo { "localmirror-optional":
-      descr    => "localmirror-optional",
-      baseurl  => "${base_url}/optional",
-      gpgcheck => "1",
-      gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-    }
+      yumrepo { "rhel-8-for-x86_64-appstream-beta-rpms":
+        descr    => "rhel-8-for-x86_64-appstream-beta-rpms",
+        baseurl  => "${base_url}/appstream/${::architecture}",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+      }
+    } else {
 
-    yumrepo { "localmirror-extras":
-      descr    => "localmirror-extras",
-      baseurl  => "${base_url}/extras",
-      gpgcheck => "1",
-      gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      yumrepo { "localmirror-os":
+        descr    => "localmirror-os",
+        baseurl  => "${base_url}/os",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+
+      yumrepo { "localmirror-optional":
+        descr    => "localmirror-optional",
+        baseurl  => "${base_url}/optional",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+
+      yumrepo { "localmirror-extras":
+        descr    => "localmirror-extras",
+        baseurl  => "${base_url}/extras",
+        gpgcheck => "1",
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
     }
 
     # We add the lb (load balancer) repo for redhat-6-x86_64 which is

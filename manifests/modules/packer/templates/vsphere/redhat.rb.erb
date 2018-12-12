@@ -24,7 +24,12 @@ Kernel.system('hostname -F /etc/hostname')
 puts '- Re-obtaining DHCP lease...'
 
 <% if (@operatingsystem == 'RedHat') or (@operatingsystem == 'CentOS') or (@operatingsystem == 'Scientific') or (@operatingsystem == 'OracleLinux') -%>
-  <% if @operatingsystemmajrelease == '7' -%>
+  <% if @operatingsystemmajrelease == '8'  -%>
+    Kernel.system('/sbin/service NetworkManager restart')
+    Kernel.system('/usr/sbin/ifdown ens33')
+    Kernel.system('/usr/sbin/ifup ens33')
+  <% end -%>
+  <% if @operatingsystemmajrelease == '7'  -%>
     File.open('/var/lib/NetworkManager/dhclient-ens160.conf', 'a') do |f|
       f << "send host-name #{hostname}"
     end

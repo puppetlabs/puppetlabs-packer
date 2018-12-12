@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-if [[ $OSTYPE == darwin* ]] then
+if [[ $OSTYPE == darwin* ]]; then
     . /etc/rc.common
 
     CheckForNetwork
@@ -13,5 +13,5 @@ if [[ $OSTYPE == darwin* ]] then
         done
 fi
 ( /etc/vsphere-bootstrap.rb ) 2>&1 | /usr/bin/tee -a  /tmp/vsphere-bootstrap.log
- 
+
 exit 0

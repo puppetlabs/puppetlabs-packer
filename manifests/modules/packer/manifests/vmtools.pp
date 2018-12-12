@@ -4,7 +4,7 @@ class packer::vmtools inherits packer::vmtools::params {
   # At some point it's going to become more worthwhile to flip this so
   # installing open-vm-tools is the default.
   if ( ($::osfamily == 'debian' and $::operatingsystemmajrelease in ['7', '8', '9', '16.04', '14.04', '18.04', '18.10']) or
-        ($::osfamily == 'redhat' and $::operatingsystemmajrelease in ['7', '25', '26', '27', '28', '29']) or
+        ($::osfamily == 'redhat' and $::operatingsystemmajrelease in ['7', '8', '25', '26', '27', '28', '29']) or
         ($::osfamily == 'suse' and $::operatingsystemmajrelease in ['15'])
     ) {
       package { 'open-vm-tools':
@@ -21,11 +21,11 @@ class packer::vmtools inherits packer::vmtools::params {
         before => File[ '/tmp/vmtools' ],
       }
     }
-    
+
     file { $vmtools_mountpoint:
       ensure => directory,
-    }   
-    
+    }
+
 
     if $::osfamily == 'Solaris' {
       mount { '/tmp/vmtools':
@@ -40,15 +40,15 @@ class packer::vmtools inherits packer::vmtools::params {
         before      => Exec[ 'install vmtools' ],
       }
     }
-    # For macos we do exec resource to mount vmtools iso 
-    elsif $::osfamily == 'Darwin'     { 
+    # For macos we do exec resource to mount vmtools iso
+    elsif $::osfamily == 'Darwin'     {
       exec { 'mount cdrom':
        command => "hdiutil mount ${root_home}/${tools_iso} -mountpoint ${vmtools_mountpoint}",
        path    => [ '/bin', '/usr/bin' ],
        cwd     => '/var/root',
        require => File[ $vmtools_mountpoint ],
-       before   => Exec[ 'install vmtools' ],       
-     } 
+       before   => Exec[ 'install vmtools' ],
+     }
     }
      else {
       mount { '/tmp/vmtools':
@@ -79,7 +79,7 @@ class packer::vmtools inherits packer::vmtools::params {
         provider => base
       }
     }
-    
+
     exec { 'remove /tmp/vmtools':
       command => $unmount_command,
       path    => [ '/sbin', '/usr/sbin', '/bin', '/usr/bin' ],
