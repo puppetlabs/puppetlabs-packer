@@ -47,6 +47,11 @@ Kernel.system('/usr/sbin/service networking restart')
 File.delete('/etc/machine-id')
 Kernel.system('/bin/systemd-machine-id-setup')
 Kernel.system('/bin/systemctl daemon-reload')
+
+# disable systemd-resolved - more info here: https://tickets.puppetlabs.com/browse/QENG-6928
+Kernel.system('rm /etc/resolv.conf')
+Kernel.system('ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf')
+
 Kernel.system('/bin/systemctl restart systemd-networkd')
 <% else -%>
 Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')

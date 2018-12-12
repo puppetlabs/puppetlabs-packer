@@ -1,8 +1,8 @@
 {
-    "template_name"                         : "ubuntu-18.10-x86_64",
+    "template_name"                         : "ubuntu-1810-x86_64",
     "template_os"                           : "ubuntu-64",
     "beakerhost"                            : "ubuntu1810-64",
-    "version"                               : "0.0.3",
+    "version"                               : "0.0.5",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-18.10-server-amd64.iso",
     "iso_checksum"                          : "524e0e2abe598581a5cb122546a23fea685efd82ce00aef5fcd9e17e118b2c06",
     "iso_checksum_type"                     : "sha256",
