@@ -42,29 +42,50 @@ class packer::repos {
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
       }
-    } else {
-
+    } elsif $::operatingsystemmajrelease =="6" {
       yumrepo { "localmirror-os":
         descr    => "localmirror-os",
-        baseurl  => "${base_url}/os",
+        baseurl  => "${base_url}-os",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
       yumrepo { "localmirror-optional":
         descr    => "localmirror-optional",
-        baseurl  => "${base_url}/optional",
+        baseurl  => "${base_url}-optional",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
       yumrepo { "localmirror-extras":
         descr    => "localmirror-extras",
-        baseurl  => "${base_url}/extras",
+        baseurl  => "${base_url}-extras",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-      }
-    }
+     }
+   } else {
+
+     yumrepo { "localmirror-os":
+       descr    => "localmirror-os",
+       baseurl  => "${base_url}/os",
+       gpgcheck => "1",
+       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+     }
+
+     yumrepo { "localmirror-optional":
+       descr    => "localmirror-optional",
+       baseurl  => "${base_url}/optional",
+       gpgcheck => "1",
+       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+     }
+
+     yumrepo { "localmirror-extras":
+       descr    => "localmirror-extras",
+       baseurl  => "${base_url}/extras",
+       gpgcheck => "1",
+       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+     }
+   }
 
     # We add the lb (load balancer) repo for redhat-6-x86_64 which is
     # used in puppet modules testing
