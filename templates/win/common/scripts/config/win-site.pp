@@ -9,4 +9,5 @@ include windows_template::apps::sysinternals
 if ($windows_install_option != 'Core') and ($::operatingsystemrelease != '2008')
 {
   include windows_template::apps::chrome
+  include windows_template::apps::notepadplusplus
 }

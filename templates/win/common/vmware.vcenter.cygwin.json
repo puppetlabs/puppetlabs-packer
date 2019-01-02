@@ -233,6 +233,13 @@
       ]
     },
     {
+      "type": "powershell",
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
+      ],
+      "valid_exit_codes" : [ 0 ]
+    },
+    {
       "type": "windows-restart"
     },
     {
