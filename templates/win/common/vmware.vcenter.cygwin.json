@@ -189,11 +189,6 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
-      "environment_vars" : [
-        "PBTEST_OSName={{user `XXXX`}}",
-        "PBTEST_Edition={{user `XXXX`}}",
-        "PBTEST_Build={{user `XXXX`}}"
-      ],
       "valid_exit_codes" : [ 0 ]
     },
     {
@@ -204,6 +199,13 @@
       "type": "windows-restart"
     },
     {
+      "type": "powershell",
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase winpackages"
+      ],
+      "valid_exit_codes" : [ 0 ]
+    },
+    {
       "type"   : "powershell",
       "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
       "environment_vars" : [
@@ -212,6 +214,13 @@
     },
     {
       "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase cygwin"
+      ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type": "powershell",
@@ -240,6 +249,13 @@
     },
     {
       "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase platform"
+      ],
+      "valid_exit_codes" : [ 0 ]
     },
     {
       "type"   : "powershell",

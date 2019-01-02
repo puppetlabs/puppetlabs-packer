@@ -105,6 +105,16 @@ if ($ENV:PROCESSOR_ARCHITECTURE -eq 'x86') {
   $ARCH = 'x86_64'
 }
 
+# Work out what CYGDIR is and set it as a Windows Environment Variable
+# Note - need seperate Prefix var for environment variables due to cygwin/git-for-win idiosyncrasies
+if ($ARCH -eq 'x86') {
+  $CygWinDir = "C:\cygwin"
+  $CygEnvPrefix = "C:/cygwin"
+} else {
+  $CygWinDir = "C:\cygwin64"
+  $CygEnvPrefix = "C:/cygwin64"
+}
+
 # Cleanmgr Registry "SageSet" Value - setting this to "random" value and associated constants
 $CleanMgrSageSet = "5462"
 Set-Variable -Option Constant -Name CleanMgrStateFlags        -Value "StateFlags$CleanMgrSageSet"
