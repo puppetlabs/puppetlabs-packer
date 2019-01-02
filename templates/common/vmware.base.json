@@ -39,7 +39,9 @@
     "inject_http_seed_in_boot_command"             : "false",
     "ssh_username"                                 : "root",
     "ssh_password"                                 : "puppet",
-    "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh"
+    "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh",
+
+    "tools_upload_flavor"                          : "linux"
   },
 
   "description"                                    : "Builds a Linux base template VM for use in VMWare",
