@@ -9,12 +9,10 @@ $ErrorActionPreference = 'Stop'
 # Select packages based on architecture (also keeps package list here which is convenient)
 # Note Google Chrome is now available as an MSI
 if ("$ARCH" -eq "x86" ) {
-  $global:NotePadInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/notepadplusplus/npp.7.5.6.Installer.exe"
   $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-32-bit.exe"
   $global:GoogleInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/googlechrome/googlechromestandaloneenterprise.msi"
 }
 else {
-  $global:NotePadInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/notepadplusplus/npp.7.5.6.Installer.x64.exe"
   $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-64-bit.exe"
   $global:GoogleInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/googlechrome/googlechromestandaloneenterprise64.msi"
 }
@@ -28,11 +26,6 @@ else {
   Download-File "$GoogleInstaller" "$PackerDownloads\googlechrome.msi"
   Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/q /I $PackerDownloads\googlechrome.msi"
   Write-Output "Google Chrome Browser Installed"
-
-  Write-Output "Installing Notepad++ $NotePadInstaller"
-  Download-File "$NotePadInstaller" "$PackerDownloads\NotePadInstaller.exe"
-  Start-Process -Wait "$PackerDownloads\NotePadInstaller.exe" @SprocParms -ArgumentList "/S"
-  Write-Output "Notepad++ Installed"
 }
 
 Write-Output "Installing Git For Windows $GitForWinInstaller"
