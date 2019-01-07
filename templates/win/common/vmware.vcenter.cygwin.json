@@ -39,11 +39,12 @@
 
   "builders": [
     {
-      "type": "vsphere-iso",
+      "type": "vsphere-23-iso",
 
-      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
+      "name"                   : "vcenter-iso",
       "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
       "vm_version"             : "{{user `vm_version`}}",
+      "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
       "vcenter_server"         : "{{user `packer_vcenter_host`}}",
       "insecure_connection"    : "{{user `packer_vcenter_insecure`}}",
@@ -67,6 +68,7 @@
       "disk_size"              : "{{user `disk_size`}}",
       "boot_order"             : "{{user `boot_order`}}",
       "boot_wait"              : "{{user `boot_wait`}}",
+      "host"                   : "",
       "boot_command" : [
         "<spacebar><wait><spacebar><wait><enter><wait><enter><wait><enter><wait><enter>"
       ],
