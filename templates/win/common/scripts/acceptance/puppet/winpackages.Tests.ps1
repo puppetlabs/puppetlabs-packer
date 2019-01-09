@@ -16,6 +16,14 @@ describe 'Windows Packages are installed' {
         "$ENV:PROGRAMFILES\Git\git-bash.exe" | Should Exist
         "$ENV:PROGRAMFILES\Git\git-cmd.exe" | Should Exist
     }
+
+    if ($PSVersionTable.PSVersion.Major -ge 4) {
+        # Powershell 6 is only installed if WMF 4.0 or greater is installed.
+        it 'Powershell 6' {
+            "$ENV:PROGRAMFILES\PowerShell\6\pwsh.exe" | Should Exist
+        }
+    }
+
 }
 
 describe -Tag 'DesktopOnly' 'Windows Desktop Packages are installed' {
