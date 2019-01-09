@@ -124,6 +124,27 @@ class packer::vsphere::repos inherits packer::vsphere::params {
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
           }
+        } elsif $::operatingsystemmajrelease == "6" {
+          yumrepo { "localmirror-os":
+            descr    => "localmirror-os",
+            baseurl  => "${base_url}-os",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+
+          yumrepo { "localmirror-optional":
+            descr    => "localmirror-optional",
+            baseurl  => "${base_url}-optional",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+
+          yumrepo { "localmirror-extras":
+            descr    => "localmirror-extras",
+            baseurl  => "${base_url}-extras",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
         } else {
 
           yumrepo { "localmirror-os":
@@ -148,16 +169,6 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           }
         }
 
-        # We add the lb (load balancer) repo for redhat-6-x86_64 which is
-        # used in puppet modules testing
-        if $::operatingsystemmajrelease == "6" and $::architecture == "x86_64" {
-          yumrepo { "localmirror-lb":
-            descr    => "localmirror-lb",
-            baseurl  => "${base_url}/lb",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-        }
       }
 
       if $::operatingsystem == 'CentOS' {
