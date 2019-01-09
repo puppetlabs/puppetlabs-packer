@@ -29,6 +29,10 @@ class packer::vsphere(
         command => "dscl . -passwd /Users/root ${facts['qa_root_passwd_plain']}",
         path    => [ '/usr/bin' ],
       }
+      exec {'remove_shared_folder':          
+          command => "dscl . delete /Groups/com.apple.sharepoint.group.1",
+          path    => [ '/usr/bin' ],
+      }
     }
     else {
     user { 'root':
