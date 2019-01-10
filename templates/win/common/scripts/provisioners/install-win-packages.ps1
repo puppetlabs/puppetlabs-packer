@@ -10,22 +10,9 @@ $ErrorActionPreference = 'Stop'
 # Note Google Chrome is now available as an MSI
 if ("$ARCH" -eq "x86" ) {
   $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-32-bit.exe"
-  $global:GoogleInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/googlechrome/googlechromestandaloneenterprise.msi"
 }
 else {
   $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-64-bit.exe"
-  $global:GoogleInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/googlechrome/googlechromestandaloneenterprise64.msi"
-}
-
-If ( $WindowsServerCore ) {
-  Write-Output "Skipping Browser and Notepad++ installs for Windows Core"
-}
-else {
-
-  Write-Output "Installing Google Chrome Browser"
-  Download-File "$GoogleInstaller" "$PackerDownloads\googlechrome.msi"
-  Start-Process -Wait "msiexec" @SprocParms -ArgumentList "/q /I $PackerDownloads\googlechrome.msi"
-  Write-Output "Google Chrome Browser Installed"
 }
 
 Write-Output "Installing Git For Windows $GitForWinInstaller"
