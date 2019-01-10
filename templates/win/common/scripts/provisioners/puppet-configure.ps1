@@ -122,6 +122,7 @@ $ENV:FACTER_packer_template_type = $ENV:PackerTemplateType
 # Pick Up user attributes as these could be localised.
 $ENV:FACTER_administrator_sid     =  $WindowsAdminSID
 $ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"
+$ENV:FACTER_psversionmajor        = $PSVersionTable.PSVersion.Major
 
 # Chrome root needs arch detection as under x86 on 64 bit boxen
 if ("$ARCH" -eq "x86") {
