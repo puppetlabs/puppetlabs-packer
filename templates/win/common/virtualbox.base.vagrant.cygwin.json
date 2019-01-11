@@ -71,13 +71,6 @@
     },
     {
         "type"   : "powershell",
-        "script" : "../../common/scripts/provisioners/install-win-packages.ps1"
-    },
-    {
-        "type": "windows-restart"
-    },
-    {
-        "type"   : "powershell",
         "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
         "environment_vars": [
             "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"

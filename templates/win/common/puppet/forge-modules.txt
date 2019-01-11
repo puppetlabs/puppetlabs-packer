@@ -8,3 +8,5 @@ puppetlabs-powershell
 puppetlabs-registry
 puppetlabs-stdlib
 puppet-download_file
+puppet-archive
+puppet-windows_env
