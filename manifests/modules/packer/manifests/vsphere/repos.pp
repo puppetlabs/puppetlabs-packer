@@ -124,29 +124,7 @@ class packer::vsphere::repos inherits packer::vsphere::params {
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
           }
-        } elsif $::operatingsystemmajrelease == "6" {
-          yumrepo { "localmirror-os":
-            descr    => "localmirror-os",
-            baseurl  => "${base_url}-os",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-
-          yumrepo { "localmirror-optional":
-            descr    => "localmirror-optional",
-            baseurl  => "${base_url}-optional",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-
-          yumrepo { "localmirror-extras":
-            descr    => "localmirror-extras",
-            baseurl  => "${base_url}-extras",
-            gpgcheck => "1",
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-        } else {
-
+        } elsif $::operatingsystemmajrelease == "5" {
           yumrepo { "localmirror-os":
             descr    => "localmirror-os",
             baseurl  => "${base_url}/os",
@@ -164,6 +142,28 @@ class packer::vsphere::repos inherits packer::vsphere::params {
           yumrepo { "localmirror-extras":
             descr    => "localmirror-extras",
             baseurl  => "${base_url}/extras",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+        } else {
+
+          yumrepo { "localmirror-os":
+            descr    => "localmirror-os",
+            baseurl  => "${base_url}-os",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+
+          yumrepo { "localmirror-optional":
+            descr    => "localmirror-optional",
+            baseurl  => "${base_url}-optional",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+
+          yumrepo { "localmirror-extras":
+            descr    => "localmirror-extras",
+            baseurl  => "${base_url}-extras",
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }

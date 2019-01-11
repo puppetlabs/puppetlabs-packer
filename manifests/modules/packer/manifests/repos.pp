@@ -42,24 +42,24 @@ class packer::repos {
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
       }
-    } elsif $::operatingsystemmajrelease =="6" {
+    } elsif $::operatingsystemmajrelease == "5" {
       yumrepo { "localmirror-os":
         descr    => "localmirror-os",
-        baseurl  => "${base_url}-os",
+        baseurl  => "${base_url}/os",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
       yumrepo { "localmirror-optional":
         descr    => "localmirror-optional",
-        baseurl  => "${base_url}-optional",
+        baseurl  => "${base_url}/optional",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
       yumrepo { "localmirror-extras":
         descr    => "localmirror-extras",
-        baseurl  => "${base_url}-extras",
+        baseurl  => "${base_url}/extras",
         gpgcheck => "1",
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
      }
@@ -67,21 +67,21 @@ class packer::repos {
 
      yumrepo { "localmirror-os":
        descr    => "localmirror-os",
-       baseurl  => "${base_url}/os",
+       baseurl  => "${base_url}-os",
        gpgcheck => "1",
        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
      }
 
      yumrepo { "localmirror-optional":
        descr    => "localmirror-optional",
-       baseurl  => "${base_url}/optional",
+       baseurl  => "${base_url}-optional",
        gpgcheck => "1",
        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
      }
 
      yumrepo { "localmirror-extras":
        descr    => "localmirror-extras",
-       baseurl  => "${base_url}/extras",
+       baseurl  => "${base_url}-extras",
        gpgcheck => "1",
        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
      }
