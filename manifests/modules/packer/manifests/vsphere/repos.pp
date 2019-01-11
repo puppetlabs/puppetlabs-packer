@@ -161,9 +161,21 @@ class packer::vsphere::repos inherits packer::vsphere::params {
             gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
 
+          # since the 'extras' repo isn't bound to a specific version,
+          # we need to exclude updates to subscription-manager, otherwise
+          # yum update will fail due to unmet dependencies
+          #
+          # see https://access.redhat.com/solutions/3675971
+          if $::operatingsystemmajrelease == "7" {
+            $extras_exclude = "subscription-manager*"
+          } else {
+            $extras_exclude = undef
+          }
+
           yumrepo { "localmirror-extras":
             descr    => "localmirror-extras",
             baseurl  => "${base_url}-extras",
+            exclude  =>  $extras_exclude,
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
