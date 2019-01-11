@@ -6,20 +6,6 @@ $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
-# Select packages based on architecture (also keeps package list here which is convenient)
-# Note Google Chrome is now available as an MSI
-if ("$ARCH" -eq "x86" ) {
-  $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-32-bit.exe"
-}
-else {
-  $global:GitForWinInstaller = "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/gitforwin/Git-2.17.0-64-bit.exe"
-}
-
-Write-Output "Installing Git For Windows $GitForWinInstaller"
-Download-File "$GitForWinInstaller"  "$PackerDownloads\GitForWindowsInstaller.exe"
-Start-Process -Wait "$PackerDownloads\GitForWindowsInstaller.exe" @SprocParms -ArgumentList "/VERYSILENT /LOADINF=$PackerConfig\gitforwin.inf"
-Write-Output "Git For Windows Installed"
-
 # Install Sysinternals - to special tools directory as we may want to remove chocolatey
 Write-Output "Installing Sysinternal Tools"
 $SysInternalsTools = @(

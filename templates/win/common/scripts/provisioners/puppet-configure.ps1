@@ -115,6 +115,7 @@ Write-Output "Loading Default User hive to HKLM\DEFUSER..."
 # Set "facts" that we need for the Puppet Run
 $ENV:FACTER_modules_path         = "$ModulesPath"
 $ENV:FACTER_packer_downloads     = "$PackerDownloads"
+$ENV:FACTER_packer_config        = "$PackerConfig"
 $ENV:FACTER_build_date           = get-date -format "yyyy-MM-dd HH:mm zzz"
 $ENV:FACTER_packer_sha           = $ENV:PackerSHA
 $ENV:FACTER_packer_template_name = $ENV:PackerTemplateName
