@@ -18,12 +18,12 @@ Start-Process -Wait "msiexec" -ArgumentList "/x $PackerDownloads\puppet-agent.ms
 reg.exe delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Puppet"  /f
 reg.exe delete "HKLM\SOFTWARE\Puppet Labs" /f
 
-# Run Cleanmgr again.
+# Run Cleanmgr.
 If ($WindowsVersion -like $WindowsServer2008) {
   Write-Output "Skipping CleanMgr for Windows 2008"
 }
-ElseIf ( $WindowsServerCore ) {
-  Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation)."
+ElseIf ( $WindowsServerCore -or $WindowsVersion -Like $WindowsServer2012) {
+  Write-Output "Skipping Clean-Mgr as GUI not installed (Core Installation or win 2012)."
 }
 ElseIf ($WindowsVersion -like $WindowsServer2016) {
   Write-Output "Skipping Clean-Mgr for Win-10/2016 as it tends to hang"

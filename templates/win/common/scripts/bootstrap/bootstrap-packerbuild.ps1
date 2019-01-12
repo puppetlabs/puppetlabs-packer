@@ -46,6 +46,7 @@ if (-not (Test-Path "$PackerLogs\BootstrapSchedTask.installed")) {
 # Same seems to apply to win-2012 so disabling for this too.
 if ($WindowsVersion -like $WindowsServer2016 -or $WindowsVersion -like $WindowsServer2012) {
   Write-Output "Bypassing WSUS - Go Direct to Microsoft for updates"
+  Disable-WindowsAutoUpdate
 }
 else {
   Enable-UpdatesFromInternalWSUS
