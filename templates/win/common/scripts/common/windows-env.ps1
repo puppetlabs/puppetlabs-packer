@@ -291,6 +291,22 @@ Function Enable-UpdatesFromInternalWSUS {
   }
 }
 
+# Helper Function set Windows Update to use the Internal Production WSUS Server
+Function Disable-WindowsAutoUpdate {
+  if (-not (Test-Path "$PackerLogs\DisableWinAutoUpdate.installed")) {
+
+    Write-Output "Disabling Windows AutoUpdate"
+
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallDay" /t REG_DWORD /d 0 /f
+    reg.exe ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "ScheduledInstallTime" /t REG_DWORD /d 3 /f
+
+    Touch-File "$PackerLogs/DisableWinAutoUpdate.installed"
+  }
+}
+
+
 # Helper Function to install 7zip as a key package
 Function Install-7ZipPackage {
   if (-not (Test-Path "$PackerLogs\7zip.installed")) {
