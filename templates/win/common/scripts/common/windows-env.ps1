@@ -46,8 +46,16 @@ $WindowsAdminSID =  (Get-WmiObject win32_useraccount -Filter "Sid like 'S-1-5-21
 # Crude Code to chose appropriate resonse for YesNo
 $PrimaryLanguage = (Get-Culture).TwoLetterISOLanguageName
 Switch ($PrimaryLanguage) {
-  "fr"  {$AnswerPromptYes = "O"; break}
-  default {$AnswerPromptYes = "Y"; break}
+  "fr"  {
+    $global:AnswerPromptYes = "O"
+    $global:TZTitle = "Fuseau horaire:"
+    break
+  }
+  default {
+    $global:AnswerPromptYes = "Y"
+    $global:TZTitle = "Zone:"
+    break 
+  }
 }
 
 # Test to see if we are Core Version or not.

@@ -8,8 +8,8 @@
 
 . C:\Packer\Scripts\windows-env.ps1
 
-# Pick up the Timezone from systeminfo
-$Timezone = $(systeminfo | findstr  /L 'Zone:')
+# Pick up the Timezone from systeminfo - with Localised Timezone Title
+$Timezone = $(systeminfo | findstr  /L $TZTitle)
 # Note (Get-CimInstance -class Win32_OperatingSystem).LastBootUpTime would be better here, but its not available in PS2.
 # Noting for future.
 $LastBoot = (Get-WmiObject -class Win32_OperatingSystem | Select-Object @{label='LastBootUpTime';expression={$_.ConvertToDateTime($_.LastBootUpTime)}}).LastBootUpTime
