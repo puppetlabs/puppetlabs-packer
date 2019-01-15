@@ -1,0 +1,214 @@
+{
+    "variables": {
+      "template_config"                              : "vcenter",
+      "provisioner"                                  : "vmware",
+      "template_name"                                : null,
+      "version"                                      : null,
+      "disk_size"                                    : "20480",
+      "RAM_reserve_all"                              : "true",
+      "disk_thin_provisioned"                        : "true",
+      "shutdown_command"                             : "/sbin/halt -h -p",
+      "iso_disk"                                     : "[AI_Insurgency_Test_Images] iso/",
+      "floppy_dirs"                                  : null,
+      "floppy_files"                                 : null,
+      "boot_command"                                 : null,
+
+      "iso_name"                                     : null,
+      "puppet_aio"                                   : null,
+      "packer_vcenter_host"                          : null,
+      "packer_vcenter_username"                      : null,
+      "packer_vcenter_password"                      : null,
+      "packer_vcenter_dc"                            : null,
+      "packer_vcenter_cluster"                       : null,
+      "packer_vcenter_datastore"                     : null,
+      "packer_vcenter_folder"                        : null,
+      "packer_vcenter_net"                           : null,
+      "packer_vcenter_insecure"                      : null,
+
+      "packer_sha"                                   : "{{env `PACKER_SHA`}}",
+
+      "convert_to_template"                          : "false",
+      "boot_order"                                   : "disk,cdrom",
+      "communicator_protocol"                        : "ssh",
+
+      "vmware_base_required_modules"                 : "saz-ssh puppetlabs-stdlib",
+  
+      "vmware_base_vmx_data_memsize"                 : "512",
+      "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
+      "vmware_base_vmx_data_numvcpus"                : "1",
+      "vmware_base_vmx_ehci_present"                 : "FALSE",
+      "vmware_base_vm_usb_present"                   : "FALSE" ,
+      "vmware_base_vm_scsi0_present"                 : "TRUE",
+      "vmware_base_vm_smc_present"                   : "",
+      "vmware_base_vm_hpet0_present"                 : "",
+      "vmware_base_vm_ich7m_present"                 : "",                     
+      "vmware_base_vm_firmware"                      : "",
+      "vmware_base_vmx_keyboard_and_mouse_profile"   : "",
+      "vmware_base_vm_disk_adapter_type"             : "pvscsi",
+      "vmware_base_vm_vmx_hardware_version"          : "13",
+      "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
+      "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
+
+      "vmware_vsphere_nocm_required_modules"         : null,
+    
+      "qa_root_passwd"                               : "{{env `QA_ROOT_PASSWD`}}",
+      "qa_root_passwd_plain"                         : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
+
+    
+      "ssh_username"                                 : "root",
+      "ssh_password"                                 : "puppet",
+      "inject_http_seed_in_boot_command"             : "false",
+      "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh",
+
+      "support_status"                               : "puppet_maintained",
+      "tools_upload_flavor"                          : "linux",
+      "project_root"                                 : "../../../.."
+    },
+
+ "builders": [
+    {
+      "type"                                         : "vsphere-iso",
+
+      "communicator"                                 : "{{user `communicator_protocol`}}",
+      "ssh_username"                                 : "{{user `ssh_username`}}",
+      "ssh_password"                                 : "{{user `ssh_password`}}",
+     
+
+      "name"                                         : "vcenter-iso",
+      "vm_name"                                      : "{{user `template_name`}}-{{user `version`}}",
+      "vm_version"                                   : "{{user `vmware_base_vm_vmx_hardware_version`}}",
+      "notes"                                        : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}} OS Type: {{user `template_os`}}",
+
+      "vcenter_server"                               : "{{user `packer_vcenter_host`}}",
+      "insecure_connection"                          : "{{user `packer_vcenter_insecure`}}",
+      "username"                                     : "{{user `packer_vcenter_username`}}",
+      "password"                                     : "{{user `packer_vcenter_password`}}",
+      "datacenter"                                   : "{{user `packer_vcenter_dc`}}",
+      "cluster"                                      : "{{user `packer_vcenter_cluster`}}",
+      "convert_to_template"                          : "{{user `convert_to_template`}}",
+      "folder"                                       : "{{user `packer_vcenter_folder`}}",
+      "firmware"                                     : "{{user `vmware_base_vm_firmware`}}",
+      "CPUs"                                         : "{{user `vmware_base_vmx_data_numvcpus`}}",
+      "CPU_limit"                                    : -1,
+      "RAM"                                          : "{{user `vmware_base_vmx_data_memsize`}}",
+      "RAM_reserve_all"                              : "{{user `RAM_reserve_all`}}",
+      "network"                                      : "{{user `packer_vcenter_net`}}",
+      "network_card"                                 : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
+      "guest_os_type"                                : "{{user `template_os`}}",
+      "datastore"                                    : "{{user `packer_vcenter_datastore`}}",
+      "disk_controller_type"                         : "{{user `vmware_base_vm_disk_adapter_type`}}",
+      "disk_thin_provisioned"                        : "{{user `disk_thin_provisioned`}}",
+      "disk_size"                                    : "{{user `disk_size`}}",
+      "boot_order"                                   : "{{user `boot_order`}}",
+      "boot_wait"                                    : "{{user `vmware_base_boot_wait`}}",
+      "host"                                         : "",
+      "boot_command"                                 : "{{$flag:= user `inject_http_seed_in_boot_command`}}{{$bootCmd:= user `boot_command`}}{{if eq $flag `true`}}{{$seed:= printf \"%s:%d\" .HTTPIP .HTTPPort}}{{$seed | printf $bootCmd}}{{else}}{{$bootCmd}}{{end}}",
+
+      "shutdown_command"                             : "{{user `shutdown_command`}}",
+      "shutdown_timeout"                             : "{{user `shutdown_timeout`}}",
+
+      "floppy_files"                                 : "{{user `floppy_files`}}",
+      "floppy_dirs"                                  : "{{user `floppy_dirs`}}",
+      "iso_paths"                                    : ["{{user `iso_disk`}}{{user `iso_name`}}"],
+
+      "configuration_parameters": {
+        "annotation"                                 : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
+
+        "gui.fitguestusingnativedisplayresolution"   : "FALSE",
+        "devices.hotplug"                            : "false",
+        "vcpu.hotadd"                                : "TRUE",
+        "mem.hotadd"                                 : "TRUE",
+
+        "tools.syncTime"                             : "FALSE",
+        "time.synchronize.continue"                  : "FALSE",
+        "time.synchronize.restore"                   : "FALSE",
+        "time.synchronize.resume.disk"               : "FALSE",
+        "time.synchronize.shrink"                    : "FALSE",
+        "time.synchronize.tools.startup"             : "FALSE",
+        "time.synchronize.tools.enable"              : "FALSE",
+        "time.synchronize.resume.host"               : "FALSE",
+
+        "svga.vramSize"                              : "134217728",
+        "svga.autodetect"                            : "FALSE",
+        "svga.maxWidth"                              : "1680",
+        "svga.maxHeight"                             : "1050",
+
+        "memsize"                                    : "{{user `vmware_base_vmx_data_memsize`}}",
+        "cpuid.coresPerSocket"                       : "{{user `vmware_base_vmx_data_cpuid_coresPerSocket`}}",
+        "numvcpus"                                   : "{{user `vmware_base_vmx_data_numvcpus`}}",
+        "keyboardAndMouseProfile"                    : "{{user `vmware_base_vmx_keyboard_and_mouse_profile`}}",
+        "ethernet0.virtualDev"                       : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
+        "ethernet0.pciSlotNumber"                    : "{{user `vmware_base_vmx_data_ethernet0_pciSlotNumber`}}",
+        "ehci.present"                               : "{{user `vmware_base_vmx_ehci_present`}}",
+        "hpet0.present"                              : "{{user `vmware_base_vm_hpet0_present`}}",
+        "ich7m.present"                              : "{{user `vmware_base_vm_ich7m_present`}}",
+        "scsi0.present"                              : "{{user `vmware_base_vm_scsi0_present`}}",
+        "smc.present"                                : "{{user `vmware_base_vm_smc_present`}}",
+        "usb.present"                                : "{{user `vmware_base_vm_usb_present`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type"                                         : "shell",
+      "execute_command"                              : "{{.Vars}} bash '{{.Path}}' {{user `vmware_base_required_modules`}}",
+      "environment_vars"                             : [
+                                                          "PUPPET_AIO={{user `puppet_aio`}}",
+                                                          "PC_REPO={{user `pc_repo`}}"
+                                                       ],
+      "scripts"                                      : "{{user `vmware_base_provisioning_scripts`}}"
+    },  
+  
+    {
+      "type"                                         : "puppet-masterless",
+      "execute_command"                              : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                                       : {
+        "provisioner"                                : "{{user `provisioner`}}"
+      },
+      "manifest_dir"                                 : "{{user `project_root`}}/manifests",
+      "manifest_file"                                : "{{user `project_root`}}/manifests/base.pp"
+    },
+
+    {
+      "type"                                         : "shell",
+      "execute_command"                              : "{{.Vars}} bash '{{.Path}}' {{user `vmware_vsphere_nocm_required_modules`}}",
+      "environment_vars"                             : [
+                                                         "PUPPET_AIO={{user `puppet_aio`}}",
+                                                         "PC_REPO={{user `pc_repo`}}"
+                                                       ],
+      "scripts"                                      : [
+                                                         "{{user `project_root`}}/scripts/bootstrap-aio.sh"
+                                                       ]
+    },
+    {
+      "type"                                         : "file",
+      "source"                                       : "{{user `project_root`}}/hiera",
+      "destination"                                  : "/tmp/packer-puppet-masterless"
+    },
+
+    {
+      "type"                                         : "puppet-masterless",
+      "execute_command"                              : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin puppet apply --verbose --detailed-exitcodes --hiera_config='/tmp/packer-puppet-masterless/hiera/hiera.yaml' --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
+      "facter"                                       : {
+        "provisioner"                                : "{{user `provisioner`}}",
+        "qa_root_passwd"                             : "{{user `qa_root_passwd`}}",
+        "qa_root_passwd_plain"                       : "{{user `qa_root_passwd_plain`}}"
+      },
+      "manifest_dir"                                 : "{{user `project_root`}}/manifests",
+      "manifest_file"                                : "{{user `project_root`}}/manifests/vsphere/nocm.pp"
+    },
+
+    {
+      "type"                                       : "shell",
+      "environment_vars"                           : [
+                                                        "PUPPET_AIO={{user `puppet_aio`}}",
+                                                        "PC_REPO= {{user `pc_repo` }}"
+                                                     ],
+      "scripts"                                    : [
+                                                        "{{user `project_root`}}/scripts/cleanup-aio.sh",
+                                                        "{{user `project_root`}}/scripts/cleanup-packer.sh",
+                                                        "{{user `project_root`}}/scripts/cleanup-scrub.sh"
+                                                     ]
+    }
+  ]
+}
