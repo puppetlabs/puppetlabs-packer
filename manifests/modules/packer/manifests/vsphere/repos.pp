@@ -83,7 +83,7 @@ class packer::vsphere::repos inherits packer::vsphere::params {
         $base_url = $::operatingsystemmajrelease ? {
           # TODO: RHEL 8 is beta atm, we need to update with some local mirros when available
           '8' => "https://downloads.redhat.com/redhat/rhel/rhel-8-beta",
-          '7' => "${repo_mirror}/rpm__remote_rhel-72",
+          '7' => "${repo_mirror}/rpm-rhel-7-${::architecture}",
           '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
           '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
         }
@@ -123,6 +123,13 @@ class packer::vsphere::repos inherits packer::vsphere::params {
             baseurl  => "${base_url}/appstream/${::architecture}",
             gpgcheck => "1",
             gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+          }
+        } elsif $::operatingsystemmajrelease == "7" {
+          yumrepo { "localmirror-everything":
+            descr    => "localmirror-everything",
+            baseurl  => "${base_url}",
+            gpgcheck => "1",
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
         } elsif $::operatingsystemmajrelease == "5" {
           yumrepo { "localmirror-os":
