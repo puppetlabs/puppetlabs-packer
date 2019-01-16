@@ -2,7 +2,7 @@
     "template_name"                         : "redhat-fips-7.2-x86_64",
     "template_os"                           : "rhel7-64",
     "beakerhost"                            : "redhatfips7-64",
-    "version"                               : "0.0.3",
+    "version"                               : "0.0.4",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-server-7.2-x86_64-dvd.iso",
     "iso_checksum"                          : "03f3a0291634335f6995534d829bd21ffaa0d000004dfeb1b2fb81052d64a4d5",
     "iso_checksum_type"                     : "sha256",
