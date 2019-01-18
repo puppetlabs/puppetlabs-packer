@@ -63,7 +63,7 @@ do {
     } else {
       # All other versions - mainly 2012r2 use this version
       Write-Output "Running PSWindows Update - Non Verbose Mode"
-      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
+      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot -Verbose
     }
     if (Test-PendingReboot) { 
       Invoke-Reboot 
