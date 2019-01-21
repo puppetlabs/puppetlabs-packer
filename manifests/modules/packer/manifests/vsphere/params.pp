@@ -1,3 +1,7 @@
+# == Class: packer::vsphere::params
+#
+# Default vsphere parameter values for the packer module 
+#
 class packer::vsphere::params {
 
   # NOTE: The os_mirror parameter should be removed once all of the repos
@@ -14,10 +18,10 @@ class packer::vsphere::params {
       $authorized_keys_path='/var/root/.ssh/authorized_keys'
     }
     default: {
-       $group = 'root'
-       $mode = '0755'
-       $authorized_keys_path='/root/.ssh/authorized_keys'
-       $ssh_path='/root/.ssh'
+      $group = 'root'
+      $mode = '0755'
+      $authorized_keys_path='/root/.ssh/authorized_keys'
+      $ssh_path='/root/.ssh'
     }
   }
 
@@ -112,7 +116,7 @@ class packer::vsphere::params {
 
     # TODO check if this can work with Solaris 11 main template
     'Solaris': {
-      if $::operatingsystemrelease in ['11.4'] {
+      if $::operatingsystemrelease in ['11.4', '11.2'] {
         $ruby_package       = [ 'ruby' ]
         $bootstrap_file_source = 'solaris.rb.erb'
         $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
@@ -128,7 +132,7 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $startup_file_perms    = '0644'
       $startup_file_plist = '/Library/LaunchDaemons/local.localhost.startup.plist'
-      $startup_file_plist_source = 'local.localhost.startup.plist'      
+      $startup_file_plist_source = 'local.localhost.startup.plist'
     }
 
     default: {

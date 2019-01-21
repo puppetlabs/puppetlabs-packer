@@ -108,7 +108,7 @@ class packer::vsphere inherits packer::vsphere::params {
     
   #TODO check if this works with existing template for solaris 11
   if $::operatingsystem == 'Solaris' {
-    if $::operatingsystemrelease in ['11.4'] {
+    if $::operatingsystemrelease in ['11.4', '11.2'] {
       file { "/etc/rc2.d/S99${startup_file_source}":
           ensure => 'link',
           target => $startup_file,

@@ -4,6 +4,8 @@
     "floppy_dirs"                          : "",
     "floppy_files"                         : "",
     "vmware_base_vmx_data_ethernet0_virtualDev"  : "e1000",
-    "tools_upload_flavor"                  : "solaris"    ,
-    "http_directory"                       : "../common/files"
+    "tools_upload_flavor"                  : "solaris",
+    "vmware_base_vmx_data_memsize"          : "4096",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2"
 }
