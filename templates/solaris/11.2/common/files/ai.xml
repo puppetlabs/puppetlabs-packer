@@ -49,8 +49,8 @@
 	<name>pkg:/entire@0.5.11-0.build#</name>
       -->
       <software_data action="install">
-        <name>pkg:/server_install</name>
-        <name>pkg:/release/evaluation</name>
+       <name>pkg:/entire@0.5.11,5.11-0.175.2.0.0.42.0:20140624T193832Z</name>
+        <name>pkg:/server_install@0.1,5.11-0.166:20110521T050851Z</name>        
       </software_data>
       <!--
 	    babel_install and slim_install are group packages used to

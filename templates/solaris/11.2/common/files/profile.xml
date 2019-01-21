@@ -27,7 +27,7 @@ Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
     <instance name="default" enabled="true">
       <property_group name="root_account">
         <!-- root password is "root" -->
-        <propval name="password" value="$5$mcNmQhWw$Twllt/J1M29Ow/KluqmvYadW9VvBfpc2gNvz.tXeLS8"/>
+        <propval name="password" value="$1$af88SE4u$52lu6hjmRcyQw56./.Hdb."/>
         <propval name="type" value="normal"/>
       </property_group>
     </instance>
@@ -35,7 +35,7 @@ Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
   <service version="1" name="system/identity">
     <instance enabled="true" name="node">
       <property_group name="config">
-        <propval name="nodename" value="vagrant-solaris"/>
+        <propval name="nodename" value="vmware-solaris"/>
       </property_group>
     </instance>
   </service>

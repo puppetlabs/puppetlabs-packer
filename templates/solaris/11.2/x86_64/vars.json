@@ -1,0 +1,13 @@
+{
+    "template_name"                         : "solaris-112-x86_64",
+    "template_os"                           : "solaris11-64",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/sol-11_2-ai-x86.iso",                                              
+    "iso_checksum"                          : "2b3859bb7532cfe42214349dff9fcc23",
+    "iso_checksum_type"                     : "md5",    
+    "puppet_aio"                            : "http://builds.delivery.puppetlabs.net/puppet-agent/5.5.0/artifacts/solaris/11/PC1/puppet-agent@5.5.0,5.11-1.i386.p5p",    
+    "shutdown_command"                      : "/usr/sbin/poweroff",
+    "inject_http_seed_in_boot_command"      : "true",
+    "tools_upload_flavor"                   : "solaris",
+    "version"                               : "0.0.2",
+    "beakerhost"                            : "solaris112-32"
+}

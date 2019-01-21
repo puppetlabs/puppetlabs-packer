@@ -3,7 +3,6 @@
 tmp_dir="/tmp/packer-puppet-masterless"
 mkdir -p "$tmp_dir"
 # Download and install puppet-agent
-
 if [ -n "${PC_REPO}" ]; then
   echo "Downloading and installing AIO from repo..."
   # Determin if this is RPM or DEB and Do the Right Thing (tm)
@@ -63,6 +62,13 @@ elif [ -n "${PUPPET_AIO}" ]; then
     PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
     softwareupdate -i "$PROD" --verbose
     rm $PLACEHOLDER
+  elif [[ ${PUPPET_AIO} == *".p5p" ]]; then
+    sleep 20
+    # Download puppet agent for solaris from PUPPET_AIO    
+    curl --silent "${PUPPET_AIO}" -o $tmp_dir/puppet-agent.p5p  
+    pkg install -g file:///$tmp_dir/puppet-agent.p5p pkg://puppetlabs.com/puppet-agent
+    # Set puppet bin to PATH
+    export PATH=$PATH:/opt/puppetlabs/bin    
   else
     echo "Unsupported AIO package format" >&2
     exit 1
@@ -83,9 +89,7 @@ printf 'Puppet ' ; $PUPPET_CMD --version
 # Installed required modules
 for i in $@
 do
- 
   $PUPPET_CMD module install $i --modulepath=/tmp/packer-puppet-masterless/manifests/modules
-  
   # TODO: Check if this is still an issue once we switch over to the SLES 15 GA image
   sleep_time=20
   echo "Sleeping for ${sleep_time} seconds to avoid transient networking failures ..."
