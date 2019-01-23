@@ -8,10 +8,10 @@ class windows_template::policies::local_group_policies ()
     windows_group_policy::gpupdate { 'GPUpdate':
     }
 
-    windows_group_policy::local::machine_client_side_extensions { "MachineGCE":
+    windows_group_policy::local::machine_client_side_extensions { 'MachineGCE':
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
-    windows_group_policy::local::user_client_side_extensions { "UserGCE":
+    windows_group_policy::local::user_client_side_extensions { 'UserGCE':
         notify => Windows_group_policy::Gpupdate['GPUpdate'],
     }
 
@@ -222,7 +222,7 @@ class windows_template::policies::local_group_policies ()
 
     # Screen out these policies for anything earlier than Win-2012r2
     #
-    if ("$::kernelmajversion" == '10.0' ) {
+    if ($::kernelmajversion == '10.0' ) {
         # Mostly Win-10 policies.
         #  1. Turn off Tile Notifications
         windows_group_policy::local::user { 'NotileApplicationNotification':

@@ -10,7 +10,7 @@ class windows_template::apps::gitforwin()
     $gitforwininstaller = 'Git-2.20.1-64-bit.exe'
   }
 
-  download_file { "${gitforwininstaller}" :
+  download_file { $gitforwininstaller :
     url                   => "${gitforwindownloadurl}/${gitforwininstaller}",
     destination_directory => $::packer_downloads
   }

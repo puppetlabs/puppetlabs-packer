@@ -6,9 +6,13 @@
 # TODO: Consolidate this and the vsphere repos manifest into a single
 # module, which can be conditionally included in base.pp for targeted
 # platforms and for all cases in vsphere.pp.
+# == Class: packer::repos
+#
+# A define that manages repos
+#
 class packer::repos {
 
-  if $::operatingsystem == 'RedHat' {
+  if $facts['operatingsystem'] == 'RedHat' {
 
     $repo_mirror = 'https://artifactory.delivery.puppetlabs.net/artifactory'
     $os_mirror   = 'http://osmirror.delivery.puppetlabs.net'
@@ -22,70 +26,70 @@ class packer::repos {
     # TODO: RHEL 5 needs further refactoring
     $base_url = $::operatingsystemmajrelease ? {
       # TODO: RHEL 8 is beta atm, we need to update with some local mirros when available
-      '8' => "https://downloads.redhat.com/redhat/rhel/rhel-8-beta",
+      '8' => 'https://downloads.redhat.com/redhat/rhel/rhel-8-beta',
       '7' => "${repo_mirror}/rpm__remote_rhel-7",
       '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
       '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
     }
 
-    if $::operatingsystemmajrelease == "8" {
-      yumrepo { "rhel-8-for-x86_64-baseos-beta-rpms":
-        descr    => "rhel-8-for-x86_64-baseos-beta-rpms",
+    if $facts['operatingsystemmajrelease'] == '8' {
+      yumrepo { 'rhel-8-for-x86_64-baseos-beta-rpms':
+        descr    => 'rhel-8-for-x86_64-baseos-beta-rpms',
         baseurl  => "${base_url}/baseos/${::architecture}",
-        gpgcheck => "1",
-        gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        gpgcheck => '1',
+        gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
 
-      yumrepo { "rhel-8-for-x86_64-appstream-beta-rpms":
-        descr    => "rhel-8-for-x86_64-appstream-beta-rpms",
+      yumrepo { 'rhel-8-for-x86_64-appstream-beta-rpms':
+        descr    => 'rhel-8-for-x86_64-appstream-beta-rpms',
         baseurl  => "${base_url}/appstream/${::architecture}",
-        gpgcheck => "1",
-        gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        gpgcheck => '1',
+        gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
-    } elsif $::operatingsystemmajrelease == "5" {
-      yumrepo { "localmirror-os":
-        descr    => "localmirror-os",
+    } elsif $facts['operatingsystemmajrelease'] == '5' {
+      yumrepo { 'localmirror-os':
+        descr    => 'localmirror-os',
         baseurl  => "${base_url}/os",
-        gpgcheck => "1",
+        gpgcheck => '1',
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
-      yumrepo { "localmirror-optional":
-        descr    => "localmirror-optional",
+      yumrepo { 'localmirror-optional':
+        descr    => 'localmirror-optional',
         baseurl  => "${base_url}/optional",
-        gpgcheck => "1",
+        gpgcheck => '1',
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
       }
 
-      yumrepo { "localmirror-extras":
-        descr    => "localmirror-extras",
+      yumrepo { 'localmirror-extras':
+        descr    => 'localmirror-extras',
         baseurl  => "${base_url}/extras",
-        gpgcheck => "1",
+        gpgcheck => '1',
         gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-     }
-   } else {
+      }
+    } else {
 
-     yumrepo { "localmirror-os":
-       descr    => "localmirror-os",
-       baseurl  => "${base_url}-os",
-       gpgcheck => "1",
-       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-     }
+      yumrepo { 'localmirror-os':
+        descr    => 'localmirror-os',
+        baseurl  => "${base_url}-os",
+        gpgcheck => '1',
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
 
-     yumrepo { "localmirror-optional":
-       descr    => "localmirror-optional",
-       baseurl  => "${base_url}-optional",
-       gpgcheck => "1",
-       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-     }
+      yumrepo { 'localmirror-optional':
+        descr    => 'localmirror-optional',
+        baseurl  => "${base_url}-optional",
+        gpgcheck => '1',
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
 
-     yumrepo { "localmirror-extras":
-       descr    => "localmirror-extras",
-       baseurl  => "${base_url}-extras",
-       gpgcheck => "1",
-       gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-     }
-   }
+      yumrepo { 'localmirror-extras':
+        descr    => 'localmirror-extras',
+        baseurl  => "${base_url}-extras",
+        gpgcheck => '1',
+        gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+      }
+    }
 
   }
 }

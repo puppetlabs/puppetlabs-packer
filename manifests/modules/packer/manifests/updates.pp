@@ -1,3 +1,7 @@
+# == Class: packer::updates
+#
+# A define that manages puppet modules
+#
 class packer::updates {
 
   $linux_pkgs = [
@@ -36,7 +40,7 @@ class packer::updates {
     'kernel',
   ]
 
-  if $::osfamily == 'Debian' {
+  if $facts['osfamily'] == 'Debian' {
     $pkgs_to_update = $linux_pkgs + $debian_pkgs
   } elsif $::osfamily == 'Redhat' and $::operatingsystemmajrelease == '6' {
     $pkgs_to_update = $linux_pkgs + $redhat6_pkgs
@@ -48,10 +52,10 @@ class packer::updates {
     $pkgs_to_update = $linux_pkgs + $solaris_pkgs
   }
   # Macos does not install any of the packages
-  if $::osfamily != 'Darwin' {
+  if $facts['osfamily'] != 'Darwin' {
     package { $pkgs_to_update: ensure => latest; }
   }
-  if $::osfamily == 'Suse' {
+  if $facts['osfamily'] == 'Suse' {
     file { '/etc/zypp/locks':
       ensure => absent
     }

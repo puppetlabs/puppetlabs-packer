@@ -1,4 +1,11 @@
-class packer::vagrant inherits packer::vagrant::params {
+# == Class: packer::vagrant
+#
+# A define that manages vagrant
+#
+class packer::vagrant(
+  $home_base = $packer::vagrant::params::home_base,
+  $sudoers_file = $packer::vagrant::params::sudoer
+) inherits packer::vagrant::params {
 
   group { 'vagrant':
     ensure => present,
@@ -23,10 +30,10 @@ class packer::vagrant inherits packer::vagrant::params {
   }
 
   ssh_authorized_key { 'vagrant':
-    ensure  => present,
-    user    => 'vagrant',
-    key     => 'AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==',
-    type    => 'ssh-rsa',
+    ensure => present,
+    user   => 'vagrant',
+    key    => 'AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==',
+    type   => 'ssh-rsa',
   }
 
   class { 'sudo': }
@@ -36,9 +43,9 @@ class packer::vagrant inherits packer::vagrant::params {
   }
 
   file_line { "allow ${sudoers_file} notty":
-    path   => $sudoers_file,
-    line   => '#Defaults requiretty',
-    match  => 'Defaults\s+requiretty',
+    path  => $sudoers_file,
+    line  => '#Defaults requiretty',
+    match => 'Defaults\s+requiretty',
   }
 
 }

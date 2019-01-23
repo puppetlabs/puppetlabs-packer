@@ -30,8 +30,8 @@ class windows_template::registry::machine ()
     file { 'c:/crash_dumps':
       ensure => 'directory',
       mode   => '0750',
-      owner  => "${::administrator_sid}",
-      group  => "${::administrator_grp_sid}"
+      owner  => $::administrator_sid,
+      group  => $::administrator_grp_sid
     }
 
     # Disable IE ESC for admins
@@ -76,25 +76,25 @@ class windows_template::registry::machine ()
     registry::value { 'VMPOOLER_Build_Date':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Build_Date',
-        data  => "${build_date}",
+        data  => $build_date,
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_SHA':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_SHA',
-        data  => "${packer_sha}",
+        data  => $packer_sha,
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template',
-        data  => "${packer_template_name}",
+        data  => $packer_template_name,
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template_Type':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template_Type',
-        data  => "${packer_template_type}",
+        data  => $packer_template_type,
         type  => 'string'
     }
 
@@ -109,7 +109,7 @@ class windows_template::registry::machine ()
     # Sysprep Autounattend, so keeping the key in place even though we have moved to scheduled tasks for the startup
     # script.
     #
-    if ( "${windows_install_option}" == 'Core' ) {
+    if ( $windows_install_option == 'Core' ) {
         registry::value { 'WinCoreLogon':
           key   => 'HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',
           value => 'Shell',
@@ -119,7 +119,7 @@ class windows_template::registry::machine ()
         }
     }
 
-    if ("$::operatingsystemrelease" == '2008R2') {
+    if ($::operatingsystemrelease == '2008R2') {
       # WMF5 on 2008R2 causes an issue with sysprep, so set this registry key
       # https://social.technet.microsoft.com/Forums/en-US/a37d2158-1b8b-412e-ad49-02fe0ba573c2/sysprep-fails-on-windows-2008-r2-after-installing-windows-management-framework-50?forum=mdt
       registry::value { 'WMFStreamProvider':

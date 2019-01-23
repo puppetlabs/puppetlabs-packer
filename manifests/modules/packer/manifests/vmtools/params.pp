@@ -1,16 +1,20 @@
+# == Class: packer::vmtools::params
+#
+# A define that manages paramters for vmtools
+#
 class packer::vmtools::params {
-  
-  case $::osfamily{
+
+  case $facts['osfamily']{
     'Darwin' :{
       $unmount_command = 'hdiutil unmount /tmp/vmtools ; rmdir /tmp/vmtools'
     }
     default : {
-      $unmount_command = 'umount /tmp/vmtools ; rmdir /tmp/vmtools' 
+      $unmount_command = 'umount /tmp/vmtools ; rmdir /tmp/vmtools'
     }
   }
 
 
-  case $::osfamily {
+  case $facts['osfamily'] {
     'Redhat' : {
       $root_home = '/root'
       $required_packages = [ 'kernel-devel', 'gcc' ]
@@ -33,13 +37,13 @@ class packer::vmtools::params {
 
     'Darwin' : {
       $root_home = '/var/root'
-      $required_packages = []      
+      $required_packages = []
     }
 
     default : {
       fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
     }
-  } 
+  }
 
   case $::provisioner {
     virtualbox: {
@@ -48,10 +52,10 @@ class packer::vmtools::params {
     }
 
     vmware: {
-      if $::osfamily == 'Solaris' {
+      if $facts['osfamily'] == 'Solaris' {
         $tools_iso   = 'solaris.iso'
       }
-      elsif $::osfamily == 'Darwin' {
+      elsif $facts['osfamily'] == 'Darwin' {
         $tools_iso = 'darwin.iso'
       }
 
@@ -59,13 +63,13 @@ class packer::vmtools::params {
         $tools_iso   = 'linux.iso'
       }
 
-      if $::osfamily == 'Solaris' {
+      if $facts['osfamily'] == 'Solaris' {
         $install_cmd = 'tar zxf /tmp/vmtools/vmware-solaris-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
       }
-      elsif $::osfamily == 'Darwin' {
+      elsif $facts['osfamily'] == 'Darwin' {
         $install_cmd = 'installer -pkg /tmp/vmtools/Install\ VMware\ Tools.app/Contents/Resources/VMware\ Tools.pkg -target /'
       }
-       else {
+      else {
         $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
       }
     }

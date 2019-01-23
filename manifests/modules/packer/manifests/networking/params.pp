@@ -1,18 +1,23 @@
+# == Class: packer::networking::params
+#
+# A define that manages networking paramterers
+#
 class packer::networking::params {
 
-  case $::osfamily {
+  case $facts['osfamily'] {
     debian: {
       $udev_rule     = '/etc/udev/rules.d/70-persistent-net.rules'
       $udev_rule_gen = '/lib/udev/rules.d/75-persistent-net-generator.rules'
     }
 
     redhat: {
-      case $::operatingsystemrelease {
+      case $facts['operatingsystemrelease'] {
         '7.0', '7.0.1406', '7.1.1503', '7.2.1511', '7.2', '7.3.1611', '7.4.1708', '7.5.1804', '8.0': {
           case $::provisioner {
             'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
             'vmware':     { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens33' }
             'libvirt':    { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-eth0' }
+            default : {}
           }
 
           $udev_rule     = '/etc/udev/rules.d/70-persistent-net.rules'
@@ -29,6 +34,7 @@ class packer::networking::params {
             'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
             'libvirt':    { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens4' }
             'vmware':     { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-lo' }
+            default: {}
           }
           $udev_rule     = undef
           $udev_rule_gen = undef

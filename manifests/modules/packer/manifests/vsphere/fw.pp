@@ -1,6 +1,10 @@
+# == Class: packer::fw
+#
+# A define that manages firewall
+#
 class packer::vsphere::fw {
 
-  if ($::osfamily == 'RedHat')
+  if ($facts['osfamily'] == 'RedHat')
   and ($::operatingsystemmajrelease in ['6', '7']) {
     class { 'firewall':
       ensure => stopped,
@@ -10,7 +14,7 @@ class packer::vsphere::fw {
   # RHEL 8 comes with firewalld, we need this specific declaration because puppetlabs-firewall only manages iptables
   if ($::osfamily == 'RedHat')
   and ($::operatingsystemmajrelease == '8') {
-    service { "firewalld":
+    service { 'firewalld':
       ensure => stopped,
       enable => false
     }

@@ -8,9 +8,9 @@ class packer::vsphere::params {
   # are moved over to artifactory
   $repo_mirror = 'https://artifactory.delivery.puppetlabs.net/artifactory'
   $os_mirror = 'http://osmirror.delivery.puppetlabs.net'
-  $loweros     = downcase($::operatingsystem)
+  $loweros     = downcase($facts['operatingsystem'])
 
-  case $::operatingsystem {
+  case $facts['operatingsystem'] {
     'Darwin': {
       $group = 'admin'
       $mode = '0644'
@@ -25,15 +25,16 @@ class packer::vsphere::params {
     }
   }
 
-  case $::operatingsystem {
+  case $facts['operatingsystem'] {
     'Ubuntu': {
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
-      if $::operatingsystemrelease in ['18.04', '18.10'] {
+      if $facts['operatingsystemrelease'] in ['18.04', '18.10'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
-      } else {
+      }
+      else {
         $startup_file          = '/etc/rc.local'
         $startup_file_source   = 'rc.local'
       }
@@ -52,8 +53,8 @@ class packer::vsphere::params {
       $repo_name             = 'ubuntu__remote'
       $repo_list             = 'main restricted universe multiverse'
       $security_repo_name    = 'ubuntu__remote'
-      $security_release      = "${lsbdistcodename}-security"
-      $updates_release       = "${lsbdistcodename}-updates"
+      $security_release      = "${facts['lsbdistcodename']}-security"
+      $updates_release       = "${facts['lsbdistcodename']}-updates"
     }
 
     'Debian': {
@@ -71,8 +72,8 @@ class packer::vsphere::params {
       $repo_name             = 'debian'
       $repo_list             = 'main contrib non-free'
       $security_repo_name    = 'debian-security'
-      $security_release      = "${lsbdistcodename}/updates"
-      $updates_release       = "${lsbdistcodename}-updates"
+      $security_release      = "${facts['lsbdistcodename']}/updates"
+      $updates_release       = "${facts['lsbdistcodename']}-updates"
     }
 
     'CentOS', 'Redhat', 'Scientific', 'OracleLinux': {
@@ -85,7 +86,7 @@ class packer::vsphere::params {
     }
 
     'SLES': {
-      if $::operatingsystemmajrelease in ['15'] {
+      if $facts['operatingsystemmajrelease'] in ['15'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
@@ -100,7 +101,7 @@ class packer::vsphere::params {
     }
 
     'Fedora': {
-      if $::operatingsystemrelease in ['28', '29'] {
+      if $facts['operatingsystemrelease'] in ['28', '29'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
@@ -116,7 +117,7 @@ class packer::vsphere::params {
 
     # TODO check if this can work with Solaris 11 main template
     'Solaris': {
-      if $::operatingsystemrelease in ['11.4', '11.2'] {
+      if $facts['operatingsystemrelease'] in ['11.4', '11.2'] {
         $ruby_package       = [ 'ruby' ]
         $bootstrap_file_source = 'solaris.rb.erb'
         $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
