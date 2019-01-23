@@ -3,11 +3,11 @@
 # A define that manages vmtools installation
 #
 class packer::vmtools(
-    $required_packages = $packer::vmtools::params::required_packages,
-    $root_home = $packer::vmtools::params::root_home,
-    $tools_iso = $packer::vmtools::params::tools_iso,
-    $unmount_command = $packer::vmtools::params::unmount_command,
-    $install_cmd = $packer::vmtools::params::install_cmd
+  Optional[Tuple]  $required_packages = $packer::vmtools::params::required_packages,
+  Optional[String]  $root_home = $packer::vmtools::params::root_home,
+  Optional[String]  $tools_iso = $packer::vmtools::params::tools_iso,
+  Optional[String]  $unmount_command = $packer::vmtools::params::unmount_command,
+  Optional[String]  $install_cmd = $packer::vmtools::params::install_cmd
 
 ) inherits packer::vmtools::params {
 

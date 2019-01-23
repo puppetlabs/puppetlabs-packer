@@ -22,7 +22,7 @@ class packer::vmtools::params {
 
     'Debian' : {
       $root_home = '/root'
-      $required_packages = [ "linux-headers-${::kernelrelease}" ]
+      $required_packages = [ "linux-headers-${facts['kernelrelease']}" ]
     }
 
     'Suse' : {
@@ -41,7 +41,7 @@ class packer::vmtools::params {
     }
 
     default : {
-      fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
+      fail( "Unsupported platform: ${facts['osfamily']}/${facts['operatingsystem']}" )
     }
   }
 
@@ -64,13 +64,16 @@ class packer::vmtools::params {
       }
 
       if $facts['osfamily'] == 'Solaris' {
-        $install_cmd = 'tar zxf /tmp/vmtools/vmware-solaris-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
+        $install_cmd = 'tar zxf /tmp/vmtools/vmware-solaris-*.tar.gz && \
+        /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
       }
       elsif $facts['osfamily'] == 'Darwin' {
-        $install_cmd = 'installer -pkg /tmp/vmtools/Install\ VMware\ Tools.app/Contents/Resources/VMware\ Tools.pkg -target /'
+        $install_cmd = 'installer -pkg /tmp/vmtools/Install\ VMware\ Tools.app \
+        /Contents/Resources/VMware\ Tools.pkg \-target /'
       }
       else {
-        $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && rm -rf /tmp/vmware-tools-distrib'
+        $install_cmd = 'tar zxf /tmp/vmtools/VMwareTools-*.tar.gz && /tmp/vmware-tools-distrib/vmware-install.pl --default && \
+        rm -rf /tmp/vmware-tools-distrib'
       }
     }
 

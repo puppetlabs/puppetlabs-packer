@@ -42,7 +42,7 @@ class packer::updates {
 
   if $facts['osfamily'] == 'Debian' {
     $pkgs_to_update = $linux_pkgs + $debian_pkgs
-  } elsif $::osfamily == 'Redhat' and $::operatingsystemmajrelease == '6' {
+  } elsif $facts['osfamily'] == 'Redhat' and $facts['operatingsystemmajrelease'] == '6' {
     $pkgs_to_update = $linux_pkgs + $redhat6_pkgs
   } elsif $::osfamily == 'Redhat' {
     $pkgs_to_update = $linux_pkgs + $redhat_pkgs

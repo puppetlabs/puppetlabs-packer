@@ -3,9 +3,9 @@
 # A define that manages networking
 #
 class packer::networking(
-  $udev_rule = $packer::networking::params::udev_rule,
-  $udev_rule_gen = $packer::networking::params::udev_rule_gen,
-  $interface_script = $packer::networking::params::interface_script
+  Optional[String] $udev_rule = $packer::networking::params::udev_rule,
+  Optional[String] $udev_rule_gen = $packer::networking::params::udev_rule_gen,
+  Optional[String] $interface_script = $packer::networking::params::interface_script
 ) inherits packer::networking::params {
 
   if ( $udev_rule != undef ) {

@@ -3,16 +3,16 @@
 # A define that manages repos
 #
 class packer::vsphere::repos(
-  $periodic_file = $packer::vsphere::params::periodic_file,
-  $repo_mirror = $packer::vsphere::params::repo_mirror,
-  $repo_name = $packer::vsphere::params::repo_name,
-  $updates_release = $packer::vsphere::params::updates_release,
-  $repo_list = $packer::vsphere::params::repo_list,
-  $gpgkey = $packer::vsphere::params::gpgkey,
-  $security_repo_name = $packer::vsphere::params::security_repo_name,
-  $security_release = $packer::vsphere::params::security_release,
-  $os_mirror = $packer::vsphere::params::os_mirror,
-  $loweros = $packer::vsphere::params::loweros
+  Optional[String] $periodic_file = $packer::vsphere::params::periodic_file,
+  Optional[String] $repo_mirror = $packer::vsphere::params::repo_mirror,
+  Optional[String] $repo_name = $packer::vsphere::params::repo_name,
+  Optional[String] $updates_release = $packer::vsphere::params::updates_release,
+  Optional[String] $repo_list = $packer::vsphere::params::repo_list,
+  Optional[String] $gpgkey = $packer::vsphere::params::gpgkey,
+  Optional[String] $security_repo_name = $packer::vsphere::params::security_repo_name,
+  Optional[String] $security_release = $packer::vsphere::params::security_release,
+  Optional[String] $os_mirror = $packer::vsphere::params::os_mirror,
+  Optional[String] $loweros = $packer::vsphere::params::loweros
 ) inherits packer::vsphere::params {
 
   case $facts['osfamily'] {
@@ -104,10 +104,10 @@ class packer::vsphere::repos(
         }
       } else {
         $base_url = $facts['operatingsystem'] ? {
-          'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${::operatingsystemmajrelease}/Everything/${::architecture}/os",
-          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${::operatingsystemmajrelease}",
-          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${::operatingsystemmajrelease}/${::architecture}",
-          'OracleLinux' => "${os_mirror}/${loweros}-${::operatingsystemmajrelease}-${::architecture}/RPMS.all"
+          'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${facts['operatingsystemmajrelease']}/Everything/${facts['architecture']}/os",
+          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${facts['operatingsystemmajrelease']}",
+          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${facts['operatingsystemmajrelease']}/${facts['architecture']}",
+          'OracleLinux' => "${os_mirror}/${loweros}-${facts['operatingsystemmajrelease']}-${facts['architecture']}/RPMS.all"
         }
       }
 
@@ -201,21 +201,21 @@ class packer::vsphere::repos(
       if $facts['operatingsystem'] == 'CentOS' {
         yumrepo { 'localmirror-os':
           descr    => 'localmirror-os',
-          baseurl  => "${base_url}/os/${::architecture}",
+          baseurl  => "${base_url}/os/${facts['architecture']}",
           gpgcheck => '1',
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
 
         yumrepo { 'localmirror-updates':
           descr    => 'localmirror-updates',
-          baseurl  => "${base_url}/updates/${::architecture}",
+          baseurl  => "${base_url}/updates/${facts['architecture']}",
           gpgcheck => '1',
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
 
         yumrepo { 'localmirror-extras':
           descr    => 'localmirror-extras',
-          baseurl  => "${base_url}/extras/${::architecture}",
+          baseurl  => "${base_url}/extras/${facts['architecture']}",
           gpgcheck => '1',
           gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
         }
@@ -253,7 +253,8 @@ class packer::vsphere::repos(
       $base_url = $facts['operatingsystemrelease'] ? {
         # TODO: Mirror this repo over to artifactory
         '15.0'    => 'http://osmirror.delivery.puppetlabs.net/sles-15-gm-x86_64/RPMS.os',
-        default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
+        default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-\
+        sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
       }
 
       $gpg_check = $::operatingsystemrelease ? {
@@ -291,7 +292,7 @@ class packer::vsphere::repos(
     }
 
   default: {
-    fail( "Unsupported platform: ${::osfamily}/${::operatingsystem}" )
+    fail( "Unsupported platform: ${facts['osfamily']}/${facts['operatingsystem']}" )
     }
   }
 }

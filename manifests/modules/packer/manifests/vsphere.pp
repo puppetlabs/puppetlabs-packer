@@ -3,20 +3,19 @@
 # A define that manages vsphere
 #
 class packer::vsphere(
-  $group = $packer::vsphere::params::group,
-  $mode = $packer::vsphere::params::mode,
-  $startup_file = $packer::vsphere::params::startup_file,
-  $startup_file_source = $packer::vsphere::params::startup_file_source,
-  $startup_file_plist = $packer::vsphere::params::startup_file_plist,
-  $startup_file_plist_source = $packer::vsphere::params::startup_file_plist_source,
-  $startup_file_perms = $packer::vsphere::params::startup_file_perms,
-  $ruby_package = $packer::vsphere::params::ruby_package,
-  $ssh_path = $packer::vsphere::params::ssh_path,
-  $authorized_keys = $packer::vsphere::params::authorized_keys,
-  $authorized_keys_path = $packer::vsphere::params::authorized_keys_path,
-  $bootstrap_file = $packer::vsphere::params::bootstrap_file,
-  $bootstrap_file_source = $packer::vsphere::params::bootstrap_file_source
-
+  Optional[String] $group = $packer::vsphere::params::group,
+  Optional[String] $mode = $packer::vsphere::params::mode,
+  Optional[String] $startup_file = $packer::vsphere::params::startup_file,
+  Optional[String] $startup_file_source = $packer::vsphere::params::startup_file_source,
+  Optional[String] $startup_file_plist = $packer::vsphere::params::startup_file_plist,
+  Optional[String] $startup_file_plist_source = $packer::vsphere::params::startup_file_plist_source,
+  Optional[String] $startup_file_perms = $packer::vsphere::params::startup_file_perms,
+  Optional[Tuple] $ruby_package = $packer::vsphere::params::ruby_package,
+  Optional[String] $ssh_path = $packer::vsphere::params::ssh_path,
+  Optional[String] $authorized_keys = $packer::vsphere::params::authorized_keys,
+  Optional[String] $authorized_keys_path = $packer::vsphere::params::authorized_keys_path,
+  Optional[String] $bootstrap_file = $packer::vsphere::params::bootstrap_file,
+  Optional[String] $bootstrap_file_source = $packer::vsphere::params::bootstrap_file_source
 ) inherits packer::vsphere::params {
 
   include packer::vsphere::repos
@@ -27,14 +26,14 @@ class packer::vsphere(
   # We recieve qa_root_passwd_plain from platform-ci-utils
   if $facts['osfamily'] == 'Darwin' {
       exec { 'change_root_passwd':
-        command => "dscl . -passwd /Users/root ${qa_root_passwd_plain}",
+        command => "dscl . -passwd /Users/root ${facts['qa_root_passwd_plain']}",
         path    => [ '/usr/bin' ],
       }
     }
     else {
     user { 'root':
       ensure   => present,
-      password => $qa_root_passwd,
+      password => $facts['qa_root_passwd'],
     }
   }
 

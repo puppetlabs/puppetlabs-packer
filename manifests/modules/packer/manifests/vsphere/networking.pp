@@ -3,7 +3,7 @@
 # A define that manages networking
 #
 class packer::vsphere::networking(
-  $interface_script = $packer::vsphere::network::params::interface_script
+  Optional[String] $interface_script = $packer::vsphere::network::params::interface_script
 ) inherits packer::networking::params {
 
   if $facts['osfamily'] != 'Darwin' {
