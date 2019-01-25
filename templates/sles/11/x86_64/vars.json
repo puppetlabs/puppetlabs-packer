@@ -1,0 +1,12 @@
+{
+    "template_name"                         : "sles-11-x86_64",
+    "template_os"                           : "linux",
+    "beakerhost"                            : "sles11-64",
+    "version"                               : "0.0.2",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/SLES-11-SP3-DVD-x86_64-GM-DVD1.iso",
+    "iso_checksum"                          : "797165fe2e159fd32e5d3138fde735d0db46cb1d6aab1b53b38f60778b3c9bc3",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/sles/11/PC1/x86_64/puppet-agent-1.10.9-1.sles11.x86_64.rpm"
+}
