@@ -1,11 +1,22 @@
-class packer::vmtools inherits packer::vmtools::params {
+# == Class: packer::vmtools
+#
+# A define that manages vmtools installation
+#
+class packer::vmtools(
+  Optional[Tuple]  $required_packages = $packer::vmtools::params::required_packages,
+  Optional[String]  $root_home = $packer::vmtools::params::root_home,
+  Optional[String]  $tools_iso = $packer::vmtools::params::tools_iso,
+  Optional[String]  $unmount_command = $packer::vmtools::params::unmount_command,
+  Optional[String]  $install_cmd = $packer::vmtools::params::install_cmd
+
+) inherits packer::vmtools::params {
 
   $vmtools_mountpoint = '/tmp/vmtools'
   # At some point it's going to become more worthwhile to flip this so
   # installing open-vm-tools is the default.
-  if ( ($::osfamily == 'debian' and $::operatingsystemmajrelease in ['7', '8', '9', '16.04', '14.04', '18.04', '18.10']) or
-        ($::osfamily == 'redhat' and $::operatingsystemmajrelease in ['7', '8', '25', '26', '27', '28', '29']) or
-        ($::osfamily == 'suse' and $::operatingsystemmajrelease in ['15'])
+  if ( ($facts['osfamily'] == 'debian' and $facts['operatingsystemmajrelease'] in ['7', '8', '9', '16.04', '14.04', '18.04', '18.10']) or
+        ($facts['osfamily'] == 'redhat' and $facts['operatingsystemmajrelease'] in ['7', '8', '25', '26', '27', '28', '29']) or
+        ($facts['osfamily'] == 'suse' and $facts['operatingsystemmajrelease'] in ['15'])
     ) {
       package { 'open-vm-tools':
         ensure => installed,
@@ -27,7 +38,7 @@ class packer::vmtools inherits packer::vmtools::params {
     }
 
 
-    if $::osfamily == 'Solaris' {
+    if $facts['osfamily'] == 'Solaris' {
       mount { '/tmp/vmtools':
         ensure      => mounted,
         device      => "${root_home}/${tools_iso}",
@@ -41,16 +52,16 @@ class packer::vmtools inherits packer::vmtools::params {
       }
     }
     # For macos we do exec resource to mount vmtools iso
-    elsif $::osfamily == 'Darwin'     {
+    elsif $facts['osfamily'] == 'Darwin'     {
       exec { 'mount cdrom':
-       command => "hdiutil mount ${root_home}/${tools_iso} -mountpoint ${vmtools_mountpoint}",
-       path    => [ '/bin', '/usr/bin' ],
-       cwd     => '/var/root',
-       require => File[ $vmtools_mountpoint ],
-       before   => Exec[ 'install vmtools' ],
-     }
+        command => "hdiutil mount ${root_home}/${tools_iso} -mountpoint ${vmtools_mountpoint}",
+        path    => [ '/bin', '/usr/bin' ],
+        cwd     => '/var/root',
+        require => File[ $vmtools_mountpoint ],
+        before  => Exec[ 'install vmtools' ],
+      }
     }
-     else {
+      else {
       mount { '/tmp/vmtools':
         ensure  => mounted,
         device  => "${root_home}/${tools_iso}",
@@ -67,7 +78,7 @@ class packer::vmtools inherits packer::vmtools::params {
       cwd     => '/tmp/',
     }
 
-    if $::osfamily == 'Solaris' {
+    if $facts['osfamily'] == 'Solaris' {
       # this is required because the vmware-tools installation fails with 0 exit code
       # the next step tries to validate that the service is running.
       service { 'vmware-tools':
@@ -92,12 +103,12 @@ class packer::vmtools inherits packer::vmtools::params {
       require => Exec[ "remove ${vmtools_mountpoint}" ],
     }
 
-    if $::osfamily == 'Solaris' {
+    if $facts['osfamily'] == 'Solaris' {
       $fstab_path = '/etc/vfstab'
     } else {
       $fstab_path = '/etc/fstab'
     }
-    if $::osfamily != 'Darwin'{
+    if $facts['osfamily'] != 'Darwin'{
     file_line { 'remove fstab /tmp/vmtools':
       path    => $fstab_path,
       line    => '#/tmp/vmtools removed',

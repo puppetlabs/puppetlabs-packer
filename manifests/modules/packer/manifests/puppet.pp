@@ -1,6 +1,10 @@
+# == Class: packer::puppet
+#
+# A define that manages puppet
+#
 class packer::puppet {
 
-  case $::osfamily {
+  case $facts['osfamily'] {
     debian: {
       include apt
 
@@ -19,20 +23,20 @@ class packer::puppet {
 
     redhat: {
 
-        if $operatingsystem == "Fedora" {
+        if $facts['operatingsystem'] == 'Fedora' {
           $ostype = 'fedora'
           $prefix = 'f'
-        } elsif $osfamily == "RedHat" {
+        } elsif $facts['osfamily'] == 'RedHat' {
           $ostype = 'el'
           $prefix = ''
         }
         else {
-          err("Unable to determine operating system information to assign yum repo.")
+          err('Unable to determine operating system information to assign yum repo.')
         }
 
       yumrepo { 'puppetlabs-pc1':
         baseurl  => "http://yum.puppetlabs.com/${ostype}/${prefix}\$releasever/PC1/\$basearch",
-        descr    => "Puppet Labs PC1 Repository ${ostype} $releasever - \$basearch",
+        descr    => "Puppet Labs PC1 Repository ${ostype} ${releasever} - \$basearch",
         gpgkey   => 'http://yum.puppetlabs.com/RPM-GPG-KEY-puppetlabs',
         enabled  => '1',
         gpgcheck => '1',

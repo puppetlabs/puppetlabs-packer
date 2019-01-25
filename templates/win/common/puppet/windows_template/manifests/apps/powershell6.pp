@@ -13,7 +13,7 @@ class windows_template::apps::powershell6()
     $ps6corearchtype = 'x64'
   }
 
-  download_file { "${ps6coreinstaller}" :
+  download_file { $ps6coreinstaller :
     url                   => "${ps6coredownloadurl}/${ps6coreinstaller}",
     destination_directory => $::packer_downloads
   }

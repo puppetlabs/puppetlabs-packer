@@ -10,7 +10,7 @@ class windows_template::apps::chrome()
     $chromeinstaller = 'googlechromestandaloneenterprise64.71.0.3578.98.msi'
   }
 
-  download_file { "${chromeinstaller}" :
+  download_file { $chromeinstaller :
     url                   => "${chromedownloadurl}/${chromeinstaller}",
     destination_directory => $::packer_downloads
   }
@@ -22,8 +22,8 @@ class windows_template::apps::chrome()
 
   # Following resources all depend on Google already being installed.
   file { "${::chrome_root}\\Application\\master_preferences":
-    owner   => "${::administrator_sid}",
-    group   => "${::administrator_grp_sid}",
+    owner   => $::administrator_sid,
+    group   => $::administrator_grp_sid,
     source  => "${::modules_path}\\windows_template\\files\\master_preferences",
     require => Package['Google Chrome'],
   }

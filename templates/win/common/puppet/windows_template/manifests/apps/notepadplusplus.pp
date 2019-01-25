@@ -14,7 +14,7 @@ class windows_template::apps::notepadplusplus()
     $notepadpparchtype = '(64-bit x64)'
   }
 
-  download_file { "${notepadppinstaller}" :
+  download_file { $notepadppinstaller :
     url                   => "${notepadppdownloadurl}/${notepadppinstaller}",
     destination_directory => $::packer_downloads
   }

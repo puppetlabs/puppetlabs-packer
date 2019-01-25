@@ -11,8 +11,8 @@ define windows_group_policy::gpupdate(
   # TODO watch out of for prompts.  Need to pipe in 'N'
   # TODO Need to figure out how to do RefreshOnly stuff
 
-  exec { "GPO-GPUPDATE-$name":
-    command     => "& cmd /c gpupdate /force /Wait:$timeout",
+  exec { "GPO-GPUPDATE-${name}":
+    command     => "& cmd /c gpupdate /force /Wait:${timeout}",
     provider    => powershell,
     logoutput   => $logoutput,
     timeout     => $timeout,

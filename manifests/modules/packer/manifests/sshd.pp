@@ -4,7 +4,7 @@
 #
 class packer::sshd {
 
-  if ($::operatingsystem == 'Solaris') and ($::operatingsystemrelease in ['11.2']) {
+  if ($facts['operatingsystem'] == 'Solaris') and ($facts['operatingsystemrelease'] in ['11.2']) {
     # In version 11.2 UseDNS option is invalid so we remove it from options.
     class { 'ssh::server':
       storeconfigs_enabled => false,

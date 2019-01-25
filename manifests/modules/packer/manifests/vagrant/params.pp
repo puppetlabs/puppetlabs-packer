@@ -1,3 +1,7 @@
+# == Class: packer::vagrant::params
+#
+# A define that manages vagrand praramters
+#
 class packer::vagrant::params {
 
   case $::osfamily {

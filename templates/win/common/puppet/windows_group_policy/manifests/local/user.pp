@@ -11,7 +11,7 @@ define windows_group_policy::local::user(
   $policy_type = 'User'
 
   if $ensure in ['present'] {
-    exec { "GPO-Local-User-$name":
+    exec { "GPO-Local-User-${name}":
       command   => template('windows_group_policy/script_header.ps1',
                             'windows_group_policy/PolFileEditor.ps1',
                             'windows_group_policy/local_gpo.ps1',
