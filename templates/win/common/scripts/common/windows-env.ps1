@@ -750,6 +750,6 @@ Function Shutdown-PackerBuild {
   $System.AutomaticManagedPagefile = $true
   $System.Put()
 
-  Write-Output "Bye Bye"
+  Write-Output "Bye Bye - Shutting Down"
   shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1
 }

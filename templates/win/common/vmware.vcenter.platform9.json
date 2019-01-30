@@ -4,7 +4,7 @@
     "memsize"                   : "4096",
     "RAM_reserve_all"           : "true",
     "numvcpus"                  : "2",
-    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -Shutdown -RemoveVMWare -ImageProvisioner platform9 >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
 
     "packer_vcenter_host"       : null,
     "packer_vcenter_username"   : null,
