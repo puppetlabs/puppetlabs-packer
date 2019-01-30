@@ -29,6 +29,8 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
 
+    "firmware"                  : "efi",
+
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
     "network_card"              : "vmxnet3",

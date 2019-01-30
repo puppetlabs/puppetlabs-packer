@@ -12,9 +12,9 @@ export PACKER_PROD_KEY=`jq -r .product_key vars.json`
 export PACKER_IMAGE_NAME=`jq -r .image_name vars.json`
 export PACKER_WIN_VERSION=`jq -r .windows_version vars.json`
 
-# Firmware if needed - otherwise default to "efi"
-export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
-[ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE="efi"
+# Firmware is set externally but if not set pick up from vars file, otherwise fail.
+[ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
+if [ -z "${PACKER_FIRMWARE}" ]; then echo "PACKER_FIRMWARE not set - exit;" exit 1; fi
 
 # PACKER_WIN_PROC_ARCH defaults to "amd64" unless specified
 # These values are specific to the Autounattend.xml files and differ from
