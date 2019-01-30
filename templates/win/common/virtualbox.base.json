@@ -59,8 +59,7 @@
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
-        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-        "../../common/scripts/bootstrap/startup-profile.ps1"
+        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1"
       ]
     }
   ],

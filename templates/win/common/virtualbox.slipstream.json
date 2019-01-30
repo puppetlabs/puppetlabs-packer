@@ -64,8 +64,7 @@
         "../../common/scripts/provisioners/generate-slipstream.ps1",
         "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
-        "../../common/scripts/bootstrap/core-shutdown.ps1",
-        "../../common/scripts/bootstrap/startup-profile.ps1"
+        "../../common/scripts/bootstrap/core-shutdown.ps1"
     ]
   }
   ],
