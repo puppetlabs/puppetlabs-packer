@@ -107,7 +107,7 @@
         "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
         "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
         "PackerSHA={{user `packer_sha`}}",
-        "PackerTemplateType=vmpooler"
+        "PackerTemplateType=platform9"
       ]
     },
     {
@@ -123,6 +123,10 @@
     {
       "type": "powershell",
       "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/config-platform9.ps1"
     },
     {
       "type": "powershell",
