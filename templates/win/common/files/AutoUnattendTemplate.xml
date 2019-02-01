@@ -255,7 +255,7 @@
                     <Order>1</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d 0 /f</CommandLine>
+                    <CommandLine>reg.exe ADD &quot;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v &quot;EnableLUA&quot; /t REG_DWORD /d 0 /f</CommandLine>
                     <Description>Disable UAC</Description>
                     <Order>2</Order>
                 </SynchronousCommand>

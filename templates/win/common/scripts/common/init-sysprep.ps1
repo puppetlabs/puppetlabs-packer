@@ -10,12 +10,36 @@
 
 param(
   [switch]$Restart,
-  [switch]$Shutdown
+  [switch]$Shutdown,
+  [switch]$RemoveVMWare,
+  [switch]$RunOncePrimed,
+  [string]$ImageProvisioner = "vmware"
 )
 
 $ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
+
+$rundate = date
+Write-Output "Initialising sysrep for $ImageProvisioner at $rundate"
+
+if ($RemoveVMWare -and (-not $RunOncePrimed)) {
+    # Removing VMWare tools breaks the network and WinRM which causes the script to hang.
+    # So setting a RunOnce Key here followed by a reboot to re-run the script immediately
+    # on reboot. This appears to resolve the "hanging" issue and cleanly removes vmware tools.
+    Write-Output "Setting up RunOnce to run VMWare Remove after Reboot"
+    New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" `
+                     -Name "InitSysprep" `
+                     -PropertyType String `
+                     -Value "c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass -File C:\Packer\Scripts\init-sysprep.ps1 -RunOncePrimed -Shutdown -RemoveVMWare -ImageProvisioner platform9 >> C:\Packer\Logs\Init-Sysprep.log 2>&1"`
+                     -Force `
+                     -ErrorAction Continue
+    Invoke-Reboot
+    Exit 0
+}
+
+# Main script execution from this point.
+Write-Output "Init-Sysrep Script continues here"
 
 If ( ($WindowsVersion -like $WindowsServer2008R2) -and ($psversiontable.psversion.major -eq 5) ) {
 
@@ -35,7 +59,6 @@ if (Test-Path "$PackerLogs\AppsPackageRemove.Required") {
 
     Write-Output "Listing state of all applications"
     Get-AppxPackage -AllUser | Format-List -Property Name,PackageFullName,PackageUserInformation,IsFramework
-
 }
 
 # Stop the tilemode service
@@ -43,11 +66,20 @@ Stop-Service -Name "tiledatamodelsvc" -Force -Verbose -ErrorAction SilentlyConti
 Stop-Service -Name "AppXSvc" -Force -Verbose -ErrorAction SilentlyContinue
 Stop-Service -Name "staterepository" -Force -Verbose -ErrorAction SilentlyContinue
 
+if ($RemoveVMWare) {
+    # Disable VMWare tools - would prefer to uninstall but haven't been able to get the following command to work reliably.
+    # Uninstall VMWare Tools using the GUID obtained from HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall
+    Write-Output "Removing VMWare Tools"
+    Start-Process "msiexec" -Wait -NoNewWindow -Verbose -ArgumentList "/x {F32C4E7B-2BF8-4788-8408-824C6896E1BB} /qn /norestart REBOOT=REALLYSUPPRESS"
+    Write-Output "VMWare tools removed"
+}
+
 $SysPrepDir = "C:\Windows\System32\sysprep\"
-$SysPrepArgs = "/generalize /oobe /quit /mode:vm /unattend:C:\Packer\Config\post-clone.autounattend.xml"
-if ( ($WindowsVersion -like $WindowsServer2008R2) -or ($WindowsVersion -like $WindowsServer2008) ) {
+$SysPrepArgs = "/generalize /oobe /quit /unattend:C:\Packer\Config\post-clone.autounattend.xml"
+if ( ($ImageProvisioner -eq "vmware") -and ($WindowsVersion -notlike $WindowsServer2008R2) -and ($WindowsVersion -notlike $WindowsServer2008)) {
     # /mode:vm was only introduced from win-2012 onwards
-    $SysPrepArgs = "/generalize /oobe /quit /unattend:C:\Packer\Config\post-clone.autounattend.xml"
+    Write-Output "Using /mode:vm"
+    $SysPrepArgs += "/mode:vm"
 }
 Write-Output "Starting the Sysprep Process"
 $zproc = Start-Process "$SysPrepDir\sysprep.exe" @SprocParms -ArgumentList "$SysPrepArgs"

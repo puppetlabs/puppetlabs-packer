@@ -8,7 +8,6 @@
     "numvcpus"                  : "2",
     "disk_controller_type"      : "pvscsi",
     "disk_thin_provisioned"     : "true",
-    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
     "vsphere_guest_os"          : null,
@@ -73,7 +72,6 @@
         "<spacebar><wait><spacebar><wait><enter><wait><enter><wait><enter><wait><enter>"
       ],
 
-      "shutdown_command"  : "{{user `shutdown_command`}}",
       "shutdown_timeout"  : "{{user `shutdown_timeout`}}",
 
       "floppy_files": [
@@ -81,9 +79,7 @@
         "./files/platform-packages.ps1",
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
-        "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
-        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-        "../../common/scripts/bootstrap/startup-profile.ps1"
+        "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1"
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
@@ -99,11 +95,6 @@
   "provisioners": [
     {
       "type"        : "file",
-      "source"      : "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-      "destination" : "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
-    },
-    {
-      "type"        : "file",
       "source": "../../common/scripts/common/",
       "destination": "C:\\Packer\\Scripts"
     },
@@ -114,18 +105,8 @@
     },
     {
       "type"        : "file",
-      "source": "../../common/scripts/config/",
-      "destination": "C:\\Packer\\Config"
-    },
-    {
-      "type"        : "file",
       "source": "../../common/scripts/acceptance/",
       "destination": "C:\\Packer\\Acceptance"
-    },
-    {
-      "type"        : "file",
-      "source": "./tmp/post-clone.autounattend.xml",
-      "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
     },
     {
       "type"        : "powershell",

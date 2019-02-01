@@ -4,7 +4,7 @@
     "memsize"                   : "4096",
     "RAM_reserve_all"           : "true",
     "numvcpus"                  : "2",
-    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -Shutdown -RemoveVMWare -ImageProvisioner platform9 >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
 
     "packer_vcenter_host"       : null,
     "packer_vcenter_username"   : null,
@@ -107,7 +107,7 @@
         "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
         "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
         "PackerSHA={{user `packer_sha`}}",
-        "PackerTemplateType=vmpooler"
+        "PackerTemplateType=platform9"
       ]
     },
     {
@@ -123,6 +123,10 @@
     {
       "type": "powershell",
       "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+    },
+    {
+      "type": "powershell",
+      "script" : "../../common/scripts/provisioners/config-platform9.ps1"
     },
     {
       "type": "powershell",

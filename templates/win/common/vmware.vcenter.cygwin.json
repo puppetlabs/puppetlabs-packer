@@ -10,7 +10,7 @@
     "numvcpus"                  : "2",
     "disk_controller_type"      : "pvscsi",
     "disk_thin_provisioned"     : "true",
-    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -Shutdown >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
     "vsphere_guest_os"          : null,
@@ -28,6 +28,8 @@
 
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
+
+    "firmware"                  : "efi",
 
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
@@ -82,8 +84,7 @@
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
         "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
-        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-        "../../common/scripts/bootstrap/startup-profile.ps1"
+        "../../common/scripts/bootstrap/shutdown-packerbuild.ps1"
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",

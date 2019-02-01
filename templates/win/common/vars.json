@@ -8,7 +8,6 @@
   "winrm_timeout"       : "1h",
   "winupdate_timeout"   : "400m",
   "shutdown_timeout"    : "1h",
-  "firmware"            : "efi",
 
   "packer_download_dir" : "C:/Packer/Downloads",
 
