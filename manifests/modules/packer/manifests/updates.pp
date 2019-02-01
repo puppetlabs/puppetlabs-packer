@@ -12,7 +12,6 @@ class packer::updates {
   $debian_pkgs = [
     'libc6',
     'openssh-client',
-    'openssh-server',
   ]
 
   # Updating the EL 6.8 kernel causes a kernel panic on bootup in
