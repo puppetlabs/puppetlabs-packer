@@ -8,5 +8,6 @@
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://yum.puppetlabs.com/sles/12/PC1/x86_64/puppet-agent-1.10.9-1.sles12.x86_64.rpm"
+    "puppet_aio"                            : "http://yum.puppetlabs.com/sles/12/PC1/x86_64/puppet-agent-1.10.9-1.sles12.x86_64.rpm",
+    "inject_http_seed_in_boot_command"      : "true"
 }
