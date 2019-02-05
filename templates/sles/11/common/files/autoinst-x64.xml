@@ -559,10 +559,7 @@
       <domain>delivery.puppetlabs.net</domain>
       <hostname>sles-11sp4-x64</hostname>
       <resolv_conf_policy>auto</resolv_conf_policy>
-      <searchlist config:type="list">
-        <search>delivery.puppetlabs.net</search>
-      </searchlist>
-      <write_hostname config:type="boolean">true</write_hostname>
+      <write_hostname config:type="boolean">false</write_hostname>
     </dns>
     <interfaces config:type="list">
       <interface>
