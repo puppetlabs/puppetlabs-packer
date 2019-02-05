@@ -63,16 +63,15 @@
   </bootloader>
   <ca_mgm>
     <CAName>YaST_Default_CA</CAName>
-    <ca_commonName>YaST Default CA (sles-11sp4-i386)</ca_commonName>
+    <ca_commonName>YaST Default CA (site)</ca_commonName>
     <country>US</country>
     <locality></locality>
     <organisation></organisation>
     <organisationUnit></organisationUnit>
     <password>ENTER PASSWORD HERE</password>
-    <server_commonName>sles-11sp4-i386.delivery.puppetlabs.net</server_commonName>
-    <server_email>postmaster@delivery.puppetlabs.net</server_email>
+    <server_email>postmaster@site</server_email>
     <state></state>
-    <takeLocalServerName config:type="boolean">false</takeLocalServerName>
+    <takeLocalServerName config:type="boolean">true</takeLocalServerName>
   </ca_mgm>
   <deploy_image>
     <image_installation config:type="boolean">false</image_installation>
@@ -214,13 +213,6 @@
     </group>
     <group>
       <encrypted config:type="boolean">true</encrypted>
-      <gid>113</gid>
-      <group_password>!</group_password>
-      <groupname>gdm</groupname>
-      <userlist></userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
       <gid>65534</gid>
       <group_password>x</group_password>
       <groupname>nogroup</groupname>
@@ -291,7 +283,7 @@
     </group>
     <group>
       <encrypted config:type="boolean">true</encrypted>
-      <gid>107</gid>
+      <gid>106</gid>
       <group_password>!</group_password>
       <groupname>puppet</groupname>
       <userlist></userlist>
@@ -305,7 +297,7 @@
     </group>
     <group>
       <encrypted config:type="boolean">true</encrypted>
-      <gid>108</gid>
+      <gid>107</gid>
       <group_password>!</group_password>
       <groupname>polkituser</groupname>
       <userlist></userlist>
@@ -315,13 +307,6 @@
       <gid>10</gid>
       <group_password>x</group_password>
       <groupname>wheel</groupname>
-      <userlist></userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
-      <gid>110</gid>
-      <group_password>!</group_password>
-      <groupname>pulse</groupname>
       <userlist></userlist>
     </group>
     <group>
@@ -350,13 +335,6 @@
       <gid>17</gid>
       <group_password>x</group_password>
       <groupname>audio</groupname>
-      <userlist>pulse</userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
-      <gid>112</gid>
-      <group_password>!</group_password>
-      <groupname>suse-ncc</groupname>
       <userlist></userlist>
     </group>
     <group>
@@ -364,6 +342,13 @@
       <gid>49</gid>
       <group_password>x</group_password>
       <groupname>ftp</groupname>
+      <userlist></userlist>
+    </group>
+    <group>
+      <encrypted config:type="boolean">true</encrypted>
+      <gid>109</gid>
+      <group_password>!</group_password>
+      <groupname>suse-ncc</groupname>
       <userlist></userlist>
     </group>
     <group>
@@ -417,14 +402,7 @@
     </group>
     <group>
       <encrypted config:type="boolean">true</encrypted>
-      <gid>106</gid>
-      <group_password>!</group_password>
-      <groupname>sfcb</groupname>
-      <userlist>root</userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
-      <gid>109</gid>
+      <gid>108</gid>
       <group_password>!</group_password>
       <groupname>ntp</groupname>
       <userlist></userlist>
@@ -434,20 +412,6 @@
       <gid>14</gid>
       <group_password>x</group_password>
       <groupname>uucp</groupname>
-      <userlist></userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
-      <gid>111</gid>
-      <group_password>!</group_password>
-      <groupname>pulse-access</groupname>
-      <userlist></userlist>
-    </group>
-    <group>
-      <encrypted config:type="boolean">true</encrypted>
-      <gid>71</gid>
-      <group_password>!</group_password>
-      <groupname>ntadmin</groupname>
       <userlist></userlist>
     </group>
     <group>
@@ -585,7 +549,7 @@
     <start_ldap config:type="boolean">false</start_ldap>
   </ldap>
   <login_settings/>
-     <networking>
+<networking>
     <dhcp_options>
       <dhclient_client_id/>
       <dhclient_hostname_option>AUTO</dhclient_hostname_option>
@@ -784,220 +748,7 @@
   </partitioning>
   <printer>
     <cups_remote_server/>
-    <server_settings>
-      <BrowseAllow config:type="list">
-        <listentry>all</listentry>
-      </BrowseAllow>
-      <BrowseOrder config:type="list">
-        <listentry>allow,deny</listentry>
-      </BrowseOrder>
-      <Browsing config:type="list">
-        <listentry>On</listentry>
-      </Browsing>
-      <DefaultAuthType config:type="list">
-        <listentry>Basic</listentry>
-      </DefaultAuthType>
-      <DefaultPolicy config:type="list">
-        <listentry>default</listentry>
-      </DefaultPolicy>
-      <Listen config:type="list">
-        <listentry>localhost:631</listentry>
-        <listentry>/var/run/cups/cups.sock</listentry>
-      </Listen>
-      <LogLevel config:type="list">
-        <listentry>info</listentry>
-      </LogLevel>
-      <SystemGroup config:type="list">
-        <listentry>root</listentry>
-      </SystemGroup>
-      <sections config:type="list">
-        <section>
-          <Allow config:type="list">
-            <listentry>127.0.0.2</listentry>
-          </Allow>
-          <Key>Location</Key>
-          <Order config:type="list">
-            <listentry>allow,deny</listentry>
-          </Order>
-          <Value>/</Value>
-        </section>
-        <section>
-          <Encryption config:type="list">
-            <listentry>Required</listentry>
-          </Encryption>
-          <Key>Location</Key>
-          <Order config:type="list">
-            <listentry>allow,deny</listentry>
-          </Order>
-          <Value>/admin</Value>
-        </section>
-        <section>
-          <AuthType config:type="list">
-            <listentry>Default</listentry>
-          </AuthType>
-          <Key>Location</Key>
-          <Order config:type="list">
-            <listentry>allow,deny</listentry>
-          </Order>
-          <Require config:type="list">
-            <listentry>user @SYSTEM</listentry>
-          </Require>
-          <Value>/admin/conf</Value>
-        </section>
-        <section>
-          <Key>Policy</Key>
-          <Value>default</Value>
-          <sections config:type="list">
-            <section>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @OWNER @SYSTEM</listentry>
-              </Require>
-              <Value>Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job CUPS-Move-Job</Value>
-            </section>
-            <section>
-              <AuthType config:type="list">
-                <listentry>Default</listentry>
-              </AuthType>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @SYSTEM</listentry>
-              </Require>
-              <Value>CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default</Value>
-            </section>
-            <section>
-              <AuthType config:type="list">
-                <listentry>Default</listentry>
-              </AuthType>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @SYSTEM</listentry>
-              </Require>
-              <Value>Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After CUPS-Accept-Jobs CUPS-Reject-Jobs</Value>
-            </section>
-            <section>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @OWNER @SYSTEM</listentry>
-              </Require>
-              <Value>Cancel-Job CUPS-Authenticate-Job</Value>
-            </section>
-            <section>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Value>All</Value>
-            </section>
-          </sections>
-        </section>
-        <section>
-          <Key>Policy</Key>
-          <Value>easy</Value>
-          <sections config:type="list">
-            <section>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>allow,deny</listentry>
-              </Order>
-              <Satisfy config:type="list">
-                <listentry>any</listentry>
-              </Satisfy>
-              <Value>All</Value>
-            </section>
-          </sections>
-        </section>
-        <section>
-          <Key>Policy</Key>
-          <Value>paranoid</Value>
-          <sections config:type="list">
-            <section>
-              <Allow config:type="list">
-                <listentry>from 127.0.0.0/8</listentry>
-              </Allow>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @OWNER</listentry>
-              </Require>
-              <Value>Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job CUPS-Move-Job</Value>
-            </section>
-            <section>
-              <Allow config:type="list">
-                <listentry>from 127.0.0.0/8</listentry>
-              </Allow>
-              <AuthType config:type="list">
-                <listentry>Default</listentry>
-              </AuthType>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @SYSTEM</listentry>
-              </Require>
-              <Value>CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default</Value>
-            </section>
-            <section>
-              <Allow config:type="list">
-                <listentry>from 127.0.0.0/8</listentry>
-              </Allow>
-              <AuthType config:type="list">
-                <listentry>Default</listentry>
-              </AuthType>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @SYSTEM</listentry>
-              </Require>
-              <Value>Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After CUPS-Accept-Jobs CUPS-Reject-Jobs</Value>
-            </section>
-            <section>
-              <Allow config:type="list">
-                <listentry>from 127.0.0.0/8</listentry>
-              </Allow>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @OWNER</listentry>
-              </Require>
-              <Value>Cancel-Job CUPS-Authenticate-Job</Value>
-            </section>
-            <section>
-              <Allow config:type="list">
-                <listentry>from 127.0.0.0/8</listentry>
-              </Allow>
-              <Key>Limit</Key>
-              <Order config:type="list">
-                <listentry>deny,allow</listentry>
-              </Order>
-              <Require config:type="list">
-                <listentry>user @OWNER @SYSTEM</listentry>
-              </Require>
-              <Value>All</Value>
-            </section>
-          </sections>
-        </section>
-      </sections>
-    </server_settings>
+    <server_settings/>
   </printer>
   <proxy>
     <enabled config:type="boolean">false</enabled>
@@ -1031,35 +782,47 @@
     </yesno_messages>
   </report>
   <runlevel>
-    <default>5</default>
+    <default>3</default>
   </runlevel>
   <software>
     <packages config:type="list">
+      <package>desktop-data-SLED</package>
+      <package>desktop-translations</package>
+      <package>gconf2-branding-SLES</package>
       <package>libproxy0-config-gnome</package>
-      <package>xorg-x11-driver-video-radeonhd</package>
+      <package>sound-theme-freedesktop</package>
       <package>yast2-trans-en_US</package>
     </packages>
     <patterns config:type="list">
       <pattern>Basis-Devel</pattern>
       <pattern>Minimal</pattern>
-      <pattern>WBEM</pattern>
       <pattern>apparmor</pattern>
       <pattern>base</pattern>
       <pattern>documentation</pattern>
-      <pattern>gnome</pattern>
       <pattern>jeos</pattern>
       <pattern>laptop</pattern>
-      <pattern>print_server</pattern>
-      <pattern>x11</pattern>
+      <pattern>sle-manager_client</pattern>
     </patterns>
     <remove-packages config:type="list">
+      <package>Mesa</package>
       <package>emacs-nox</package>
+      <package>fonts-config</package>
+      <package>ft2demos</package>
+      <package>libdrm</package>
+      <package>libmysqlclient_r15</package>
+      <package>libpciaccess0</package>
+      <package>libqt4</package>
+      <package>libqt4-qt3support</package>
+      <package>libqt4-sql</package>
+      <package>libqt4-sql-mysql</package>
       <package>libqt4-sql-sqlite</package>
-      <package>lprng</package>
+      <package>libqt4-x11</package>
       <package>pcmciautils</package>
       <package>sendmail</package>
-      <package>susehelp_de</package>
-      <package>yast2-control-center-qt</package>
+      <package>xorg-x11-fonts</package>
+      <package>xorg-x11-fonts-core</package>
+      <package>yast2-qt</package>
+      <package>yast2-qt-pkg</package>
     </remove-packages>
   </software>
   <timezone>
@@ -1092,7 +855,7 @@
       </password_settings>
       <shell>/bin/bash</shell>
       <uid>1000</uid>
-      <user_password>$2y$05$5FFOnB/HFCUJMd2EA8lSku7xI3fCVz1qO7lG/Xaf6g9xwcvYQ86zi</user_password>
+      <user_password>$2y$05$QZfA1yGNhLICeFPxrCyfEuvZYa4hNLxIwlNuoztHv3df4msPxSBfq</user_password>
       <username>sles</username>
     </user>
     <user>
@@ -1206,7 +969,7 @@
     <user>
       <encrypted config:type="boolean">true</encrypted>
       <fullname>Novell Customer Center User</fullname>
-      <gid>112</gid>
+      <gid>109</gid>
       <home>/var/lib/YaST2/suse-ncc-fakehome</home>
       <password_settings>
         <expire></expire>
@@ -1217,7 +980,7 @@
         <warn>7</warn>
       </password_settings>
       <shell>/bin/bash</shell>
-      <uid>107</uid>
+      <uid>106</uid>
       <user_password>*</user_password>
       <username>suse-ncc</username>
     </user>
@@ -1238,24 +1001,6 @@
       <uid>40</uid>
       <user_password>*</user_password>
       <username>ftp</username>
-    </user>
-    <user>
-      <encrypted config:type="boolean">true</encrypted>
-      <fullname>Gnome Display Manager daemon</fullname>
-      <gid>113</gid>
-      <home>/var/lib/gdm</home>
-      <password_settings>
-        <expire></expire>
-        <flag></flag>
-        <inact></inact>
-        <max>99999</max>
-        <min>0</min>
-        <warn>7</warn>
-      </password_settings>
-      <shell>/bin/false</shell>
-      <uid>108</uid>
-      <user_password>*</user_password>
-      <username>gdm</username>
     </user>
     <user>
       <encrypted config:type="boolean">true</encrypted>
@@ -1290,7 +1035,7 @@
       </password_settings>
       <shell>/bin/bash</shell>
       <uid>0</uid>
-      <user_password>$2y$05$lNXeAL7YXL5ovvRWlCFn9OjUS4rEtl764W8XNCke3jpOBkayJ8me6</user_password>
+      <user_password>$2y$05$/2r.Oy.rStxRB7byL.QZ4OGyniPEfPOrxuMeOrg7NBeYvt.Ru.i7.</user_password>
       <username>root</username>
     </user>
     <user>
@@ -1332,7 +1077,7 @@
     <user>
       <encrypted config:type="boolean">true</encrypted>
       <fullname>NTP daemon</fullname>
-      <gid>109</gid>
+      <gid>108</gid>
       <home>/var/lib/ntp</home>
       <password_settings>
         <expire></expire>
@@ -1422,7 +1167,7 @@
     <user>
       <encrypted config:type="boolean">true</encrypted>
       <fullname>Puppet daemon</fullname>
-      <gid>107</gid>
+      <gid>106</gid>
       <home>/var/lib/puppet</home>
       <password_settings>
         <expire></expire>
@@ -1458,7 +1203,7 @@
     <user>
       <encrypted config:type="boolean">true</encrypted>
       <fullname>PolicyKit</fullname>
-      <gid>108</gid>
+      <gid>107</gid>
       <home>/var/run/PolicyKit</home>
       <password_settings>
         <expire></expire>
@@ -1499,40 +1244,5 @@
       <uid>102</uid>
       <username>sshd</username>
     </user>
-    <user>
-      <encrypted config:type="boolean">true</encrypted>
-      <fullname>PulseAudio daemon</fullname>
-      <gid>110</gid>
-      <home>/var/lib/pulseaudio</home>
-      <password_settings>
-        <expire></expire>
-        <flag></flag>
-        <inact></inact>
-        <max>99999</max>
-        <min>0</min>
-        <warn>7</warn>
-      </password_settings>
-      <shell>/bin/false</shell>
-      <uid>106</uid>
-      <user_password>*</user_password>
-      <username>pulse</username>
-    </user>
   </users>
-  <x11>
-    <color_depth config:type="integer">24</color_depth>
-    <display_manager>gdm</display_manager>
-    <enable_3d config:type="boolean">true</enable_3d>
-    <monitor>
-      <display>
-        <max_hsync config:type="integer">94</max_hsync>
-        <max_vsync config:type="integer">75</max_vsync>
-        <min_hsync config:type="integer">31</min_hsync>
-        <min_vsync config:type="integer">50</min_vsync>
-      </display>
-      <monitor_device>1024X768@60HZ</monitor_device>
-      <monitor_vendor>--&gt; VESA</monitor_vendor>
-    </monitor>
-    <resolution>1024x768 (XGA)</resolution>
-    <window_manager>gnome</window_manager>
-  </x11>
 </profile>

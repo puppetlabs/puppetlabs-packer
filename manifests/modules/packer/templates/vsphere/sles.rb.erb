@@ -15,12 +15,16 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
 
-Kernel.system("hostnamectl set-hostname #{hostname}")
+
 
 puts '- Re-obtaining DHCP lease...'
-
+<% if ['11.4'].include? @operatingsystemrelease -%>
+Kernel.system('hostname #{hostname}')
+Kernel.system('/etc/init.d/network restart')
+<% else %>
 Kernel.system('systemctl restart wicked.service')
-
+Kernel.system("hostnamectl set-hostname #{hostname}")
+<% end %>
 puts '- Cleaning up...'
 
 Kernel.system('rm /etc/vsphere-bootstrap.rb')
