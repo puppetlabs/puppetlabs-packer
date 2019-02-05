@@ -18,11 +18,11 @@
     "provisioner"                           : "vmware",
     "shutdown_command"                      : "/sbin/halt -h -p",
 
-    "qa_root_passwd"                        : "{{env `QA_ROOT_PASSWD`}}",
-    "qa_root_passwd_plain"                  : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
-    "packer_sha"                            : "{{env `PACKER_SHA`}}",
-    "packer_source_dir"                     : "{{env `PACKER_VM_SRC_DIR`}}",
-    "packer_output_dir"                     : "{{env `PACKER_VM_OUT_DIR`}}"
+    "qa_root_passwd"                        : "{{user `qa_root_passwd`}}",
+    "qa_root_passwd_plain"                  : "{{user `qa_root_passwd_plain`}}",
+    "packer_sha"                            : "{{user `packer_sha`}}",
+    "packer_source_dir"                     : "{{user `packer_vm_src_dir`}}",
+    "packer_output_dir"                     : "{{user `packer_vm_out_dir`}}"
   },
 
   "builders": [

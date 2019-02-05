@@ -16,10 +16,10 @@
 
     "raw_vmx_file"              : "{{env `VRO_RAW_VMX_PATH` }}",
 
-    "qa_root_passwd_plain"      : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
-    "packer_sha"                : "{{env `PACKER_SHA`}}",
-    "packer_source_dir"         : "{{env `PACKER_VM_SRC_DIR`}}",
-    "packer_output_dir"         : "{{env `PACKER_VM_OUT_DIR`}}"
+    "qa_root_passwd_plain"      : "{{user `qa_root_passwd_plain`}}",
+    "packer_sha"                : "{{user `packer_sha`}}",
+    "packer_source_dir"         : "{{user `packer_vm_src_dir`}}",
+    "packer_output_dir"         : "{{user `packer_vm_out_dir`}}"
   },
 
   "builders": [
