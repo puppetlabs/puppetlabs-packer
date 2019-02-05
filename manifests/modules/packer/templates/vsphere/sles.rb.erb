@@ -27,7 +27,7 @@ Kernel.system("hostnamectl set-hostname #{hostname}")
 <% end %>
 puts '- Cleaning up...'
 
-Kernel.system('rm /etc/vsphere-bootstrap.rb')
+<%# Kernel.system('rm /etc/vsphere-bootstrap.rb') %>
 
 <% if ['15.0'].include? @operatingsystemrelease -%>
 # Disable the oneshot service that runs this script:
