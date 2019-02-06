@@ -22,7 +22,9 @@
     "packer_sha"                : null,
 
     "boot_wait"                 : "10ms",
-    "boot_order"                : "disk,cdrom"
+    "boot_order"                : "disk,cdrom",
+
+    "valid_exit_codes"          : "0"
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
@@ -115,7 +117,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "windows-restart"
@@ -140,7 +142,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase platform"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"   : "powershell",

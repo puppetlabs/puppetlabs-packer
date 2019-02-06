@@ -1,5 +1,5 @@
 {
-    "A_Comment"         : "This is preview so not all 2019 defs are available below",
+    "A_Comment"         : "Windows 2019 Mock build for pipeline testing",
     "template_name"     : "win-2019-mock-x86_64",
     "beakerhost"        : "windows2019-64",
     "vbox_guest_os"     : "Windows2016_64",
@@ -7,16 +7,18 @@
     "vsphere_guest_os"  : "windows9Server64Guest",
     "windows_version"   : "Windows-2019",
     "image_name"        : "Windows Server 2019 SERVERSTANDARD",
-    "product_key"       : "MFY9F-XBN2F-TYFMP-CCV49-RMYVH",
-    "iso_name"          : "/Windows_InsiderPreview_Server_vNext_en-us_17723.iso",
+    "product_key"       : "N69G4-B89J2-4G8F4-WWYCC-J464C",
+    "iso_name"          : "en_windows_server_2019_x64_dvd_3c2cf1202.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "593ef03364c7cd730f0ec89e322ab4ca",
+    "iso_checksum"      : "37c51cc09182237ae2c30c9d8ce3c41e",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
 
-    "CurrentVersion"    : "6.1",
+    "CurrentVersion"    : "6.3",
     "ProductName"       : "Windows Server 2019 Standard",
     "EditionID"         : "ServerStandard",
     "InstallationType"  : "Server",
-    "ReleaseID"         : "N/A"
+    "ReleaseID"         : "1809",
+
+    "valid_exit_codes"  : "0,1"
 
 }

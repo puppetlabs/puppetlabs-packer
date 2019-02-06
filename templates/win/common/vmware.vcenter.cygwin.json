@@ -34,7 +34,9 @@
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
     "network_card"              : "vmxnet3",
-    "boot_order"                : "disk,cdrom"
+    "boot_order"                : "disk,cdrom",
+
+    "valid_exit_codes"          : "0"
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
@@ -173,7 +175,7 @@
           "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
           "PBTEST_WindowsMemorySize={{user `memsize`}}"
         ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
@@ -192,7 +194,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"   : "powershell",
@@ -209,7 +211,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase cygwin"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
@@ -226,7 +228,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "windows-restart"
@@ -251,7 +253,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase platform"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"   : "powershell",
