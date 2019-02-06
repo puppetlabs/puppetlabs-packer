@@ -250,13 +250,29 @@ class packer::vsphere::repos(
     }
 
     suse: {
-      $base_url = $facts['operatingsystemrelease'] ? {
-        # TODO: Mirror this repo over to artifactory
-        '15.0'    => 'http://osmirror.delivery.puppetlabs.net/sles-15-gm-x86_64/RPMS.os',
-        default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-\
-        sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
+      # $base_url = $facts['operatingsystemrelease'] ? {
+      #   # TODO: Mirror this repo over to artifactory
+      #   '15.0'    => 'http://osmirror.delivery.puppetlabs.net/sles-15-gm-x86_64/RPMS.os',
+      #   '11.4'    =>  'http://osmirror.delivery.puppetlabs.net/sles-11-sp4-x86_64/RPMS.os',
+      #   default => "${repo_mirror}/${loweros}-${facts[os][release][major]}-\
+      #   sp${facts[os][release][minor]}-${facts[os][architecture]}/RPMS.os"
+        case $facts['operatingsystemrelease'] {
+          '11.4': {
+            if $facts['architecture'] == 'i386'{
+              $base_url = 'http://osmirror.delivery.puppetlabs.net/sles-11-sp4-i386/RPMS.os'
+            }
+            else {
+              $base_url = 'http://osmirror.delivery.puppetlabs.net/sles-11-sp4-x86_64/RPMS.os'
+            }
+          }
+          '15.0': {
+            $base_url = 'http://osmirror.delivery.puppetlabs.net/sles-15-gm-x86_64/RPMS.os'
+          }
+          default: {
+            # defaults to sles 12
+            $base_url = 'http://osmirror.delivery.puppetlabs.net/sles-12-sp1-x86_64/RPMS.os'
+          }
       }
-
       $gpg_check = $::operatingsystemrelease ? {
         # SLES 15 defaults to requiring signed repos, and we generate our
         # own repo from the ISO images, which is unsigned

@@ -1,3 +1,12 @@
 {
-    "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network darin-zypprepo"
+    "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network darin-zypprepo",
+    "vmware_base_vmx_data_memsize"                 : "512",
+    "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
+    "vmware_base_vmx_data_numvcpus"                : "1",
+    "vmware_base_vmx_data_ethernet0_virtualDev"    : "e1000",
+    "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",    
+    "http_directory"                               : "../common/files",
+    "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev": "e1000",
+    "floppy_dirs"                                  : "",
+    "floppy_files"                                 : ""
 }

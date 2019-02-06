@@ -27,7 +27,7 @@ class packer::vmtools::params {
 
     'Suse' : {
       $root_home = '/root'
-      $required_packages = [ 'kernel-devel', 'gcc' ]
+      $required_packages = [ 'gcc' ]
     }
 
     'Solaris' : {

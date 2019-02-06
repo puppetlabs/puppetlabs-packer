@@ -30,7 +30,6 @@ class packer::updates {
 
   $suse_pkgs = [
     'glibc',
-    'openssh',
     'kernel',
   ]
 
