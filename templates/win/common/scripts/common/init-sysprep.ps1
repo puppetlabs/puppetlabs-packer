@@ -79,7 +79,7 @@ $SysPrepArgs = "/generalize /oobe /quit /unattend:C:\Packer\Config\post-clone.au
 if ( ($ImageProvisioner -eq "vmware") -and ($WindowsVersion -notlike $WindowsServer2008R2) -and ($WindowsVersion -notlike $WindowsServer2008)) {
     # /mode:vm was only introduced from win-2012 onwards
     Write-Output "Using /mode:vm"
-    $SysPrepArgs += "/mode:vm"
+    $SysPrepArgs += " /mode:vm"
 }
 Write-Output "Starting the Sysprep Process"
 $zproc = Start-Process "$SysPrepDir\sysprep.exe" @SprocParms -ArgumentList "$SysPrepArgs"
