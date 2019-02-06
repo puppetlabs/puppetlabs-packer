@@ -30,7 +30,9 @@
 
     "boot_wait"                 : "10ms",
     "network_card"              : "vmxnet3",
-    "boot_order"                : "disk,cdrom"
+    "boot_order"                : "disk,cdrom",
+
+    "valid_exit_codes"          : "0"
   },
 
   "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
@@ -121,7 +123,7 @@
           "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
           "PBTEST_WindowsMemorySize={{user `memsize`}}"
         ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"         : "powershell",
@@ -140,7 +142,7 @@
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
-      "valid_exit_codes" : [ 0 ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"   : "powershell",
