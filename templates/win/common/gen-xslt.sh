@@ -14,7 +14,7 @@ export PACKER_WIN_VERSION=`jq -r .windows_version vars.json`
 
 # Firmware is set externally but if not set pick up from vars file, otherwise fail.
 [ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
-if [ -z "${PACKER_FIRMWARE}" ]; then echo "PACKER_FIRMWARE not set - exit;" exit 1; fi
+[ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=efi
 
 # PACKER_WIN_PROC_ARCH defaults to "amd64" unless specified
 # These values are specific to the Autounattend.xml files and differ from
