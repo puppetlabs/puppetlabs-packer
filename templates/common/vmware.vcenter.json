@@ -25,14 +25,14 @@
       "packer_vcenter_net"                           : null,
       "packer_vcenter_insecure"                      : null,
 
-      "packer_sha"                                   : "{{env `PACKER_SHA`}}",
+      "packer_sha"                                   : "{{user `packer_sha`}}",
 
       "convert_to_template"                          : "false",
       "boot_order"                                   : "disk,cdrom",
       "communicator_protocol"                        : "ssh",
 
       "vmware_base_required_modules"                 : "saz-ssh puppetlabs-stdlib",
-  
+
       "vmware_base_vmx_data_memsize"                 : "512",
       "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
       "vmware_base_vmx_data_numvcpus"                : "1",
@@ -41,7 +41,7 @@
       "vmware_base_vm_scsi0_present"                 : "TRUE",
       "vmware_base_vm_smc_present"                   : "",
       "vmware_base_vm_hpet0_present"                 : "",
-      "vmware_base_vm_ich7m_present"                 : "",                     
+      "vmware_base_vm_ich7m_present"                 : "",
       "vmware_base_vm_firmware"                      : "",
       "vmware_base_vmx_keyboard_and_mouse_profile"   : "",
       "vmware_base_vm_disk_adapter_type"             : "pvscsi",
@@ -50,11 +50,11 @@
       "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
 
       "vmware_vsphere_nocm_required_modules"         : null,
-    
+
       "qa_root_passwd"                               : "{{env `QA_ROOT_PASSWD`}}",
       "qa_root_passwd_plain"                         : "{{env `QA_ROOT_PASSWD_PLAIN`}}",
 
-    
+
       "ssh_username"                                 : "root",
       "ssh_password"                                 : "puppet",
       "inject_http_seed_in_boot_command"             : "false",
@@ -72,7 +72,7 @@
       "communicator"                                 : "{{user `communicator_protocol`}}",
       "ssh_username"                                 : "{{user `ssh_username`}}",
       "ssh_password"                                 : "{{user `ssh_password`}}",
-     
+
 
       "name"                                         : "vcenter-iso",
       "vm_name"                                      : "{{user `template_name`}}-{{user `version`}}",
@@ -157,8 +157,8 @@
                                                           "PC_REPO={{user `pc_repo`}}"
                                                        ],
       "scripts"                                      : "{{user `vmware_base_provisioning_scripts`}}"
-    },  
-  
+    },
+
     {
       "type"                                         : "puppet-masterless",
       "execute_command"                              : "{{.FacterVars}} PATH=$PATH:/opt/puppetlabs/bin puppet apply --verbose --detailed-exitcodes --modulepath='/tmp/packer-puppet-masterless/manifests/modules' {{.ManifestFile}}",
