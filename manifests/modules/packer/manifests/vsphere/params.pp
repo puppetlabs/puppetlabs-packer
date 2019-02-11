@@ -1,6 +1,6 @@
 # == Class: packer::vsphere::params
 #
-# Default vsphere parameter values for the packer module 
+# Default vsphere parameter values for the packer module
 #
 class packer::vsphere::params {
 
@@ -69,10 +69,10 @@ class packer::vsphere::params {
         $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
       }
       $ruby_package          = [ 'ruby' ]
-      $repo_name             = 'debian'
+      $repo_name             = 'debian__remote'
       $repo_list             = 'main contrib non-free'
-      $security_repo_name    = 'debian-security'
-      $security_release      = "${facts['lsbdistcodename']}/updates"
+      $security_repo_name    = 'debian__remote'
+      $security_release      = "${facts['lsbdistcodename']}"
       $updates_release       = "${facts['lsbdistcodename']}-updates"
     }
 

@@ -3,6 +3,7 @@
       "template_config"                              : "vcenter",
       "provisioner"                                  : "vmware",
       "template_name"                                : null,
+      "template_suffix"                              : "",
       "version"                                      : null,
       "disk_size"                                    : "20480",
       "RAM_reserve_all"                              : "true",
@@ -33,9 +34,9 @@
 
       "vmware_base_required_modules"                 : "saz-ssh puppetlabs-stdlib",
 
-      "vmware_base_vmx_data_memsize"                 : "512",
-      "vmware_base_vmx_data_cpuid_coresPerSocket"    : "1",
-      "vmware_base_vmx_data_numvcpus"                : "1",
+      "vmware_base_vmx_data_memsize"                 : "4096",
+      "vmware_base_vmx_data_cpuid_coresPerSocket"    : "4",
+      "vmware_base_vmx_data_numvcpus"                : "4",
       "vmware_base_vmx_ehci_present"                 : "FALSE",
       "vmware_base_vm_usb_present"                   : "FALSE" ,
       "vmware_base_vm_scsi0_present"                 : "TRUE",
@@ -45,7 +46,7 @@
       "vmware_base_vm_firmware"                      : "",
       "vmware_base_vmx_keyboard_and_mouse_profile"   : "",
       "vmware_base_vm_disk_adapter_type"             : "pvscsi",
-      "vmware_base_vm_vmx_hardware_version"          : "13",
+      "vmware_base_vm_vmx_hardware_version"          : "14",
       "vmware_base_vmx_data_ethernet0_virtualDev"    : "vmxnet3",
       "vmware_base_vmx_data_ethernet0_pciSlotNumber" : "33",
 
@@ -58,6 +59,7 @@
       "ssh_username"                                 : "root",
       "ssh_password"                                 : "puppet",
       "inject_http_seed_in_boot_command"             : "false",
+      "http_directory"                               : "",
       "vmware_base_provisioning_scripts"             : "../../../../scripts/bootstrap-aio.sh",
 
       "support_status"                               : "puppet_maintained",
@@ -67,7 +69,7 @@
 
  "builders": [
     {
-      "type"                                         : "vsphere-iso",
+      "type"                                         : "vsphere-23-iso",
 
       "communicator"                                 : "{{user `communicator_protocol`}}",
       "ssh_username"                                 : "{{user `ssh_username`}}",
@@ -75,7 +77,7 @@
 
 
       "name"                                         : "vcenter-iso",
-      "vm_name"                                      : "{{user `template_name`}}-{{user `version`}}",
+      "vm_name"                                      : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",
       "vm_version"                                   : "{{user `vmware_base_vm_vmx_hardware_version`}}",
       "notes"                                        : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}} OS Type: {{user `template_os`}}",
 
@@ -104,6 +106,7 @@
       "host"                                         : "",
       "boot_command"                                 : "{{$flag:= user `inject_http_seed_in_boot_command`}}{{$bootCmd:= user `boot_command`}}{{if eq $flag `true`}}{{$seed:= printf \"%s:%d\" .HTTPIP .HTTPPort}}{{$seed | printf $bootCmd}}{{else}}{{$bootCmd}}{{end}}",
 
+      "http_directory"                               : "{{user `http_directory` }}",
       "shutdown_command"                             : "{{user `shutdown_command`}}",
       "shutdown_timeout"                             : "{{user `shutdown_timeout`}}",
 
