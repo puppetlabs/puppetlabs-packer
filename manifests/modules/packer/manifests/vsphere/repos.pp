@@ -274,9 +274,10 @@ class packer::vsphere::repos(
           }
       }
       $gpg_check = $::operatingsystemrelease ? {
-        # SLES 15 defaults to requiring signed repos, and we generate our
+        # SLES 15/11 defaults to requiring signed repos, and we generate our
         # own repo from the ISO images, which is unsigned
-        '15.0' => '0',
+        '15.0'  => '0',
+        '11.4'  => '0',
         default => '1'
       }
 
