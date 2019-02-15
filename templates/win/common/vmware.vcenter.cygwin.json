@@ -29,6 +29,8 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
 
+    "template_suffix"           : "",
+
     "firmware"                  : "efi",
 
     "boot_wait"                 : "10ms",
@@ -46,7 +48,7 @@
       "type": "vsphere-23-iso",
 
       "name"                   : "vcenter-iso",
-      "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix}}",
       "vm_version"             : "{{user `vm_version`}}",
       "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
