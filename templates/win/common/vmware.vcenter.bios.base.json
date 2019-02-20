@@ -26,7 +26,9 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
 
-    "firmware"                  : null,
+    "firmware"                  : "bios",
+
+    "template_suffix"           : "",
 
     "boot_wait"                 : "10ms",
     "network_card"              : "vmxnet3",
@@ -42,7 +44,7 @@
       "type"                   : "vsphere-23-iso",
 
       "name"                   : "vcenter-base",
-      "vm_name"                : "{{user `template_name`}}-{{user `version`}}.{{user `firmware`}}.base",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",
       "vm_version"             : "{{user `vm_version`}}",
       "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 

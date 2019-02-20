@@ -21,6 +21,8 @@
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
 
+    "template_suffix"           : "",
+
     "boot_wait"                 : "10ms",
     "boot_order"                : "disk,cdrom",
 
@@ -35,7 +37,7 @@
 
       "name"                   : "vcenter-clone",
       "template"               : "{{user `base_template_name`}}",
-      "vm_name"                : "{{user `template_name`}}-{{user `version`}}.platform9",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",
       "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
       "vcenter_server"         : "{{user `packer_vcenter_host`}}",

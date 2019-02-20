@@ -4,7 +4,10 @@
 # IMAGE_PROVISIONER
 # 
 if [ -z "${IMAGE_PROVISIONER}" ]; then echo "IMAGE_PROVISIONER not set - exit" ; exit 1; fi
+if [ -z "${IMAGE_CONFIG}" ]; then echo "IMAGE_CONFIG not set - exit" ; exit 1; fi
 export WIN_COMMON_DIR=$(dirname $0)
+
+[ -z "${IMAGE_CLONE_PROVISIONER}" ] && export IMAGE_CLONE_PROVISIONER=${IMAGE_PROVISIONER}
 
 # Derive parameters from json variable file.
 #
@@ -14,6 +17,7 @@ export PACKER_WIN_VERSION=`jq -r .windows_version vars.json`
 
 # Firmware is set externally but if not set pick up from vars file, otherwise fail.
 [ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=`jq -r '.firmware //empty' vars.json`
+[ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=`jq -r '.variables.firmware //empty' ${WIN_COMMON_DIR}/${IMAGE_PROVISIONER}.${IMAGE_CONFIG}.json`
 [ -z "${PACKER_FIRMWARE}" ] && export PACKER_FIRMWARE=efi
 
 # PACKER_WIN_PROC_ARCH defaults to "amd64" unless specified
@@ -52,7 +56,7 @@ xsltproc --stringparam ProcessorArchitecture "${PACKER_WIN_PROC_ARCH}" \
          --stringparam ProductKey "${PACKER_PROD_KEY}" \
          --stringparam ImageName "${PACKER_IMAGE_NAME}" \
          --stringparam WindowsVersion "${PACKER_WIN_VERSION}" \
-         --stringparam ImageProvisioner "${IMAGE_PROVISIONER}" \
+         --stringparam ImageProvisioner "${IMAGE_CLONE_PROVISIONER}" \
          --stringparam Firmware "${PACKER_FIRMWARE}" \
          --stringparam WinRmUsername "${PACKER_WINRM_USER}" \
          --stringparam WinRmPassword "${PACKER_WINRM_PSWD}" \
