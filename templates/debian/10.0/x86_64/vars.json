@@ -1,5 +1,5 @@
 {
-    "template_name"                            : "debian-10.0-x86_64",
+    "template_name"                            : "debian-100-x86_64",
     "template_os"                              : "debian10_64Guest",
     "beakerhost"                               : "debian10-64",
     "version"                                  : "0.0.1",
