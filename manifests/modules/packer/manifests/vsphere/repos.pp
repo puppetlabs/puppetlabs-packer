@@ -18,7 +18,6 @@ class packer::vsphere::repos(
   case $facts['osfamily'] {
 
     debian: {
-
       file { $periodic_file:
         owner  => 'root',
         group  => 'root',
