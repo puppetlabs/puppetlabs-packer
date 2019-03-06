@@ -1,13 +1,18 @@
 {
   "_comment"                                                    : "Variable values specific to macOS 10.12 Sierra",  
   "beakerhost"                                                  : "osx1012-64",
-  "install_xcode_cli_tools"                                     : "true",
+  "install_xcode_cli_tools"                                     : "true",  
+  "iso_name"                                                    : "MacOS_10.12.iso",
   "iso_url"                                                     : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/MacOS_10.12.iso",
   "iso_checksum"                                                : "8c125882b82f68c22a98aabe5e156fb1",
   "iso_checksum_type"                                           : "md5",
   "template_name"                                               : "osx-1012-x86_64",  
   "version"                                                     : "0.0.2",
-  "template_os"                                                 : "darwin12-64",
-  "vmware_vsphere_nocm_required_modules"                        : "puppetlabs-stdlib"
+  "template_os"                                                 : "darwin16_64Guest",
+  "vmware_vsphere_nocm_required_modules"                        : "puppetlabs-stdlib",
+  "vcenter_host_to_build"                                       : "opdx-a0-mini-2a.ops.puppetlabs.net",
+  "packer_vcenter_cluster"                                      : "mac1",
+  "vmware_base_vm_firmware"                                     : "efi",
+  "vmware_base_vm_vmx_hardware_version"                         : "13"
 
 }

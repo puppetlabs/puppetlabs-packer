@@ -103,7 +103,7 @@
       "disk_size"                                    : "{{user `disk_size`}}",
       "boot_order"                                   : "{{user `boot_order`}}",
       "boot_wait"                                    : "{{user `vmware_base_boot_wait`}}",
-      "host"                                         : "",
+      "host"                                         : "{{user `vcenter_host_to_build`}}",
       "boot_command"                                 : "{{$flag:= user `inject_http_seed_in_boot_command`}}{{$bootCmd:= user `boot_command`}}{{if eq $flag `true`}}{{$seed:= printf \"%s:%d\" .HTTPIP .HTTPPort}}{{$seed | printf $bootCmd}}{{else}}{{$bootCmd}}{{end}}",
 
       "http_directory"                               : "{{user `http_directory` }}",
