@@ -130,7 +130,10 @@
     },
     {
       "type": "powershell",
-      "script" : "../../common/scripts/provisioners/config-platform9.ps1"
+      "script" : "../../common/scripts/provisioners/config-platform9.ps1",
+      "environment_vars" : [
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
+      ]
     },
     {
       "type": "powershell",
