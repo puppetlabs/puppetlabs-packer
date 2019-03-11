@@ -18,5 +18,5 @@
     "ProductName"       : "Windows Server 2016 Standard",
     "EditionID"         : "ServerStandard",
     "InstallationType"  : "Server",
-    "ReleaseID"         : "1607",
+    "ReleaseID"         : "1607"
 }
