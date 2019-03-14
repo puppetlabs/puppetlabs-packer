@@ -2,7 +2,6 @@
 # This script no longer runs under Boxstarter as the reboot sequence doesn't play well with packer once winrm is up
 #
 
-$ErrorActionPreference = "Stop"
 
 . C:\Packer\Scripts\windows-env.ps1
 

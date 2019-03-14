@@ -1,4 +1,3 @@
-$ErrorActionPreference = "Stop"
 
 # Customised Slipstream script for Windows-2008r2 - this proves a bit more difficult than the "usual"
 # Slipstream update process.

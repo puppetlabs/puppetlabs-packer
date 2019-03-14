@@ -10,8 +10,6 @@ param (
 $rundate = date
 write-output "Script: vmpooler-post-clone-configuration.ps1 Starting at: $rundate"
 
-$ErrorActionPreference = "Stop"
-
 # Used Frequently throughout
 $CygwinDir = "$ENV:CYGWINDIR"
 

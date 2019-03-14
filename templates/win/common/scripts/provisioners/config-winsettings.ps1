@@ -1,6 +1,5 @@
 # New Common Windows configuration file.
 #
-$ErrorActionPreference = "Stop"
 
 . C:\Packer\Scripts\windows-env.ps1
 

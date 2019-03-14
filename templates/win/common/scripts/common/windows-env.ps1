@@ -196,7 +196,7 @@ Function Set-UserKey($key,$valuename,$reg_type,$data) {
 # Copy of Unix Touch command - useful for checkpointing w.r.t. Boxstarter
 Function Touch-File {
     $file = $args[0]
-    if($file -eq $null) {
+    if($null -eq $file) {
         throw "No filename supplied"
     }
 

@@ -6,8 +6,6 @@
 $rundate = date
 write-output "Script: vmpooler-clone-startup.ps1 Starting at: $rundate"
 
-$ErrorActionPreference = "Stop"
-
 # Run vmstoolsd
 Write-Output "Starting vmstoolsd"
 $VMToolsd = "$($env:ProgramFiles)\VMware\VMware Tools\vmtoolsd.exe"

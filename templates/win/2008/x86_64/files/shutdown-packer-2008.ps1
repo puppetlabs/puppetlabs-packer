@@ -1,6 +1,5 @@
 # Windows-2008 special to do the shutdown.
 
-$ErrorActionPreference = 'Stop'
 
 . C:\Packer\Scripts\windows-env.ps1
 
