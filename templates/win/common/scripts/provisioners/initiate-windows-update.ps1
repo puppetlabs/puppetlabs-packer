@@ -47,7 +47,7 @@ Write-Output "========== A log and update report will be given at the end of the
 # Also set generous wait time of 50 seconds before task is run to ensure machine is in
 # ready state for update (Win-7-WMF5 seems to need this - (IMAGES-984)
 Write-Output "Create Bootstrap Scheduled Task"
-schtasks /create /tn PackerWinUpdate /rl HIGHEST /ru "$ENV:ADMIN_USERNAME" /RP "$ENV:ADMIN_PASSWORD" /IT /F /SC ONSTART /DELAY 0000:50 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\packer-windows-update.ps1 >> C:\Packer\Logs\windows-update.log'
+schtasks /create /tn PackerWinUpdate /rl HIGHEST /ru "$ENV:ADMIN_USERNAME" /RP "$ENV:ADMIN_PASSWORD" /IT /F /SC ONSTART /DELAY 0000:50 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\packer-windows-update.ps1 >> C:\Packer\Logs\windows-update.log 2>&1'
 
 # Disable WinRM until further notice.
 Set-Service "WinRM" -StartupType Disabled
