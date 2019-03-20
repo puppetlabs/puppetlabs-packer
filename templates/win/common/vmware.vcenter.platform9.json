@@ -105,14 +105,24 @@
       "destination": "C:\\Packer\\Config\\post-clone.autounattend.xml"
     },
     {
-      "type": "powershell",
-      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "type": "file",
+      "generated" : true,
+      "source": "./tmp/build.yaml",
+      "destination": "C:\\Packer\\puppet\\data\\build.yaml"
+    },
+    {
+      "type"         : "powershell",
+      "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1",
       "environment_vars" : [
         "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
         "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
         "PackerSHA={{user `packer_sha`}}",
         "PackerTemplateType=platform9"
       ]
+    },
+    {
+      "type" : "windows-restart",
+      "restart_timeout" : "{{user `puppetconfig_timeout`}}"
     },
     {
       "type": "powershell",

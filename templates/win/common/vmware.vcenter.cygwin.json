@@ -216,14 +216,18 @@
       "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
-      "type": "powershell",
-      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "type"         : "powershell",
+      "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1",
       "environment_vars" : [
         "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
         "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
         "PackerSHA={{user `packer_sha`}}",
         "PackerTemplateType=vmpooler"
       ]
+    },
+    {
+      "type" : "windows-restart",
+      "restart_timeout" : "{{user `puppetconfig_timeout`}}"
     },
     {
       "type": "powershell",

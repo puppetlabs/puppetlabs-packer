@@ -69,8 +69,11 @@ if (Test-Path "C:\Packer\Logs\$TestPhase.log") {
 }
 
 # Now for the Test Proper - assuming they exist of course
+# With a very rich hack for Win-2008 to suppress Notepad/Chrome errors.
+# Could add some additional tagging but the extra level of testing for this simply isn't worth it to
+# support an OS that's EOL at end of year.
 
-If ( $WindowsServerCore ) {
+If ( $WindowsServerCore -or ($WindowsVersion -Like $WindowsServer2008)) {
     $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'DesktopOnly'
 } else {
     $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'CoreOnly'
