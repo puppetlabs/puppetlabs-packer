@@ -94,6 +94,7 @@ $PackerStaging = "C:\Packer"
 $PackerDownloads = "$PackerStaging\Downloads"
 $PackerPuppet = "$PackerStaging\puppet"
 $PuppetModulesPath = "$PackerStaging\puppet\modules"
+$PuppetHieradata = "$PackerStaging\puppet\data"
 $PackerScripts = "$PackerStaging\Scripts"
 $SysInternals = "$PackerStaging\SysInternals"
 $PackerLogs = "$PackerStaging\Logs"
@@ -147,6 +148,7 @@ Function Create-PackerStagingDirectories {
     New-Item -ItemType Directory -Force -Path $PackerStaging
 
     New-Item -ItemType Directory -Force -Path $PuppetModulesPath
+    New-Item -ItemType Directory -Force -Path $PuppetHieradata
     New-Item -ItemType Directory -Force -Path $PackerDownloads
     New-Item -ItemType Directory -Force -Path $CygwinDownloads
     New-Item -ItemType Directory -Force -Path $PackerConfig

@@ -123,6 +123,25 @@
   ],
   "provisioners": [
     {
+      "type": "shell-local",
+      "inline" : [
+        "rm -f ./tmp/build.yaml",
+        "echo '---' > tmp/build.yaml",
+        "echo \"packer::template_name: '{{user `template_name`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::version: '{{user `version`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::build_date: '{{isotime}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::template_type: '{{user `packer_template_type`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml"
+      ]
+    },
+    {
+      "type": "file",
+      "generated" : true,
+      "source": "./tmp/build.yaml",
+      "destination": "C:\\Packer\\puppet\\data\\build.yaml"
+    },
+    {
       "type": "file",
       "source": "../../common/scripts/bootstrap/",
       "destination": "C:\\Packer\\Scripts"
@@ -218,10 +237,9 @@
       "elevated_password": "{{user `winrm_password`}}",
       "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1",
       "environment_vars" : [
-        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
-        "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
-        "PackerSHA={{user `packer_sha`}}",
-        "PackerTemplateType=vmpooler"
+        "ADMIN_USERNAME={{user `winrm_username`}}",
+        "ADMIN_PASSWORD={{user `winrm_password`}}",
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
       ]
     },
     {

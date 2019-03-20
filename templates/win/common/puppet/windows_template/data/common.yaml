@@ -1,0 +1,8 @@
+---
+# Common or Default data definitions for Packer/Puppet
+packer::template_name: 'Undefined'
+packer::packer_sha: 'Undefined'
+packer::version: 'Undefined'
+packer::build_date: 'Undefined'
+packer::template_type: 'Undefined'
+packer::packer_sha: 'Undefined'

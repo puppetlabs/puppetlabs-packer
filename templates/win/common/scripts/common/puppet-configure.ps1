@@ -30,10 +30,6 @@ $ENV:FACTER_modules_path         = "$PuppetModulesPath"
 $ENV:FACTER_packer_downloads     = "$PackerDownloads"
 $ENV:FACTER_packer_config        = "$PackerConfig"
 $ENV:FACTER_sysinternals         = "$SysInternals"
-$ENV:FACTER_build_date           = get-date -format "yyyy-MM-dd HH:mm zzz"
-$ENV:FACTER_packer_sha           = $ENV:PackerSHA
-$ENV:FACTER_packer_template_name = $ENV:PackerTemplateName
-$ENV:FACTER_packer_template_type = $ENV:PackerTemplateType
 # Pick Up user attributes as these could be localised.
 $ENV:FACTER_administrator_sid     =  $WindowsAdminSID
 $ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"
@@ -69,7 +65,7 @@ Try {
     Set-Content -Path $PuppetCounterFile "$AttemptCounter"
     Write-Output "Applying $($Manifest.Name).  Attempt $AttemptCounter of $MaxAttempts ..."
 
-    & $PuppetPath apply ($Manifest.Fullname) "--modulepath=$PuppetModulesPath" --verbose --detailed-exitcodes
+    & $PuppetPath apply ($Manifest.Fullname) "--hiera_config=$PuppetModulesPath\hiera.yaml" "--modulepath=$PuppetModulesPath" --verbose --detailed-exitcodes
     $EC = $LASTEXITCODE
     switch ($EC) {
       1 {
