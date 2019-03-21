@@ -28,7 +28,7 @@ Write-Output "Appveyor Username: $appveyor_username"
 $hostname = hostname
 
 Write-Output "Create new GCE Startup Script"
-schtasks /create /tn PackerAppveyorStartup /rl HIGHEST /ru "$appveyor_username" /RP "$appveyor_password" /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\gce-startup.ps1 >> c:\Packer\Logs\gce-startup.log'
+schtasks /create /tn PackerAppveyorStartup /rl HIGHEST /ru "$appveyor_username" /RP "$appveyor_password" /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\gce-startup.ps1 >> c:\Packer\Logs\gce-startup.log 2>&1'
 
 $securePassword = ConvertTo-SecureString "$appveyor_password" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential "$appveyor_username", $securePassword

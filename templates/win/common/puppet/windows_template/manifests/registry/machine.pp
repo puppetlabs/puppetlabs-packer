@@ -69,32 +69,29 @@ class windows_template::registry::machine ()
         type  => 'dword',
     }
 
-    # Set the following BGInfo Variables using facter provided variables from env
-    #VMPOOLER_Build_Date=Build-Date
-    #VMPOOLER_Packer_SHA=124214215215215235
-    #VMPOOLER_Packer_Template=Packer_Template_Name & type
+    # Set the following BGInfo Variables using lookups from hiera build data.
     registry::value { 'VMPOOLER_Build_Date':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Build_Date',
-        data  => $build_date,
+        data  => lookup('packer::build_date'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_SHA':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_SHA',
-        data  => $packer_sha,
+        data  => lookup('packer::packer_sha'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template',
-        data  => $packer_template_name,
+        data  => lookup('packer::template_name'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template_Type':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template_Type',
-        data  => $packer_template_type,
+        data  => lookup('packer::template_type'),
         type  => 'string'
     }
 

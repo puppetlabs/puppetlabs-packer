@@ -28,6 +28,10 @@
 
     "qa_root_passwd_plain"      : null,
     "packer_sha"                : null,
+    "packer_template_type"      : "vmpooler",
+
+    "template_suffix"           : "",
+    "firmware"                  : "bios",
 
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
@@ -39,11 +43,12 @@
 
   "builders": [
     {
-      "type": "vsphere-iso",
+      "type": "vsphere-23-iso",
 
-      "name"                   : "{{user `template_name`}}-{{user `provisioner`}}-{{user `template_config`}}",
-      "vm_name"                : "{{user `template_name`}}-{{user `version`}}",
+      "name"                   : "vcenter-iso",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",
       "vm_version"             : "{{user `vm_version`}}",
+      "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
       "vcenter_server"         : "{{user `packer_vcenter_host`}}",
       "insecure_connection"    : "{{user `packer_vcenter_insecure`}}",
@@ -67,6 +72,7 @@
       "disk_size"              : "{{user `disk_size`}}",
       "boot_order"             : "{{user `boot_order`}}",
       "boot_wait"              : "{{user `boot_wait`}}",
+      "host"                   : "",
       "boot_command" : [
         "<spacebar><wait><spacebar><wait><enter><wait><enter><wait><enter><wait><enter>"
       ],
@@ -116,6 +122,25 @@
     }
   ],
   "provisioners": [
+    {
+      "type": "shell-local",
+      "inline" : [
+        "rm -f ./tmp/build.yaml",
+        "echo '---' > tmp/build.yaml",
+        "echo \"packer::template_name: '{{user `template_name`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::version: '{{user `version`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::build_date: '{{isotime}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::template_type: '{{user `packer_template_type`}}'\" >> ./tmp/build.yaml",
+        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml"
+      ]
+    },
+    {
+      "type": "file",
+      "generated" : true,
+      "source": "./tmp/build.yaml",
+      "destination": "C:\\Packer\\puppet\\data\\build.yaml"
+    },
     {
       "type": "file",
       "source": "../../common/scripts/bootstrap/",
@@ -170,8 +195,7 @@
           "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
           "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
           "PBTEST_WindowsMemorySize={{user `memsize`}}"
-        ],
-      "valid_exit_codes" : [ 0 ]
+        ]
     },
     {
       "type": "powershell",
@@ -193,13 +217,7 @@
       "elevated_password": "{{user `winrm_password`}}",
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
-      ],
-      "environment_vars" : [
-        "PBTEST_OSName={{user `XXXX`}}",
-        "PBTEST_Edition={{user `XXXX`}}",
-        "PBTEST_Build={{user `XXXX`}}"
-      ],
-      "valid_exit_codes" : [ 0 ]
+      ]
     },
     {
       "type": "powershell",
@@ -217,16 +235,24 @@
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/puppet-configure.ps1",
+      "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1",
       "environment_vars" : [
-        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}",
-        "PackerTemplateName={{user `template_name`}}-{{user `version`}}",
-        "PackerSHA={{user `packer_sha`}}",
-        "PackerTemplateType=vmpooler"
+        "ADMIN_USERNAME={{user `winrm_username`}}",
+        "ADMIN_PASSWORD={{user `winrm_password`}}",
+        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
       ]
     },
     {
-      "type": "windows-restart"
+      "type": "windows-restart",
+      "restart_timeout" : "{{user `puppetconfig_timeout`}}"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "inline" : [
+        "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
+      ]
     },
     {
       "type": "powershell",
@@ -238,8 +264,7 @@
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/cleanup-host.ps1",
-      "valid_exit_codes" : [0,1]
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
     },
     {
       "type"   : "powershell",

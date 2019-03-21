@@ -35,7 +35,7 @@ if (-not (Test-Path "$PackerScripts\windows-env.ps1" )) {
 # Create Scheduled Task so this repeatedly until we have finished.
 if (-not (Test-Path "$PackerLogs\BootstrapSchedTask.installed")) {
   Write-Output "Create Bootstrap Scheduled Task"
-  schtasks /create /tn PackerBootstrap /rl HIGHEST /ru "$AdminUsername" /RP "$AdminPassword" /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File A:\bootstrap-packerbuild.ps1 >> C:\Packer\Logs\bootstrap-packerbuild.log'
+  schtasks /create /tn PackerBootstrap /rl HIGHEST /ru "$AdminUsername" /RP "$AdminPassword" /F /SC ONSTART /DELAY 0000:20 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Hidden -ExecutionPolicy Bypass -NonInteractive -NoProfile -File A:\bootstrap-packerbuild.ps1 >> C:\Packer\Logs\bootstrap-packerbuild.log 2>&1'
   Touch-File "$PackerLogs\BootstrapSchedTask.installed"
 }
 

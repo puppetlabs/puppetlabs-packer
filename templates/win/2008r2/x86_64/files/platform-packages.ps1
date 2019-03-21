@@ -1,4 +1,3 @@
-$ErrorActionPreference = "Stop"
 
 . C:\Packer\Scripts\windows-env.ps1
 

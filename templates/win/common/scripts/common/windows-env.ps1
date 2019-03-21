@@ -93,6 +93,8 @@ $startup = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup"
 $PackerStaging = "C:\Packer"
 $PackerDownloads = "$PackerStaging\Downloads"
 $PackerPuppet = "$PackerStaging\puppet"
+$PuppetModulesPath = "$PackerStaging\puppet\modules"
+$PuppetHieradata = "$PackerStaging\puppet\data"
 $PackerScripts = "$PackerStaging\Scripts"
 $SysInternals = "$PackerStaging\SysInternals"
 $PackerLogs = "$PackerStaging\Logs"
@@ -140,16 +142,22 @@ $SprocParms = @{'PassThru'=$true;
 
 # Helper to create consistent staging directories.
 Function Create-PackerStagingDirectories {
-  if (-not (Test-Path "$PackerStaging\puppet\modules")) {
-    Write-Output "Creating $PackerStaging"
-    mkdir -Path $PackerStaging\puppet\modules
-    mkdir -Path $PackerStaging\Downloads
-    mkdir -Path $PackerStaging\Downloads\Cygwin
-    mkdir -Path $PackerStaging\Config
-    mkdir -Path $PackerStaging\Scripts
-    mkdir -Path $PackerStaging\PsModules
-    mkdir -Path $PackerStaging\Sysinternals
-    mkdir -Path $PackerStaging\Acceptance
+  if (-not (Test-Path "$PackerLogs/StagingDirectories.installed")) {
+    Write-Output "Creating $PackerStaging and its associated directories"
+
+    New-Item -ItemType Directory -Force -Path $PackerStaging
+
+    New-Item -ItemType Directory -Force -Path $PuppetModulesPath
+    New-Item -ItemType Directory -Force -Path $PuppetHieradata
+    New-Item -ItemType Directory -Force -Path $PackerDownloads
+    New-Item -ItemType Directory -Force -Path $CygwinDownloads
+    New-Item -ItemType Directory -Force -Path $PackerConfig
+    New-Item -ItemType Directory -Force -Path $PackerScripts
+    New-Item -ItemType Directory -Force -Path $PackerPsModules
+    New-Item -ItemType Directory -Force -Path $SysInternals
+    New-Item -ItemType Directory -Force -Path $PackerAcceptance
+
+    Touch-File "$PackerLogs/StagingDirectories.installed"
   }
 }
 
@@ -195,19 +203,20 @@ Function Set-UserKey($key,$valuename,$reg_type,$data) {
 
 # Copy of Unix Touch command - useful for checkpointing w.r.t. Boxstarter
 Function Touch-File {
-    $file = $args[0]
-    if($file -eq $null) {
-        throw "No filename supplied"
-    }
+  $file = $args[0]
+  if($null -eq $file) {
+    throw "No filename supplied"
+  }
 
-    if(Test-Path $file)
-    {
-        (Get-ChildItem $file).LastWriteTime = Get-Date
-    }
-    else
-    {
-        Write-Output $null > $file
-    }
+  if(Test-Path $file)
+  {
+    (Get-ChildItem $file).LastWriteTime = Get-Date
+  }
+  else
+  {
+    Write-Output "Touch File: $file created"
+    Write-Output $null > $file
+  }
 }
 
 # Helper Function to disable all sleep timeouts on the windows box.
