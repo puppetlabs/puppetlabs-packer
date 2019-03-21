@@ -108,8 +108,8 @@ Write-Output "========== A log and update report will be given at the end of the
 
 # Need to pick up Admin Username/Password from Environment for sched task
 
-Write-Output "Create Bootstrap Scheduled Task"
-schtasks /create /tn PuppetConfigure /rl HIGHEST /ru "$ENV:ADMIN_USERNAME" /RP "$ENV:ADMIN_PASSWORD" /IT /F /SC ONSTART /DELAY 0000:50 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\puppet-configure.ps1 >> C:\Packer\Logs\puppet.log 2>&1'
+Write-Output "Create Bootstrap Scheduled Task with $($PackerBuildParams.packer.admin_username)"
+schtasks /create /tn PuppetConfigure /rl HIGHEST /ru "$($PackerBuildParams.packer.admin_username)" /RP "$($PackerBuildParams.packer.admin_password)" /IT /F /SC ONSTART /DELAY 0000:50 /TR 'cmd /c c:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe -sta -WindowStyle Normal -ExecutionPolicy Bypass -NonInteractive -NoProfile -File C:\Packer\Scripts\puppet-configure.ps1 >> C:\Packer\Logs\puppet.log 2>&1'
 
 # Disable WinRM until further notice.
 Set-Service "WinRM" -StartupType Disabled

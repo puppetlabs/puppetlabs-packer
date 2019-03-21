@@ -1,0 +1,20 @@
+{
+  "packer": {
+    "template_name": "Template-Undef",
+    "packer_sha": "XXXXXXXXXXXX",
+    "version": "YYYYMMDD",
+    "build_date": "YYYY-MM-DD",
+    "template_type": "Undefined",
+    "memsize": "0000",
+    "admin_username": "Administrator",
+    "admin_password": "PackerAdmin",
+    "qa_password_plain": "XXXXXXX",
+    "windows": {
+      "currentversion": "X.Y",
+      "productname": "Windows Edition Name",
+      "editionid": "EditionID",
+      "installationtype": "Installation Type",
+      "releaseid": "N/A"
+    }
+  }
+}

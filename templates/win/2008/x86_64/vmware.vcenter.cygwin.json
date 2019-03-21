@@ -36,7 +36,9 @@
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
     "network_card"              : "vmxnet3",
-    "boot_order"                : "disk,cdrom"
+    "boot_order"                : "disk,cdrom",
+
+    "valid_exit_codes"          : "0"
   },
 
   "description": "Builds a Windows Server 2008 SP2 template VM for use in VMware. Custom spec needed for this platform",
@@ -125,21 +127,37 @@
     {
       "type": "shell-local",
       "inline" : [
-        "rm -f ./tmp/build.yaml",
-        "echo '---' > tmp/build.yaml",
-        "echo \"packer::template_name: '{{user `template_name`}}'\" >> ./tmp/build.yaml",
-        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml",
-        "echo \"packer::version: '{{user `version`}}'\" >> ./tmp/build.yaml",
-        "echo \"packer::build_date: '{{isotime}}'\" >> ./tmp/build.yaml",
-        "echo \"packer::template_type: '{{user `packer_template_type`}}'\" >> ./tmp/build.yaml",
-        "echo \"packer::packer_sha: '{{user `packer_sha`}}'\" >> ./tmp/build.yaml"
+        "rm -f ./tmp/build.json",
+        "echo '{' > tmp/build.json",
+
+        "echo '  \"packer\" : {' >> ./tmp/build.json",
+        "echo '    \"template_name\": \"{{user `template_name`}}\",' >> ./tmp/build.json",
+        "echo '    \"packer_sha\": \"{{user `packer_sha`}}\",' >> ./tmp/build.json",
+        "echo '    \"version\": \"{{user `version`}}\",' >> ./tmp/build.json",
+        "echo '    \"build_date\": \"{{isotime}}\",' >> ./tmp/build.json",
+        "echo '    \"template_type\": \"{{user `packer_template_type`}}\",' >> ./tmp/build.json",
+        "echo '    \"memsize\": \"{{user `memsize`}}\",' >> ./tmp/build.json",
+        "echo '    \"admin_username\": \"{{user `winrm_username`}}\",' >> ./tmp/build.json",
+        "echo '    \"admin_password\": \"{{user `winrm_password`}}\",' >> ./tmp/build.json",
+        "echo '    \"qa_root_passwd_plain\": \"{{user `qa_root_passwd_plain`}}\",' >> ./tmp/build.json",
+
+        "echo '    \"windows\" : {' >> ./tmp/build.json",
+        "echo '       \"currentversion\": \"{{user `CurrentVersion`}}\",' >> ./tmp/build.json",
+        "echo '       \"productname\": \"{{user `ProductName`}}\",' >> ./tmp/build.json",
+        "echo '       \"editionid\": \"{{user `EditionID`}}\",' >> ./tmp/build.json",
+        "echo '       \"installationtype\": \"{{user `InstallationType`}}\",' >> ./tmp/build.json",
+        "echo '       \"releaseid\": \"{{user `ReleaseID`}}\"' >> ./tmp/build.json",
+
+        "echo '    }' >> ./tmp/build.json",
+        "echo '  }' >> ./tmp/build.json",
+        "echo '}' >> ./tmp/build.json"
       ]
     },
     {
       "type": "file",
       "generated" : true,
-      "source": "./tmp/build.yaml",
-      "destination": "C:\\Packer\\puppet\\data\\build.yaml"
+      "source": "./tmp/build.json",
+      "destination": "C:\\Packer\\puppet\\data\\build.json"
     },
     {
       "type": "file",
@@ -188,24 +206,14 @@
       "inline" : [
           "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
         ],
-        "environment_vars" : [
-          "PBTEST_WindowsCurrentVersion={{user `CurrentVersion`}}",
-          "PBTEST_WindowsProductName={{user `ProductName`}}",
-          "PBTEST_WindowsEditionID={{user `EditionID`}}",
-          "PBTEST_WindowsInstallationType={{user `InstallationType`}}",
-          "PBTEST_WindowsReleaseID={{user `ReleaseID`}}",
-          "PBTEST_WindowsMemorySize={{user `memsize`}}"
-        ]
+        "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1",
-      "environment_vars" : [
-        "ADMIN_USERNAME={{user `winrm_username`}}",
-        "ADMIN_PASSWORD={{user `winrm_password`}}"
-      ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type" : "windows-restart",
@@ -217,16 +225,15 @@
       "elevated_password": "{{user `winrm_password`}}",
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
-      ]
+      ],
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "script" : "../../common/scripts/provisioners/install-cygwin.ps1",
-      "environment_vars" : [
-        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
-      ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "windows-restart"
@@ -236,11 +243,7 @@
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
       "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1",
-      "environment_vars" : [
-        "ADMIN_USERNAME={{user `winrm_username`}}",
-        "ADMIN_PASSWORD={{user `winrm_password`}}",
-        "QA_ROOT_PASSWD_PLAIN={{user `qa_root_passwd_plain`}}"
-      ]
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "windows-restart",
@@ -252,25 +255,29 @@
       "elevated_password": "{{user `winrm_password`}}",
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
-      ]
+      ],
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
+      "script" : "../../common/scripts/provisioners/config-winsettings.ps1",
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
+      "script" : "../../common/scripts/provisioners/cleanup-host.ps1",
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"   : "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
+      "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1",
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type": "windows-restart"
@@ -279,7 +286,8 @@
       "type"   : "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1"
+      "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1",
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     }
   ]
 }

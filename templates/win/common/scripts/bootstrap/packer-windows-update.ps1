@@ -22,16 +22,6 @@ if ( ($WindowsVersion -Like $WindowsServer2016) -or (($PSVersionTable.PSVersion.
   }
 }
 
-# Run the (Optional) Installation Package File.
-
-if (Test-Path "A:\platform-packages.ps1")
-{
-  & "A:\platform-packages.ps1"
-}
-else {
-  Write-Warning "No additional packages found in $PackageDir"
-}
-
 Import-PsWindowsUpdateModule
 
 # Run Windows Update - this will repeat as often as needed through the Invoke-Reboot cycle.

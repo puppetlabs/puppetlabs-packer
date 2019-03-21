@@ -47,10 +47,6 @@ foreach ($line in $content)
 }
 Write-Output "Package list is: $CygWinPackageList"
 
-# Setup Password for later use
-if ($ENV:QA_ROOT_PASSWD_PLAIN.length -le 0 ) {throw "QA_ROOT_PASSWD_PLAIN is not defined"}
-$ENV:QA_ROOT_PASSWD_PLAIN | Out-File "$CygwinDownloads\qapasswd"
-
 Write-Output "Downloading Cygwin Packages"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/cygwin/packages-$ARCH.zip" "$CygwinDownloads\packages_$ARCH.zip"
 Write-Output "Extracting $CygwinDownloads\packages_$ARCH.zip"

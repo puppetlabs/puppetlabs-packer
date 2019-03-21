@@ -3,6 +3,8 @@
 
 $ErrorActionPreference = 'Stop'
 
+. C:\Packer\Scripts\windows-env.ps1
+
 # If we are Windows-10/2016 need to set network adapters private.
 # Note - need longhand test as windows_env isn't available here.
 if ($WindowsVersion -like "10.*") {
@@ -65,8 +67,7 @@ Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "A
 
 # Set up cygserv Username
 Write-Output "Setting SSH Host Configuration"
-$qa_root_passwd_plain = Get-Content "$ENV:CYGWINDOWNLOADS\qapasswd"
-& $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd $qa_root_passwd_plain`'
+& $CygWinShell --login -c `'ssh-host-config --yes --privileged --user cyg_server --pwd $($PackerBuildParams.packer.qa_root_passwd_plain)`'
 
 # Generate ssh keys for both Administrator and vagrant
 Write-Output "Generate SSH Keys"

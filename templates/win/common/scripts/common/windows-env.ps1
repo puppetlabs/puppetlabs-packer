@@ -93,8 +93,8 @@ $startup = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup"
 $PackerStaging = "C:\Packer"
 $PackerDownloads = "$PackerStaging\Downloads"
 $PackerPuppet = "$PackerStaging\puppet"
-$PuppetModulesPath = "$PackerStaging\puppet\modules"
-$PuppetHieradata = "$PackerStaging\puppet\data"
+$PuppetModulesPath = "$PackerPuppet\modules"
+$PuppetHieradata = "$PackerPuppet\data"
 $PackerScripts = "$PackerStaging\Scripts"
 $SysInternals = "$PackerStaging\SysInternals"
 $PackerLogs = "$PackerStaging\Logs"
@@ -102,6 +102,16 @@ $PackerConfig = "$PackerStaging\Config"
 $CygwinDownloads = "$PackerDownloads\Cygwin"
 $PackerPsModules = "$PackerStaging\PsModules"
 $PackerAcceptance = "$PackerStaging\Acceptance"
+
+# Load in the build parameters injected from the Packer Build.
+$PackerBuildFile = "$PuppetHieradata\build.json"
+if (Test-Path "$PuppetHieradata\build.json") {
+  $PackerBuildData = Get-Content -Path "$PuppetHieradata\build.json"
+
+  [System.Reflection.Assembly]::LoadWithPartialName("System.Web.Extensions")
+  $ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+  $Global:PackerBuildParams = $ser.DeserializeObject($PackerBuildData)
+}
 
 # For Puppet modules configuration
 $ModulesPath = ''
