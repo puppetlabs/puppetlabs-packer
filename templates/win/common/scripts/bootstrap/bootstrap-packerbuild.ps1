@@ -136,6 +136,16 @@ if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
 }
 
+# Run the (Optional) Installation Package File.
+
+if (Test-Path "A:\platform-packages.ps1")
+{
+  & "A:\platform-packages.ps1"
+}
+else {
+  Write-Warning "No additional packages found in $PackageDir"
+}
+
 # Need to guard against system going into standby for long updates
 Write-Output "Disabling Sleep timers"
 Disable-PC-Sleep

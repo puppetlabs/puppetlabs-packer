@@ -2,11 +2,11 @@
 version: 5
 defaults:
   datadir: C:\Packer\puppet\data
-  data_hash: yaml_data
+  data_hash: json_data 
 
 hierarchy:
   - name: "Build data"
-    path: "build.yaml"
+    path: "build.json"
 
   - name: "Common data"
-    path: "common.yaml"
+    path: "common.json"

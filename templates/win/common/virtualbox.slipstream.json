@@ -70,6 +70,41 @@
   ],
   "provisioners": [
     {
+      "type": "shell-local",
+      "inline" : [
+        "rm -f ./tmp/build.json",
+        "echo '{' > tmp/build.json",
+
+        "echo '  \"packer\" : {' >> ./tmp/build.json",
+        "echo '    \"template_name\": \"{{user `template_name`}}\",' >> ./tmp/build.json",
+        "echo '    \"packer_sha\": \"{{user `packer_sha`}}\",' >> ./tmp/build.json",
+        "echo '    \"version\": \"{{user `version`}}\",' >> ./tmp/build.json",
+        "echo '    \"build_date\": \"{{isotime}}\",' >> ./tmp/build.json",
+        "echo '    \"template_type\": \"{{user `packer_template_type`}}\",' >> ./tmp/build.json",
+        "echo '    \"memsize\": \"{{user `memsize`}}\",' >> ./tmp/build.json",
+        "echo '    \"admin_username\": \"{{user `winrm_username`}}\",' >> ./tmp/build.json",
+        "echo '    \"admin_password\": \"{{user `winrm_password`}}\",' >> ./tmp/build.json",
+        "echo '    \"qa_root_passwd_plain\": \"{{user `qa_root_passwd_plain`}}\",' >> ./tmp/build.json",
+
+        "echo '    \"windows\" : {' >> ./tmp/build.json",
+        "echo '       \"currentversion\": \"{{user `CurrentVersion`}}\",' >> ./tmp/build.json",
+        "echo '       \"productname\": \"{{user `ProductName`}}\",' >> ./tmp/build.json",
+        "echo '       \"editionid\": \"{{user `EditionID`}}\",' >> ./tmp/build.json",
+        "echo '       \"installationtype\": \"{{user `InstallationType`}}\",' >> ./tmp/build.json",
+        "echo '       \"releaseid\": \"{{user `ReleaseID`}}\"' >> ./tmp/build.json",
+
+        "echo '    }' >> ./tmp/build.json",
+        "echo '  }' >> ./tmp/build.json",
+        "echo '}' >> ./tmp/build.json"
+      ]
+    },
+    {
+      "type": "file",
+      "generated" : true,
+      "source": "./tmp/build.json",
+      "destination": "C:\\Packer\\puppet\\data\\build.json"
+    },
+    {
       "type": "powershell",
       "script" : "../../common/scripts/provisioners/test-bootstrap.ps1"
     },

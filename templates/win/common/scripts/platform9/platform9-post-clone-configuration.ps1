@@ -17,10 +17,9 @@ Write-Output "Starting Cloud-Init"
 Write-Output "Cloudbase-Init Ended"
 
 # Update machine password (and reset autologin)
-$qa_root_passwd_plain = Get-Content "$PackerDownloads\qapasswd"
 Write-Output "Setting $AdminUsername Password"
-net user $AdminUsername "$qa_root_passwd_plain"
-autologon -AcceptEula $AdminUsername . "$qa_root_passwd_plain"
+net user $AdminUsername "$($PackerBuildParams.packer.qa_root_passwd_plain)"
+autologon -AcceptEula $AdminUsername . "$($PackerBuildParams.packer.qa_root_passwd_plain)"
 
 # Use BGInfo to paint the screen
 if (-not $WindowsServerCore) {

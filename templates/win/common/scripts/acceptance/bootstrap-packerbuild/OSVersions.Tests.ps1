@@ -15,19 +15,18 @@
 describe 'Windows Platform Validation Tests' {
 
     it 'Should be the Correct Operating System name' {
-        $WindowsProductName | Should Be $ENV:PBTEST_WindowsProductName
+        $WindowsProductName | Should Be $($PackerBuildParams.packer.windows.productname)
     }
 
     it 'Should be the correct Edition' {
-        $WindowsEditionID | Should Be $ENV:PBTEST_WindowsEditionID
+        $WindowsEditionID | Should Be $($PackerBuildParams.packer.windows.editionid)
     }
 
     it 'Should be the correct Installation Type' {
-        $WindowsInstallationType | Should Be  $ENV:PBTEST_WindowsInstallationType
+        $WindowsInstallationType | Should Be $($PackerBuildParams.packer.windows.installationtype)
     }
 
     it 'Should be the correct Release ID' {
-        $WindowsReleaseID | Should Be  $ENV:PBTEST_WindowsReleaseID
+        $WindowsReleaseID | Should Be $($PackerBuildParams.packer.windows.releaseid)
     }
-
 }

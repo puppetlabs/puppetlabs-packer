@@ -73,25 +73,25 @@ class windows_template::registry::machine ()
     registry::value { 'VMPOOLER_Build_Date':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Build_Date',
-        data  => lookup('packer::build_date'),
+        data  => lookup('packer.build_date'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_SHA':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_SHA',
-        data  => lookup('packer::packer_sha'),
+        data  => lookup('packer.packer_sha'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template',
-        data  => lookup('packer::template_name'),
+        data  => lookup('packer.template_name'),
         type  => 'string'
     }
     registry::value { 'VMPOOLER_Packer_Template_Type':
         key   => 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
         value => 'VMPOOLER_Packer_Template_Type',
-        data  => lookup('packer::template_type'),
+        data  => lookup('packer.template_type'),
         type  => 'string'
     }
 
