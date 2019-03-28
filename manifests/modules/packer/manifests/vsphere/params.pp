@@ -71,8 +71,8 @@ class packer::vsphere::params {
       $ruby_package          = [ 'ruby' ]
       $repo_name             = 'debian__remote'
       $repo_list             = 'main contrib non-free'
-      $security_repo_name    = 'debian__remote'
-      $security_release      = "${facts['lsbdistcodename']}"
+      $security_repo_name    = 'debian_security__remote'
+      $security_release      = "${facts['lsbdistcodename']}/security"
       $updates_release       = "${facts['lsbdistcodename']}-updates"
     }
 
