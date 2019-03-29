@@ -22,7 +22,7 @@ if (-not (Test-Path "$PackerLogs\PSWindowsUpdate.installed")) {
   # Download and install PSWindows Update Modules 
   # Use Version 2.0.0.4 (latest) for Win-10/2016 only as it doesn't play nicely with earlier versions
   If ($WindowsVersion -like $WindowsServer2016) {
-    $Global:PsWindowsUpdateVersion = "2.0.0.4"
+    $Global:PsWindowsUpdateVersion = "2.1.1.2"
   } else {
     $Global:PsWindowsUpdateVersion = "1.6.1.1"
   }

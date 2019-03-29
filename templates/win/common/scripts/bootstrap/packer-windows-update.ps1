@@ -42,10 +42,10 @@ do {
     # The format and command for windows update differs across windows versions.
     # See below.
     If ($WindowsVersion -like $WindowsServer2016) {
-      # Use Latest (2.0.0.4) for Win-10/2016 only
+      # Use Latest (2.1.1.2) for Win-10/2016 only
       # Note 'KB2267602' is screened out as it doesn't appear to install correctly.
-      Write-Output "Running PSWindows Update - Verbose Mode"
-      Install-WindowsUpdate -Verbose -AcceptAll -UpdateType Software -IgnoreReboot -NotKBArticleID 'KB2267602'
+      Write-Output "Running PSWindows Update"
+      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot -NotKBArticleID 'KB2267602'
     } elseif ($psversiontable.psversion.major -eq 2) {
       # Ignore errors on PS2 (in case of unblock file errors)
       Write-Output "Running PSWindows Update - Ignoring errors (PS2)"
@@ -53,7 +53,7 @@ do {
     } else {
       # All other versions - mainly 2012r2 use this version
       Write-Output "Running PSWindows Update - Non Verbose Mode"
-      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot -Verbose
+      Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
     }
     if (Test-PendingReboot) { 
       Invoke-Reboot 
