@@ -51,14 +51,16 @@ class packer::vsphere::repos(
         },
       }
 
-      apt::source { "${facts['lsbdistcodename']}-updates":
-        release  => $updates_release,
-        location => "${repo_mirror}/${repo_name}",
-        repos    => $repo_list,
-        include  => {
-          'src' => true,
-          'deb' => true,
-        },
+      if $facts['operatingsystem'] == 'Debian' and $facts['operatingsystemmajrelease'] !~  /^(7|8)/ {
+        apt::source { "${facts['lsbdistcodename']}-updates":
+          release  => $updates_release,
+          location => "${repo_mirror}/${repo_name}",
+          repos    => $repo_list,
+          include  => {
+            'src' => true,
+            'deb' => true,
+          },
+        }
       }
 
       apt::source { "${facts['lsbdistcodename']}-security":

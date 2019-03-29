@@ -1,0 +1,16 @@
+{
+    "template_name"                         : "debian-8-x86_64",
+    "template_os"                           : "debian8_64Guest",
+    "beakerhost"                            : "debian8-64",
+    "version"                               : "0.0.7",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic__local/iso/debian-8.11.0-amd64-CD-1.iso",
+    "iso_checksum"                          : "166868369a8094a69b2766b46a9a28869ac921bac5697e525d0ec5be14a9d373",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_base_vmx_data_memsize"          : "4096",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/stretch/puppet5/p/puppet-agent/puppet-agent_5.5.10-1stretch_amd64.deb",
+    "iso_name"                              : "debian-8.11.0-amd64-CD-1.iso"
+    
+    
+}

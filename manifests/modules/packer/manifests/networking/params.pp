@@ -6,8 +6,9 @@ class packer::networking::params {
 
   case $facts['osfamily'] {
     debian: {
-      $udev_rule     = '/etc/udev/rules.d/70-persistent-net.rules'
-      $udev_rule_gen = '/lib/udev/rules.d/75-persistent-net-generator.rules'
+      $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
+      $udev_rule_gen    = '/lib/udev/rules.d/75-persistent-net-generator.rules'
+      $interface_script = undef
     }
 
     redhat: {
