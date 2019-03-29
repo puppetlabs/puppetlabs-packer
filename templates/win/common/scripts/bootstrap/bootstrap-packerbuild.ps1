@@ -42,9 +42,9 @@ if (-not (Test-Path "$PackerLogs\BootstrapSchedTask.installed")) {
 # Enable WSUS - this is being put at the top of the script deliberately as a recycle of wuauserv is
 # required - this most reliable way to do this is with a reboot so we want to get this out the way first
 # to prevent windows update starting anything.
-# Windows-10/2016 seem to consistenly break on WSUS, so disable WSUS completely for these.
+# Windows-10/2016 LTSB seem to consistenly break on WSUS, so disable WSUS completely for these.
 # Same seems to apply to win-2012 so disabling for this too.
-if ($WindowsVersion -like $WindowsServer2016 -or $WindowsVersion -like $WindowsServer2012) {
+if ($WindowsVersion -like $WindowsServer2012 -or ($WindowsVersion -like $WindowsServer2016 -and $WindowsInstallationType -eq "Client" -and $WindowsReleaseID -eq "1607")) {
   Write-Output "Bypassing WSUS - Go Direct to Microsoft for updates"
   Disable-WindowsAutoUpdate
 }
