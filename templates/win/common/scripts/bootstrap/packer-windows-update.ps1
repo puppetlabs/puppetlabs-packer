@@ -10,6 +10,10 @@ $ErrorActionPreference = 'Stop'
 $rundate = Get-Date
 write-output "Script: packer-windows-update.ps1 Starting at: $rundate"
 
+# Need to guard against system going into standby for long updates
+Write-Output "Disabling Sleep timers"
+Disable-PC-Sleep
+
 # Install latest .Net package prior to any windows updates - this NOT done for:
 # Powershell 2.0 builds (win-2008, win-2008R2 and Win-7)
 # Windows 10/2016 - this comes with either the latest, or close to latest.
@@ -20,6 +24,14 @@ if ( ($WindowsVersion -Like $WindowsServer2016) -or (($PSVersionTable.PSVersion.
   if (Test-PendingReboot) {
     Invoke-Reboot
   }
+}
+
+# Run the (Optional) Installation Package File 
+# 
+
+if (Test-Path "A:\platform-packages.ps1" )
+{
+  & "A:\platform-packages.ps1"
 }
 
 Import-PsWindowsUpdateModule
