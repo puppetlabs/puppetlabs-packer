@@ -1,4 +1,3 @@
-
 <#
   .SYNOPSIS
 	Bootstrap the Packer build
@@ -10,8 +9,6 @@
   This means that more immediate feedback is given to packer that the OS load itself
   is sound.
 #>
-
-
 
 param (
     [string]$HyperVisor = "vmware",
@@ -25,6 +22,10 @@ $PackageDir = 'A:\'
 
 $rundate = Get-Date
 Write-Output "Script: bootstrap-packerbuild.ps1 Starting at: $rundate"
+
+# Disabling WinRM Service as this will be explicitly enabled as the final action on this script.
+Write-Output "Ensure WinRM is disabled"
+Set-Service -StartupType Disabled -Name WinRM
 
 # Create Packer Log Directories if they don't exist already.
 Create-PackerStagingDirectories
@@ -136,19 +137,44 @@ if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
 }
 
-# Run the (Optional) Installation Package File.
+# Special for Windows 2008/2008r2 only to enable the JSON parsing assemblies. This was originally in the
+# platform-packages.ps1 script which had been moved to the bootstrap phase. Unfortunately that caused too
+# many side effects with the WirRM configuration, so platform-packages was moved back to the windows udpate
+# phase and the .Net 3.5 enablement was moved here.
 
-if (Test-Path "A:\platform-packages.ps1")
-{
-  & "A:\platform-packages.ps1"
+if ($WindowsVersion -like $WindowsServer2008) {
+  if (-not (Test-Path "$PackerLogs\NET35.Installed"))
+  {
+    Write-Output "Setting network adapters to private"
+    $networkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]"{DCB00C01-570F-4A9B-8D69-199FDBA5723B}"))
+    $connections = $networkListManager.GetNetworkConnections()
+
+    # Install .Net 3.5.1
+    Write-Output ".Net 3.5.1"
+    Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/win-2008-ps2/dotnetfx35setup.exe"  "$ENV:TEMP\dotnetfx35setup.exe"
+    Start-Process -Wait "$ENV:TEMP\dotnetfx35setup.exe" -ArgumentList "/q"
+    Write-Output ".Net 3.5.1 Installed"
+    Touch-File "$PackerLogs\NET35.Installed"
+    if (Test-PendingReboot) { Invoke-Reboot }
+  }
 }
-else {
-  Write-Warning "No additional packages found in $PackageDir"
+if ($WindowsVersion -like $WindowsServer2008r2 -and $WindowsInstallationType -eq "Server" ) {
+  if (-not (Test-Path "$PackerLogs\NET35.installed"))
+  {
+    # Enable .Net 3.5 (needed for Puppet csc compiles)
+    Write-Output "Enable .Net 3.5"
+    DISM /Online /Enable-Feature /FeatureName:NetFx3
+    Touch-File "$PackerLogs\NET35.installed"
+    if (Test-PendingReboot) { Invoke-Reboot }
+  }
 }
 
-# Need to guard against system going into standby for long updates
-Write-Output "Disabling Sleep timers"
-Disable-PC-Sleep
+# Set WinRM service to start automatically (not delayed)
+Write-Output "Enabling WinRM Service"
+Set-Service "WinRM" -StartupType Automatic -Status Running
+Write-Output "Checking/Waiting for running WinRm"
+$WinRmService = Get-Service -Name WinRM
+$WinRmService.WaitForStatus("Running",'00:02:00')
 
 # Enable Remote Desktop (with reduce authentication resetting here again)
 Write-Output "Enable Remote Desktop"
@@ -181,16 +207,18 @@ catch {
 Write-Output "Enable WSMandCredSSP"
 Enable-WSManCredSSP -Force -Role Server
 
+# Needed for Win-2008r2
+# Generally increase all of these parameters to improve file upload reliability
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
+winrm set winrm/config/winrs '@{MaxProcessesPerShell="2147483647"}'
+winrm set winrm/config/winrs '@{MaxShellsPerUser="2147483647"}'
+winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+
 # NOTE - This is insecure but can be shored up in later customisation.  Required for Vagrant and other provisioning tools
 Write-Output "WinRM Settings"
 winrm set winrm/config/client/auth '@{Basic="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-# Needed for Win-2008r2
-winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
-# Set service to start automatically (not delayed)
-Set-Service "WinRM" -StartupType Automatic
-
 
 # Bootstrap Cycle complete - delete this task.
 Write-Output "Deleting Bootstrap Scheduled Task"

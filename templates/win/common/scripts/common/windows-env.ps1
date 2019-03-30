@@ -178,6 +178,10 @@ param (
   [string]$url,
   [string]$file
  )
+  # Nasty hack for Win-2008/2008r2 only to disable ssl validation
+  if ($WindowsVersion -Like $WindowsServer2008 -or $WindowsVersion -Like $WindowsServer2008r2) {
+    [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true} ;
+  }
   $downloader = new-object System.Net.WebClient
   $downloader.Proxy.Credentials=[System.Net.CredentialCache]::DefaultNetworkCredentials;
 
@@ -655,11 +659,13 @@ Function Test-PendingReboot {
 Function Invoke-Reboot {
   $shutdate = Get-Date
   Write-Output "Proceeding with Shutdown at: $shutdate"
-  shutdown /t 0 /r /f
+  Write-Output "Using Shutdown command"
+  shutdown /t 0 /r /f /c \"Packer Reboot\" /d p:4:1
   # Sleep here to stop any further command execution.
-  Start-Sleep -Seconds 20
-  Write-Output "Ok - we havent shutdown lets exit gracefully."
-  Exit 0
+  Start-Sleep -Seconds 60
+  Write-Output "Ok - we still havent shutdown lets drop this session completely"
+  # This will stop this script and the parent scripts
+  $host.SetShouldExit(0)
 }
 
 # Helper Function (from Boxstarter) to enable remote desktop
