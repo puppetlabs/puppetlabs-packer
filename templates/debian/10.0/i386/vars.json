@@ -1,0 +1,15 @@
+{
+    "template_name"                            : "debian-10-i386",
+    "template_os"                              : "debian10Guest",
+    "beakerhost"                               : "debian10-32",
+    "version"                                  : "0.0.1",
+    "iso_name"                                 : "debian-buster-DI-alpha5-i386-netinst.iso",
+    "floppy_dirs"                              : "",
+    "floppy_files"                             : "",
+    "vmware_base_vm_firmware"                  : "bios",
+    "vmware_base_boot_wait"                    :  "5s",
+    "inject_http_seed_in_boot_command"         : "true",
+    "http_directory"                           :"../common/files",
+    "boot_command"                             : "<esc><wait>install <wait>auto <wait>url=http://%s/preseed.cfg <wait>debian-installer=en_US <wait>locale=en_US <wait>keymap=us <wait>netcfg/get_domain=vm <wait>netcfg/get_hostname=localhost <wait><enter>",
+    "puppet_aio"                               : "http://apt.puppetlabs.com/pool/stretch/puppet5/p/puppet-agent/puppet-agent_5.5.10-1stretch_i386.deb"
+}
