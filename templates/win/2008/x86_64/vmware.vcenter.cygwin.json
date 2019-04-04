@@ -86,6 +86,7 @@
         "./tmp/autounattend.xml",
         "./files/platform-packages.ps1",
         "../../common/scripts/common/windows-env.ps1",
+        "../../common/scripts/bootstrap/AddTrust_External_CA_Root.cer",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
         "../../common/scripts/bootstrap/bootstrap-packerbuild.ps1",
         "../../common/scripts/bootstrap/shutdown-packerbuild.ps1"

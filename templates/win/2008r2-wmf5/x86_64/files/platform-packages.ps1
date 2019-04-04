@@ -9,16 +9,13 @@ if (Test-PendingReboot) {
   Invoke-Reboot
 }
 
-if (-not (Test-Path "$PackerLogs\NET35.installed"))
+if (-not (Test-Path "$PackerLogs\DesktopExperience.installed"))
 {
-  # Enable .Net 3.5 (needed for Puppet csc compiles)
-  Write-Output "Enable .Net 3.5"
-  DISM /Online /Enable-Feature /FeatureName:NetFx3
-  # And add desktop experience for cleanmgr
-  Write-Output "Enable Desktop-Experience"
-  dism /online /enable-feature /FeatureName:DesktopExperience /featurename:InkSupport /norestart
-  Touch-File "$PackerLogs\NET35.installed"
-  if (Test-PendingReboot) { Invoke-Reboot }
+    # And add desktop experience for cleanmgr
+    Write-Output "Enable Desktop-Experience"
+    dism /online /enable-feature /FeatureName:DesktopExperience /featurename:InkSupport /norestart
+    Touch-File "$PackerLogs\DesktopExperience.installed"
+    if (Test-PendingReboot) { Invoke-Reboot }
 }
 
 if (-not (Test-Path "$PackerLogs\KB2852386.installed"))
