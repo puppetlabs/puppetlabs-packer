@@ -90,6 +90,7 @@ if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
       # Install Virtual Box extensions
       Write-Output "Install VirtualBox Tools cert"
       $vproc = Start-Process certutil  @SprocParms -ArgumentList '-addstore -f "TrustedPublisher" A:\oracle-cert-1.cer'
+      $vproc.WaitForExit()
 
       Write-Output "Installing Virtual Box Extensions"
       $vproc = Start-Process "E:\VBoxWindowsAdditions.exe" @SprocParms -ArgumentList '/S'
@@ -135,6 +136,15 @@ if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
       Set-NetConnectionProfile  -InterfaceIndex (Get-NetConnectionProfile).InterfaceIndex -NetworkCategory Private
   }
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
+}
+
+if (($WindowsVersion -like $WindowsServer2008) -or ($WindowsVersion -like $WindowsServer2008r2)) {
+  if (-not (Test-Path "$PackerLogs\AddTrust_External_CA_Root.installed")) {
+    Write-Output "Adding `"AddTrust External CA Root`" for Win-2008/2008r2/7 SSL Issue"
+    $vproc = Start-Process certutil  @SprocParms -ArgumentList '-addstore -f "AuthRoot" "A:\AddTrust_External_CA_Root.cer"'
+    $vproc.WaitForExit()
+  }
+  Touch-File "$PackerLogs\AddTrust_External_CA_Root.installed"
 }
 
 # Special for Windows 2008/2008r2 only to enable the JSON parsing assemblies. This was originally in the
