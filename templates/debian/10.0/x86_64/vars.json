@@ -2,7 +2,7 @@
     "template_name"                            : "debian-10-x86_64",
     "template_os"                              : "debian10_64Guest",
     "beakerhost"                               : "debian10-64",
-    "version"                                  : "0.0.1",
+    "version"                                  : "0.0.2",
     "iso_name"                                 : "debian-buster-DI-alpha5-amd64-netinst.iso",
     "floppy_dirs"                              : "",
     "floppy_files"                             : "",
