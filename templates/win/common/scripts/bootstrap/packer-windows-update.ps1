@@ -68,7 +68,13 @@ do {
       Install-WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
     }
     if (Test-PendingReboot) { 
-      Invoke-Reboot 
+      Invoke-Reboot
+    }
+    elseif (-not (Test-Path "$PackerLogs\WinUpdateExtraRebootDone.Platform")) {
+      # This extra flag ensures we always force another reboot through.
+      # Hoping this helps sort out an residual error with the win-2008 cycle.
+      Touch-File "$PackerLogs\WinUpdateExtraRebootDone.Platform"
+      Invoke-Reboot
     }
   }
   catch {
