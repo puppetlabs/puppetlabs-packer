@@ -7,7 +7,7 @@ param (
 
 $ErrorActionPreference = 'Stop'
 
-. C:\Packer\Dism\windows-env.ps1
+. C:\Packer\scripts\windows-env.ps1
 
 New-Item -ItemType directory -Force -Path C:\Packer\Dism\$OSName
 
@@ -17,6 +17,7 @@ $MountPoint = "$DismBase\Mount"
 $WinIsoPath = "$DismBase\$OSName-SlipStream.iso"
 $WinDistPath = "$DismBase\$OSName"
 $WinImageFile = "$WinDistPath\sources\install.wim"
+
 
 # Install ADK
 Write-Output "Install Win ADK"
@@ -30,6 +31,14 @@ if ("$ARCH" -eq "x86") {
 } else {
   $IsoGen = "${ENV:ProgramFiles(X86)}\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe"
 }
+
+if ($WindowsVersion -like $WindowsServer2008 ) {
+  # Windows 2008 doesn't seem to install this well - so a workaround.
+  & "${ENV:ProgramFiles(X86)}\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\dism\wimmountadksetupamd64.exe" "/install"
+  $env:path = "$env:path;${ENV:ProgramFiles(X86)}\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\amd64\dism"
+  New-Item -ItemType directory -Force -Path C:\Packer\Dism\Cabs
+}
+
 
 # Use Robocopy to make duplicate of Image ISO
 Write-Output "Copy Image ISO to $WinDistPath"
@@ -57,13 +66,16 @@ ForEach ($Cab in $Cabs) {
   $CabCount++
   Write-Output "======================================================="
   Write-Output "Working on CAB File ($CabCount of $Cabtotal)  $Cab"
+  if ($WindowsVersion -like $WindowsServer2008 ) {
+    Copy-Item -Path $Cab -Destination C:\Packer\Dism\Cabs
+  }
 
     if ($ExcludedCabs.ContainsKey($Cab.Name)) {
       Write-Output "Ignoring CAB"
       Continue
     }
 
-    DISM /image:$MountPoint /add-package /packagepath:$Cab  /loglevel:1 /logpath=$DismBase\dism-slip.log
+    dism.exe /image:$MountPoint /add-package /packagepath:$Cab  /loglevel:1 /logpath=$DismBase\dism-slip.log
     if ($? -eq $TRUE){
       $Cab.Name | Out-File -FilePath $DismBase\Updates-Sucessful.log -Append
       Write-Output "Update $Cab Succeeded"
@@ -86,9 +98,9 @@ ElseIf ($WindowsVersion -like $WindowsServer2012 -or $WindowsVersion -like $Wind
   Write-Output "Skipping Cleanup - Not Available"
 } else {
   Write-Output "Starting DISM Cleanup"
-  dism /image:$MountPoint /Cleanup-Image /StartComponentCleanup /ResetBase
+  dism.exe /image:$MountPoint /Cleanup-Image /StartComponentCleanup /ResetBase
 }
 
-dism /unmount-wim /mountdir:$MountPoint /commit
+dism.exe /unmount-wim /mountdir:$MountPoint /commit
 
 & $IsoGen -m -o -u2 -udfver102 -bootdata:"2#p0,e,b$WinDistPath\boot\etfsboot.com#pEF,e,b$WinDistPath\efi\microsoft\boot\efisys.bin" $WinDistPath $WinIsoPath

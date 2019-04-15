@@ -9,6 +9,8 @@
   "winupdate_timeout"   : "400m",
   "puppetconfig_timeout": "60m", 
   "shutdown_timeout"    : "1h",
+  
+  "image_index"         : "2",
 
   "packer_download_dir" : "C:/Packer/Downloads",
 

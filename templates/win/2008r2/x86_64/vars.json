@@ -10,6 +10,7 @@
     "iso_name"          : "en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_03.iso",
     "iso_checksum_type" : "md5",
     "iso_checksum"      : "f94011cfdc4e0498a01a86a0cafe403e",
+    "image_index"       : "1",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
 
     "CurrentVersion"    : "6.1",
