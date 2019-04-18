@@ -7,9 +7,9 @@
     "windows_version"   : "Windows-2008r2",
     "image_name"        : "Windows Server 2008 R2 SERVERSTANDARD",
     "product_key"       : "YC6KT-GKW9T-YTKYR-T4X34-R7VHC",
-    "iso_name"          : "en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_03.iso",
+    "iso_name"          : "en_windows_server_2008_r2_with_sp1_x64_dvd_617601_SlipStream_04.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "f94011cfdc4e0498a01a86a0cafe403e",
+    "iso_checksum"      : "888f87caabc9526bb2bed7d72f66c644",
     "image_index"       : "1",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
 

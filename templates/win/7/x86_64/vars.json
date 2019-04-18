@@ -7,10 +7,10 @@
     "windows_version"   : "Windows-7",
     "image_name"        : "Windows 7 Enterprise",
     "product_key"       : "33PXH-7Y6KF-2VJC9-XBBR8-HVTHH",
-    "iso_name"          : "en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_03.iso",
+    "iso_name"          : "en_windows_7_enterprise_with_sp1_x64_dvd_u_677651_SlipStream_04.iso",
     "iso_checksum_type" : "md5",
     "image_index"       : "1",
-    "iso_checksum"      : "4246cfa663a9a581d2da4ba784554308",
+    "iso_checksum"      : "cdbc7bebc7f470053e6539cfe8b317d1",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
 
     "CurrentVersion"    : "6.1",
