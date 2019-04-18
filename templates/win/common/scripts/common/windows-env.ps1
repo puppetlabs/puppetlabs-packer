@@ -357,8 +357,8 @@ Function Install-DotNetLatest {
         $DotNetInstaller = "NDP46-KB3045557-x86-x64-AllOS-ENU.exe"
       }
       else {
-        Write-Output "Installing .Net 4.7"
-        $DotNetInstaller = "NDP47-KB3186497-x86-x64-AllOS-ENU.exe"
+        Write-Output "Installing .Net 4.7.2"
+        $DotNetInstaller = "NDP472-KB4054530-x86-x64-AllOS-ENU.exe"
         if ($WindowsVersion -like $WindowsServer2008r2 -or $WindowsVersion -like $WindowsServer2012 ) {
           # Win-2008r2 & 2012 need this patch installed.
           # This will fail silently if the patch is already installed.
@@ -377,7 +377,6 @@ Function Install-DotNetLatest {
   }
   Touch-File "$PackerLogs\InstallDotNetLatest.installed"
 }
-
 
 # This code lifted from https://github.com/W4RH4WK/Debloat-Windows-10
 # Windows-10 only ?

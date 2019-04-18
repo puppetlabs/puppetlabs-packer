@@ -10,11 +10,12 @@
     "numvcpus"                  : "2",
     "disk_controller_type"      : "pvscsi",
     "disk_thin_provisioned"     : "true",
-    "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -Shutdown >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
+    "shutdown_command"          : "shutdown /s /t 1 /c \"Packer Shutdown\" /f /d p:4:1",
     "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
     "vsphere_guest_os"          : null,
     "iso_name"                  : null,
+    "image_index"               : "1",
 
     "packer_vcenter_host"       : null,
     "packer_vcenter_username"   : null,
@@ -32,8 +33,7 @@
 
 
     "template_suffix"           : "",
-
-    "firmware"                  : "efi",
+    "firmware"                  : "bios",
 
     "boot_wait"                 : "10ms",
     "convert_to_template"       : "false",
@@ -42,15 +42,14 @@
 
     "valid_exit_codes"          : "0"
   },
-
-  "description": "Builds a Windows template VM for use in VMware/cygwin directly on vcenter",
-
+  
+  "description": "Specific build to prepare slipstream ISO for Windows 2008 platforms",
   "builders": [
     {
-      "type": "vsphere-23-iso",
+      "type"              : "vsphere-23-iso",
 
-      "name"                   : "vcenter-iso",
-      "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",
+      "name"                   : "vsphere-slipstream",
+      "vm_name"                : "{{user `template_name`}}-{{user `version`}}.slip{{user `template_suffix`}}",
       "vm_version"             : "{{user `vm_version`}}",
       "notes"                  : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
 
@@ -87,6 +86,7 @@
       "floppy_files": [
         "./tmp/autounattend.xml",
         "./files/platform-packages.ps1",
+        "./files/slipstream-filter",
         "../../common/scripts/common/windows-env.ps1",
         "../../common/scripts/bootstrap/AddTrust_External_CA_Root.cer",
         "../../common/scripts/bootstrap/bootstrap-base.bat",
@@ -95,7 +95,7 @@
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
-        "{{user `iso_disk`}}windows.iso"
+        "{{user `iso_disk`}}windows-10.1.15.iso"
       ],
 
       "communicator"      : "winrm",
@@ -166,8 +166,8 @@
     },
     {
       "type": "file",
-      "source": "../../common/scripts/bootstrap/shutdown-packerbuild.ps1",
-      "destination": "C:\\Packer\\Scripts\\shutdown-packerbuild.ps1"
+      "source": "../../common/scripts/bootstrap/",
+      "destination": "C:\\Packer\\Scripts"
     },
     {
       "type": "file",
@@ -206,6 +206,8 @@
     },
     {
       "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
       "inline" : [
           "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
         ],
@@ -213,7 +215,10 @@
     },
     {
       "type": "powershell",
-      "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1"
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "script" : "../../common/scripts/provisioners/initiate-windows-update.ps1",
+      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type" : "windows-restart",
@@ -221,68 +226,34 @@
     },
     {
       "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
       "inline" : [
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
       "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
-      "type"   : "powershell",
-      "script" : "../../common/scripts/provisioners/install-cygwin.ps1"
-    },
-    {
-      "type": "windows-restart"
+      "type": "powershell",
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "remote_path": "{{user `packer_download_dir`}}/init-slipstream.ps1",
+      "inline": [
+        "Write-Output 'Executing Powershell Script: init-slipstream.ps1'",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Mount",
+        "New-Item -ItemType directory -Force -Path C:\\Packer\\Dism\\Logs",
+        "Copy-Item A:\\slipstream-filter C:\\Packer\\Dism"
+      ]
     },
     {
       "type": "powershell",
-      "inline" : [
-        "C:/Packer/Scripts/test-packerbuild -TestPhase cygwin"
+      "elevated_user": "{{user `winrm_username`}}",
+      "elevated_password": "{{user `winrm_password`}}",
+      "inline": [
+        "C:\\Packer\\Scripts\\generate-slipstream.ps1 -OSName {{user `template_name`}} -ImageIndex {{user `image_index`}}"
       ],
-      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
-    },
-    {
-      "type"         : "powershell",
-      "script"       : "../../common/scripts/provisioners/initiate-puppet-configure.ps1"
-    },
-    {
-      "type" : "windows-restart",
-      "restart_timeout" : "{{user `puppetconfig_timeout`}}"
-    },
-    {
-      "type": "powershell",
-      "inline" : [
-        "C:/Packer/Scripts/test-packerbuild -TestPhase puppet"
-      ],
-      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
-    },
-    {
-      "type": "powershell",
-      "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
-    },
-    {
-      "type"   : "powershell",
-      "script" : "../../common/scripts/provisioners/clean-disk-dism.ps1"
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "inline" : [
-        "C:/Packer/Scripts/test-packerbuild -TestPhase platform"
-      ],
-      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
-    },
-    {
-      "type"   : "powershell",
-      "script" : "../../common/scripts/provisioners/clean-disk-sdelete.ps1"
+      "valid_exit_codes": [0,1]
     }
   ]
 }
