@@ -43,6 +43,11 @@ if ($WindowsVersion -notlike $WindowsServer2016) {
   }
 }
 
+Write-Output "Re-enable NETBios and WinRM Services"
+Set-Service "lmhosts" -StartupType Automatic
+Set-Service "netbt" -StartupType Automatic
+Set-Service "WinRM" -StartupType Automatic
+
 # Put a restart in to make sure host is renamed.
 Write-Output "Restarting to allow host rename"
 if ($WindowsVersion -like $WindowsServer2008R2 -or $WindowsVersion -like $WindowsServer2008) {
