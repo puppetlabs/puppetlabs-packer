@@ -18,7 +18,12 @@ class packer::vsphere::networking(
           enable_dhcp   => true,
         }
       }
-      if ($facts['operatingsystemmajrelease'] in ['8', '9', '16.04', '18.04', '18.10']) {
+      if ($facts['operatingsystemmajrelease'] in ['8']) {
+          network::interface { 'eth0':
+          enable_dhcp   => true,
+        }
+      }
+      if ($facts['operatingsystemmajrelease'] in ['9', '16.04', '18.04', '18.10']) {
         network::interface { 'ens160':
           enable_dhcp   => true,
         }
