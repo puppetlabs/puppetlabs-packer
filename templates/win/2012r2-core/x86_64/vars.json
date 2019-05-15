@@ -17,7 +17,5 @@
     "ProductName"       : "Windows Server 2012 R2 Standard",
     "EditionID"         : "ServerStandard",
     "InstallationType"  : "Server Core",
-    "ReleaseID"         : "N/A",
-
-    "valid_exit_codes"  : "0,1"
+    "ReleaseID"         : "N/A"
 }
