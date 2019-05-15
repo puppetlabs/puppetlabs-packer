@@ -1,10 +1,11 @@
 {
     "template_name"     : "win-2012r2-ja-x86_64",
     "locale"            : "ja-JP",
-    "beakerhost"        : "windows2012r2-64",
+    "beakerhost"        : "windows2012r2_ja-64",
     "vbox_guest_os"     : "Windows2012_64",
     "vmware_guest_os"   : "windows8srv-64",
     "vsphere_guest_os"  : "windows8Server64Guest",
+    "beaker_locale"     : "ja",
     "windows_version"   : "Windows-2012r2",
     "image_name"        : "Windows Server 2012 R2 SERVERSTANDARD",
     "product_key"       : "D2N9P-3P6X9-2R39C-7RTCD-MDVJX",
