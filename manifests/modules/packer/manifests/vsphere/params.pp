@@ -101,7 +101,7 @@ class packer::vsphere::params {
     }
 
     'Fedora': {
-      if $facts['operatingsystemrelease'] in ['28', '29'] {
+      if $facts['operatingsystemrelease'] in ['28', '29', '30'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
