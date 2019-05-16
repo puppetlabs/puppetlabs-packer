@@ -3,10 +3,10 @@
 
 Write-Output "Running Win-2016 Package Customisation"
 
-if (-not (Test-Path "$PackerLogs\kb4485447.installed"))
+if (-not (Test-Path "$PackerLogs\kb4500641.installed"))
 {
   Write-Output "Installing Windows Update SSU kb4485447"
-  Install_Win_Patch -PatchUrl "http://download.windowsupdate.com/d/msdownload/update/software/secu/2019/02/windows10.0-kb4485447-x64_e9334a6f18fa0b63c95cd62930a058a51bba9a14.msu"
-  Touch-File "$PackerLogs\kb4485447.installed"
+  Install_Win_Patch -PatchUrl "http://download.windowsupdate.com/d/msdownload/update/software/secu/2019/05/windows10.0-kb4500641-x64_66a086b2ae104c6b295b0da94500b85125a6a562.msu"
+  Touch-File "$PackerLogs\kb4500641.installed"
   Invoke-Reboot
 }
