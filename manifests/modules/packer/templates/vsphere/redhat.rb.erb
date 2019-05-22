@@ -14,7 +14,7 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
 
-<% if ['28', '29', '30'].include? @operatingsystemrelease -%>
+<% if ['8', '28', '29', '30'].include? @operatingsystemmajrelease -%>
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 <% else -%>
