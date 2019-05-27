@@ -1,17 +1,15 @@
 {
     "template_name"                                         : "redhat-8-x86_64",
-    "template_os"                                           : "rhel7-64",
+    "template_os"                                           : "rhel8_64Guest",
     "beakerhost"                                            : "redhat8-64",
-    "version"                                               : "0.0.1",
-    "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.0-beta-1-x86_64-dvd.iso",
-    "iso_checksum"                                          : "06bec9e7de3ebfcdb879804be8c452b69ba3e046daedac3731e1ccd169cfd316",
+    "version"                                               : "0.0.3",
+    "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.0-x86_64-dvd.iso",
+    "iso_checksum"                                          : "005d4f88fff6d63b0fc01a10822380ef52570edd8834321de7be63002cc6cc43",
     "iso_checksum_type"                                     : "sha256",
-    "vmware_vsphere_nocm_vmx_data_memsize"                  : "6144",
-    "vmware_vsphere_nocm_vmx_data_numvcpus"                 : "2",
+    "vmware_base_vmx_data_memsize"                          : "6144",
+    "vmware_base_vmx_data_numvcpus"                         : "2",
     "puppet_aio"                                            : "http://yum.puppetlabs.com/el/7/PC1/x86_64/puppet-agent-1.10.9-1.el7.x86_64.rpm",
     "inject_http_seed_in_boot_command"                      : "true",
     "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait><enter>",
-    "vmware_base_vm_disk_adapter_type"                      : "sata",
-    "vmware_base_vm_vmx_hardware_version"                   : "10",
-    "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"     : "e1000"
+    "iso_name"                                              : "rhel-8.0-x86_64-dvd.iso"
 }
