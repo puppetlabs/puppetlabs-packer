@@ -14,7 +14,7 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
 
-<% if ['8', '28', '29', '30'].include? @operatingsystemmajrelease -%>
+<% if ['7', '8', '28', '29', '30'].include? @operatingsystemmajrelease -%>
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 <% else -%>
@@ -24,18 +24,21 @@ Kernel.system('hostname -F /etc/hostname')
 puts '- Re-obtaining DHCP lease...'
 
 <% if (@operatingsystem == 'RedHat') or (@operatingsystem == 'CentOS') or (@operatingsystem == 'Scientific') or (@operatingsystem == 'OracleLinux') -%>
-  <% if @operatingsystemmajrelease == '8'  -%>
+  <% if @operatingsystemmajrelease == '8' -%>
     Kernel.system('/sbin/service NetworkManager restart')
     Kernel.system('/usr/sbin/ifdown ens33')
     Kernel.system('/usr/sbin/ifup ens33')
   <% end -%>
-  <% if @operatingsystemmajrelease == '7'  -%>
-    File.open('/var/lib/NetworkManager/dhclient-ens160.conf', 'a') do |f|
+  <% if @operatingsystemmajrelease == '7' -%>
+    network_interface_name = `ls /sys/class/net -I lo`.chomp
+    puts 'network_interface_name is: '
+    puts "#{network_interface_name}"
+    File.open("/var/lib/NetworkManager/dhclient-#{network_interface_name}.conf", 'a') do |f|
       f << "send host-name #{hostname}"
     end
     Kernel.system('/sbin/service NetworkManager restart')
-    Kernel.system('/usr/sbin/ifdown ens160')
-    Kernel.system('/usr/sbin/ifup ens160')
+    Kernel.system("/usr/sbin/ifdown #{network_interface_name}")
+    Kernel.system("/usr/sbin/ifup #{network_interface_name}")
   <% end -%>
   <% if @operatingsystemmajrelease == '6' -%>
     File.open('/etc/dhcp/dhclient-eth0.conf', 'a') do |f|
