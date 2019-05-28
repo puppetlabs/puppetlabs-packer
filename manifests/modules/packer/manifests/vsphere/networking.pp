@@ -43,7 +43,7 @@ class packer::vsphere::networking(
           }
         }
         if $facts['operatingsystemmajrelease'] == '7' {
-          network::interface { 'ens160':
+          network::interface { 'ens33':
             enable_dhcp   => true,
           }
         }
