@@ -2,7 +2,7 @@
     "template_name"                                         : "redhat-8-x86_64",
     "template_os"                                           : "rhel8_64Guest",
     "beakerhost"                                            : "redhat8-64",
-    "version"                                               : "0.0.3",
+    "version"                                               : "0.0.4",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.0-x86_64-dvd.iso",
     "iso_checksum"                                          : "005d4f88fff6d63b0fc01a10822380ef52570edd8834321de7be63002cc6cc43",
     "iso_checksum_type"                                     : "sha256",
