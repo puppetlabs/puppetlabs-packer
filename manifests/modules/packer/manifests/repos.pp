@@ -25,24 +25,23 @@ class packer::repos {
     # We don't have consistent mirror urls between RedHat versions:
     # TODO: RHEL 5 needs further refactoring
     $base_url = $::operatingsystemmajrelease ? {
-      # TODO: RHEL 8 is beta atm, we need to update with some local mirros when available
-      '8' => 'https://downloads.redhat.com/redhat/rhel/rhel-8-beta',
+      '8' => "${repo_mirror}/rpm__remote_rhel-8",
       '7' => "${repo_mirror}/rpm__remote_rhel-7",
       '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
       '5' => "${os_mirror}/rhel50server-${::architecture}/RPMS.all"
     }
 
     if $facts['operatingsystemmajrelease'] == '8' {
-      yumrepo { 'rhel-8-for-x86_64-baseos-beta-rpms':
-        descr    => 'rhel-8-for-x86_64-baseos-beta-rpms',
-        baseurl  => "${base_url}/baseos/${::architecture}",
+      yumrepo { 'localmirror-base':
+        descr    => 'localmirror-base',
+        baseurl  => "${base_url}-base",
         gpgcheck => '1',
         gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
 
-      yumrepo { 'rhel-8-for-x86_64-appstream-beta-rpms':
-        descr    => 'rhel-8-for-x86_64-appstream-beta-rpms',
-        baseurl  => "${base_url}/appstream/${::architecture}",
+      yumrepo { 'localmirror-appstream':
+        descr    => 'localmirror-appstream',
+        baseurl  => "${base_url}-appstream",
         gpgcheck => '1',
         gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
