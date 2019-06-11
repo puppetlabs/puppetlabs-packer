@@ -1,0 +1,22 @@
+{
+    "template_name"     : "win-10-next-i386",
+    "win_proc_arch"     : "x86",
+    "beakerhost"        : "windows10next-32",
+    "vbox_guest_os"     : "Windows10",
+    "vmware_guest_os"   : "windows8",
+    "vsphere_guest_os"  : "windows9Guest",
+    "windows_version"   : "Windows-10",
+    "image_name"        : "Windows 10 Enterprise",
+    "product_key"       : "M7XTQ-FN8P6-TTKYV-9D4CC-J462D",
+    "iso_name"          : "en_windows_10_business_editions_version_1903_x86_dvd_ca4f0f49.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "23b62778b7b577be88503f2208044c3e",
+    "boot_command"      : "<nexter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 10 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "1903"
+
+}
