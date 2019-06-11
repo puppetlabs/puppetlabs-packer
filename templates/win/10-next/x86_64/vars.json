@@ -1,6 +1,6 @@
 {
     "template_name"     : "win-10-next-x86_64",
-    "beakerhost"        : "windows10next-64",
+    "beakerhost"        : "windows10ent-64",
     "vbox_guest_os"     : "Windows81_64",
     "vmware_guest_os"   : "windows8-64",
     "vsphere_guest_os"  : "windows9_64Guest",

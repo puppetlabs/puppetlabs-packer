@@ -1,7 +1,7 @@
 {
     "template_name"     : "win-2019-ja-x86_64",
     "locale"            : "ja-JP",
-    "beakerhost"        : "windows2019_ja-64",
+    "beakerhost"        : "windows2019-64",
     "vbox_guest_os"     : "Windows2019_64",
     "vmware_guest_os"   : "windows8srv-64",
     "vsphere_guest_os"  : "windows8Server64Guest",
