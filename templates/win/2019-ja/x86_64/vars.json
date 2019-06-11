@@ -1,0 +1,23 @@
+{
+    "template_name"     : "win-2019-ja-x86_64",
+    "locale"            : "ja-JP",
+    "beakerhost"        : "windows2019_ja-64",
+    "vbox_guest_os"     : "Windows2019_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "vsphere_guest_os"  : "windows8Server64Guest",
+    "beaker_locale"     : "ja",
+    "windows_version"   : "Windows-2019",
+    "image_name"        : "Windows Server 2019 SERVERSTANDARD",
+    "product_key"       : "N69G4-B89J2-4G8F4-WWYCC-J464C",
+    "iso_name"          : "ja_windows_server_2019_updated_march_2019_x64_dvd_fee81286.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "be3135e3488418a80de6ff078ad105b0",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows Server 2019 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "1809"
+
+}
