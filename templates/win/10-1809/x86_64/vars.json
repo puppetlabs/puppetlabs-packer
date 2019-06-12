@@ -1,0 +1,21 @@
+{
+    "template_name"     : "win-10-1809-x86_64",
+    "beakerhost"        : "windows10ent-64",
+    "vbox_guest_os"     : "Windows81_64",
+    "vmware_guest_os"   : "windows8-64",
+    "vsphere_guest_os"  : "windows9_64Guest",
+    "windows_version"   : "Windows-10",
+    "image_name"        : "Windows 10 Enterprise LTSC 2019",
+    "product_key"       : "M7XTQ-FN8P6-TTKYV-9D4CC-J462D",
+    "iso_name"          : "en_windows_10_enterprise_ltsc_2019_x64_dvd_5795bb03.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "1067be5346fed207089b3022165b8b19",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 10 Enterprise LTSC 2019",
+    "EditionID"         : "EnterpriseS",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "1809"
+
+}
