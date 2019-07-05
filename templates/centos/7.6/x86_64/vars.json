@@ -1,0 +1,14 @@
+{
+    "template_name"                         : "centos-7.6-x86_64",
+    "template_os"                           : "rhel7-64",
+    "beakerhost"                            : "centos7-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "http://centos.mirror.nucleus.be/7.6.1810/isos/x86_64/CentOS-7-x86_64-DVD-1810.iso",
+    "iso_checksum"                          : "6d44331cc4f6c506c7bbe9feb8468fad6c51a88ca1393ca6b8b486ea04bec3c1",
+    "iso_checksum_type"                     : "sha256",
+    "docker_base_image"                     : "centos:7.6.1810",
+    "virtualbox_base_template_os"           : "RedHat_64",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/el/7/PC1/x86_64/puppet-agent-1.10.9-1.el7.x86_64.rpm"
+}
