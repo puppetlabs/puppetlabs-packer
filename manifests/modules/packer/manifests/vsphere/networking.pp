@@ -28,7 +28,7 @@ class packer::vsphere::networking(
           enable_dhcp   => true,
         }
       }
-      if $facts['operatingsystemmajrelease'] == 'buster/sid' {
+      if $facts['operatingsystemmajrelease'] == '10' {
         network::interface { 'ens192':
           enable_dhcp   => true,
         }
