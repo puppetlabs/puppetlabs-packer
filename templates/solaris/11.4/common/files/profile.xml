@@ -85,6 +85,9 @@ Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
       </property_group>
     </instance>
   </service>
+  <service name='system/name-service/cache' type='service' version='1'>
+    <instance enabled="false" name="default"/>
+  </service>
   <service name='network/dns/client' type='service' version='1'>
     <property_group name='config' type='application'>
         <property name='nameserver' type='net_address'>
