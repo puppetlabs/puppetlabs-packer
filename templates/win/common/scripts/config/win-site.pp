@@ -5,6 +5,7 @@ include windows_template::services::configure_services
 include windows_template::registry::machine
 include windows_template::registry::user
 include windows_template::apps::sysinternals
+include windows_template::bootcfg::bootcfg
 
 # Install Apps as required.
 include windows_template::apps::gitforwin
