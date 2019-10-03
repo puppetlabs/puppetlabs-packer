@@ -41,12 +41,6 @@ if ("$ARCH" -eq "x86") {
 } else {
   $ENV:FACTER_chrome_root        = "$ENV:ProgramFiles `(x86`)\Google\Chrome"
 }
-If ( $WindowsServerCore ) {
-  $ENV:FACTER_windows_install_option = "Core"
-}
-else {
-  $ENV:FACTER_windows_install_option = "Normal"
-}
 
 # Puppet run loop - use the Manifest in the Config Directory and run Puppet as many times up
 # to MaxAttempts until no further resources are modified.

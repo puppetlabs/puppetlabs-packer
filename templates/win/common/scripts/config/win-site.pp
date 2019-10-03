@@ -13,7 +13,7 @@ if ($psversionmajor >= '4') {
 }
 # Conditional for Core checkining
 # only allowed for main installs and non-core
-if ($windows_install_option != 'Core') and ($::operatingsystemrelease != '2008')
+if (lookup('packer.windows.installationtype') != 'Server Core') and ($::operatingsystemrelease != '2008')
 {
   include windows_template::apps::chrome
   include windows_template::apps::notepadplusplus
