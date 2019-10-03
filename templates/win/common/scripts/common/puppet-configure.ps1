@@ -16,8 +16,8 @@ write-output "Script: packer-puppet-configure.ps1 Starting at: $rundate"
 $PuppetCounterFile = "$PackerLogs\Puppet.Counter"
 
 if (-not (Test-Path "$PuppetCounterFile")) {
-  New-Item -Path $PuppetCounterFile
-  Set-Content -Path $PuppetCounterFile "0"
+  New-Item -ItemType file -Path $PuppetCounterFile -Force
+  Set-Content -Path $PuppetCounterFile "0" -Force
 }
 
 # TODO What about custom facts?
