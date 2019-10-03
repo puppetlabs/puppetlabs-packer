@@ -9,6 +9,8 @@
   "winupdate_timeout"   : "400m",
   "puppetconfig_timeout": "60m", 
   "shutdown_timeout"    : "1h",
+
+  "locale"              : "en-US",
   
   "image_index"         : "2",
 
