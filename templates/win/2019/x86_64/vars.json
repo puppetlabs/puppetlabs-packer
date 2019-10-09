@@ -8,9 +8,9 @@
     "windows_version"   : "Windows-2019",
     "image_name"        : "Windows Server 2019 SERVERSTANDARD",
     "product_key"       : "N69G4-B89J2-4G8F4-WWYCC-J464C",
-    "iso_name"          : "en_windows_server_2019_x64_dvd_3c2cf1202.iso",
+    "iso_name"          : "en_windows_server_2019_updated_sept_2019_x64_dvd_199664ce.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "37c51cc09182237ae2c30c9d8ce3c41e",
+    "iso_checksum"      : "6b70008cefedb84a6d780cbf09dc7817",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
 
     "CurrentVersion"    : "6.3",
@@ -18,5 +18,4 @@
     "EditionID"         : "ServerStandard",
     "InstallationType"  : "Server",
     "ReleaseID"         : "1809"
-
 }
