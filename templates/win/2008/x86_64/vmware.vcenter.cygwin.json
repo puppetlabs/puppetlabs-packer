@@ -13,6 +13,8 @@
     "shutdown_command"          : "powershell -executionpolicy bypass -File C:\\Packer\\Scripts\\init-sysprep.ps1 -ArumentList \"-Shutdown\" >> C:\\Packer\\Logs\\Init-Sysprep.log 2>&1",
     "iso_disk"                  : "[AI_Insurgency_Test_Images] iso/",
 
+    "locale"                    : "en-US",
+
     "vsphere_guest_os"          : null,
     "iso_name"                  : null,
 
@@ -140,6 +142,7 @@
         "echo '    \"memsize\"              : \"{{user `memsize`}}\",' >> ./tmp/build.json",
         "echo '    \"admin_username\"       : \"{{user `winrm_username`}}\",' >> ./tmp/build.json",
         "echo '    \"admin_password\"       : \"{{user `winrm_password`}}\",' >> ./tmp/build.json",
+        "echo '    \"locale\"               : \"{{user `locale`}}\",' >> ./tmp/build.json",
         "echo '    \"qa_root_passwd_plain\" : \"{{user `qa_root_passwd_plain`}}\",' >> ./tmp/build.json",
 
         "echo '    \"windows\" : {' >> ./tmp/build.json",

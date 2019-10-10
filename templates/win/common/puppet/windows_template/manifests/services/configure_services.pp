@@ -18,7 +18,7 @@ class windows_template::services::configure_services()
     }
 
     # Following services are only considered in Non-Core installation.
-    if ($::windows_install_option != 'Core')
+    if (lookup('packer.windows.installationtype') != 'Server Core')
     {
       # Disable Audiosrv (Audio) service
       service { 'Audiosrv':

@@ -106,7 +106,7 @@ class windows_template::registry::machine ()
     # Sysprep Autounattend, so keeping the key in place even though we have moved to scheduled tasks for the startup
     # script.
     #
-    if ( $windows_install_option == 'Core' ) {
+    if ( lookup('packer.windows.installationtype') == 'Server Core' ) {
         registry::value { 'WinCoreLogon':
           key   => 'HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',
           value => 'Shell',
