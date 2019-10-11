@@ -104,37 +104,7 @@ if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
 }
 
 if (-not (Test-Path "$PackerLogs\PrivatiseNetAdapters.installed")) {
-  # Set all network adapters Private
-  Write-Output "Set all network adapters private"
-  if (($WindowsVersion -like $WindowsServer2008) -or ($WindowsVersion -like $WindowsServer2008r2)) {
-
-    # This hack was obtained to set the network interface private for PS2 platforms
-    # Source https://blogs.msdn.microsoft.com/dimeby8/2009/06/10/change-unidentified-network-from-public-to-work-in-windows-7/
-    #
-    Write-Output "Using Workaround Method"
-    $NLMType = [Type]::GetTypeFromCLSID('DCB00C01-570F-4A9B-8D69-199FDBA5723B')
-    $INetworkListManager = [Activator]::CreateInstance($NLMType)
-    $NLM_ENUM_NETWORK_CONNECTED  = 1
-    $NLM_NETWORK_CATEGORY_PUBLIC = 0x00
-    $NLM_NETWORK_CATEGORY_PRIVATE = 0x01
-    $INetworks = $INetworkListManager.GetNetworks($NLM_ENUM_NETWORK_CONNECTED)
-    foreach ($INetwork in $INetworks)
-    {
-        $Name = $INetwork.GetName()
-        $Category = $INetwork.GetCategory()
-        Write-Output "Network $Name, Category $Category"
-        if ($INetwork.IsConnected -and ($Category -eq $NLM_NETWORK_CATEGORY_PUBLIC) -and ($Name -eq "Unidentified network" -or $Name -eq "Network"))
-        {
-          Write-Output "Setting Network Private"
-            $INetwork.SetCategory($NLM_NETWORK_CATEGORY_PRIVATE)
-        }
-      }
-  }
-  else {
-      # Use cmdlet to run through network interfacen and set them private.
-      New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" -Force -ErrorAction SilentlyContinue
-      Set-NetConnectionProfile  -InterfaceIndex (Get-NetConnectionProfile).InterfaceIndex -NetworkCategory Private
-  }
+  Set-AllNetworkAdaptersPrivate
   Touch-File "$PackerLogs\PrivatiseNetAdapters.installed"
 }
 
