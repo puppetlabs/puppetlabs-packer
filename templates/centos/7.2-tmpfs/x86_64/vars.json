@@ -1,0 +1,14 @@
+{
+    "template_name"                         : "centos-7.2-tmpfs-x86_64",
+    "template_os"                           : "centos7_64Guest",
+    "beakerhost"                            : "centos7-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/CentOS-7-x86_64-DVD-1511.iso",
+    "iso_checksum"                          : "907e5755f824c5848b9c8efbb484f3cd945e93faa024bad6ba875226f9683b16",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_base_vmx_data_memsize"          : "6144",
+    "vmware_base_vmx_data_numvcpus"         : "2",
+    "puppet_aio"                            : "http://builds.delivery.puppetlabs.net/puppet-agent/5.5.16/artifacts/el/7/puppet5/x86_64/puppet-agent-5.5.16-1.el7.x86_64.rpm",
+    "vmware_base_required_modules"          : "puppetlabs-stdlib saz-ssh puppetlabs-firewall",
+    "iso_name"                              : "CentOS-7-x86_64-DVD-1511.iso"
+}
