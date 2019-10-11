@@ -199,25 +199,44 @@ class packer::vsphere::repos(
       }
 
       if $facts['operatingsystem'] == 'CentOS' {
-        yumrepo { 'localmirror-os':
-          descr    => 'localmirror-os',
-          baseurl  => "${base_url}/os/${facts['architecture']}",
-          gpgcheck => '1',
-          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-        }
-
-        yumrepo { 'localmirror-updates':
-          descr    => 'localmirror-updates',
-          baseurl  => "${base_url}/updates/${facts['architecture']}",
-          gpgcheck => '1',
-          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-        }
-
-        yumrepo { 'localmirror-extras':
-          descr    => 'localmirror-extras',
-          baseurl  => "${base_url}/extras/${facts['architecture']}",
-          gpgcheck => '1',
-          gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+        if $facts['operatingsystemmajrelease'] == '8' {
+          yumrepo { 'localmirror-base':
+            descr    => 'localmirror-base',
+            baseurl  => "${base_url}/BaseOS/${facts['architecture']}/os",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+          yumrepo { 'localmirror-appstream':
+            descr    => 'localmirror-appstream',
+            baseurl  => "${base_url}/AppStream/${facts['architecture']}/os",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+          yumrepo { 'localmirror-extras':
+            descr    => 'localmirror-extras',
+            baseurl  => "${base_url}/extras/${facts['architecture']}/os",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+        } else {
+          yumrepo { 'localmirror-os':
+            descr    => 'localmirror-os',
+            baseurl  => "${base_url}/os/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+          yumrepo { 'localmirror-updates':
+            descr    => 'localmirror-updates',
+            baseurl  => "${base_url}/updates/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
+          yumrepo { 'localmirror-extras':
+            descr    => 'localmirror-extras',
+            baseurl  => "${base_url}/extras/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+          }
         }
       }
 
