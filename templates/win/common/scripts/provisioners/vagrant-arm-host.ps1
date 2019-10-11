@@ -14,7 +14,6 @@ if ($WindowsVersion -like "10.*") {
 
 # Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
-$CygwinDownloads = $ENV:CYGWINDOWNLOADS
 $AdministratorName =  $ENV:Username
 $AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
 Write-Output "Administrator Name set as: $AdministratorName Home Directory is: $AdministratorHome"

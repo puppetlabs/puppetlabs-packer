@@ -82,6 +82,7 @@
         "echo '    \"admin_username\"       : \"{{user `winrm_username`}}\",' >> ./tmp/build.json",
         "echo '    \"admin_password\"       : \"{{user `winrm_password`}}\",' >> ./tmp/build.json",
         "echo '    \"locale\"               : \"{{user `locale`}}\",' >> ./tmp/build.json",
+        "echo '    \"ssh_platform\"         : \"{{user `ssh_platform`}}\",' >> ./tmp/build.json",
         "echo '    \"qa_root_passwd_plain\" : \"{{user `qa_root_passwd_plain`}}\",' >> ./tmp/build.json",
 
         "echo '    \"windows\" : {' >> ./tmp/build.json",

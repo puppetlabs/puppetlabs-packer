@@ -21,3 +21,8 @@ if (lookup('packer.windows.installationtype') != 'Server Core') and ($::operatin
   include windows_template::apps::chrome
   include windows_template::apps::notepadplusplus
 }
+
+if (lookup('packer.ssh_platform') == 'cygwin-2.4.0')
+{
+  include windows_template::ssh::cygwin_240
+}

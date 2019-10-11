@@ -144,6 +144,7 @@
         "echo '    \"admin_username\"       : \"{{user `winrm_username`}}\",' >> ./tmp/build.json",
         "echo '    \"admin_password\"       : \"{{user `winrm_password`}}\",' >> ./tmp/build.json",
         "echo '    \"locale\"               : \"{{user `locale`}}\",' >> ./tmp/build.json",
+        "echo '    \"ssh_platform\"         : \"{{user `ssh_platform`}}\",' >> ./tmp/build.json",
         "echo '    \"qa_root_passwd_plain\" : \"{{user `qa_root_passwd_plain`}}\",' >> ./tmp/build.json",
 
         "echo '    \"windows\" : {' >> ./tmp/build.json",
@@ -227,20 +228,6 @@
         "C:/Packer/Scripts/test-packerbuild -TestPhase windows-update"
       ],
       "valid_exit_codes" : "{{user `winupdate_valid_exit_codes`}}"
-    },
-    {
-      "type"   : "powershell",
-      "script" : "../../common/scripts/provisioners/install-cygwin.ps1"
-    },
-    {
-      "type": "windows-restart"
-    },
-    {
-      "type": "powershell",
-      "inline" : [
-        "C:/Packer/Scripts/test-packerbuild -TestPhase cygwin"
-      ],
-      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
       "type"         : "powershell",
