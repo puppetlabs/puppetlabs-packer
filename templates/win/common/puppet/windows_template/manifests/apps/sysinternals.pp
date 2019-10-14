@@ -3,57 +3,21 @@
 # Sets Path to include the utilities.
 class windows_template::apps::sysinternals()
 {
-  # Placeholder class to install and configure sysinternals apps.
-  # Initially set the registry keys for them.
+  include windows_template::apps::sysinternals_pkgs
 
-  $sysinternalsdownloadurl = 'https://download.sysinternals.com/files'
-
-  $sysinternalsutilsinstpairs = [ ['ProcessExplorer','procexp.exe'],
-                                  ['ProcessMonitor','procmon.exe'],
-                                  ['PSTools','psversion.txt'],
-                                  ['BGInfo','Bginfo.exe'],
-                                  ['AutoLogon','Autologon.exe'] ]
-
-    $sysinternalsutilsinstpairs.each | Array $sysintalsutilinst | {
-      $sysinternalszip = $sysintalsutilinst[0]
-      $sysinternalsfile = $sysintalsutilinst[1]
-
-      archive { "${::packer_downloads}/${sysinternalszip}.zip" :
-        source       => "${sysinternalsdownloadurl}/${sysinternalszip}.zip",
-        extract      => true,
-        extract_path => $::sysinternals,
-        creates      => "${::sysinternals}/${sysinternalsfile}"
-      }
-  }
-
-  $regkeys = ['Process Explorer',
-              'Process Monitor',
-              'PsExec',
-              'PsFile',
-              'PsGetSid',
-              'PsInfo',
-              'PsKill',
-              'PsList',
-              'PsLoggedOn',
-              'PsLogList',
-              'PsPasswd',
-              'PsService',
-              'PsShutdown',
-              'PsSuspend',
-              'PsTools' ]
-
-  $regkeys.each | String $regkey | {
-    registry::value { "Sysinternals_EULA_${regkey}":
-      key   => "HKLM\\DEFUSER\\Software\\Sysinternals\\${regkey}",
-      value => 'EulaAccepted',
-      data  => 1,
-      type  => 'dword',
-    }
-  }
-
-  # Update Path to include sysinternals path - this seems to be all thats necessary.
   windows_env { "PATH=${::sysinternals}":
+    # Update Path to include sysinternals path - this seems to be all thats necessary.
     ensure    => present,
     mergemode => insert,
+    require   => Class['windows_template::apps::sysinternals_pkgs'],
+
+  } -> exec { 'Enable AutoLogon':
+      #
+      # Check to see if AutoLogon is enabled and enable it.
+      # (this is check only as the initial unattend should have done this already)
+      command   => 'autologon -AcceptEula Administrator . PackerAdmin',
+      unless    => 'try {if ($(Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon").AutoAdminLogon -eq 1) {Exit 0} else {Exit 1}} catch {Exit 1}', # lint:ignore:140chars
+      provider  => powershell,
+      logoutput => true,
   }
 }

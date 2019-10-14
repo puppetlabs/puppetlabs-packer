@@ -268,13 +268,6 @@
       "type": "powershell",
       "elevated_user": "{{user `winrm_username`}}",
       "elevated_password": "{{user `winrm_password`}}",
-      "script" : "../../common/scripts/provisioners/config-winsettings.ps1",
-      "valid_exit_codes" : "{{user `valid_exit_codes`}}"
-    },
-    {
-      "type": "powershell",
-      "elevated_user": "{{user `winrm_username`}}",
-      "elevated_password": "{{user `winrm_password`}}",
       "script" : "../../common/scripts/provisioners/cleanup-host.ps1",
       "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },

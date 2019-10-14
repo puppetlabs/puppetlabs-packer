@@ -1,6 +1,6 @@
 {
     "template_name"     : "win-2012r2-fips-x86_64",
-    "beakerhost"        : "windows2012r2-fips-64",
+    "beakerhost"        : "windows2012r2-64",
     "vbox_guest_os"     : "Windows2012_64",
     "vmware_guest_os"   : "windows8srv-64",
     "vsphere_guest_os"  : "windows8Server64Guest",

@@ -168,10 +168,6 @@
     },
     {
         "type"   : "powershell",
-        "script" : "../../common/scripts/provisioners/config-winsettings.ps1"
-    },
-    {
-        "type"   : "powershell",
         "script" : "../../common/scripts/provisioners/cleanup-host.ps1"
     },
     {

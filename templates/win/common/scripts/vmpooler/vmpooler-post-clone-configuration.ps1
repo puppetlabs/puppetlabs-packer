@@ -93,6 +93,10 @@ $CygwinGroupFile = "$CygwinDir\etc\group"
 Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
 Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
 
+# Although the adaptors were set private during build, the sysprep appears to reset them.
+Write-Output "Setting all adaptors private"
+Set-AllNetworkAdaptersPrivate
+
 # NIC Power Management - ignore any errors as need host-rename to proceed.
 Write-Output "Disabling NIC Power Management"
 try {
