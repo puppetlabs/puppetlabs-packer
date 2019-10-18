@@ -1,0 +1,23 @@
+{
+    "A_Comment"         : "Windows 2019 Server GA Release WSL/SSH",
+    "template_name"     : "win-2019-wslssh-x86_64",
+    "beakerhost"        : "windows2019-64",
+    "vbox_guest_os"     : "Windows2016_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "vsphere_guest_os"  : "windows9Server64Guest",
+    "windows_version"   : "Windows-2019",
+    "image_name"        : "Windows Server 2019 SERVERSTANDARD",
+    "product_key"       : "N69G4-B89J2-4G8F4-WWYCC-J464C",
+    "iso_name"          : "en_windows_server_2019_updated_sept_2019_x64_dvd_199664ce.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "6b70008cefedb84a6d780cbf09dc7817",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+
+    "ssh_platform"      : "wsl_ssh",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows Server 2019 Standard",
+    "EditionID"         : "ServerStandard",
+    "InstallationType"  : "Server",
+    "ReleaseID"         : "1809"
+}
