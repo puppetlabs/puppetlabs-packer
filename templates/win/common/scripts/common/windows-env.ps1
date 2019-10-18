@@ -338,7 +338,7 @@ Function Disable-WindowsAutoUpdate {
 Function Install-7ZipPackage {
   if (-not (Test-Path "$PackerLogs\7zip.installed")) {
     # Download and install 7za now as its needed here and is useful going forward.
-    $SevenZipInstaller = "7z1604-$ARCH.exe"
+    $SevenZipInstaller = "7z1900-$ARCH.exe"
     Write-Output "Installing 7zip $SevenZipInstaller"
     Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/7zip/$SevenZipInstaller"  "$Env:TEMP\$SevenZipInstaller"
     Start-Process -Wait "$Env:TEMP\$SevenZipInstaller" @SprocParms -ArgumentList "/S"
