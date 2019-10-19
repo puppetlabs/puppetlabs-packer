@@ -103,6 +103,8 @@ $CygwinDownloads = "$PackerDownloads\Cygwin"
 $PackerPsModules = "$PackerStaging\PsModules"
 $PackerAcceptance = "$PackerStaging\Acceptance"
 
+$WSLDir = "$PackerStaging\wsl"
+
 # Load in the build parameters injected from the Packer Build.
 $PackerBuildFile = "$PuppetHieradata\build.json"
 if (Test-Path "$PuppetHieradata\build.json") {
@@ -166,6 +168,7 @@ Function Create-PackerStagingDirectories {
     New-Item -ItemType Directory -Force -Path $PackerPsModules
     New-Item -ItemType Directory -Force -Path $SysInternals
     New-Item -ItemType Directory -Force -Path $PackerAcceptance
+    New-Item -ItemType Directory -Force -Path $WSLDir
 
     Touch-File "$PackerLogs/StagingDirectories.installed"
   }

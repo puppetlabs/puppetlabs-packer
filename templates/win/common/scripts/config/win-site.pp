@@ -22,7 +22,9 @@ if (lookup('packer.windows.installationtype') != 'Server Core') and ($::operatin
   include windows_template::apps::notepadplusplus
 }
 
-if (lookup('packer.ssh_platform') == 'cygwin-2.4.0')
-{
-  include windows_template::ssh::cygwin_240
+# Select an SSH layer
+case lookup('packer.ssh_platform') {
+  'wsl_ssh':      { include windows_template::ssh::wsl_ssh }
+  'cygwin-2.4.0': { include windows_template::ssh::cygwin_240 }
+  default: {} # None provided
 }

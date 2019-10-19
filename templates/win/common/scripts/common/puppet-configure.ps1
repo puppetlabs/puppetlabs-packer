@@ -30,6 +30,7 @@ $ENV:FACTER_modules_path         = "$PuppetModulesPath"
 $ENV:FACTER_packer_downloads     = "$PackerDownloads"
 $ENV:FACTER_packer_config        = "$PackerConfig"
 $ENV:FACTER_sysinternals         = "$SysInternals"
+$ENV:FACTER_wsldir               = "$WSLDir"
 $ENV:FACTER_windir               = "$ENV:WINDIR"
 # Pick Up user attributes as these could be localised.
 $ENV:FACTER_administrator_sid     =  $WindowsAdminSID
