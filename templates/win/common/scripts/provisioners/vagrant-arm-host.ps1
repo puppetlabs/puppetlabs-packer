@@ -1,3 +1,6 @@
+# Note -this script has not followed recent changes (e.g. wsl/ssh) as vagrant builds have not
+# been generated for some time. 
+#
 # vagrant host Arming - this is is done during the maching prep as a post-clone operation is
 # not required for current vagrant testing.
 
@@ -12,7 +15,6 @@ if ($WindowsVersion -like "10.*") {
   Set-NetConnectionProfile  -InterfaceIndex (Get-NetConnectionProfile).InterfaceIndex -NetworkCategory Private
 }
 
-# Pickup Env Variables defined in "install-cygwin.ps1"
 $CygWinShell = "$ENV:CYGWINDIR\bin\sh.exe"
 $AdministratorName =  $ENV:Username
 $AdministratorHome = "$ENV:CYGWINDIR\home\$AdministratorName"
