@@ -1,5 +1,5 @@
 {
-  "version"             : "20191011",
+  "version"             : "20191021",
 
   "headless"            : "true",
 
@@ -11,6 +11,8 @@
   "shutdown_timeout"    : "1h",
 
   "locale"              : "en-US",
+
+  "ssh_platform"        : "cygwin-2.4.0",
   
   "image_index"         : "2",
 

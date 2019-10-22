@@ -10,4 +10,6 @@ puppetlabs-stdlib
 puppet-download_file
 puppet-archive
 puppet-windows_env
+puppet-windowsfeature
+puppetlabs-reboot
 ayohrling-local_security_policy

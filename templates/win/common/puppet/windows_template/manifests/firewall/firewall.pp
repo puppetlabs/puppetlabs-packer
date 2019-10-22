@@ -11,36 +11,36 @@ class windows_template::firewall::firewall()
     # These operating systems are soon to be removed, so its not worth spending any more
     # effort working on this.
 
-    $fwnetsh_action = @(FWNETSH_ACTION)
-        netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
-        netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
-        Write-Output $null > C:\Packer\Logs\FireWallRules.Installed
+    $fw_action = @(FWNETSH_ACTION)
+        Try {
+          netsh advfirewall firewall add rule name="All Incoming" dir=in action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
+          netsh advfirewall firewall add rule name="All Outgoing" dir=out action=allow enable=yes interfacetype=any profile=any localip=any remoteip=any
+          Write-Output $null > C:\Packer\Logs\FireWallRules.Installed
+        } Catch {
+          Exit 1
+        }
         | FWNETSH_ACTION
-
-    exec { 'Enable Permissive netsh-Firewall':
-      command   => $fwnetsh_action,
-      unless    => 'if (-Not (Test-Path C:\Packer\Logs\FireWallRules.Installed) ) {Exit 1}',
-      provider  => powershell,
-      logoutput => true,
-    }
   } else {
 
-    # Using XXX-NetFireWallRule cmdlets available on win-2012+ operating systems.
-    # Resorting to the simple file check option to get this working.
+    # Using New-NetFireWallRule cmdlets available on win-2012+ operating systems.
 
-    $fwps_action = @(FWPS_ACTION)
-        Remove-NetFireWallRule -DisplayName "All Incoming" -ErrorAction SilentlyContinue
-        New-NetFirewallRule -DisplayName "All Incoming" -Enabled True -Profile Any -Direction Inbound -InterfaceType Any -Action Allow -Protocol TCP -LocalPort Any -LocalAddress Any -RemoteAddress Any
-        Remove-NetFireWallRule -DisplayName "All Outgoing" -ErrorAction SilentlyContinue
-        New-NetFirewallRule -DisplayName "All Outgoing" -Enabled True -Profile Any -Direction Outbound -InterfaceType Any -Action Allow -Protocol TCP -LocalPort Any -LocalAddress Any -RemoteAddress Any
-        Write-Output $null > C:\Packer\Logs\FireWallRules.Installed
+    $fw_action = @(FWPS_ACTION)
+        Try {
+          Remove-NetFireWallRule -DisplayName "All Incoming" -ErrorAction SilentlyContinue
+          New-NetFirewallRule -DisplayName "All Incoming" -Enabled True -Profile Any -Direction Inbound -InterfaceType Any -Action Allow -Protocol TCP -LocalPort Any -LocalAddress Any -RemoteAddress Any
+          Remove-NetFireWallRule -DisplayName "All Outgoing" -ErrorAction SilentlyContinue
+          New-NetFirewallRule -DisplayName "All Outgoing" -Enabled True -Profile Any -Direction Outbound -InterfaceType Any -Action Allow -Protocol TCP -LocalPort Any -LocalAddress Any -RemoteAddress Any
+          Write-Output $null > C:\Packer\Logs\FireWallRules.Installed
+        } Catch {
+          Exit 1
+        }
         | FWPS_ACTION
+  }
 
-    exec { 'Enable Permissive XXX-NetFireWallRule':
-      command   => $fwps_action,
-      unless    => 'if (-Not (Test-Path C:\Packer\Logs\FireWallRules.Installed) ) {Exit 1}',
-      provider  => powershell,
-      logoutput => true,
-    }
+  exec { 'Enable Firewall Rules':
+    command   => $fw_action,
+    unless    => 'if (-Not (Test-Path C:\Packer\Logs\FireWallRules.Installed) ) {Exit 1}',
+    provider  => powershell,
+    logoutput => true,
   }
 }

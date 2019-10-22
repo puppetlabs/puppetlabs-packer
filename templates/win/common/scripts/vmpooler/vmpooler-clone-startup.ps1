@@ -16,22 +16,30 @@ If ( -not $WindowsServerCore ) {
     schtasks /run /tn UpdateBGInfo
 }
 
-# CYGWINDIR is set in the environment when Cygwin is installed
-$CygwinDir = "$ENV:CYGWINDIR"
-$CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
-$CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
-$CygwinPasswdFile = "$CygwinDir\etc\passwd"
-$CygwinGroupFile = "$CygwinDir\etc\group"
 
-#Snooze for a bit
-sleep -s 10
+if ("$($PackerBuildParams.packer.ssh_platform)" -ne "wsl_ssh") {
 
-#--- SCRIPT ---#
-Write-Output "Updating the Cygwin passwd file!"
+    # CYGWINDIR is set in the environment when Cygwin is installed
+    $CygwinDir = "$ENV:CYGWINDIR"
+    $CygwinMkpasswd = "$CygwinDir\bin\mkpasswd.exe -l"
+    $CygwinMkgroup = "$CygwinDir\bin\mkgroup.exe -l"
+    $CygwinPasswdFile = "$CygwinDir\etc\passwd"
+    $CygwinGroupFile = "$CygwinDir\etc\group"
 
-#Update the passwd file.
-Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
-Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
+    #Snooze for a bit
+    Start-Sleep -Seconds 10
+
+    #--- SCRIPT ---#
+    Write-Output "Updating the Cygwin passwd file!"
+
+    #Update the passwd file.
+    Invoke-Expression $CygwinMkpasswd | Out-File $CygwinPasswdFile -Force -Encoding "ASCII"
+    Invoke-Expression $CygwinMkgroup | Out-File $CygwinGroupFile -Force -Encoding "ASCII"
+} else {
+    # WSL Start SSH Service
+    Write-Output "Starting SSH Service"
+    wsl -e sudo service ssh --full-restart
+}
 
 if (-not (Test-Path "$PackerLogs\WinRMHTTPS.installed"))
 {

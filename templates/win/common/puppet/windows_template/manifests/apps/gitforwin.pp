@@ -5,16 +5,16 @@ class windows_template::apps::gitforwin()
 
   # Select package name/install title depending on archictecture
   if ($::architecture == 'x86') {
-    $gitforwininstaller = 'Git-2.20.1-32-bit.exe'
+    $gitforwininstaller = 'Git-2.23.0-32-bit.exe'
   } else {
-    $gitforwininstaller = 'Git-2.20.1-64-bit.exe'
+    $gitforwininstaller = 'Git-2.23.0-64-bit.exe'
   }
 
   download_file { $gitforwininstaller :
     url                   => "${gitforwindownloadurl}/${gitforwininstaller}",
     destination_directory => $::packer_downloads
   }
-  -> package { 'Git version 2.20.1':
+  -> package { 'Git version 2.23.0.windows.1': # This version has strange string.
     ensure          => installed,
     source          => "${::packer_downloads}\\${gitforwininstaller}",
     install_options => ['/VERYSILENT', "/LOADINF=${::packer_config}\\gitforwin.inf"]
