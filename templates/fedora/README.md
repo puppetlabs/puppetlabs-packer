@@ -8,7 +8,7 @@ This contains all of the var files required to build any of the other templates 
 
 This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
 
-Puppet maintained Fedora versions include 26, 27, 28, 29 and 30. Any other versions of Fedora here are community maintained.
+Puppet maintained Fedora versions include 26, 27, 28, 29, 30 and 31. Any other versions of Fedora here are community maintained.
 
 ### Building
 

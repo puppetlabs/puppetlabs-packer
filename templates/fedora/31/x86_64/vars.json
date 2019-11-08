@@ -1,0 +1,14 @@
+{
+    "template_name"                         : "fedora-31-x86_64",
+    "template_os"                           : "fedora64Guest",
+    "beakerhost"                            : "fedora31-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/Fedora-Server-dvd-x86_64-31-1.9.iso",
+    "iso_checksum"                          : "225ebc160e40bb43c5de28bad9680e3a78a9db40c9e3f4f42f3ee3f10f95dbeb",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "4096",
+    "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
+    "floppy_files"                          : "../files/ks.cfg",
+    "puppet_aio"                            : "http://yum.puppetlabs.com/puppet6/fedora/30/x86_64/puppet-agent-6.10.1-1.fc30.x86_64.rpm",
+    "iso_name"                              : "Fedora-Server-dvd-x86_64-31-1.9.iso"
+}
