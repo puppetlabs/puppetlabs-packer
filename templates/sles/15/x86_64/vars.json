@@ -6,7 +6,7 @@
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/SLE-15-Installer-DVD-x86_64-GM-DVD1.iso",
     "iso_checksum"                          : "06bd8b78ef0ca6d5ff5000688727953e894805dc3de59060d74441f0fd0539ab",
     "iso_checksum_type"                     : "sha256",
-    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "8168",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
     "puppet_aio"                            : "http://yum.puppetlabs.com/puppet5/sles/15/x86_64/puppet-agent-5.5.7-1.sles15.x86_64.rpm",
     "inject_http_seed_in_boot_command"      : "true"
