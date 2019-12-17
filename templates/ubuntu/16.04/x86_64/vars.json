@@ -6,7 +6,7 @@
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-16.04-server-amd64.iso",
     "iso_checksum"                          : "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
     "iso_checksum_type"                     : "sha256",
-    "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
+    "vmware_vsphere_nocm_vmx_data_memsize"  : "8168",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
     "puppet_aio"                            : "http://apt.puppetlabs.com/pool/xenial/puppet5/p/puppet-agent/puppet-agent_5.3.2-1xenial_amd64.deb"
 }
