@@ -35,12 +35,14 @@
       "vmware_base_required_modules"                 : "saz-ssh puppetlabs-stdlib",
 
       "vmware_base_vmx_data_memsize"                 : "4096",
+      "vmware_base_vmx_data_usb"                     : "FALSE",
       "vmware_base_vmx_data_cpuid_coresPerSocket"    : "4",
       "vmware_base_vmx_data_numvcpus"                : "4",
       "vmware_base_vmx_ehci_present"                 : "FALSE",
       "vmware_base_vm_usb_present"                   : "FALSE" ,
       "vmware_base_vm_scsi0_present"                 : "TRUE",
       "vmware_base_vm_smc_present"                   : "",
+      "vmware_base_vm_smc_version"                   : "",
       "vmware_base_vm_hpet0_present"                 : "",
       "vmware_base_vm_ich7m_present"                 : "",
       "vmware_base_vm_firmware"                      : "",
@@ -90,10 +92,12 @@
       "convert_to_template"                          : "{{user `convert_to_template`}}",
       "folder"                                       : "{{user `packer_vcenter_folder`}}",
       "firmware"                                     : "{{user `vmware_base_vm_firmware`}}",
+      "cdrom_type"                                   : "{{user `cdrom_type`}}",
       "CPUs"                                         : "{{user `vmware_base_vmx_data_numvcpus`}}",
       "CPU_limit"                                    : -1,
       "RAM"                                          : "{{user `vmware_base_vmx_data_memsize`}}",
       "RAM_reserve_all"                              : "{{user `RAM_reserve_all`}}",
+      "usb_controller"                               : "{{user `vmware_base_vmx_data_usb_controller`}}",
       "network"                                      : "{{user `packer_vcenter_net`}}",
       "network_card"                                 : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
       "guest_os_type"                                : "{{user `template_os`}}",
@@ -112,7 +116,7 @@
 
       "floppy_files"                                 : "{{user `floppy_files`}}",
       "floppy_dirs"                                  : "{{user `floppy_dirs`}}",
-      "iso_paths"                                    : ["{{user `iso_disk`}}{{user `iso_name`}}"],
+      "iso_paths"                                    : ["{{user `iso_disk`}}{{user `iso_name`}}", "{{user `iso_disk`}}{{user `tools_upload_flavor`}}.iso"],
 
       "configuration_parameters": {
         "annotation"                                 : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",
@@ -147,6 +151,7 @@
         "ich7m.present"                              : "{{user `vmware_base_vm_ich7m_present`}}",
         "scsi0.present"                              : "{{user `vmware_base_vm_scsi0_present`}}",
         "smc.present"                                : "{{user `vmware_base_vm_smc_present`}}",
+        "smc.version"                                : "{{user `vmware_base_vm_smc_version`}}",
         "usb.present"                                : "{{user `vmware_base_vm_usb_present`}}"
       }
     }

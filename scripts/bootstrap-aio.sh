@@ -40,22 +40,20 @@ elif [ -n "${PUPPET_AIO}" ]; then
     curl --silent "${PUPPET_AIO}" -o $tmp_dir/puppet-agent.deb
     dpkg -i $tmp_dir/puppet-agent.deb
   elif [[ ${PUPPET_AIO} == *".dmg"* ]]; then
+    # Write a test value to disabled.plist if it does not exist
+    # Puppet launchd provider fails if the file does not exist or
+    # doesn't have a valid plist format
+    if [ ! -f "/var/db/com.apple.xpc.launchd/disabled.plist" ]; then
+      defaults write /var/db/com.apple.xpc.launchd/disabled test value
+    fi
+
     curl --silent "${PUPPET_AIO}" -o $tmp_dir/puppet-agent.dmg
-    hdiutil mount $tmp_dir/puppet-agent.dmg
+    hdiutil attach $tmp_dir/puppet-agent.dmg
     # Add puppet to $PATH environment variable
     export PATH=$PATH:/opt/puppetlabs/bin
-    # Change dir to point to /Volumes/
-    cd "/Volumes/"
-    # Find image path
-    export IMAGE_PATH=$(find . -name puppet-agent*)
-    cd "$IMAGE_PATH/"
-    # Find puppet agent .pkg 
-    export AGENT_NAME=$(find . -name puppet-agent*.pkg)
-    # Install pupet agent 
-    installer -pkg $AGENT_NAME -target / 
-    # Unmount disk    
-    cd "$HOME"
-    diskutil unmountDisk /dev/disk2 
+    installer -pkg /Volumes/puppet-agent-*/puppet-agent-*.pkg -target / 
+    aio_drive=$(diskutil list | grep puppet | egrep -o "disk\d*")
+    diskutil unmountDisk $aio_drive
     # Software update & install xcode-commandline-tools
     PLACEHOLDER="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
     touch $PLACEHOLDER

@@ -103,6 +103,55 @@ $ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
     common/vmware.vsphere.nocm.json
 ```
 
+#### 10.15 Catalina
+
+The macOS 10.15 image uses a bootable `.iso` file generated from the `Install macOS
+Catalina.app` from the App Store.
+
+Most of the installation (until the desktop screen shows) is automated with boot
+command keystrokes. In broad terms, this is what the `boot_command` does
+
+1. English language is selected in the installer
+2. Opens a Terminal session, inputs the following commands:
+    - `diskutil eraseDisk APFS 'Macintosh HD' /dev/disk0` - erases the installation disk
+    - `until '/Install macOS Catalina.app/Contents/Resources/startosinstall'
+      --agreetolicense --volume '/Volumes/Macintosh HD'; do echo 'trying
+      again...'; done` - runs the non-interactive installer with a simple guard
+      (it fails from time to time when getting Recovery Information from Apple)
+3. The system then reboots and continues the installation, while the boot command
+   waits for 50 minutes
+4. Configuration resumes, goes through region and language settings...
+5. Network configuration is sometimes prompted (this is not scripted in the boot
+   command since it doesn't happen all the time, still trying to figure this
+   out)
+6. Privacy, Transfer, iCloud, License Agreement, Account Creation (user: osx,
+   password: puppet), Screen Time, Siri, Theme are configured
+7. Desktop screen shows up, which means installation is done
+
+After reaching the desktop screen, the boot command waits for another 10
+minutes, then switches context to Packer which (by default) waits for an IP from
+the guest machine for 30 minutes. That's to give us time to set up VMware Tools
+so the machine becomes reachable over SSH:
+
+1. Open a Terminal (Launchpad -> Terminal)
+2. Change the `root` password to puppet (`sudo passwd root`)
+3. Elevate (`sudo su - root`)
+4. Edit `/etc/ssh/sshd_config`, uncomment `PermitRootLogin` and set it to `yes`
+5. Give Full Disk Access to Terminal (System Preferences -> Security & Privacy
+   -> Privacy -> Full Disk Access)
+6. Provided the VMware Tools image is mounted, you can install it with
+   `installer -pkg '/Volumes/VMware Tools/Install VMware
+   Tools.app/Contents/Resources/VMware Tools.pkg' -target / -verbose`
+7. The installer will probably fail (due to Apple blocking VMware's system
+   extension), you need to open the Security & Privacy panel again, go to
+   General and click Allow, then run the installer again
+8. Install the XCode Command Line tools by running `xcode-select --install`;
+   this is an interactive process that can only be done via the user interface.
+9. After a reboot, the machine should have an IP and you should have mouse acceleration
+10. Execute `systemsetup -setremotelogin on` to start the SSH server (this does
+    not persist between reboots, so you might need to start it again if you
+    rebooted sometime in the process)
+
 ### Background
 
 Previously, the creation of packer templates for macOS involved the following steps:
