@@ -99,7 +99,7 @@ class packer::vsphere(
     file { $bootstrap_file:
       owner   => 'root',
       group   => $group,
-      mode    => $mode,
+      mode    => pick($startup_file_perms, $mode),
       content => template("packer/vsphere/${bootstrap_file_source}"),
     }
 

@@ -7,9 +7,6 @@
     <key>RunAtLoad</key>         <true/>
     <key>KeepAlive</key>         <false/>
     <key>LaunchOnlyOnce</key>    <true/>
-    <key>ProgramArguments</key>
-        <array>
-            <string>/etc/rc.local</string>
-        </array>
+    <key>Program</key>           <string>/etc/rc.local</string>
 </dict>
 </plist>

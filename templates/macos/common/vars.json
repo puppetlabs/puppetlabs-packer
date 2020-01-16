@@ -1,5 +1,6 @@
 {
   "_comment"                                                    : "Variable values common to all macOS versions (see <version>/<arch>/vars.json for version-specific values)",
+  "cdrom_type"                                                  : "sata",
   "common_files"                                                : "../../common/files",
   "disk_size"                                                   : "40960",
   "headless"                                                    : "true",
@@ -10,6 +11,7 @@
   "puppet_aio"                                                  : "https://downloads.puppetlabs.com/mac/puppet6/10.12/x86_64/puppet-agent-latest.dmg",
   "pc_repo"                                                     : "",
   "http_directory"                                              : "../common/files",
+  "vmware_vsphere_nocm_required_modules"                        : "puppetlabs-stdlib",
   "vmware_vsphere_nocm_vmx_data_numvcpus"                       : "2",
   "vmware_vsphere_nocm_vmx_data_memsize"                        : "4096",  
   "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"           : "e1000",
@@ -17,6 +19,8 @@
   "vmware_base_vmx_data_memsize"                                : "4096",
   "vmware_base_vmx_data_cpuid_coresPerSocket"                   : "2",
   "vmware_base_vmx_data_numvcpus"                               : "2",
+  "vmware_base_vmx_data_usb_controller"                         : "TRUE",
+  "vmware_base_vm_disk_adapter_type"                            : "lsilogic",
   "vmware_base_vmx_keyboard_and_mouse_profile"                  : "macProfile",
   "vmware_base_vmx_data_ethernet0_virtualDev"                   : "e1000",
   "vmware_base_vmx_ehci_present"                                : "TRUE",
@@ -25,7 +29,8 @@
   "vmware_base_vm_ich7m_present"                                : "TRUE",
   "vmware_base_vm_scsi0_present"                                : "TRUE",
   "vmware_base_vm_smc_present"                                  : "TRUE",
+  "vmware_base_vm_smc_version"                                  : "0",
   "vmware_base_vm_usb_present"                                  : "TRUE",   
   "inject_http_seed_in_boot_command"                            : "FALSE",  
-  "tools_upload_flavor"                                         : "darwin"  
+  "tools_upload_flavor"                                         : "darwin"
 }
