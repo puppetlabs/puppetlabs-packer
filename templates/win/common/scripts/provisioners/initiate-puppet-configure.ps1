@@ -16,10 +16,10 @@ Write-Output "Setting up for Puppet Configuration"
 
 Write-Output "Installing Puppet Agent..."
 if ("$ARCH" -eq "x86") {
-  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x86-latest.msi"
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-x86-latest.msi"
 }
 else {
-  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
+  $PuppetMSIUrl = "https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-x64-latest.msi"
 }
 Download-File "$PuppetMSIUrl" $PackerDownloads\puppet-agent.msi
 

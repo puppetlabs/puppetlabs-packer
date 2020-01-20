@@ -1,2 +1,2 @@
-class win_group_policy {
+class windows_group_policy {
 }
