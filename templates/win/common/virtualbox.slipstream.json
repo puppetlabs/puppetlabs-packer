@@ -24,9 +24,7 @@
 
   "description": "Generic build to prepare slipstream ISO for Win2012r2+ platforms using virtualbox",
 
-  "_comment": [
-      "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done"
-  ],
+  "_comment": "The boot_command is hacky because the UEFI boot file used requires the 'Press any key' to be done",
   "builders": [
     {
       "type"                    : "virtualbox-iso",
