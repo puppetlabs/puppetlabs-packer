@@ -29,7 +29,7 @@ class packer::vsphere::params {
     'Ubuntu': {
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'ubuntu.rb.erb'
-      if $facts['operatingsystemrelease'] in ['18.04', '18.10'] {
+      if $facts['operatingsystemrelease'] in ['18.04', '18.10', '20.04'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
