@@ -62,7 +62,7 @@ class packer::vsphere(
       }
     }
     debian: {
-      if $facts['operatingsystemrelease'] in ['18.04', '18.10'] {
+      if $facts['operatingsystemrelease'] in ['18.04', '18.10', '20.04'] {
         # Enable systemd service for vsphere bootstrap instead of relying on rc.local
         file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
           ensure => 'link',
@@ -99,7 +99,7 @@ class packer::vsphere(
     file { $bootstrap_file:
       owner   => 'root',
       group   => $group,
-      mode    => pick($startup_file_perms, $mode),
+      mode    => $mode,
       content => template("packer/vsphere/${bootstrap_file_source}"),
     }
 

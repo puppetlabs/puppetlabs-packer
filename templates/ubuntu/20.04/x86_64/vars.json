@@ -1,0 +1,13 @@
+{
+    "template_name"                         : "ubuntu-2004-x86_64",
+    "template_os"                           : "ubuntu64Guest",
+    "beakerhost"                            : "ubuntu2004-64",
+    "version"                               : "0.0.1",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic__iso/iso/focal-server-amd64.iso",
+    "iso_checksum"                          : "fa1098d04d96e869ca861b711906bf1cf657e7e253cc9aea0163a0356f5f1a95",
+    "iso_checksum_type"                     : "sha256",
+    "vmware_vsphere_base_vmx_data_memsize"  : "8168",
+    "vmware_vsphere_base_vmx_data_numvcpus" : "2",
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/bionic/puppet5/p/puppet-agent/puppet-agent_5.5.18-1bionic_amd64.deb",
+    "iso_name"                              : "focal-server-amd64.iso"
+}

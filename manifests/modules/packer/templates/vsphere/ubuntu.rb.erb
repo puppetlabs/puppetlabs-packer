@@ -14,7 +14,7 @@ File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
  
-<% if ['18.04', '18.10'].include? @operatingsystemrelease -%>
+<% if ['18.04', '18.10', '20.04'].include? @operatingsystemrelease -%>
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 <% else -%>
@@ -41,7 +41,7 @@ puts '- Re-obtaining DHCP lease...'
 <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
 # NetworkManager
 Kernel.system('/usr/sbin/service networking restart')
-<% elsif ['18.04', '18.10'].include? @operatingsystemrelease -%>
+<% elsif ['18.04', '18.10', '20.04'].include? @operatingsystemrelease -%>
 # systemd-networkd's DHCP client uses /etc/machine-id instead of the link layer address (as dhclient does) to generate a client ID
 # /etc/machine-id will be the same on VMs cloned from the same template, so regenerate it:
 File.delete('/etc/machine-id')
@@ -59,7 +59,7 @@ Kernel.system('/sbin/ifdown eth0 && /sbin/ifup eth0')
  
 puts '- Cleaning up...'
 
-<% if ['18.04', '18.10'].include? @operatingsystemrelease -%>
+<% if ['18.04', '18.10', '20.04'].include? @operatingsystemrelease -%>
 # With systemd-networkd, disable the oneshot service that runs this script:
 Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
 <% else -%>
