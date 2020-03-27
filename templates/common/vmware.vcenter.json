@@ -66,12 +66,14 @@
 
       "support_status"                               : "puppet_maintained",
       "tools_upload_flavor"                          : "linux",
-      "project_root"                                 : "../../../.."
+      "project_root"                                 : "../../../..",
+      "custom_provisioning_env"                      : "pe_ver=2018.1.4,pe_foo=bar",
+      "custom_provisioning_script"                   : "{{user `project_root`}}/scripts/noop.sh"
     },
 
  "builders": [
     {
-      "type"                                         : "vsphere-23-iso",
+      "type"                                         : "vsphere-iso",
 
       "communicator"                                 : "{{user `communicator_protocol`}}",
       "ssh_username"                                 : "{{user `ssh_username`}}",
@@ -215,7 +217,22 @@
                                                         "PC_REPO= {{user `pc_repo` }}"
                                                      ],
       "scripts"                                    : [
-                                                        "{{user `project_root`}}/scripts/cleanup-aio.sh",
+                                                        "{{user `project_root`}}/scripts/cleanup-aio.sh"
+                                                     ]
+    },
+    {
+      "type"                                       : "shell",
+      "environment_vars"                           : "{{user `custom_provisioning_env`}}",
+      "scripts"                                    : "{{user `custom_provisioning_script`}}"
+    },
+
+    {
+      "type"                                       : "shell",
+      "environment_vars"                           : [
+                                                        "PUPPET_AIO={{user `puppet_aio`}}",
+                                                        "PC_REPO= {{user `pc_repo` }}"
+                                                     ],
+      "scripts"                                    : [
                                                         "{{user `project_root`}}/scripts/cleanup-packer.sh",
                                                         "{{user `project_root`}}/scripts/cleanup-scrub.sh"
                                                      ]
