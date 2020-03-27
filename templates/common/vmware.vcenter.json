@@ -71,7 +71,7 @@
 
  "builders": [
     {
-      "type"                                         : "vsphere-23-iso",
+      "type"                                         : "vsphere-iso",
 
       "communicator"                                 : "{{user `communicator_protocol`}}",
       "ssh_username"                                 : "{{user `ssh_username`}}",

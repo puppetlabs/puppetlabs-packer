@@ -34,7 +34,7 @@
 
   "builders": [
     {
-      "type"                   : "vsphere-23-clone",
+      "type"                   : "vsphere-clone",
 
       "name"                   : "vcenter-clone",
       "template"               : "{{user `base_template_name`}}",
