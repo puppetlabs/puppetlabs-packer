@@ -1,4 +1,5 @@
 {
+    "disk_size"                            : "71680",
     "floppy_dirs"                          : "",
     "floppy_files"                         : "../common/files/preseed.cfg",
     "vmware_vsphere_nocm_required_modules" : "puppetlabs-stdlib example42-network puppetlabs-apt"
