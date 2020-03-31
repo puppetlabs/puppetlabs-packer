@@ -48,7 +48,7 @@
 
   "builders": [
     {
-      "type": "vsphere-23-iso",
+      "type": "vsphere-iso",
 
       "name"                   : "vcenter-iso",
       "vm_name"                : "{{user `template_name`}}-{{user `version`}}{{user `template_suffix`}}",

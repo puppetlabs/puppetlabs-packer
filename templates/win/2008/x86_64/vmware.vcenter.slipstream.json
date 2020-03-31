@@ -46,7 +46,7 @@
   "description": "Specific build to prepare slipstream ISO for Windows 2008 platforms",
   "builders": [
     {
-      "type"              : "vsphere-23-iso",
+      "type"              : "vsphere-iso",
 
       "name"                   : "vsphere-slipstream",
       "vm_name"                : "{{user `template_name`}}-{{user `version`}}.slip{{user `template_suffix`}}",
