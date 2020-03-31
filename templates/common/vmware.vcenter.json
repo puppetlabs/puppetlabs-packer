@@ -26,6 +26,10 @@
       "packer_vcenter_net"                           : null,
       "packer_vcenter_insecure"                      : null,
 
+      "vmware_base_boot_wait"                        : "45s",
+      "shutdown_timeout"                             : "5m",
+
+
       "packer_sha"                                   : "{{user `packer_sha`}}",
 
       "convert_to_template"                          : "false",
