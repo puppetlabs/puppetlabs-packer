@@ -2,7 +2,7 @@
     "template_name"                                         : "centos-8-pdbpreload-x86_64",
     "template_os"                                           : "centos8_64Guest",
     "beakerhost"                                            : "centos8-64",
-    "version"                                               : "0.0.1",
+    "version"                                               : "0.0.2",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/CentOS-8-x86_64-1905-dvd1.iso",
     "iso_checksum"                                          : "ea17ef71e0df3f6bf1d4bf1fc25bec1a76d1f211c115d39618fe688be34503e8",
     "iso_checksum_type"                                     : "sha256",
