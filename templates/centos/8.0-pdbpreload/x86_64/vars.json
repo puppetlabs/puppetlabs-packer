@@ -1,5 +1,5 @@
 {
-    "template_name"                                         : "centos-8-x86_64",
+    "template_name"                                         : "centos-8-pdbpreload-x86_64",
     "template_os"                                           : "centos8_64Guest",
     "beakerhost"                                            : "centos8-64",
     "version"                                               : "0.0.2",
@@ -11,5 +11,7 @@
     "puppet_aio"                                            : "http://builds.delivery.puppetlabs.net/puppet-agent/5.5.16/artifacts/el/8/puppet5/x86_64/puppet-agent-5.5.16-1.el8.x86_64.rpm",
     "inject_http_seed_in_boot_command"                      : "true",
     "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait><enter>",
-    "iso_name"                                              : "CentOS-8-x86_64-1905-dvd1.iso"
+    "iso_name"                                              : "CentOS-8-x86_64-1905-dvd1.iso",
+    "custom_provisioning_env"                               : "BRANCH=master,VERSION=latest,PLATFORM=el-8-x86_64",
+    "custom_provisioning_script"                            : "scripts/pdbpreload.sh"
 }

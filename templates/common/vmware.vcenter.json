@@ -72,7 +72,7 @@
       "tools_upload_flavor"                          : "linux",
       "project_root"                                 : "../../../..",
       "custom_provisioning_env"                      : "pe_ver=2018.1.4,pe_foo=bar",
-      "custom_provisioning_script"                   : "{{user `project_root`}}/scripts/noop.sh"
+      "custom_provisioning_script"                   : "scripts/noop.sh"
     },
 
  "builders": [
@@ -227,7 +227,7 @@
     {
       "type"                                       : "shell",
       "environment_vars"                           : "{{user `custom_provisioning_env`}}",
-      "scripts"                                    : "{{user `custom_provisioning_script`}}"
+      "scripts"                                    : "{{user `project_root`}}/{{user `custom_provisioning_script`}}"
     },
 
     {
