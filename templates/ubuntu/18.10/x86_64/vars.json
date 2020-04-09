@@ -1,6 +1,6 @@
 {
     "template_name"                         : "ubuntu-1810-x86_64",
-    "template_os"                           : "ubuntu-64",
+    "template_os"                           : "ubuntu64Guest",
     "beakerhost"                            : "ubuntu1810-64",
     "version"                               : "0.0.5",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/ubuntu-18.10-server-amd64.iso",
@@ -8,5 +8,6 @@
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "6144",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/stretch/puppet5/p/puppet-agent/puppet-agent_5.3.2-1stretch_amd64.deb"
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/stretch/puppet5/p/puppet-agent/puppet-agent_5.3.2-1stretch_amd64.deb",
+    "iso_name"                              : "ubuntu-18.10-server-amd64.iso"
 }
