@@ -1,6 +1,6 @@
 {
     "template_name"                         : "solaris-114-x86_64",
-    "template_os"                           : "solaris11-64",
+    "template_os"                           : "solaris11_64Guest",
     "beakerhost"                            : "solaris114-32",
     "version"                               : "0.0.5",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/sol-11_4-ai-x86.iso",
@@ -11,6 +11,6 @@
     "puppet_aio"                            : "",
     "shutdown_command"                      : "/usr/sbin/poweroff",
     "inject_http_seed_in_boot_command"      : "true",
-    "tools_upload_flavor"                   : "solaris"
-    
+    "tools_upload_flavor"                   : "solaris",
+    "iso_name"                              : "sol-11_4-ai-x86.iso"
 }
