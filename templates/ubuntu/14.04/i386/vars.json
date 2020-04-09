@@ -1,6 +1,6 @@
 {
     "template_name"                         : "ubuntu-14.04-i386",
-    "template_os"                           : "ubuntu",
+    "template_os"                           : "ubuntuGuest",
     "beakerhost"                            : "ubuntu1404-32",
     "version"                               : "0.0.6",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/ubuntu-14.04.2-server-i386.iso",
@@ -8,5 +8,6 @@
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "2048",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/trusty/PC1/p/puppet-agent/puppet-agent_1.8.3-1trusty_i386.deb"
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/trusty/PC1/p/puppet-agent/puppet-agent_1.8.3-1trusty_i386.deb",
+    "iso_name"                              : "ubuntu-14.04.2-server-i386.iso"
 }

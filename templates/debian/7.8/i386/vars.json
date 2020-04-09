@@ -1,6 +1,6 @@
 {
     "template_name"                         : "debian-7.8-i386",
-    "template_os"                           : "debian7",
+    "template_os"                           : "debian7Guest",
     "beakerhost"                            : "debian7-32",
     "version"                               : "0.0.5",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/debian-7.8.0-i386-CD-1.iso",
@@ -8,5 +8,6 @@
     "iso_checksum_type"                     : "md5",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "2048",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/wheezy/PC1/p/puppet-agent/puppet-agent_1.8.2-1wheezy_i386.deb"
+    "puppet_aio"                            : "http://apt.puppetlabs.com/pool/wheezy/PC1/p/puppet-agent/puppet-agent_1.8.2-1wheezy_i386.deb",
+    "iso_name"                              : "debian-7.8.0-i386-CD-1.iso"
 }
