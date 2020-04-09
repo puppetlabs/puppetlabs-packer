@@ -10,5 +10,6 @@
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
     "puppet_aio"                            : "http://yum.puppetlabs.com/puppet5/sles/15/x86_64/puppet-agent-5.5.7-1.sles15.x86_64.rpm",
     "inject_http_seed_in_boot_command"      : "true",
+    "boot_command"                          : "<esc><enter><wait>linux netdevice=eth0 netsetup=dhcp install=cd:/ lang=en_US autoyast=http://%s/autoinst-x64.xml textmode=1<wait><enter><wait>",
     "iso_name"                              : "SLE-15-Installer-DVD-x86_64-GM-DVD1.iso"
 }
