@@ -1,6 +1,6 @@
 {
     "template_name"                         : "scientific-6.8-i386",
-    "template_os"                           : "rhel6",
+    "template_os"                           : "rhel6Guest",
     "beakerhost"                            : "scientific6-32",
     "version"                               : "0.0.2",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/rpm__remote_scientific/6.8/i386/iso/SL-68-i386-2016-06-29-DVD-DL.iso",
@@ -8,5 +8,6 @@
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "2048",
     "vmware_vsphere_nocm_vmx_data_numvcpus" : "2",
-    "puppet_aio"                            : "http://yum.puppetlabs.com/el/6/PC1/i386/puppet-agent-1.10.10-1.el6.i386.rpm"
+    "puppet_aio"                            : "http://yum.puppetlabs.com/el/6/PC1/i386/puppet-agent-1.10.10-1.el6.i386.rpm",
+    "iso_name"                              : "SL-68-i386-2016-06-29-DVD-DL.iso"
 }
