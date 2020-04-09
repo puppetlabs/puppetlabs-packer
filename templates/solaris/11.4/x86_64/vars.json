@@ -8,7 +8,7 @@
     "iso_checksum_type"                     : "sha256",
     
     "pc_repo"                               : "default repository",
-    "puppet_aio"                            : "",
+    "puppet_aio"                            : "http://builds.delivery.puppetlabs.net/puppet-agent/5.5.0/artifacts/solaris/11/PC1/puppet-agent@5.5.0,5.11-1.sparc.p5p",
     "shutdown_command"                      : "/usr/sbin/poweroff",
     "inject_http_seed_in_boot_command"      : "true",
     "tools_upload_flavor"                   : "solaris",
