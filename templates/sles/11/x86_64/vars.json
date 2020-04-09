@@ -1,6 +1,6 @@
 {
     "template_name"                         : "sles-11-x86_64",
-    "template_os"                           : "linux",
+    "template_os"                           : "sles11_64Guest",
     "beakerhost"                            : "sles11-64",
     "version"                               : "0.0.3",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/SLES-11-SP4-DVD-x86_64-GM-DVD1.iso",
@@ -11,5 +11,6 @@
     "puppet_aio"                            : "http://yum.puppetlabs.com/sles/11/PC1/x86_64/puppet-agent-1.10.9-1.sles11.x86_64.rpm",
     "inject_http_seed_in_boot_command"      : "true",
     "boot_command"                          : "<esc><enter><wait>linux netdevice=eth0 netsetup=dhcp install=cd:/ lang=en_US autoyast=http://%s/autoinst-x64.xml textmode=1<wait><enter><wait>",
-    "vmware_base_boot_wait"                 : "20s"
+    "vmware_base_boot_wait"                 : "20s",
+    "iso_name"                              : "SLES-11-SP4-DVD-x86_64-GM-DVD1.iso"
 }
