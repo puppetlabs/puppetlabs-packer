@@ -3,7 +3,7 @@
     "template_os"                           : "rhel6Guest",
     "beakerhost"                            : "scientific6-32",
     "version"                               : "0.0.2",
-    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/rpm__remote_scientific/6.8/i386/iso/SL-68-i386-2016-06-29-DVD-DL.iso",
+    "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/rpm__remote_scientific-cache/6.8/i386/iso/SL-68-i386-2016-06-29-DVD-DL.iso",
     "iso_checksum"                          : "f46ca847a468e79b69fc2f3ab71893803bd45b00b22aaf30019ea576e498c655",
     "iso_checksum_type"                     : "sha256",
     "vmware_vsphere_nocm_vmx_data_memsize"  : "2048",
