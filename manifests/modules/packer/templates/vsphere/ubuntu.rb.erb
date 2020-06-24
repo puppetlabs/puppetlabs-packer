@@ -25,7 +25,7 @@ File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
   <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
   dhc.gsub!(/^(send host-name.*)/, "send host-name \"#{hostname}\";")
   <% else -%>
-  dhc.gsub!(/^(#send host-name.*)/, "send host-name \"#{hostname}\";")
+  dhc.gsub!(/^(#?send host-name.*)/, "send host-name \"#{hostname}\";")
   <% end -%>
   f.write(dhc)
 end
@@ -42,15 +42,16 @@ puts '- Re-obtaining DHCP lease...'
 # NetworkManager
 Kernel.system('/usr/sbin/service networking restart')
 <% elsif ['18.04', '18.10', '20.04'].include? @operatingsystemrelease -%>
-# systemd-networkd's DHCP client uses /etc/machine-id instead of the link layer address (as dhclient does) to generate a client ID
-# /etc/machine-id will be the same on VMs cloned from the same template, so regenerate it:
-File.delete('/etc/machine-id')
-Kernel.system('/bin/systemd-machine-id-setup')
-Kernel.system('/bin/systemctl daemon-reload')
+# netplan uses machine-id or client-it as identifier by default, but we need a different value for
+# each VM, so configure netplan's dhcp to use mac addresses
+#open('/etc/netplan/01-netcfg.yaml', 'a') { |f|
+#  f.puts "      dhcp-identifier: mac"
+#}
 
-# disable systemd-resolved - more info here: https://tickets.puppetlabs.com/browse/QENG-6928
-Kernel.system('rm /etc/resolv.conf')
-Kernel.system('ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf')
+# NOTE: not needed anymore, disable systemd-resolved - more info here: https://tickets.puppetlabs.com/browse/QENG-6928
+# see superseding ticket IMAGES-1217
+# Kernel.system('rm /etc/resolv.conf')
+# Kernel.system('ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf')
 
 Kernel.system('/bin/systemctl restart systemd-networkd')
 <% else -%>

@@ -2,12 +2,12 @@
     "template_name"                         : "ubuntu-2004-x86_64",
     "template_os"                           : "ubuntu64Guest",
     "beakerhost"                            : "ubuntu2004-64",
-    "version"                               : "0.0.2",
+    "version"                               : "0.0.6",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic__iso/iso/ubuntu-20.04-live-server-amd64.iso",
     "iso_checksum"                          : "caf3fd69c77c439f162e2ba6040e9c320c4ff0d69aad1340a514319a9264df9f",
     "iso_checksum_type"                     : "sha256",
-    "vmware_vsphere_base_vmx_data_memsize"  : "8168",
-    "vmware_vsphere_base_vmx_data_numvcpus" : "2",
+    "vmware_base_vmx_data_memsize"          : "8168",
+    "vmware_base_vmx_data_numvcpus"         : "2",
     "puppet_aio"                            : "http://apt.puppetlabs.com/pool/bionic/puppet5/p/puppet-agent/puppet-agent_5.5.18-1bionic_amd64.deb",
     "iso_name"                              : "focal-server-amd64.iso"
 }
