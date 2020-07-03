@@ -1,4 +1,4 @@
 {
-    "boot_command" : "<esc><wait><esc><wait><enter><wait>/install/vmlinuz console-setup/ask_detect=false console-setup/layoutcode=us console-setup/modelcode=pc105 debconf/frontend=noninteractive debian-installer=en_US fb=false initrd=/install/initrd.gz kbd-chooser/method=us keyboard-configuration/layout=USA keyboard-configuration/variant=USA locale=en_US.UTF-8 netcfg/get_domain=vm netcfg/get_hostname=localhost grub-installer/bootdev=/dev/sda noapic preseed/file=/floppy/preseed.cfg -- <wait><enter>",
+    "boot_command" : "<esc><wait><esc><wait><enter><wait>/install/vmlinuz console-setup/ask_detect=false console-setup/layoutcode=us console-setup/modelcode=pc105 debconf/frontend=noninteractive debian-installer=en_US fb=false initrd=/install/initrd.gz kbd-chooser/method=us keyboard-configuration/layout=USA keyboard-configuration/variant=USA locale=en_US.UTF-8 netcfg/get_domain=vm netcfg/get_hostname=localhost grub-installer/bootdev=/dev/sda preseed/file=/floppy/preseed.cfg -- <wait><enter>",
     "vmware_base_boot_wait" : "15s"
 }
