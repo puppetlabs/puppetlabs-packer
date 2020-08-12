@@ -3,7 +3,7 @@
     "template_name"                         : "centos-7.2-mono-2018.1.15-preload-x86_64",
     "template_os"                           : "centos7_64Guest",
     "beakerhost"                            : "centos7-64",
-    "version"                               : "0.0.8",
+    "version"                               : "0.0.9",
     "iso_url"                               : "http://osmirror.delivery.puppetlabs.net/iso/CentOS-7-x86_64-DVD-1511.iso",
     "iso_checksum"                          : "907e5755f824c5848b9c8efbb484f3cd945e93faa024bad6ba875226f9683b16",
     "iso_checksum_type"                     : "sha256",

@@ -47,6 +47,7 @@ ${PUPPET_BIN}/puppet agent -t
 # The refresh_master_hostname plan requires user_data.conf to be present
 echo '### Running puppet infra recover_configuration to generate user_data.conf ###'
 ${PUPPET_BIN}/puppet-infrastructure recover_configuration
+puppet resource service puppet ensure=stopped enable=false
 
 echo '### Creating refresh_hostname script ###'
 
