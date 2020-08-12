@@ -104,13 +104,17 @@
       "RAM"                                          : "{{user `vmware_base_vmx_data_memsize`}}",
       "RAM_reserve_all"                              : "{{user `RAM_reserve_all`}}",
       "usb_controller"                               : "{{user `vmware_base_vmx_data_usb_controller`}}",
-      "network"                                      : "{{user `packer_vcenter_net`}}",
-      "network_card"                                 : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}",
+        "network_adapters"       : [{
+          "network"                                  : "{{user `packer_vcenter_net`}}",
+          "network_card"                             : "{{user `vmware_base_vmx_data_ethernet0_virtualDev`}}"
+      }],
       "guest_os_type"                                : "{{user `template_os`}}",
       "datastore"                                    : "{{user `packer_vcenter_datastore`}}",
       "disk_controller_type"                         : "{{user `vmware_base_vm_disk_adapter_type`}}",
-      "disk_thin_provisioned"                        : "{{user `disk_thin_provisioned`}}",
-      "disk_size"                                    : "{{user `disk_size`}}",
+      "storage"                                      : [{
+          "disk_thin_provisioned"                        : "{{user `disk_thin_provisioned`}}",
+          "disk_size"                                    : "{{user `disk_size`}}"
+      }],
       "boot_order"                                   : "{{user `boot_order`}}",
       "boot_wait"                                    : "{{user `vmware_base_boot_wait`}}",
       "host"                                         : "",
