@@ -67,13 +67,17 @@
       "CPU_limit"              : -1,
       "RAM"                    : "{{user `memsize`}}",
       "RAM_reserve_all"        : "{{user `RAM_reserve_all`}}",
-      "network"                : "{{user `packer_vcenter_net`}}",
-      "network_card"           : "{{user `network_card`}}",
+      "network_adapters"       : [{
+          "network"                : "{{user `packer_vcenter_net`}}",
+          "network_card"           : "{{user `network_card`}}"
+      }],
       "guest_os_type"          : "{{user `vsphere_guest_os`}}",
       "datastore"              : "{{user `packer_vcenter_datastore`}}",
       "disk_controller_type"   : "{{user `disk_controller_type`}}",
-      "disk_thin_provisioned"  : "{{user `disk_thin_provisioned`}}",
-      "disk_size"              : "{{user `disk_size`}}",
+      "storage"                : [{
+        "disk_thin_provisioned"  : "{{user `disk_thin_provisioned`}}",
+        "disk_size"              : "{{user `disk_size`}}"
+      }],
       "boot_order"             : "{{user `boot_order`}}",
       "boot_wait"              : "{{user `boot_wait`}}",
       "host"                   : "",

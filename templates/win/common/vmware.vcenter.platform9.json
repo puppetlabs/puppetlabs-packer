@@ -55,7 +55,9 @@
       "RAM"                    : "{{user `memsize`}}",
       "RAM_reserve_all"        : "{{user `RAM_reserve_all`}}",
       "datastore"              : "{{user `packer_vcenter_datastore`}}",
-      "disk_size"              : "{{user `disk_size`}}",
+      "storage"                : [{
+          "disk_size"              : "{{user `disk_size`}}"
+      }],
       "host"                   : "",
 
       "linked_clone"           : "false",
