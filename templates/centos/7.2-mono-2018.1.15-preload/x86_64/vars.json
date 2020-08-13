@@ -1,5 +1,9 @@
 {
-    "disk_size"                             : "71680",
+    "storage": [
+        {
+          "disk_size": 71680
+        }
+      ],
     "template_name"                         : "centos-7.2-mono-2018.1.15-preload-x86_64",
     "template_os"                           : "centos7_64Guest",
     "beakerhost"                            : "centos7-64",
