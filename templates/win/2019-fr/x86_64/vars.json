@@ -10,9 +10,9 @@
     "windows_version"   : "Windows-2019",
     "image_name"        : "Windows Server 2019 SERVERSTANDARD",
     "product_key"       : "N69G4-B89J2-4G8F4-WWYCC-J464C",
-    "iso_name"          : "fr_windows_server_2019_updated_march_2019_x64_dvd_afbb129f.iso",
+    "iso_name"          : "fr_windows_server_2019_updated_july_2020_x64_dvd_f41ee5a9.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "3d20cdcfdfe59e3ab29be2607436dbc7",
+    "iso_checksum"      : "9416ae5741161af0dbe999e5fcba444b",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
 
     "CurrentVersion"    : "6.3",
