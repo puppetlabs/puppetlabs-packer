@@ -7,15 +7,16 @@
     "vsphere_guest_os"  : "windows9_64Guest",
     "image_name"        : "Windows 10 Enterprise",
     "product_key"       : "NPPR9-FWDCX-D2C8J-H872K-2YT43",
-    "iso_name"          : "en_windows_10_business_editions_version_1903_updated_sept_2019_x64_dvd_a10b235d.iso",
+    "iso_name"          : "en_windows_10_business_editions_version_1909_updated_july_2020_x64_dvd_1ca84e91.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "751ea50f8af03a6b4ab3ab8183a0a3e9",
+    "iso_checksum"      : "d607abde461509a7d468b73808b6cb96",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
 
     "CurrentVersion"    : "6.1",
     "ProductName"       : "Windows 10 Enterprise",
     "EditionID"         : "Enterprise",
     "InstallationType"  : "Client",
-    "ReleaseID"         : "1903"
+    "ReleaseID"         : "1909"
 
 }
+
