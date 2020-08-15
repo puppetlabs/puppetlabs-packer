@@ -41,7 +41,7 @@ switch -wildcard ($WindowsProductName) {
 }
 Write-Output "OSPrefix: $OSPrefix"
 $DriverDirectory = "$PackerDownloads\$VirtIoDrivers"
-$DriversList = @("Balloon","NetKVM","qemupciserial","viorng","vioscsi","vioserial","viostor")
+$DriversList = @("Balloon","NetKVM","qemupciserial","viorng","vioscsi","vioserial","qxldod","viostor")
 foreach ($DriverName in $DriversList) {
     $DriverPath = "$DriverDirectory\$DriverName\$OsPrefix\$ArchDir"
     Write-Output "Installing $OsPrefix Drivers for $DriverName from $DriverPath"
@@ -55,7 +55,10 @@ $zproc = Start-Process "msiexec" @SprocParms -ArgumentList "/i $DriverDirectory\
 $zproc.WaitForExit()
 
 Write-Output "Installing Cloudbase Init"
+# Sample options from: https://ask.cloudbase.it/question/2468/unattended-installation-cloudbase-init-parameters/ 
 # msiexec /i CloudbaseInitSetup_x64.msi /qn /l*v log.txt CLOUDBASEINITCONFFOLDER="C:\" LOGGINGSERIALPORTNAME="COM1" BINFOLDER="C:\bin" LOGFOLDER="C:\log" USERNAME="admin1" INJECTMETADATAPASSWORD="TRUE" USERGROUPS="Administrators" LOGGINGSERIALPORTNAME="COM2" LOCALSCRIPTSFOLDER="C:\localscripts"
+# https://cloudbase-init.readthedocs.io/en/latest/tutorial.html#configuration-file
+# https://cloudbase-init.readthedocs.io/en/latest/config.html#config-list
 $CloudbaseInstaller = "CloudbaseInitSetup_1_1_2_$ArchExt.msi"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/platform9/$CloudbaseInstaller" "$PackerDownloads\$CloudbaseInstaller"
 $zproc = Start-Process "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\$CloudbaseInstaller /qn /l*v $PackerLogs\CloudbaseInstaller.log"
