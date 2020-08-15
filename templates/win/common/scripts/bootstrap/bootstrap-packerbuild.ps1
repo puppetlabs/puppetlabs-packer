@@ -86,18 +86,6 @@ if (-not (Test-Path "$PackerLogs\HyperVisorExtensions.installed")) {
       $vproc.WaitForExit()
       break
     }
-    "virtualbox" {
-      # VirtualBox installs only
-      # Install Virtual Box extensions
-      Write-Output "Install VirtualBox Tools cert"
-      $vproc = Start-Process certutil  @SprocParms -ArgumentList '-addstore -f "TrustedPublisher" A:\oracle-cert-1.cer'
-      $vproc.WaitForExit()
-
-      Write-Output "Installing Virtual Box Extensions"
-      $vproc = Start-Process "E:\VBoxWindowsAdditions.exe" @SprocParms -ArgumentList '/S'
-      $vproc.WaitForExit()
-      break
-    }
   }
   Touch-File "$PackerLogs\HyperVisorExtensions.installed"
   Write-Output "Forcing Reboot to fully install Hypervisor extension/toolset and restart wuauserv"
