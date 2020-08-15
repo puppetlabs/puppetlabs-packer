@@ -7,10 +7,10 @@ class windows_template::apps::notepadplusplus()
 
   # Select package name/install title depending on archictecture
   if ($::architecture == 'x86') {
-    $notepadppinstaller = 'npp.7.8.Installer.exe'
+    $notepadppinstaller = 'npp.7.8.9.Installer.exe'
     $notepadpparchtype = '(32-bit x86)'
   } else {
-    $notepadppinstaller = 'npp.7.8.Installer.x64.exe'
+    $notepadppinstaller = 'npp.7.8.9.Installer.x64.exe'
     $notepadpparchtype = '(64-bit x64)'
   }
 
