@@ -99,7 +99,7 @@
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
-        "{{user `iso_disk`}}windows-11.0.0.iso"
+        "{{user `iso_disk`}}windows-11.1.0.iso"
       ],
 
       "communicator"      : "winrm",

@@ -11,8 +11,8 @@ include windows_template::bootcfg::bootcfg
 include windows_template::apps::gitforwin
 
 if ($psversionmajor >= '4') {
-  # Powershell 6 requires WMF 4.0 or greater for PS6
-  include windows_template::apps::powershell6
+  # Powershell 7 requires WMF 4.0 or greater for PS7
+  include windows_template::apps::powershell7
 }
 # Conditional for Core checkining
 # only allowed for main installs and non-core

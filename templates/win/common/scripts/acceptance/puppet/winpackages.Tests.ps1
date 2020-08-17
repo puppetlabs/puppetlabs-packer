@@ -19,8 +19,8 @@ describe 'Windows Packages are installed' {
 
     if ($PSVersionTable.PSVersion.Major -ge 4) {
         # Powershell 6 is only installed if WMF 4.0 or greater is installed.
-        it 'Powershell 6' {
-            "$ENV:PROGRAMFILES\PowerShell\6\pwsh.exe" | Should Exist
+        it 'Powershell 7' {
+            "$ENV:PROGRAMFILES\PowerShell\7\pwsh.exe" | Should Exist
         }
     }
 
