@@ -47,127 +47,125 @@ ${PUPPET_BIN}/puppet agent -t
 # The refresh_master_hostname plan requires user_data.conf to be present
 echo '### Running puppet infra recover_configuration to generate user_data.conf ###'
 ${PUPPET_BIN}/puppet-infrastructure recover_configuration
+
+# Stop all services and disable puppet here instead of at the beginning of the refresh 
+# hostname script. This saves time in CI
 puppet resource service puppet ensure=stopped enable=false
+puppet agent --disable
+puppet resource service pe-nginx ensure=stopped
+puppet resource service pe-console-services ensure=stopped
+puppet resource service pe-puppetserver ensure=stopped
+puppet resource service pe-bolt-server ensure=stopped
+puppet resource service pe-ace-server ensure=stopped
+puppet resource service pe-orchestration-services ensure=stopped
+puppet resource service pe-puppetdb ensure=stopped
+puppet resource service pe-postgresql ensure=stopped
+
 
 echo '### Creating refresh_hostname script ###'
 
 set -e
-cat <<'EOF' > /opt/puppetlabs/installer/share/Boltdir/site-modules/enterprise_tasks/plans/testing/refresh_master_hostname.pp
-# Note: This plan requires user_data.conf to be present. We can't run
-# it from inside this plan since the plan is meant to be run AFTER
-# the hostname has already changed and therefore
-# puppet infra recover_configuration will not work correctly.
-plan enterprise_tasks::testing::refresh_master_hostname(
-  Optional[TargetSpec] $master              = 'localhost',
-  Optional[String]     $old_master_certname = undef,
-) {
-  $puppet_bin = constants()['puppet_bin']
-  $master_target = get_targets($master)[0]
-  run_plan('facts', 'targets' => $master_target)
-  $master_fqdn = $master_target.facts()['fqdn']
+cat <<'EOF' > /root/refresh_hostname.sh
+# Note: This script is a simplification of our refresh_master_hostname plan found
+# in enterprise tasks, and is created to be used in preloaded images to speed up
+# refreshing as these nodes do not need the extra user-facing features and verification
+# steps that the plan does. If you wish to refresh your hostname on anything 
+# other than preloaded images we suggest you use our plan instead.
 
-  # Get old certname. This is overrideable in case the plan has issues part way
-  # and puppet.conf has already been modified.
-  $current_puppet_certname = run_command('/opt/puppetlabs/bin/puppet config print certname --section main', $master).first.value['stdout'][0,-2]
-  $prev_master_certname = empty($old_master_certname) ? {
-    true  => $current_puppet_certname,
-    false => $old_master_certname,
-  }
+master='localhost'
+master_fqdn=$(facter fqdn)
+prev_master_certname=$(/opt/puppetlabs/bin/puppet config print certname --section main)
 
-  if $master_fqdn == $prev_master_certname {
-    enterprise_tasks::message('refresh_master_hostname', "Current hostname ${master_fqdn} has not changed. Exiting.")
-    return undef
-  }
-  enterprise_tasks::message('refresh_master_hostname', "Changing master hostname from ${prev_master_certname} to ${master_fqdn}...")
+if [[ "$master_fqdn" == "$prev_master_certname" ]]
+then
+    echo "Current hostname ${master_fqdn} has not changed. Exiting."
+    exit 1
+fi
 
-  $status_hash = run_plan(enterprise_tasks::get_service_status, target => $master,
-    service    => 'puppet')
+echo "Changing master hostname from $prev_master_certname to ${master_fqdn}..."
 
-  ### Disabled until we are ready to make this user-facing ###
-  # Replicas and compilers both have the master role, external postgres has the database role,
-  # so this should cover all of the infra nodes. 
-  #$infra_nodes = enterprise_tasks::get_nodes_with_role('master') + enterprise_tasks::get_nodes_with_role('database')
-  #$infra_non_primary = $infra_nodes.flatten.unique.filter |$node| { $node != $master_fqdn and $node != $current_puppet_certname }
-  $result_or_error = catch_errors() || {
-    # Change this to [$master] + $infra_non_primary when we make this user-facing
-    enterprise_tasks::message('refresh_master_hostname', 'Stopping PE services...')
-    run_task(enterprise_tasks::disable_all_puppet_services, $master)
+echo 'Modifying configuration files to use new hostname...'
+sed -i "s/$prev_master_certname/${master_fqdn}/g" /etc/puppetlabs/puppet/puppet.conf
+sed -i "s/$prev_master_certname/${master_fqdn}/g" /etc/puppetlabs/enterprise/conf.d/pe.conf
+sed -i "s/%{::trusted.certname}/${master_fqdn}/g" /etc/puppetlabs/enterprise/conf.d/pe.conf
+sed -i "s/$prev_master_certname/${master_fqdn}/g" /etc/puppetlabs/enterprise/conf.d/user_data.conf
 
-    enterprise_tasks::message('refresh_master_hostname', 'Modifying configuration files to use new hostname...')
-    run_command("sed -i 's/${prev_master_certname}/${master_fqdn}/g' /etc/puppetlabs/puppet/puppet.conf", $master)
-    run_command("sed -i 's/${prev_master_certname}/${master_fqdn}/g' /etc/puppetlabs/enterprise/conf.d/pe.conf", $master)
-    # Because we have to set up the pdbpreload VM using the trusted certname fact for puppet_master host,
-    # and having puppet_master_host set to the trusted fact causes problems when pe.conf gets copied elsewhere,
-    # we replace instances of the trusted fact as well. May not want this if we make the plan user-facing.
-    run_command("sed -i 's/%{::trusted.certname}/${master_fqdn}/g' /etc/puppetlabs/enterprise/conf.d/pe.conf", $master)
-    run_command("sed -i 's/${prev_master_certname}/${master_fqdn}/g' /etc/puppetlabs/enterprise/conf.d/user_data.conf", $master)
+# Remove old certname
+echo > /etc/puppetlabs/nginx/conf.d/proxy.conf
+echo > /etc/puppetlabs/nginx/conf.d/http_redirect.conf
+echo > /etc/puppetlabs/puppetdb/certificate-whitelist
+echo > /etc/puppetlabs/console-services/rbac-certificate-whitelist
 
-    # These will get regenerated. We're clearing them out here because while puppet
-    # will add configuration for the new certname, it will not remove the old certname
-    run_command('echo > /etc/puppetlabs/nginx/conf.d/proxy.conf', $master)
-    run_command('echo > /etc/puppetlabs/nginx/conf.d/http_redirect.conf', $master)
-    run_command('echo > /etc/puppetlabs/puppetdb/certificate-whitelist', $master)
-    run_command('echo > /etc/puppetlabs/console-services/rbac-certificate-whitelist', $master)
+echo 'Clearing cached catalogs...'
+rm -f /opt/puppetlabs/puppet/cache/client_data/catalog/*
+# Master Cert Regen 
 
-    enterprise_tasks::message('refresh_master_hostname', 'Clearing cached catalogs...')
-    run_command('rm -f /opt/puppetlabs/puppet/cache/client_data/catalog/*', $master)
+# Remove Cache
+certname=$(/opt/puppetlabs/bin/puppet config print certname)
+rm -rf  "/opt/puppetlabs/puppet/cache/client_data/catalog/${certname}.json"
 
-    ### Disabled until we are ready to make this user-facing ###
-    #enterprise_tasks::message('refresh_master_hostname', 'Modifying puppet.conf on infrastructure nodes...')
-    # We have to modify puppet.conf here first because master_cert_regen will run puppet 
-    # and regen the cert on an external postgres node.
-    #$infra_non_primary.each |$node| {
-    #  run_command("sed -i 's/${prev_master_certname}/${master_fqdn}/g' /etc/puppetlabs/puppet/puppet.conf", $node)
-    #}
+# Delete Cert
+cert_locations=( '/etc/puppetlabs/puppet/ssl' '/etc/puppetlabs/puppetdb/ssl' '/etc/puppetlabs/ace-server/ssl' '/etc/puppetlabs/bolt-server/ssl' '/etc/puppetlabs/orchestration-services/ssl' '/opt/puppetlabs/server/data/console-services/certs')
+for location in "${cert_locations[@]}"
+do
+    test -e "${location}"
+    exit_status=$?
+    if [ $exit_status -eq 1 ]; then
+        echo "Nothing found in ${location}"
+        continue
+    fi
+    find "${location}" -name "${certname}".* -delete
+done
 
-    # We have to skip past verification since the verify_node task won't be able to talk to PDB
-    # as it will still be pointing at the old certname
-    run_plan(enterprise_tasks::master_cert_regen, master => $master, force => true)
+puppet infrastructure configure --no-recover
+puppet agent --enable
+puppet agent -t
 
-    # For some totally bizarre reason, on at least Ubuntu (not sure about other platforms),
-    # about half the time the RBAC service in pe-console-services gets into a weird state
-    # and just returns 500s when you try to do a node purge. Restarting the service
-    # fixes it, instead of wasting more time trying to root cause this weird bug,
-    # I'm just restarting it here.
-    run_task(service, $master,
-            action        => 'restart',
-            name          => 'pe-console-services')
 
-    enterprise_tasks::message('refresh_master_hostname', 'Purging old master certname and deleting its certificate...')
-    run_command("${puppet_bin} node purge ${prev_master_certname}", $master)
-    run_task(enterprise_tasks::delete_cert, $master, certname => $prev_master_certname)
+# For some totally bizarre reason, on at least Ubuntu (not sure about other platforms),
+# about half the time the RBAC service in pe-console-services gets into a weird state
+# and just returns 500s when you try to do a node purge. Restarting the service
+# fixes it, instead of wasting more time trying to root cause this weird bug,
+# I'm just restarting it here.
+service pe-console-services restart 
 
-    enterprise_tasks::message('refresh_master_hostname', 'Unpinning old certname from PE node groups...')
-    run_command("${puppet_bin} resource pe_node_group 'PE Certificate Authority' unpinned='${prev_master_certname}'", $master)
-    run_command("${puppet_bin} resource pe_node_group 'PE Console' unpinned='${prev_master_certname}'", $master)
-    run_command("${puppet_bin} resource pe_node_group 'PE Database' unpinned='${prev_master_certname}'", $master)
-    run_command("${puppet_bin} resource pe_node_group 'PE Master' unpinned='${prev_master_certname}'", $master)
-    run_command("${puppet_bin} resource pe_node_group 'PE Orchestrator' unpinned='${prev_master_certname}'", $master)
-    run_command("${puppet_bin} resource pe_node_group 'PE PuppetDB' unpinned='${prev_master_certname}'", $master)
-    $ha_master_group = run_command("${puppet_bin} resource pe_node_group 'PE HA Master'", $master).first.value['stdout']
-    if $ha_master_group =~ /present/ {
-      run_command("${puppet_bin} resource pe_node_group 'PE HA Master' unpinned='${prev_master_certname}'")
-    }
 
-    enterprise_tasks::message('refresh_master_hostname', 'Running puppet to populate services.conf with new certname...')
-    run_task(enterprise_tasks::run_puppet, $master)
+echo 'Purging old master certname and deleting its certificate...'
+/opt/puppetlabs/bin/puppet node purge "$prev_master_certname"
 
-    ### Disabled until we are ready to make this user-facing ###
-    #enterprise_tasks::message('refresh_master_hostname', 'Running puppet on infrastructure nodes...')
-    #$infra_non_primary.each |$node| {
-    #  run_task(enterprise_tasks::run_puppet, $node, max_timeout => 256)
-    #}
-  }
-  enterprise_tasks::message('refresh_master_hostname', 'Applying original agent state...')
-  run_command("${puppet_bin} resource service puppet ensure=${status_hash[status]} enable=${status_hash[enabled]}", $master)
-  if $result_or_error =~ Error {
-    fail_plan($result_or_error)
-  }
-}
+# Delete Old Certs
+old_cert_locations=( '/etc/puppetlabs/puppet/ssl' '/etc/puppetlabs/puppetdb/ssl' '/etc/puppetlabs/ace-server/ssl' '/etc/puppetlabs/bolt-server/ssl' '/etc/puppetlabs/orchestration-services/ssl' '/opt/puppetlabs/server/data/console-services/certs')
+for location in "${old_cert_locations[@]}"
+do
+    test -e "${location}"
+    exit_status=$?
+    if [ $exit_status -eq 1 ]; then
+        echo "Nothing found in ${location}"
+        continue
+    fi
+    find "${location}" -name "${prev_master_certname}".* -delete
+done
+echo 'Unpinning old certname from PE node groups...'
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE Certificate Authority' unpinned="$prev_master_certname"
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE Console' unpinned="$prev_master_certname"
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE Database' unpinned="$prev_master_certname"
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE Master' unpinned="$prev_master_certname"
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE Orchestrator' unpinned="$prev_master_certname"
+/opt/puppetlabs/bin/puppet resource pe_node_group 'PE PuppetDB' unpinned="$prev_master_certname"
+
+echo 'Running puppet to populate services.conf with new certname...'
+puppet agent -t
+echo 'Complete' 
+EOF
+
+cat << EOF > /etc/motd
+###########################################################################
+This is an image preloaded with PE 2018.1.15. If you are using pooler, run
+the refresh_hostname script via ./refresh_hostname.sh in the root directory
+to update to the new spicy-proton style hostname.
+###########################################################################
 EOF
 date > /tmp/packer_build
-ls /opt/puppetlabs/installer/share/Boltdir/site-modules/enterprise_tasks/plans
-echo BOLT_DISABLE_ANALYTICS=true /opt/puppetlabs/installer/bin/bolt --boltdir=/opt/puppetlabs/installer/share/Boltdir plan run enterprise_tasks::testing::refresh_master_hostname > /root/refresh_hostname.sh
 chmod +x /root/refresh_hostname.sh
 
 echo '### Setup complete ###'
