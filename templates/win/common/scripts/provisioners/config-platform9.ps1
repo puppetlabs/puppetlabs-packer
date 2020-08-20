@@ -7,7 +7,7 @@ $rundate = date
 write-output "Script: platform9-config.ps1 Starting at: $rundate"
 
 Write-Output "Fetching Virtual IO Drivers for platform9"
-$VirtIoDrivers = "virtio-win-0.1.141"
+$VirtIoDrivers = "virtio-win-0.1.189"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/platform9/$VirtIoDrivers.iso" "$Env:TEMP/$VirtIoDrivers.iso"
 $zproc = Start-Process "$7zip" @SprocParms -ArgumentList "x $Env:TEMP/$VirtIoDrivers.iso -y -o$PackerDownloads\$VirtIoDrivers"
 $zproc.WaitForExit()
@@ -16,9 +16,11 @@ $zproc.WaitForExit()
 certutil -addstore "TrustedPublisher" "$PackerScripts\RedHat.cer"
 $ArchDir = "amd64"
 $ArchExt = "x64"
+$qme_agent = "qemu-ga-x86_64.msi"
 if ($ARCH -eq 'x86') {
     $ArchExt = "x86"
     $ArchDir = "x86"
+    $qme_agent = "qemu-ga-i386.msi"
 }
 
 $OsPrefix = ""
@@ -48,13 +50,13 @@ foreach ($DriverName in $DriversList) {
     }
 }
 
-Write-Output "Installing QEMU Agent"
-$zproc = Start-Process "msiexec" @SprocParms -ArgumentList "/i $DriverDirectory\guest-agent\qemu-ga-$ArchExt.msi"
+Write-Output "Installing QEMU Agent $DriverDirectory\guest-agent\$qme_agent"
+$zproc = Start-Process "msiexec" @SprocParms -ArgumentList "/i $DriverDirectory\guest-agent\$qme_agent"
 $zproc.WaitForExit()
 
 Write-Output "Installing Cloudbase Init"
 # msiexec /i CloudbaseInitSetup_x64.msi /qn /l*v log.txt CLOUDBASEINITCONFFOLDER="C:\" LOGGINGSERIALPORTNAME="COM1" BINFOLDER="C:\bin" LOGFOLDER="C:\log" USERNAME="admin1" INJECTMETADATAPASSWORD="TRUE" USERGROUPS="Administrators" LOGGINGSERIALPORTNAME="COM2" LOCALSCRIPTSFOLDER="C:\localscripts"
-$CloudbaseInstaller = "CloudbaseInitSetup_0_9_11_$ArchExt.msi"
+$CloudbaseInstaller = "CloudbaseInitSetup_1_1_2_$ArchExt.msi"
 Download-File "https://artifactory.delivery.puppetlabs.net/artifactory/generic/buildsources/windows/platform9/$CloudbaseInstaller" "$PackerDownloads\$CloudbaseInstaller"
 $zproc = Start-Process "msiexec" @SprocParms -ArgumentList "/i $PackerDownloads\$CloudbaseInstaller /qn /l*v $PackerLogs\CloudbaseInstaller.log"
 $zproc.WaitForExit()
