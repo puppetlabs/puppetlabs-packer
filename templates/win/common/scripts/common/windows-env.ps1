@@ -293,7 +293,8 @@ Function ForceFullyDelete-Path {
           Write-Output "Removing $Path" >> $LogFile 2>&1
           Takeown /d "$AnswerPromptYes" /R /f $Path >> $LogFile 2>&1
           Icacls $Path /grant:r "*${WindowsAdminSID}:(OI)(CI)F" /t /c >> $LogFile 2>&1
-          Remove-Item $Path -Recurse -Force >> $LogFile 2>&1
+          # Ignore any Packer Environment Files to avoid throwing errors in the log.
+          Remove-Item $Path -Exclude packer-ps-*.* -Recurse -Force >> $LogFile 2>&1
         }
       }
       catch {

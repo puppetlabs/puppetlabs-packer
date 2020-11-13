@@ -6,10 +6,10 @@ class windows_template::apps::powershell7()
 
   # Select package name/install title depending on archictecture
   if ($::architecture == 'x86') {
-    $ps7coreinstaller = 'PowerShell-7.0.3-win-x86.msi'
+    $ps7coreinstaller = 'PowerShell-7.1.0-win-x86.msi'
     $ps7corearchtype = 'x86'
   } else {
-    $ps7coreinstaller = 'PowerShell-7.0.3-win-x64.msi'
+    $ps7coreinstaller = 'PowerShell-7.1.0-win-x64.msi'
     $ps7corearchtype = 'x64'
   }
 

@@ -68,4 +68,3 @@ Write-Output "Reclaimed $SpaceReclaimed GB"
 
 # Sleep to let console log catch up (and get captured by packer)
 Start-Sleep -Seconds 20
-#End

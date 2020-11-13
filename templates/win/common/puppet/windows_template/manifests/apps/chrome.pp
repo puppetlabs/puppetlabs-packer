@@ -5,9 +5,9 @@ class windows_template::apps::chrome()
 
   # Select package name/install title depending on archictecture
   if ($::architecture == 'x86') {
-    $chromeinstaller = 'GoogleChromeStandaloneEnterprise.84.0.4147.125.msi'
+    $chromeinstaller = 'GoogleChromeStandaloneEnterprise.86.0.4240.198.msi'
   } else {
-    $chromeinstaller = 'GoogleChromeStandaloneEnterprise64.84.0.4147.125.msi'
+    $chromeinstaller = 'GoogleChromeStandaloneEnterprise64.86.0.4240.198.msi'
   }
 
   download_file { $chromeinstaller :

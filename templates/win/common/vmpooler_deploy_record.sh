@@ -8,6 +8,150 @@
 # Keeping a log open on vmpooler is also a really good idea.
 
 
+# November 2020 vmpooler updates
+
+# Windows 10 Odd templates
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-pro-x86_64:templates/netapp/acceptance2/win-10-pro-x86_64-20201113 \
+            win-10-1511-x86_64:templates/netapp/acceptance2/win-10-1511-x86_64-20201113 \
+            win-10-1607-x86_64:templates/netapp/acceptance2/win-10-1607-x86_64-20201113 \
+            win-10-1809-x86_64:templates/netapp/acceptance2/win-10-1809-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-pro-x86_64-pixa4:templates/netapp/acceptance4/win-10-pro-x86_64-20201113 \
+            win-10-1511-x86_64-pixa4:templates/netapp/acceptance4/win-10-1511-x86_64-20201113 \
+            win-10-1607-x86_64-pixa4:templates/netapp/acceptance4/win-10-1607-x86_64-20201113 \
+            win-10-1809-x86_64-pixa4:templates/netapp/acceptance4/win-10-1809-x86_64-20201113
+
+# Windows 10 Main Ent 
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-ent-i386:templates/netapp/acceptance2/win-10-ent-i386-20201113 \
+            win-10-ent-x86_64:templates/netapp/acceptance2/win-10-ent-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-ent-i386-pixa4:templates/netapp/acceptance4/win-10-ent-i386-20201113 \
+            win-10-ent-x86_64-pixa4:templates/netapp/acceptance4/win-10-ent-x86_64-20201113
+
+# Windows 10 Next Release
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-next-i386:templates/netapp/acceptance2/win-10-next-i386-20201113 \
+            win-10-next-x86_64:templates/netapp/acceptance2/win-10-next-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-10-next-i386-pixa4:templates/netapp/acceptance4/win-10-next-i386-20201113 \
+            win-10-next-x86_64-pixa4:templates/netapp/acceptance4/win-10-next-x86_64-20201113
+
+# Windows 81
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+            --pools=win-81-x86_64:templates/netapp/acceptance2/win-81-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+            --pools=win-81-x86_64-pixa4:templates/netapp/acceptance4/win-81-x86_64-20201113
+
+
+# Windows 2012r2 Primary 
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2012r2-x86_64:templates/netapp/acceptance2/win-2012r2-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2012r2-x86_64-pixa4:templates/netapp/acceptance4/win-2012r2-x86_64-20201113
+
+# Windows 2012/2012r2 remainder platforms
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2012-x86_64:templates/netapp/acceptance2/win-2012-x86_64-20201113 \
+            win-2012r2-core-x86_64:templates/netapp/acceptance2/win-2012r2-core-x86_64-20201113 \
+            win-2012r2-fips-x86_64:templates/netapp/acceptance2/win-2012r2-fips-x86_64-20201113 \
+            win-2012r2-wmf5-x86_64:templates/netapp/acceptance2/win-2012r2-wmf5-x86_64-20201113
+#
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2012-x86_64-pixa4:templates/netapp/acceptance4/win-2012-x86_64-20201113 \
+            win-2012r2-core-x86_64-pixa4:templates/netapp/acceptance4/win-2012r2-core-x86_64-20201113 \
+            win-2012r2-fips-x86_64-pixa4:templates/netapp/acceptance4/win-2012r2-fips-x86_64-20201113 \
+            win-2012r2-wmf5-x86_64-pixa4:templates/netapp/acceptance4/win-2012r2-wmf5-x86_64-20201113
+#....
+# Windows 2016
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2016-core-x86_64:templates/netapp/acceptance2/win-2016-core-x86_64-20201113 \
+            win-2016-x86_64:templates/netapp/acceptance2/win-2016-x86_64-20201113 \
+            win-2016-x86_64-ipv6:templates/netapp/acceptance2/win-2016-x86_64-20201113-ipv6
+
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2016-core-x86_64-pixa4:templates/netapp/acceptance4/win-2016-core-x86_64-20201113 \
+            win-2016-x86_64-pixa4:templates/netapp/acceptance4/win-2016-x86_64-20201113 \
+            win-2016-x86_64-ipv6-pixa4:templates/netapp/acceptance4/win-2016-x86_64-20201113-ipv6
+
+# Windows 2019
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2019-core-x86_64:templates/netapp/acceptance2/win-2019-core-x86_64-20201113 \
+            win-2019-x86_64:templates/netapp/acceptance2/win-2019-x86_64-20201113 \
+            win-2019-ja-x86_64:templates/netapp/acceptance2/win-2019-ja-x86_64-20201113 \
+            win-2019-fr-x86_64:templates/netapp/acceptance2/win-2019-fr-x86_64-20201113
+
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2019-core-x86_64-pixa4:templates/netapp/acceptance4/win-2019-core-x86_64-20201113 \
+            win-2019-x86_64-pixa4:templates/netapp/acceptance4/win-2019-x86_64-20201113 \
+            win-2019-ja-x86_64-pixa4:templates/netapp/acceptance4/win-2019-ja-x86_64-20201113 \
+            win-2019-fr-x86_64-pixa4:templates/netapp/acceptance4/win-2019-fr-x86_64-20201113
+
+platform-ci-utils imaging-update-vmpooler-pool-templates --instance=ci \
+    --pools=win-2019-wslssh-x86_64-pixa4:templates/netapp/acceptance4/win-2019-wslssh-x86_64-20200813
+
+#Done
+
+# PR Update command:
+
+platform-ci-utils imaging-update-pools-in-pl-modules \
+    --pools=win-10-pro-x86_64:templates/win-10-pro-x86_64-20201113 \
+            win-10-1511-x86_64:templates/win-10-1511-x86_64-20201113 \
+            win-10-1607-x86_64:templates/win-10-1607-x86_64-20201113 \
+            win-10-1809-x86_64:templates/win-10-1809-x86_64-20201113 \
+            win-10-pro-x86_64-pixa4:templates/acceptance4/win-10-pro-x86_64-20201113 \
+            win-10-1511-x86_64-pixa4:templates/acceptance4/win-10-1511-x86_64-20201113 \
+            win-10-1607-x86_64-pixa4:templates/acceptance4/win-10-1607-x86_64-20201113 \
+            win-10-1809-x86_64-pixa4:templates/acceptance4/win-10-1809-x86_64-20201113 \
+            win-10-ent-i386:templates/win-10-ent-i386-20201113 \
+            win-10-ent-x86_64:templates/win-10-ent-x86_64-20201113 \
+            win-10-ent-i386-pixa4:templates/acceptance4/win-10-ent-i386-20201113 \
+            win-10-ent-x86_64-pixa4:templates/acceptance4/win-10-ent-x86_64-20201113 \
+            win-10-next-i386:templates/win-10-next-i386-20201113 \
+            win-10-next-x86_64:templates/win-10-next-x86_64-20201113 \
+            win-10-next-i386-pixa4:templates/acceptance4/win-10-next-i386-20201113 \
+            win-10-next-x86_64-pixa4:templates/acceptance4/win-10-next-x86_64-20201113 \
+            win-81-x86_64:templates/win-81-x86_64-20201113 \
+            win-81-x86_64-pixa4:templates/acceptance4/win-81-x86_64-20201113 \
+            win-2012r2-x86_64:templates/win-2012r2-x86_64-20201113 \
+            win-2012r2-x86_64-pixa4:templates/acceptance4/win-2012r2-x86_64-20201113 \
+            win-2012-x86_64:templates/win-2012-x86_64-20201113 \
+            win-2012r2-core-x86_64:templates/win-2012r2-core-x86_64-20201113 \
+            win-2012r2-fips-x86_64:templates/win-2012r2-fips-x86_64-20201113 \
+            win-2012r2-wmf5-x86_64:templates/win-2012r2-wmf5-x86_64-20201113 \
+            win-2012-x86_64-pixa4:templates/acceptance4/win-2012-x86_64-20201113 \
+            win-2012r2-core-x86_64-pixa4:templates/acceptance4/win-2012r2-core-x86_64-20201113 \
+            win-2012r2-fips-x86_64-pixa4:templates/acceptance4/win-2012r2-fips-x86_64-20201113 \
+            win-2012r2-wmf5-x86_64-pixa4:templates/acceptance4/win-2012r2-wmf5-x86_64-20201113 \
+            win-2016-core-x86_64:templates/win-2016-core-x86_64-20201113 \
+            win-2016-x86_64:templates/win-2016-x86_64-20201113 \
+            win-2016-x86_64-ipv6:templates/win-2016-x86_64-20201113-ipv6 \
+            win-2016-core-x86_64-pixa4:templates/acceptance4/win-2016-core-x86_64-20201113 \
+            win-2016-x86_64-pixa4:templates/acceptance4/win-2016-x86_64-20201113 \
+            win-2016-x86_64-ipv6-pixa4:templates/acceptance4/win-2016-x86_64-20201113-ipv6 \
+            win-2019-core-x86_64:templates/win-2019-core-x86_64-20201113 \
+            win-2019-x86_64:templates/win-2019-x86_64-20201113 \
+            win-2019-ja-x86_64:templates/win-2019-ja-x86_64-20201113 \
+            win-2019-fr-x86_64:templates/win-2019-fr-x86_64-20201113 \
+            win-2019-core-x86_64-pixa4:templates/acceptance4/win-2019-core-x86_64-20201113 \
+            win-2019-x86_64-pixa4:templates/acceptance4/win-2019-x86_64-20201113 \
+            win-2019-ja-x86_64-pixa4:templates/acceptance4/win-2019-ja-x86_64-20201113 \
+            win-2019-fr-x86_64-pixa4:templates/acceptance4/win-2019-fr-x86_64-20201113
+
+
+
+
+
+
+
+# ######################################################################################
+
 # August 2020 vmpooler updates
 
 # Windows 10 Odd templates
@@ -107,38 +251,38 @@ platform-ci-utils imaging-update-pools-in-pl-modules \
             win-10-1511-x86_64-pixa4:templates/acceptance4/win-10-1511-x86_64-20200813 \
             win-10-1607-x86_64-pixa4:templates/acceptance4/win-10-1607-x86_64-20200813 \
             win-10-1809-x86_64-pixa4:templates/acceptance4/win-10-1809-x86_64-20200813 \
-			win-10-ent-i386:templates/win-10-ent-i386-20200813 \
+            win-10-ent-i386:templates/win-10-ent-i386-20200813 \
             win-10-ent-x86_64:templates/win-10-ent-x86_64-20200813 \
-			win-10-ent-i386-pixa4:templates/acceptance4/win-10-ent-i386-20200813 \
+            win-10-ent-i386-pixa4:templates/acceptance4/win-10-ent-i386-20200813 \
             win-10-ent-x86_64-pixa4:templates/acceptance4/win-10-ent-x86_64-20200813 \
-			win-10-next-i386:templates/win-10-next-i386-20200813 \
+            win-10-next-i386:templates/win-10-next-i386-20200813 \
             win-10-next-x86_64:templates/win-10-next-x86_64-20200813 \
-			win-10-next-i386-pixa4:templates/acceptance4/win-10-next-i386-20200813 \
+            win-10-next-i386-pixa4:templates/acceptance4/win-10-next-i386-20200813 \
             win-10-next-x86_64-pixa4:templates/acceptance4/win-10-next-x86_64-20200813 \
-			win-81-x86_64:templates/win-81-x86_64-20200813 \
-			win-81-x86_64-pixa4:templates/acceptance4/win-81-x86_64-20200813 \
-			win-2012r2-x86_64:templates/win-2012r2-x86_64-20200813 \
-			win-2012r2-x86_64-pixa4:templates/acceptance4/win-2012r2-x86_64-20200813 \
-			win-2012-x86_64:templates/win-2012-x86_64-20200813 \
+            win-81-x86_64:templates/win-81-x86_64-20200813 \
+            win-81-x86_64-pixa4:templates/acceptance4/win-81-x86_64-20200813 \
+            win-2012r2-x86_64:templates/win-2012r2-x86_64-20200813 \
+            win-2012r2-x86_64-pixa4:templates/acceptance4/win-2012r2-x86_64-20200813 \
+            win-2012-x86_64:templates/win-2012-x86_64-20200813 \
             win-2012r2-core-x86_64:templates/win-2012r2-core-x86_64-20200813 \
             win-2012r2-fips-x86_64:templates/win-2012r2-fips-x86_64-20200813 \
             win-2012r2-wmf5-x86_64:templates/win-2012r2-wmf5-x86_64-20200813 \
-			win-2012-x86_64-pixa4:templates/acceptance4/win-2012-x86_64-20200813 \
+            win-2012-x86_64-pixa4:templates/acceptance4/win-2012-x86_64-20200813 \
             win-2012r2-core-x86_64-pixa4:templates/acceptance4/win-2012r2-core-x86_64-20200813 \
             win-2012r2-fips-x86_64-pixa4:templates/acceptance4/win-2012r2-fips-x86_64-20200813 \
             win-2012r2-wmf5-x86_64-pixa4:templates/acceptance4/win-2012r2-wmf5-x86_64-20200813 \
-			win-2016-core-x86_64:templates/win-2016-core-x86_64-20200813 \
+            win-2016-core-x86_64:templates/win-2016-core-x86_64-20200813 \
             win-2016-x86_64:templates/win-2016-x86_64-20200813 \
             win-2016-x86_64-ipv6:templates/win-2016-x86_64-20200813-ipv6 \
-			win-2016-core-x86_64-pixa4:templates/acceptance4/win-2016-core-x86_64-20200813 \
+            win-2016-core-x86_64-pixa4:templates/acceptance4/win-2016-core-x86_64-20200813 \
             win-2016-x86_64-pixa4:templates/acceptance4/win-2016-x86_64-20200813 \
             win-2016-x86_64-ipv6-pixa4:templates/acceptance4/win-2016-x86_64-20200813-ipv6 \
-			win-2019-core-x86_64:templates/win-2019-core-x86_64-20200813 \
+            win-2019-core-x86_64:templates/win-2019-core-x86_64-20200813 \
             win-2019-x86_64:templates/win-2019-x86_64-20200813 \
             win-2019-wslssh-x86_64:templates/win-2019-wslssh-x86_64-20200813 \
             win-2019-ja-x86_64:templates/win-2019-ja-x86_64-20200813 \
             win-2019-fr-x86_64:templates/win-2019-fr-x86_64-20200813 \
-			win-2019-core-x86_64-pixa4:templates/acceptance4/win-2019-core-x86_64-20200813 \
+            win-2019-core-x86_64-pixa4:templates/acceptance4/win-2019-core-x86_64-20200813 \
             win-2019-x86_64-pixa4:templates/acceptance4/win-2019-x86_64-20200813 \
             win-2019-wslssh-x86_64-pixa4:templates/acceptance4/win-2019-wslssh-x86_64-20200813 \
             win-2019-ja-x86_64-pixa4:templates/acceptance4/win-2019-ja-x86_64-20200813 \

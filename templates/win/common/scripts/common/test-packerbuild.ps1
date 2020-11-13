@@ -74,9 +74,13 @@ if (Test-Path "C:\Packer\Logs\$TestPhase.log") {
 # support an OS that's EOL at end of year.
 
 If ( $WindowsServerCore -or ($WindowsVersion -Like $WindowsServer2008)) {
+    Write-Output "========== Pester: $TestPhase START (DesktopOnly) ========"
     $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'DesktopOnly'
+    Write-Output "========== Pester: $TestPhase END (DesktopOnly) ========"
 } else {
+    Write-Output "========== Pester: $TestPhase START (CoreOnly) ========"
     $PesterResults = Invoke-Pester -Script "$PackerAcceptance\$TestPhase\" -PassThru -ExcludeTag 'CoreOnly'
+    Write-Output "========== Pester: $TestPhase END (CoreOnly) ========"
 }
 
 Write-Output "========== Completed Packer Test Phase: $TestPhase ========"

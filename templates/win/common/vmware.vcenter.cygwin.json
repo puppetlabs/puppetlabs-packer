@@ -100,7 +100,7 @@
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
-        "{{user `iso_disk`}}windows-11.1.0.iso"
+        "{{user `iso_disk`}}windows-11.2.0.iso"
       ],
 
       "communicator"      : "winrm",
@@ -215,7 +215,7 @@
       "type": "powershell",
       "inline" : [
           "C:/Packer/Scripts/test-packerbuild -TestPhase bootstrap-packerbuild"
-        ],
+       ],
       "valid_exit_codes" : "{{user `valid_exit_codes`}}"
     },
     {
