@@ -7,14 +7,14 @@
     "windows_version"   : "Windows-10",
     "image_name"        : "Windows 10 Enterprise",
     "product_key"       : "NPPR9-FWDCX-D2C8J-H872K-2YT43",
-    "iso_name"          : "en_windows_10_business_editions_version_2004_updated_july_2020_x64_dvd_8e76feb1.iso",
+    "iso_name"          : "en_windows_10_business_editions_version_20h2_x64_dvd_4788fb7c.iso",
     "iso_checksum_type" : "md5",
-    "iso_checksum"      : "b0bf9b4055c0ba160101e26ffd6d4c77",
+    "iso_checksum"      : "436a66d36e590b4714b4d75878c8c22c",
     "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
 
     "CurrentVersion"    : "6.3",
     "ProductName"       : "Windows 10 Enterprise",
     "EditionID"         : "Enterprise",
     "InstallationType"  : "Client",
-    "ReleaseID"         : "2004"
+    "ReleaseID"         : "2009"
 }

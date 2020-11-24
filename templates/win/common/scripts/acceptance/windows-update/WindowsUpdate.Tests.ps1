@@ -11,8 +11,14 @@ Import-PsWindowsUpdateModule
 
 # Pull information from Windows Update operations.
 # Updates in last 12 hours (for very long update process)
-$WUHistory = get-wuhistory -Erroraction SilentlyContinue | Where-Object { [int]($(Get-Date) - $_.Date).TotalHours -le 12 }
-
+# Windows 10 etc needs the -Last 2 parameter to avoid a hang that has appeared since
+# Build 2004 was released.
+if ($WindowsVersion -Like $WindowsServer2016) {
+    $WUHistory = get-wuhistory -Erroraction SilentlyContinue -Last 2 | Where-Object { [int]($(Get-Date) - $_.Date).TotalHours -le 12 }
+}
+else {
+    $WUHistory = get-wuhistory -Erroraction SilentlyContinue | Where-Object { [int]($(Get-Date) - $_.Date).TotalHours -le 12 }
+}
 # Pending Update List.
 $WUUpdateList = get-WULIST -UpdateType Software -Erroraction SilentlyContinue -NotKBArticleID 'KB2267602'
 # Following to handle Win-2008r2/Win-7 which returns $null if no updates.

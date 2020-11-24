@@ -36,13 +36,7 @@ $ENV:FACTER_windir               = "$ENV:WINDIR"
 $ENV:FACTER_administrator_sid     =  $WindowsAdminSID
 $ENV:FACTER_administrator_grp_sid = "S-1-5-32-544"
 $ENV:FACTER_psversionmajor        = $PSVersionTable.PSVersion.Major
-
-# Chrome root needs arch detection as under x86 on 64 bit boxen
-if ("$ARCH" -eq "x86") {
-  $ENV:FACTER_chrome_root        = "$ENV:ProgramFiles\Google\Chrome"
-} else {
-  $ENV:FACTER_chrome_root        = "$ENV:ProgramFiles `(x86`)\Google\Chrome"
-}
+$ENV:FACTER_chrome_root           = "$ENV:ProgramFiles\Google\Chrome"
 
 # Puppet run loop - use the Manifest in the Config Directory and run Puppet as many times up
 # to MaxAttempts until no further resources are modified.

@@ -7,9 +7,6 @@
 
 . C:\Packer\Scripts\windows-env.ps1
 
-# Google program directory is a bit strange.
-$GoogleProgDir = (${env:ProgramFiles(x86)}, ${env:ProgramFiles} -ne $null)[0]
-
 describe 'Windows Packages are installed' {
 
     it 'Git for Windows' {
@@ -32,6 +29,6 @@ describe -Tag 'DesktopOnly' 'Windows Desktop Packages are installed' {
     }
 
     it 'Chrome should be installed' {
-        "$GoogleProgDir\Google\Chrome\Application\chrome.exe" | Should Exist
+        "$ENV:PROGRAMFILES\Google\Chrome\Application\chrome.exe" | Should Exist
     }
 }
