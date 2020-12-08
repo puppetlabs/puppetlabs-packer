@@ -19,6 +19,7 @@
     "InstallationType"  : "Server",
     "ReleaseID"         : "1809",
 
-    "valid_exit_codes"  : "0,1"
+    "valid_exit_codes"  : "0,1",
+    "winupdate_valid_exit_codes": "0,1"
 
 }
