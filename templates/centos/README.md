@@ -8,7 +8,7 @@ This contains all of the var files required to build any of the templates in the
 
 This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
 
-Puppet maintained CentOS versions include 5.11, 6.8, 7.2 and 8.0. Any other versions of CentOS here are community maintained.
+Puppet maintained CentOS versions include 5.11, 6.8, 7.2, 8.0, and 8.3. Any other versions of CentOS here are community maintained.
 
 ### Building
 
