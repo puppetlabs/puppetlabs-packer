@@ -19,6 +19,7 @@ class packer::vsphere(
 ) inherits packer::vsphere::params {
 
   include packer::vsphere::repos
+  include packer::vsphere::updates
   include packer::vsphere::networking
   include packer::vsphere::fw
 
