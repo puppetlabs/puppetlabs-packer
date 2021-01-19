@@ -1,5 +1,4 @@
 include packer::repos
-include packer::updates
 include packer::sshd
 include packer::networking
 

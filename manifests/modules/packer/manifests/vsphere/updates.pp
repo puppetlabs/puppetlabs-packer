@@ -2,8 +2,7 @@
 #
 # A define that manages puppet modules
 #
-class packer::updates {
-
+class packer::vsphere::updates {
   $linux_pkgs = [
     'bash',
     'openssl',
@@ -14,18 +13,10 @@ class packer::updates {
     'openssh-client',
   ]
 
-  # Updating the EL 6.8 kernel causes a kernel panic on bootup in
-  # vCenter 5.5, so it is not included here. Remove this workaround
-  # when vCenter gets updated.
-  $redhat6_pkgs = [
-    'glibc',
-    'openssh',
-  ]
-
   $redhat_pkgs = [
+    #  'kernel',
     'glibc',
     'openssh',
-    'kernel',
   ]
 
   $suse_pkgs = [
@@ -40,8 +31,6 @@ class packer::updates {
 
   if $facts['osfamily'] == 'Debian' {
     $pkgs_to_update = $linux_pkgs + $debian_pkgs
-  } elsif $facts['osfamily'] == 'Redhat' and $facts['operatingsystemmajrelease'] == '6' {
-    $pkgs_to_update = $linux_pkgs + $redhat6_pkgs
   } elsif $::osfamily == 'Redhat' {
     $pkgs_to_update = $linux_pkgs + $redhat_pkgs
   } elsif $::osfamily == 'Suse' {

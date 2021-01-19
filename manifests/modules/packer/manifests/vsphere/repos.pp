@@ -217,19 +217,19 @@ class packer::vsphere::repos(
             descr    => 'localmirror-base',
             baseurl  => "${base_url}/BaseOS/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
           }
           yumrepo { 'localmirror-appstream':
             descr    => 'localmirror-appstream',
             baseurl  => "${base_url}/AppStream/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
           }
           yumrepo { 'localmirror-extras':
             descr    => 'localmirror-extras',
             baseurl  => "${base_url}/extras/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
+            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
           }
         } else {
           yumrepo { 'localmirror-os':
