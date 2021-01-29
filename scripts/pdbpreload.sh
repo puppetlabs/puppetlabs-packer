@@ -170,6 +170,9 @@ if [ -n "${BACKUP_TAR}" ]; then
   echo '### Note: ignore errors about TOC and the public schema ###'
   su - pe-postgres -s /bin/bash -c "${PG_SCRIPT}"
 
+  echo '### Upgrading PuppetDB ###'
+  /opt/puppetlabs/bin/puppetdb upgrade
+
   for SERVICE in "${SERVICES[@]}"; do
     echo "### Restarting ${SERVICE} ###"
     ${PUPPET_BIN}/puppet resource service ${SERVICE} ensure=running >/dev/null
