@@ -1,11 +1,15 @@
 #!/bin/bash
 
 # These should be passed in via custom_provisioning_env
-#BRANCH='master'
-#VERSION='latest'
+#BRANCH='main'
+#PE_VERSION=if blank, gets the latest automatically, otherwise, use what is specified here
 #PLATFORM='el-8-x86_64'
-
-PE_TARBALL_URL="https://artifactory.delivery.puppetlabs.net/artifactory/generic_enterprise__local/${BRANCH}/ci-ready"
+if [ -n "${RELEASE}" ]; then
+  PE_TARBALL_URL="https://artifactory.delivery.puppetlabs.net/artifactory/generic_enterprise__local/archives/releases/${RELEASE}"
+  PE_VERSION="${RELEASE}"
+else
+  PE_TARBALL_URL="https://artifactory.delivery.puppetlabs.net/artifactory/generic_enterprise__local/${BRANCH}/ci-ready"
+fi
 EXT='.tar'
 BACKUP_DB_URL='http://slv-performance-results.s3-website-us-west-2.amazonaws.com/releases/Kearney/SLV-415/kearney_soak/master'
 BACKUP_TAR='db_backup.2019.05.29.tar.gz'

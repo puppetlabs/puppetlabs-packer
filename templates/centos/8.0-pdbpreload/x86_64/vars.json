@@ -12,6 +12,6 @@
     "inject_http_seed_in_boot_command"                      : "true",
     "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait><enter>",
     "iso_name"                                              : "CentOS-8-x86_64-1905-dvd1.iso",
-    "custom_provisioning_env"                               : "BRANCH=master,VERSION=latest,PLATFORM=el-8-x86_64",
+    "custom_provisioning_env"                               : "RELEASE=2019.8.4,PLATFORM=el-8-x86_64",
     "custom_provisioning_script"                            : "scripts/pdbpreload.sh"
 }
