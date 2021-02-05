@@ -11,8 +11,11 @@ else
   PE_TARBALL_URL="https://artifactory.delivery.puppetlabs.net/artifactory/generic_enterprise__local/${BRANCH}/ci-ready"
 fi
 EXT='.tar'
-BACKUP_DB_URL='http://slv-performance-results.s3-website-us-west-2.amazonaws.com/releases/Kearney/SLV-415/kearney_soak/master'
-BACKUP_TAR='db_backup.2019.05.29.tar.gz'
+# Now that we are hosting this on artifactory, we can manage it ourselves if we want to update it
+# in the future. Set the cleanup.skip property to true on the uploaded file so it doesn't get
+# cleaned up after not being accessed for >1 month.
+BACKUP_DB_URL='https://artifactory.delivery.puppetlabs.net/artifactory/generic__local/pdbpreload'
+BACKUP_TAR='pe-puppetdb.tar.gz'
 TMP_DIR='/tmp'
 PUPPET_BIN='/opt/puppetlabs/bin'
 RUN_TUNE=1
@@ -85,7 +88,6 @@ set -e
 SERVICES=("pe-puppetdb" "pe-console-services" "pe-orchestration-services" "pe-puppetserver" "pe-nginx")
 
 if [ -n "${BACKUP_TAR}" ]; then
-  BACKUP_NAME=${BACKUP_TAR/.tar.gz/}
   UPDATETIME_SQL="
   DROP TABLE IF EXISTS max_report;
 
@@ -136,6 +138,14 @@ if [ -n "${BACKUP_TAR}" ]; then
   DROP TABLE IF EXISTS max_resource_event;
   "
 
+  UPDATEPERMS_SQL="
+  REVOKE CONNECT ON DATABASE \\\"pe-puppetdb\\\" FROM public;
+  GRANT \\\"pe-puppetdb\\\" TO \\\"pe-puppetdb-migrator\\\";
+  REVOKE CONNECT ON DATABASE \\\"pe-puppetdb\\\" FROM \\\"pe-puppetdb\\\";
+  GRANT CONNECT ON DATABASE \\\"pe-puppetdb\\\" TO \\\"pe-puppetdb-migrator\\\" WITH GRANT OPTION;
+  SET ROLE \\\"pe-puppetdb-migrator\\\"; GRANT CONNECT ON DATABASE \\\"pe-puppetdb\\\" TO \\\"pe-puppetdb\\\";
+  "
+
   PG_SCRIPT="
   log() {
     message=\$1
@@ -144,9 +154,11 @@ if [ -n "${BACKUP_TAR}" ]; then
   }
 
   log \"Restoring pe-puppetdb\"
-  /opt/puppetlabs/server/bin/pg_restore -U pe-postgres --if-exists -cCd template1 ${TMP_DIR}/${BACKUP_NAME}/pe-puppetdb.backup
+  /opt/puppetlabs/server/bin/pg_restore -U pe-postgres --if-exists -cCd template1 ${TMP_DIR}/pe-puppetdb.backup
   log \"Updating pe-puppetdb times\"
   /opt/puppetlabs/server/bin/psql -d pe-puppetdb -a -c \"${UPDATETIME_SQL}\"
+  log \"Updating permissions\"
+  /opt/puppetlabs/server/bin/psql -d pe-puppetdb -a -c \"${UPDATEPERMS_SQL}\"
   "
 
   echo '### Downloading backup database ###'
@@ -163,12 +175,15 @@ if [ -n "${BACKUP_TAR}" ]; then
     ${PUPPET_BIN}/puppet resource service ${SERVICE} ensure=stopped >/dev/null
   done
 
-  echo "### Stopping puppet ###"
+  echo '### Stopping puppet ###'
   ${PUPPET_BIN}/puppet resource service puppet ensure=stopped >/dev/null
 
   echo '### Restoring PuppetDB database ###'
   echo '### Note: ignore errors about TOC and the public schema ###'
   su - pe-postgres -s /bin/bash -c "${PG_SCRIPT}"
+
+  echo '### Removing backup file ###'
+  rm -f ${TMP_DIR}/pe-puppetdb.backup
 
   echo '### Upgrading PuppetDB ###'
   /opt/puppetlabs/bin/puppetdb upgrade
@@ -190,10 +205,10 @@ if [ -n "${BACKUP_TAR}" ]; then
   done
 
   set +e
-  echo '### Running puppet to register master in pe-puppetdb ###'
+  echo '### Running puppet to register primary in pe-puppetdb ###'
   ${PUPPET_BIN}/puppet agent -t
 
-  echo '### Running puppet to reconfigure master based on its presence in PuppetDB ###'
+  echo '### Running puppet to reconfigure primary based on its presence in PuppetDB ###'
   ${PUPPET_BIN}/puppet agent -t
   set -e
 
