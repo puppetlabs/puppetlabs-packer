@@ -220,7 +220,8 @@ if [ -n "${BACKUP_TAR}" ]; then
   # we just take the compilers we know to be in the SLV database.  The
   # query is commented out here for future improvement purposes.
   #${PUPPET_BIN}/puppet query "resources[certname] { type = 'Class' and title = 'Puppet_enterprise::Profile::Master' and certname != '${HOSTNAME}' }"
-  OLD_COMPILERS=("ip-10-227-1-160.amz-dev.puppet.net" "ip-10-227-2-122.amz-dev.puppet.net")
+  # Also, somehow, a phantom database node called gummy-chicken snuck into the database, so remove that too.
+  OLD_COMPILERS=("ip-10-227-1-160.amz-dev.puppet.net" "ip-10-227-2-122.amz-dev.puppet.net" "gummy-chicken.delivery.puppetlabs.net")
   
   for COMPILER in "${OLD_COMPILERS[@]}"; do
     echo "### Purging ${COMPILER} ###"
@@ -246,7 +247,14 @@ echo '### Running puppet infra recover_configuration to generate user_data.conf 
 ${PUPPET_BIN}/puppet-infrastructure recover_configuration
 
 echo '### Creating refresh_hostname script ###'
-echo BOLT_DISABLE_ANALYTICS=true /opt/puppetlabs/installer/bin/bolt --boltdir=/opt/puppetlabs/installer/share/Boltdir plan run enterprise_tasks::testing::refresh_master_hostname > /root/refresh_hostname.sh
+# Note: hostname -f doesn't work correctly on our Ubuntu image.
+# This puppet apply is a patch since 2019.8.4's refresh_master_hostname plan
+# doesn't have this code in it. We can probably remove it next time we recreate
+# the image based on a later build.
+echo "fqdn=\$(hostname -f)" >> /root/refresh_hostname.sh
+echo "/opt/puppetlabs/bin/puppet apply -e 'pe_node_group { \"PE Infrastructure Agent\": classes => {\"puppet_enterprise::profile::agent\" => {\"manage_puppet_conf\" => true, master_uris => [\"\${fqdn}:8140\"], pcp_broker_list => [\"\${fqdn}:8142\"], server_list => [\"\${fqdn}:8140\"]}}}'" >> /root/refresh_hostname.sh
+echo "set -e"
+echo BOLT_DISABLE_ANALYTICS=true /opt/puppetlabs/installer/bin/bolt --boltdir=/opt/puppetlabs/installer/share/Boltdir plan run enterprise_tasks::testing::refresh_master_hostname >> /root/refresh_hostname.sh
 chmod +x /root/refresh_hostname.sh
 
 echo '### Setup complete ###'
