@@ -152,6 +152,14 @@ so the machine becomes reachable over SSH:
     not persist between reboots, so you might need to start it again if you
     rebooted sometime in the process)
 
+#### 11.2 Big Sur
+
+The Big Sur follows the same process as Catalina, but the `boot_command` is
+reduced to the first 3 steps, and extends the wait time to 80 minutes.
+
+After the installation, the machine will need to be configured manually (steps
+4-7), along with the VMWare Tools and XCode setup.
+
 ### Background
 
 Previously, the creation of packer templates for macOS involved the following steps:
