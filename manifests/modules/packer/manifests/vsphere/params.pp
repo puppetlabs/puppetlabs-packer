@@ -129,6 +129,7 @@ class packer::vsphere::params {
     'Darwin' : {
       $bootstrap_file_source     = 'osx.rb.erb'
       $bootstrap_file            = '/etc/vsphere-bootstrap.rb'
+      $bootstrap_file_perms      = '0755'
       $startup_file              = '/etc/rc.local'
       $startup_file_source       = 'rc.local'
       $startup_file_perms        = '0755'
