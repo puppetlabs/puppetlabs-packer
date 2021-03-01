@@ -2,7 +2,7 @@
   "_comment"                                                    : "Variable values common to all macOS versions (see <version>/<arch>/vars.json for version-specific values)",
   "cdrom_type"                                                  : "sata",
   "common_files"                                                : "../../common/files",
-  "disk_size"                                                   : "40960",
+  "disk_size"                                                   : "81920",
   "headless"                                                    : "true",
   "shutdown_command"                                            : "echo 'osx' | sudo -S shutdown -h now",  
   "update_system"                                               : "true",
