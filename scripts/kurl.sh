@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # These should be passed in via custom_provisioning_env
-#APP='cd4pe'
-#CHANNEL='beta'
+#APP='puppet-application-manager'
+#CHANNEL='standalone-beta'
 
 set -e
 
