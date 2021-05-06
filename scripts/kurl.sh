@@ -2,7 +2,7 @@
 
 # These should be passed in via custom_provisioning_env
 #APP='puppet-application-manager'
-#CHANNEL='standalone-beta'
+#CHANNEL='standalone'
 
 set -e
 

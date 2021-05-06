@@ -15,6 +15,6 @@
     "custom_local_provisioning_env"                         : "REPO_URL=git@github.com:puppetlabs/kurl_test,BRANCH=main,DIRECTORY={{user `project_root`}}/local-repos",
     "custom_local_provisioning_script"                      : "scripts/local-git-checkout.sh",
     "custom_files_to_upload"                                : "{{user `project_root`}}/local-repos/kurl_test/tasks/restart_k8s.sh",
-    "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=standalone-beta",
+    "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=standalone",
     "custom_provisioning_script"                            : "scripts/kurl.sh"
 }
