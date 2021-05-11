@@ -44,7 +44,7 @@ class packer::networking::params {
           $udev_rule     = undef
           $udev_rule_gen = undef
         }
-        '29', '30', '31', '32': {
+        '29', '30', '31', '32', '34': {
           $interface_script = undef
           $udev_rule        = undef
           $udev_rule_gen    = undef
