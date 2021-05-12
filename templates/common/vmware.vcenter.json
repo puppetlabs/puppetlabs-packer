@@ -129,7 +129,7 @@
 
       "floppy_files"                                 : "{{user `floppy_files`}}",
       "floppy_dirs"                                  : "{{user `floppy_dirs`}}",
-      "iso_paths"                                    : ["{{user `iso_disk`}}{{user `iso_name`}}", "{{user `iso_disk`}}{{user `tools_upload_flavor`}}.iso"],
+      "iso_paths"                                    : ["{{user `iso_disk`}}{{user `iso_name`}}"],
 
       "configuration_parameters": {
         "annotation"                                 : "Packer build: {{user `template_name`}}-{{user `version`}} built {{isotime}} SHA: {{user `packer_sha`}}",

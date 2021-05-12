@@ -72,7 +72,11 @@ class packer::vsphere::params {
       $repo_name             = 'debian__remote'
       $repo_list             = 'main contrib non-free'
       $security_repo_name    = 'debian_security__remote'
-      $security_release      = "${facts['lsbdistcodename']}/updates"
+      if $facts[os][release] in ['7', '8', '9', '10'] {
+        $security_release      = "${facts['lsbdistcodename']}/updates"
+      } else {
+        $security_release      = "${facts['lsbdistcodename']}-security/updates"
+      }
       $updates_release       = "${facts['lsbdistcodename']}-updates"
     }
 

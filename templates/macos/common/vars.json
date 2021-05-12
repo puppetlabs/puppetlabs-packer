@@ -32,5 +32,6 @@
   "vmware_base_vm_smc_version"                                  : "0",
   "vmware_base_vm_usb_present"                                  : "TRUE",   
   "inject_http_seed_in_boot_command"                            : "FALSE",  
-  "tools_upload_flavor"                                         : "darwin"
+  "tools_upload_flavor"                                         : "darwin",
+  "iso_paths"                                                   : ["{{user `iso_disk`}}{{user `iso_name`}}", "{{user `iso_disk`}}{{user `tools_upload_flavor`}}.iso"],
 }
