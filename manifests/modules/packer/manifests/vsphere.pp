@@ -42,7 +42,7 @@ class packer::vsphere(
 
   case $facts['osfamily'] {
     redhat: {
-      if $facts['operatingsystemrelease'] in ['24', '25', '26', '27', '28', '29', '30', '31', '32'] {
+      if $facts['operatingsystemrelease'] in ['24', '25', '26', '27', '28', '29', '30', '31', '32', '34'] {
         Package {
           provider => 'dnf',
         }
@@ -55,7 +55,7 @@ class packer::vsphere(
         }
       }
 
-      if $facts['operatingsystemrelease'] in ['28', '29', '30', '31', '32'] {
+      if $facts['operatingsystemrelease'] in ['28', '29', '30', '31', '32', '34'] {
         # Enable systemd service for vsphere bootstrap instead of relying on rc.local
         file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":
           ensure => 'link',
