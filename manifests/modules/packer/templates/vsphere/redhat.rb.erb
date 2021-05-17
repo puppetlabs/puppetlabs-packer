@@ -85,7 +85,7 @@ Kernel.system('/sbin/service NetworkManager restart')
 
 puts '- Cleaning up...'
 
-<% if ['28', '29', '30', '31'].include? @operatingsystemrelease -%>
+<% if ['28', '29', '30', '31', '34'].include? @operatingsystemrelease -%>
 # With systemd-networkd, disable the oneshot service that runs this script:
 Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
 <% else -%>
