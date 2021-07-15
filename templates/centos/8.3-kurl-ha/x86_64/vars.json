@@ -12,6 +12,6 @@
     "inject_http_seed_in_boot_command"                      : "true",
     "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait><enter>",
     "iso_name"                                              : "CentOS-8.3.2011-x86_64-dvd1.iso",
-    "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=",
+    "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=stable,INSTALL=false",
     "custom_provisioning_script"                            : "scripts/kurl.sh"
 }
