@@ -1,12 +1,18 @@
 #!/bin/bash
 
+set -e
+
 # These should be passed in via custom_provisioning_env
 #APP='puppet-application-manager'
 #CHANNEL='standalone'
 #INSTALL=true (default, set false to to skip installation)
 INSTALL="${INSTALL:-true}"
 
-set -e
+if [ "${CHANNEL}" == 'stable' ]; then
+  TARBALL="${APP}.tar.gz"
+else
+  TARBALL="${APP}-${CHANNEL}.tar.gz"
+fi
 
 #################################################################################
 # Provide a script to get kubernetes back into a working state after vm checkout.
@@ -25,9 +31,9 @@ fi
 
 #############################
 # Install Kubernetes via Kurl
-curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
-tar xzf "${APP}-${CHANNEL}.tar.gz"
-rm "${APP}-${CHANNEL}.tar.gz"
+curl -sSLO "https://k8s.kurl.sh/bundle/${TARBALL}"
+tar xzf "${TARBALL}"
+rm "${TARBALL}"
 
 dnf -y install bash-completion
 if [ "${INSTALL}" == 'true' ]; then
