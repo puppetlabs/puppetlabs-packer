@@ -26,3 +26,7 @@ rm ${APP}-${CHANNEL}.tar.gz
 
 dnf -y install bash-completion
 cat install.sh | sudo bash -s airgap preserve-selinux-config
+
+# Stop Kubelet before shutdown. The packer build fills the disk with 0s to compress the image,
+# which otherwise causes Kubelet to start erasing unused images that we still need.
+systemctl stop kubelet
