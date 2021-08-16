@@ -2,7 +2,7 @@
     "template_name"                                         : "centos-8.3-kurl-beta-x86_64",
     "template_os"                                           : "centos8_64Guest",
     "beakerhost"                                            : "centos8-64",
-    "version"                                               : "0.1.6",
+    "version"                                               : "0.1.7",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/CentOS-8.3.2011-x86_64-dvd1.iso",
     "iso_checksum"                                          : "aaf9d4b3071c16dbbda01dfe06085e5d0fdac76df323e3bbe87cce4318052247",
     "iso_checksum_type"                                     : "sha256",
