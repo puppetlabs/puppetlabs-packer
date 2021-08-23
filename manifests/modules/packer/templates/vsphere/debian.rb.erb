@@ -30,7 +30,7 @@ Kernel.system('pkill dhclient')
 Kernel.system('dhclient -r')
 Kernel.system('rm /var/lib/dhcp/dhclient*')
 Kernel.system('dhclient eth0')
-<% elsif ['bullseye/sid'].include? @operatingsystemmajrelease-%>
+<% elsif ['11'].include? @operatingsystemmajrelease-%>
 Kernel.system('/usr/bin/systemctl restart networking')
 <% else -%>
 Kernel.system('/etc/init.d/networking restart')
