@@ -72,10 +72,7 @@
       "tools_upload_flavor"                          : "linux",
       "project_root"                                 : "../../../..",
       "custom_provisioning_env"                      : "pe_ver=2018.1.4,pe_foo=bar",
-      "custom_provisioning_script"                   : "scripts/noop.sh",
-      "custom_local_provisioning_env"                : "",
-      "custom_local_provisioning_script"             : "scripts/noop.sh",
-      "custom_files_to_upload"                       : "/dev/null"
+      "custom_provisioning_script"                   : "scripts/noop.sh"
     },
 
  "builders": [
@@ -230,19 +227,6 @@
       "scripts"                                    : [
                                                         "{{user `project_root`}}/scripts/cleanup-aio.sh"
                                                      ]
-    },
-
-    {
-      "type"                                       : "shell-local",
-      "environment_vars"                           : "{{user `custom_local_provisioning_env`}}",
-      "scripts"                                    : "{{user `project_root`}}/{{user `custom_local_provisioning_script`}}"
-    },
-
-    {
-      "type"                                         : "file",
-      "sources"                                      : "{{user `custom_files_to_upload`}}",
-      "destination"                                  : "/tmp/",
-      "generated"                                    : true
     },
 
     {
