@@ -6,15 +6,30 @@
 
 set -e
 
-#################################################################################
-# Provide a script to get kubernetes back into a working state after vm checkout.
-
-sudo mv /tmp/restart_k8s.sh /root
-sudo chmod 750 /root/restart_k8s.sh
+#####################################################################################
+# Provide instructions to get kubernetes back into a working state after vm checkout.
 
 cat << EOF | sudo tee -a /etc/motd
 
-After initial checkout, run /root/restart_k8s.sh to get the Kubernetes environment restarted.
+This image requires local execution of a restart script to get k8s
+up and running correctly again with its new IP.
+
+There is a Bolt task, kurl_test::restart_k8s that will do this for you in the
+private repo: https://github.com/puppetlabs/kurl_test
+
+You can run it with Bolt if you are set up for that, or, if you have ssh-agent
+forwarding set up with your puppetlabs github key you can download and execute
+the script directly by running these commands:
+
+git clone --no-checkout --depth 1 git@github.com:puppetlabs/kurl_test.git && cd kurl_test && git checkout HEAD -- tasks/restart_k8s.sh
+./tasks/restart_k8s.sh
+
+Or, without ssh-agent forwarding you can browse this link:
+
+https://github.com/puppetlabs/kurl_test/blob/main/tasks/restart_k8s.sh
+
+and click on the page's 'Raw' button to get a url with a token that can be used
+via wget/curl to obtain the script; then execute it.
 
 EOF
 
