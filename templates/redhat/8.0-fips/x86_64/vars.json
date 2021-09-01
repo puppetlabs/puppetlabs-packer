@@ -1,0 +1,17 @@
+{
+    "template_name"                                         : "redhat-fips-8-x86_64",
+    "template_os"                                           : "rhel8_64Guest",
+    "beakerhost"                                            : "redhatfips8-64",
+    "version"                                               : "0.0.1",
+    "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.0-x86_64-dvd.iso",
+    "iso_checksum"                                          : "005d4f88fff6d63b0fc01a10822380ef52570edd8834321de7be63002cc6cc43",
+    "iso_checksum_type"                                     : "sha256",
+    "vmware_base_vmx_data_memsize"                          : "8168",
+    "vmware_base_vmx_data_numvcpus"                         : "2",
+    "puppet_aio"                                            : "http://yum.puppet.com/puppet7/el/8/x86_64/puppet-agent-7.10.0-1.el8.x86_64.rpm",
+    "inject_http_seed_in_boot_command"                      : "true",
+    "floppy_files"                                          : "",
+    "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait> fips=1<enter>",
+    "vmware_base_provisioning_scripts"                      : "../../../../scripts/bootstrap-aio.sh,../../common/files/enable-fips.sh",
+    "iso_name"                                              : "rhel-8.0-x86_64-dvd.iso"
+}

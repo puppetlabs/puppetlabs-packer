@@ -18,9 +18,14 @@ fi
 # as part of openssl-devel install
 yum -y install openssl-1.0.2k-8.el7.x86_64
 
-# Step 2: Install dracut-fips and dracut-fips-aesni packages
+# Step 2: Install dracut-fips, dracut-fips-aesni and haveged packages
 yum -y install dracut-fips
 yum -y install dracut-fips-aesni
+
+MAJOR_VERSION=$(/opt/puppetlabs/bin/facter os.distro.release.major)
+if [[ "$MAJOR_VERSION" == "8" ]]; then
+    yum -y install https://artifactory.delivery.puppetlabs.net/artifactory/rpm__remote_epel/8/Everything/x86_64/Packages/h/haveged-1.9.14-1.el8.x86_64.rpm
+fi
 
 # Step 3: Find out the device details (BLOCK ID) of boot partition
 boot_blkid=$(blkid `df /boot | grep "/dev" | awk 'BEGIN{ FS=" "}; {print $1}'` | awk 'BEGIN{ FS=" "}; {print $2}' | sed 's/"//g')
