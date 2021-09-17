@@ -117,10 +117,10 @@ class packer::vsphere::repos(
         }
       } else {
         $base_url = $facts['operatingsystem'] ? {
-          'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${facts['operatingsystemmajrelease']}/Everything/${facts['architecture']}/os",
-          'CentOS'      => "${repo_mirror}/rpm__remote_centos/${facts['operatingsystemmajrelease']}",
-          'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${facts['operatingsystemmajrelease']}/${facts['architecture']}",
-          'OracleLinux' => "${os_mirror}/${loweros}-${facts['operatingsystemmajrelease']}-${facts['architecture']}/RPMS.all"
+          'Fedora'                 => "${repo_mirror}/rpm__remote_fedora/releases/${facts['operatingsystemmajrelease']}/Everything/${facts['architecture']}/os",
+          /CentOS|AlmaLinux|Rocky/ => "${repo_mirror}/rpm__remote_centos/${facts['operatingsystemmajrelease']}",
+          'Scientific'             => "${repo_mirror}/rpm__remote_scientific/${facts['operatingsystemmajrelease']}/${facts['architecture']}",
+          'OracleLinux'            => "${os_mirror}/${loweros}-${facts['operatingsystemmajrelease']}-${facts['architecture']}/RPMS.all"
         }
       }
 
@@ -211,7 +211,7 @@ class packer::vsphere::repos(
 
       }
 
-      if $facts['operatingsystem'] == 'CentOS' {
+      if $facts['operatingsystem'] in ['CentOS', 'AlmaLinux', 'Rocky'] {
         if $facts['operatingsystemmajrelease'] == '8' {
           yumrepo { 'localmirror-base':
             descr    => 'localmirror-base',
