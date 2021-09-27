@@ -86,7 +86,11 @@ class packer::vsphere::params {
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'redhat.rb.erb'
       $ruby_package          = [ 'ruby' ]
-      $gpgkey                = "RPM-GPG-KEY-${::operatingsystem}-${::operatingsystemmajrelease}"
+      $gpgkey = $::operatingsystem ? {
+        'AlmaLinux'    => "RPM-GPG-KEY-${::operatingsystem}",
+        /Rocky|CentOS/ => "RPM-GPG-KEY-${loweros}official",
+        default        => "RPM-GPG-KEY-${::operatingsystem}-${::operatingsystemmajrelease}",
+      }
     }
 
     'SLES': {

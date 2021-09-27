@@ -2,7 +2,7 @@
     "template_name"                                         : "rocky-8-x86_64",
     "template_os"                                           : "centos8_64Guest",
     "beakerhost"                                            : "rocky8-64",
-    "version"                                               : "0.0.1",
+    "version"                                               : "0.0.2",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/Rocky-8.4-x86_64-dvd1.iso",
     "iso_checksum"                                          : "ffe2fae67da6702d859cfb0b321561a5d616ce87a963d8a25b018c9c3d52d9a4",
     "iso_checksum_type"                                     : "sha256",

@@ -55,17 +55,6 @@ class packer::vsphere(
         }
       }
 
-      # ugly hack to use centos GPG key for Rocky/Alma since we're using the CentOS mirrors
-      if $facts['operatingsystem'] in ['AlmaLinux', 'Rocky'] {
-          file { '/etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial':
-            ensure => file,
-            owner  => 'root',
-            group  => 'root',
-            mode   => '0644',
-            source => 'puppet:///modules/packer/vsphere/RPM-GPG-KEY-centosofficial',
-          }
-      }
-
       if $facts['operatingsystemrelease'] in ['28', '29', '30', '31', '32', '34'] {
         # Enable systemd service for vsphere bootstrap instead of relying on rc.local
         file { "/etc/systemd/system/multi-user.target.wants/${startup_file_source}":

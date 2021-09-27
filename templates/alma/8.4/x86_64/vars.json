@@ -2,7 +2,7 @@
     "template_name"                                         : "almalinux-8-x86_64",
     "template_os"                                           : "centos8_64Guest",
     "beakerhost"                                            : "alma8-64",
-    "version"                                               : "0.0.1",
+    "version"                                               : "0.0.2",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/AlmaLinux-8.4-x86_64-dvd.iso",
     "iso_checksum"                                          : "4dd2f7c558bfa34d9a5e71d5add2c77c59fdec58076678a381d9dfd0f9583a51",
     "iso_checksum_type"                                     : "sha256",
