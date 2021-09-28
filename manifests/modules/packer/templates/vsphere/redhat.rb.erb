@@ -23,7 +23,7 @@ Kernel.system('hostname -F /etc/hostname')
 
 puts '- Re-obtaining DHCP lease...'
 
-<% if (@operatingsystem == 'RedHat') or (@operatingsystem == 'CentOS') or (@operatingsystem == 'Scientific') or (@operatingsystem == 'OracleLinux') -%>
+<% if ['RedHat', 'CentOS', 'Scientific', 'OracleLinux', 'AlmaLinux', 'Rocky'].include?(@operatingsystem) -%>
   <% if @operatingsystemmajrelease == '8' -%>
     Kernel.system('/sbin/service NetworkManager restart')
     Kernel.system('/usr/sbin/ifdown ens33')

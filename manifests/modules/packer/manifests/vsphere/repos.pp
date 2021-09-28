@@ -119,6 +119,8 @@ class packer::vsphere::repos(
         $base_url = $facts['operatingsystem'] ? {
           'Fedora'      => "${repo_mirror}/rpm__remote_fedora/releases/${facts['operatingsystemmajrelease']}/Everything/${facts['architecture']}/os",
           'CentOS'      => "${repo_mirror}/rpm__remote_centos/${facts['operatingsystemmajrelease']}",
+          'AlmaLinux'   => "${repo_mirror}/almalinux__remote/${facts['operatingsystemmajrelease']}",
+          'Rocky'       => "${repo_mirror}/rocky_linux__remote/${facts['operatingsystemmajrelease']}",
           'Scientific'  => "${repo_mirror}/rpm__remote_scientific/${facts['operatingsystemmajrelease']}/${facts['architecture']}",
           'OracleLinux' => "${os_mirror}/${loweros}-${facts['operatingsystemmajrelease']}-${facts['architecture']}/RPMS.all"
         }
@@ -211,25 +213,25 @@ class packer::vsphere::repos(
 
       }
 
-      if $facts['operatingsystem'] == 'CentOS' {
+      if $facts['operatingsystem'] in ['CentOS', 'AlmaLinux', 'Rocky'] {
         if $facts['operatingsystemmajrelease'] == '8' {
           yumrepo { 'localmirror-base':
             descr    => 'localmirror-base',
             baseurl  => "${base_url}/BaseOS/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
           yumrepo { 'localmirror-appstream':
             descr    => 'localmirror-appstream',
             baseurl  => "${base_url}/AppStream/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
           yumrepo { 'localmirror-extras':
             descr    => 'localmirror-extras',
             baseurl  => "${base_url}/extras/${facts['architecture']}/os",
             gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial"
+            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
           }
         } else {
           yumrepo { 'localmirror-os':
