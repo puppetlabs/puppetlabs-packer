@@ -157,6 +157,7 @@
         "echo '       \"editionid\"        : \"{{user `EditionID`}}\",' >> ./tmp/build.json",
         "echo '       \"installationtype\" : \"{{user `InstallationType`}}\",' >> ./tmp/build.json",
         "echo '       \"releaseid\"        : \"{{user `ReleaseID`}}\",' >> ./tmp/build.json",
+        "echo '       \"displayversion\"   : \"{{user `DisplayVersion`}}\",' >> ./tmp/build.json",
         "echo '       \"iso\"              : \"{{user `iso_name`}}\",' >> ./tmp/build.json",
         "echo '       \"iso_md5\"          : \"{{user `iso_checksum`}}\"' >> ./tmp/build.json",
 

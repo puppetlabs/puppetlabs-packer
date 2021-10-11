@@ -7,7 +7,7 @@
     1. Operating System Name
     2. Edition (e.g. Standard, Professional, Enterprise)
     3. Installation Type (e.g. Client, Server, ServerCore)
-    4. ReleaseID - the Windows 10/2016/2019 Build Version
+    4. DisplayVersion or ReleaseID - the Windows Build Version, depending on OS variant
 #>
 
 . C:\Packer\Scripts\windows-env.ps1
@@ -26,7 +26,13 @@ describe 'Windows Platform Validation Tests' {
         $WindowsInstallationType | Should Be $($PackerBuildParams.packer.windows.installationtype)
     }
 
-    it 'Should be the correct Release ID' {
-        $WindowsReleaseID | Should Be $($PackerBuildParams.packer.windows.releaseid)
+    if ($WindowsVersion -Like $WindowsServer2022) {
+        it 'Should be the correct DisplayVersion' {
+            $WindowsDisplayVersion | Should Be $($PackerBuildParams.packer.windows.displayversion)
+        }
+    } else {
+        it 'Should be the correct ReleaseID' {
+            $WindowsReleaseID | Should Be $($PackerBuildParams.packer.windows.releaseid)
+        }
     }
 }
