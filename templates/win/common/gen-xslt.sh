@@ -11,7 +11,7 @@ export WIN_COMMON_DIR=$(dirname $0)
 
 # Derive parameters from json variable file.
 #
-export PACKER_PROD_KEY=`jq -r .product_key vars.json`
+export PACKER_PROD_KEY=`jq -r ".product_key | values" vars.json`
 export PACKER_IMAGE_NAME=`jq -r .image_name vars.json`
 export PACKER_WIN_VERSION=`jq -r .windows_version vars.json`
 
@@ -41,7 +41,7 @@ mkdir -p tmp
 
 # Create base Autounattend.xml file
 xsltproc --stringparam ProcessorArchitecture "${PACKER_WIN_PROC_ARCH}" \
-         --stringparam ProductKey "${PACKER_PROD_KEY}" \
+         ${PACKER_PROD_KEY:+ --stringparam ProductKey "${PACKER_PROD_KEY}"} \
          --stringparam ImageName "${PACKER_IMAGE_NAME}" \
          --stringparam WindowsVersion "${PACKER_WIN_VERSION}" \
          --stringparam ImageProvisioner "${IMAGE_PROVISIONER}" \
@@ -53,7 +53,7 @@ xsltproc --stringparam ProcessorArchitecture "${PACKER_WIN_PROC_ARCH}" \
 
 # Create the Post Clone Autounattend file.
 xsltproc --stringparam ProcessorArchitecture "${PACKER_WIN_PROC_ARCH}" \
-         --stringparam ProductKey "${PACKER_PROD_KEY}" \
+         ${PACKER_PROD_KEY:+ --stringparam ProductKey "${PACKER_PROD_KEY}"} \
          --stringparam ImageName "${PACKER_IMAGE_NAME}" \
          --stringparam WindowsVersion "${PACKER_WIN_VERSION}" \
          --stringparam ImageProvisioner "${IMAGE_CLONE_PROVISIONER}" \
