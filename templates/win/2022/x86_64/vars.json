@@ -1,0 +1,18 @@
+{
+    "A_Comment"         : "Windows 2022 Server GA Release",
+    "template_name"     : "win-2022-x86_64",
+    "beakerhost"        : "windows2022-64",
+    "vbox_guest_os"     : "Windows2022_64",
+    "vmware_guest_os"   : "windows8srv-64",
+    "vsphere_guest_os"  : "windows9Server64Guest",
+    "windows_version"   : "Windows-2022",
+    "image_name"        : "Windows Server 2022 SERVERDATACENTER",
+    "iso_name"          : "20348.169.210806-2348.fe_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso",
+    "iso_checksum_type" : "sha256",
+    "iso_checksum"      : "4f1457c4fe14ce48c9b2324924f33ca4f0470475e6da851b39ccbf98f44e7852",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter>",
+    "ProductName"       : "Windows Server 2022 Datacenter Evaluation",
+    "EditionID"         : "ServerDatacenterEval",
+    "InstallationType"  : "Server",
+    "DisplayVersion"    : "21H2"
+}
