@@ -29,10 +29,6 @@ $WinRebootStatus = Test-PendingReboot
 
 describe 'Windows Update Validation Tests' {
 
-    it 'Should Have at least One recent Windows Update installed' {
-        $WUHistory.Count | Should BeGreaterThan 0
-    }
-
     it 'Should not have any Windows Updates Pending' {
         $WUUpdateList.Count | Should be 0
     }

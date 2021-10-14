@@ -19,6 +19,7 @@ Set-Variable -Option Constant -Name WindowsServer2008r2 -Value "6.1.*"
 Set-Variable -Option Constant -Name WindowsServer2012   -Value "6.2.*"
 Set-Variable -Option Constant -Name WindowsServer2012R2 -Value "6.3.*"
 Set-Variable -Option Constant -Name WindowsServer2016   -Value "10.*"
+Set-Variable -Option Constant -Name WindowsServer2022   -Value "10.0.20348*"
 $WindowsVersion = (Get-WmiObject win32_operatingsystem).version
 
 # Collect additional Windows Installation Parameters - useful for various uses including platform verification
@@ -33,12 +34,12 @@ if ($WindowsVersion -Like $WindowsServer2008) {
   $global:WindowsInstallationType = (Get-ItemProperty -Path "$NTVerKeyPath" -Name InstallationType).InstallationType
 }
 
-# ReleaseID is tricky as it only appears in later Windows 10 builds.
-$WindowsReleaseIDObj = Get-ItemProperty -ErrorAction SilentlyContinue -Path "$NTVerKeyPath" -Name ReleaseID
-if ($WindowsReleaseIDObj) {
-  $global:WindowsReleaseID = $WindowsReleaseIDObj.ReleaseID
+if ($WindowsVersion -Like $WindowsServer2022) {
+  $WindowsDisplayVersionObj = Get-ItemProperty -ErrorAction SilentlyContinue -Path "$NTVerKeyPath" -Name DisplayVersion
+  $global:WindowsDisplayVersion = if ($WindowsDisplayVersionObj) { $WindowsDisplayVersionObj.DisplayVersion } else { "N/A" }
 } else {
-  $global:WindowsReleaseID = "N/A"
+  $WindowsReleaseIDObj = Get-ItemProperty -ErrorAction SilentlyContinue -Path "$NTVerKeyPath" -Name ReleaseID
+  $global:WindowsReleaseID = if ($WindowsReleaseIDObj) { $WindowsReleaseIDObj.ReleaseID } else { "N/A" }
 }
 
 # Get Administrator SID

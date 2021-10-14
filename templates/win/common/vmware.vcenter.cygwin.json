@@ -100,7 +100,7 @@
       ],
       "iso_paths": [
         "{{user `iso_disk`}}{{user `iso_name`}}",
-        "{{user `iso_disk`}}windows-11.2.0.iso"
+        "{{user `iso_disk`}}windows-11.3.5.iso"
       ],
 
       "communicator"      : "winrm",
@@ -157,6 +157,7 @@
         "echo '       \"editionid\"        : \"{{user `EditionID`}}\",' >> ./tmp/build.json",
         "echo '       \"installationtype\" : \"{{user `InstallationType`}}\",' >> ./tmp/build.json",
         "echo '       \"releaseid\"        : \"{{user `ReleaseID`}}\",' >> ./tmp/build.json",
+        "echo '       \"displayversion\"   : \"{{user `DisplayVersion`}}\",' >> ./tmp/build.json",
         "echo '       \"iso\"              : \"{{user `iso_name`}}\",' >> ./tmp/build.json",
         "echo '       \"iso_md5\"          : \"{{user `iso_checksum`}}\"' >> ./tmp/build.json",
 

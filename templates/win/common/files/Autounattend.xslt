@@ -168,10 +168,13 @@
   <!-- Rule to replace product key -->
   <xsl:template match='u:unattend/u:settings/u:component[@name="Microsoft-Windows-Setup"]/u:UserData/u:ProductKey/u:Key |
                        u:unattend/u:settings/u:component[@name="Microsoft-Windows-Shell-Setup"]/u:ProductKey'>
-    <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:value-of select="$ProductKey"/>
-    </xsl:copy>
+    <!-- Windows 2022 is an evaluation ISO so it doesn't need a product key -->
+    <xsl:if test="not($WindowsVersion = 'Windows-2022')">
+      <xsl:copy>
+        <xsl:apply-templates select="@*"/>
+        <xsl:value-of select="$ProductKey"/>
+      </xsl:copy>
+    </xsl:if>
   </xsl:template>
 
   <!-- Strip out these components and elements for Windows-2008 only -->
