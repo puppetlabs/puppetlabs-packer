@@ -61,15 +61,16 @@ chmod 755 /usr/sbin/restart_k8s.sh
 cat > "/usr/lib/systemd/system/k8s-restart.service" <<SERVICE
 [Unit]
 Description=Kubernetes network restart for abs checkout
-After=network-online.target
-Wants=network-online.target
+After=network-online.target rc-local.service
+Wants=network-online.target rc-local.service
 
 [Service]
-Type=exec
+Type=oneshot
+RemainAfterExit=true
 Environment=KUBECONFIG=/root/.kube/config
 ExecStart=/usr/sbin/restart_k8s.sh
 
 [Install]
 WantedBy=multi-user.target
 SERVICE
-ln -s /usr/lib/systemd/system/k8s-restart.service /etc/systemd/system/multi-user.target.wants/k8s-restart.service
+systemctl enable k8s-restart.service
