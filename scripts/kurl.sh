@@ -74,3 +74,6 @@ ExecStart=/usr/sbin/restart_k8s.sh
 WantedBy=multi-user.target
 SERVICE
 systemctl enable k8s-restart.service
+
+echo " * Modifying ekco-reboot.service to depend on k8s-restart.service"
+sed -i -e '/After=containerd.service/ a After=k8s-restart.service' /etc/systemd/system/ekco-reboot.service
