@@ -13,7 +13,7 @@ class packer::vsphere::fw {
 
   # RHEL 8 comes with firewalld, we need this specific declaration because puppetlabs-firewall only manages iptables
   if ($facts['osfamily'] == 'RedHat')
-  and ($facts['operatingsystemmajrelease'] == '8') {
+  and ($facts['operatingsystemmajrelease'] in ['8', '9']) {
     service { 'firewalld':
       ensure => stopped,
       enable => false

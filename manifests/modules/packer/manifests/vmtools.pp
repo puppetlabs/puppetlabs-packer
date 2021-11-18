@@ -15,7 +15,7 @@ class packer::vmtools(
   # At some point it's going to become more worthwhile to flip this so
   # installing open-vm-tools is the default.
   if ( ($facts['osfamily'] == 'debian' and $facts['operatingsystemmajrelease'] in ['7', '8', '9', '10', '11', '16.04', '14.04', '18.04', '18.10', '20.04']) or
-        ($facts['osfamily'] == 'redhat' and $facts['operatingsystemmajrelease'] in ['7', '8', '25', '26', '27', '28', '29', '30', '31', '32', '34']) or
+        ($facts['osfamily'] == 'redhat' and $facts['operatingsystemmajrelease'] in ['7', '8', '9', '25', '26', '27', '28', '29', '30', '31', '32', '34']) or
         ($facts['osfamily'] == 'suse' and $facts['operatingsystemmajrelease'] in ['15'])
     ) {
       package { 'open-vm-tools':

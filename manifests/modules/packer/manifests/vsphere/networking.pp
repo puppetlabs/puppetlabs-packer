@@ -38,7 +38,7 @@ class packer::vsphere::networking(
     }
 
     redhat: {
-      if ($facts['operatingsystemmajrelease'] in ['7', '8']) {
+      if ($facts['operatingsystemmajrelease'] in ['7', '8', '9']) {
         if ( $interface_script != undef ) {
           file { $interface_script:
             ensure => absent,

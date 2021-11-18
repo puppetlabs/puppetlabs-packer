@@ -21,11 +21,13 @@ class packer::networking(
     }
   }
 
-  if ( $interface_script != undef ) {
-    file_line { "remove ${interface_script} hwaddr":
-      path  => $interface_script,
-      line  => '#HWADDR withheld',
-      match => 'HWADDR',
+  unless ($facts['osfamily'] == 'redhat' and $facts['operatingsystemmajrelease'] == '9') {
+    if ( $interface_script != undef ) {
+      file_line { "remove ${interface_script} hwaddr":
+        path  => $interface_script,
+        line  => '#HWADDR withheld',
+        match => 'HWADDR',
+      }
     }
   }
 

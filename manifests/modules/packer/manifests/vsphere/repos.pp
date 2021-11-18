@@ -109,7 +109,9 @@ class packer::vsphere::repos(
       if $facts['operatingsystem'] == 'RedHat' {
         # We don't have consistent mirror urls between RedHat versions:
         # TODO: RHEL 5 needs further refactoring
+        # TODO: Change up RHEL 9 when it's out of beta
         $base_url = $facts['operatingsystemmajrelease'] ? {
+          '9' => "${repo_mirror}/rpm__remote_rhel-9-beta-x86_64",
           '8' => "${repo_mirror}/rpm__remote_rhel-8",
           '7' => "${repo_mirror}/rpm__remote_rhel-7",
           '6' => "${repo_mirror}/rpm__remote_rhel-68-${::architecture}",
@@ -140,7 +142,20 @@ class packer::vsphere::repos(
       # between the url formats and repo names used by the other Redhat-based
       # distros that I prefer to keep this more readable:
       if $facts['operatingsystem'] == 'RedHat' {
-        if $facts['operatingsystemmajrelease'] == '8' {
+        if $facts['operatingsystemmajrelease'] == '9' {
+          yumrepo { 'localmirror-baseos':
+            descr    => 'localmirror-baseos',
+            baseurl  => "${base_url}/baseos/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
+          }
+          yumrepo { 'localmirror-appstream':
+            descr    => 'localmirror-appstream',
+            baseurl  => "${base_url}/appstream/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
+          }
+        } elsif $facts['operatingsystemmajrelease'] == '8' {
           yumrepo { 'localmirror-base':
             descr    => 'localmirror-base',
             baseurl  => "${base_url}-base",
