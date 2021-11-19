@@ -17,9 +17,9 @@ EOF
 #############################
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
-curl -sSLO https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz
-tar xzf ${APP}-${CHANNEL}.tar.gz
-rm ${APP}-${CHANNEL}.tar.gz
+curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
+tar xzf "${APP}-${CHANNEL}.tar.gz"
+rm "${APP}-${CHANNEL}.tar.gz"
 
 cat install.sh | sudo bash -s airgap preserve-selinux-config
 
