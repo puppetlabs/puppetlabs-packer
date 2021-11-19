@@ -14,5 +14,5 @@
     "iso_name"                                              : "rhel-8.4-x86_64-dvd.iso",
     "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=standalone-beta",
     "custom_provisioning_script"                            : "scripts/kurl.sh",
-    "custom_files_to_upload"                                : "../common/files/restart_k8s.sh"
+    "custom_files_to_upload"                                : "../common/files/restart_k8s.sh,../common/files/check_k8s_restart_state.sh,../common/files/bash_profile_k8s_status.sh"
 }

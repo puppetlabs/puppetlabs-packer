@@ -6,14 +6,6 @@
 
 set -e
 
-#####################################################################################
-# Provide instructions to get kubernetes back into a working state after vm checkout.
-
-cat << EOF | sudo tee -a /etc/motd
-
-Run 'kubectl kots reset-password -n default' after checkout to reset the KOTS admin console root password.
-EOF
-
 #############################
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
@@ -56,8 +48,11 @@ systemctl disable containerd
 
 echo " * Preparing kubernetes restart init script"
 mv /tmp/restart_k8s.sh /usr/sbin/restart_k8s.sh
-chown root:root /usr/sbin/restart_k8s.sh
-chmod 755 /usr/sbin/restart_k8s.sh
+mv /tmp/check_k8s_restart_state.sh /usr/sbin/check_k8s_restart_state.sh
+mv /tmp/bash_profile_k8s_status.sh /usr/sbin/bash_profile_k8s_status.sh
+chown root:root /usr/sbin/restart_k8s.sh /usr/sbin/check_k8s_restart_state.sh /usr/sbin/bash_profile_k8s_status.sh
+chmod 755 /usr/sbin/restart_k8s.sh /usr/sbin/check_k8s_restart_state.sh /usr/sbin/bash_profile_k8s_status.sh
+
 cat > "/usr/lib/systemd/system/k8s-restart.service" <<SERVICE
 [Unit]
 Description=Kubernetes network restart for abs checkout
@@ -77,3 +72,8 @@ systemctl enable k8s-restart.service
 
 echo " * Modifying ekco-reboot.service to depend on k8s-restart.service"
 sed -i -e '/After=containerd.service/ a After=k8s-restart.service' /etc/systemd/system/ekco-reboot.service
+
+###################################################
+# Provide login k8s status and password reset info.
+
+sed -i "$ a \\\n/usr/sbin/bash_profile_k8s_status.sh" /root/.bash_profile
