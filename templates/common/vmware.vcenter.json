@@ -230,6 +230,12 @@
     },
 
     {
+      "type"                                         : "file",
+      "sources"                                      : "{{user `custom_files_to_upload`}}",
+      "destination"                                  : "/tmp/"
+    },
+
+    {
       "type"                                       : "shell",
       "environment_vars"                           : "{{user `custom_provisioning_env`}}",
       "scripts"                                    : "{{user `project_root`}}/{{user `custom_provisioning_script`}}"

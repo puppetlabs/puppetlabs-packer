@@ -1,0 +1,18 @@
+{
+    "template_name"                                         : "redhat-8.4-kurl-beta-x86_64",
+    "template_os"                                           : "rhel8_64Guest",
+    "beakerhost"                                            : "redhat8-64",
+    "version"                                               : "0.3.2",
+    "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.4-x86_64-dvd.iso",
+    "iso_checksum"                                          : "aaf9d4b3071c16dbbda01dfe06085e5d0fdac76df323e3bbe87cce4318052247",
+    "iso_checksum_type"                                     : "sha256",
+    "vmware_base_vmx_data_memsize"                          : "8168",
+    "vmware_base_vmx_data_numvcpus"                         : "4",
+    "puppet_aio"                                            : "http://builds.delivery.puppetlabs.net/puppet-agent/7.12.1/artifacts/el/8/puppet7/x86_64/puppet-agent-7.12.1-1.el8.x86_64.rpm",
+    "inject_http_seed_in_boot_command"                      : "true",
+    "boot_command"                                          : "<tab> <wait>inst.text inst.ks=http://%s/ks.cfg<wait><enter>",
+    "iso_name"                                              : "rhel-8.4-x86_64-dvd.iso",
+    "custom_provisioning_env"                               : "APP=puppet-application-manager,CHANNEL=standalone-beta",
+    "custom_provisioning_script"                            : "scripts/kurl.sh",
+    "custom_files_to_upload"                                : "../common/files/restart_k8s.sh,../common/files/check_k8s_restart_state.sh,../common/files/bash_profile_k8s_status.sh"
+}
