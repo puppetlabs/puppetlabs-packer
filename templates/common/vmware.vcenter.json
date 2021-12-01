@@ -231,7 +231,7 @@
 
     {
       "type"                                         : "file",
-      "sources"                                      : "{{user `custom_files_to_upload`}}",
+      "source"                                       : "{{user `custom_files_to_upload`}}",
       "destination"                                  : "/tmp/"
     },
 
