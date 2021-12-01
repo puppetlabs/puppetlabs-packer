@@ -13,8 +13,8 @@ puts '- Setting local hostname...'
 File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
+<% if ['7', '8', '9', '28', '29', '30', '31', '32', '34'].include? @operatingsystemmajrelease -%>
 
-<% if ['7', '8', '28', '29', '30', '31', '32', '34'].include? @operatingsystemmajrelease -%>
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 <% else -%>
@@ -24,7 +24,7 @@ Kernel.system('hostname -F /etc/hostname')
 puts '- Re-obtaining DHCP lease...'
 
 <% if ['RedHat', 'CentOS', 'Scientific', 'OracleLinux', 'AlmaLinux', 'Rocky'].include?(@operatingsystem) -%>
-  <% if @operatingsystemmajrelease == '8' -%>
+  <% if ['8', '9'].include? @operatingsystemmajrelease -%>
     Kernel.system('/sbin/service NetworkManager restart')
     Kernel.system('/usr/sbin/ifdown ens33')
     Kernel.system('/usr/sbin/ifup ens33')
