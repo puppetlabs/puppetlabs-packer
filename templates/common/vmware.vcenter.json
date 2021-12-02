@@ -232,7 +232,7 @@
 
     {
       "type"                                         : "file",
-      "source"                                       : "{{user `custom_files_to_upload`}}",
+      "sources"                                      : "{{user `custom_files_to_upload`}}",
       "destination"                                  : "/tmp/"
     },
 
