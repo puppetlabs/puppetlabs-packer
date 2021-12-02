@@ -72,7 +72,8 @@
       "tools_upload_flavor"                          : "linux",
       "project_root"                                 : "../../../..",
       "custom_provisioning_env"                      : "pe_ver=2018.1.4,pe_foo=bar",
-      "custom_provisioning_script"                   : "scripts/noop.sh"
+      "custom_provisioning_script"                   : "scripts/noop.sh",
+      "custom_files_to_upload"                       : "../../../../files/empty"
     },
 
  "builders": [
