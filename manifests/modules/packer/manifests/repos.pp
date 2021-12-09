@@ -34,14 +34,20 @@ class packer::repos {
     }
     if $facts['operatingsystemmajrelease'] == '9' {
       yumrepo { 'localmirror-baseos':
-        descr     => 'localmirror-baseos',
-        baseurl   => "${base_url}/baseos/${facts['architecture']}",
-        gpgcheck  => '1',
-        gpgkey    => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
+        descr    => 'localmirror-baseos',
+        baseurl  => "${base_url}/baseos/${facts['architecture']}",
+        gpgcheck => '1',
+        gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
       yumrepo { 'localmirror-appstream':
         descr    => 'localmirror-appstream',
         baseurl  => "${base_url}/appstream/${facts['architecture']}",
+        gpgcheck => '1',
+        gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
+      }
+      yumrepo { 'localmirror-codeready-builder':
+        descr    => 'localmirror-codeready-builder',
+        baseurl  => "${base_url}/codeready-builder/${facts['architecture']}",
         gpgcheck => '1',
         gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
       }
