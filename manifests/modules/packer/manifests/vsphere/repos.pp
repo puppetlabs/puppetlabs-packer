@@ -155,6 +155,12 @@ class packer::vsphere::repos(
             gpgcheck => '1',
             gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
           }
+          yumrepo { 'localmirror-codeready-builder':
+            descr    => 'localmirror-codeready-builder',
+            baseurl  => "${base_url}/codeready-builder/${facts['architecture']}",
+            gpgcheck => '1',
+            gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
+          }
         } elsif $facts['operatingsystemmajrelease'] == '8' {
           yumrepo { 'localmirror-base':
             descr    => 'localmirror-base',
