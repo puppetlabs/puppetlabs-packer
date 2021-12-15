@@ -2,7 +2,7 @@
     "template_name"                                         : "redhat-9-x86_64",
     "template_os"                                           : "rhel8_64Guest",
     "beakerhost"                                            : "redhat9-64",
-    "version"                                               : "0.0.2",
+    "version"                                               : "0.0.3",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-baseos-9.0-beta-0-x86_64-dvd.iso",
     "iso_checksum"                                          : "23e6d31e12a22b6d56f00889ea7dc465360ea84e3b7d7854e4c627ecd3160473",
     "iso_checksum_type"                                     : "sha256",
