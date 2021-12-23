@@ -2,7 +2,7 @@
 
 ### About
 
-This repository contains the [Packer](http://packer.io) and [Puppet](http://puppetlabs.com) manifests used to build boxes shipped to VMware vsphere.
+This repository contains the [Packer](http://packer.io) and [Puppet](http://puppet.com) manifests used to build boxes shipped to VMware vsphere.
 
 The Packer templates are organized under the following directory structure inside the root `templates` directory:
 ```
@@ -48,7 +48,7 @@ Some very basic linting has been added to ensure files parse properly through pa
 
 ### Issues
 
-Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet Labs issue tracker](https://tickets.puppetlabs.com/browse/CPR).
+Please open any issues within the CPR ( Community Package Repository ) project on the [Puppet issue tracker](https://tickets.puppetlabs.com/browse/CPR).
 
 ## Notes
 
