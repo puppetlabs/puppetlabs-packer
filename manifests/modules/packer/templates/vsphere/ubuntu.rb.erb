@@ -22,7 +22,7 @@ Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
 Kernel.system('hostname -F /etc/hostname')
 dhc = File.read('/etc/dhcp/dhclient.conf')
 File.open('/etc/dhcp/dhclient.conf', 'w') do |f|
-  <% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
+  <% if ['16.04', '16.10'].include? @operatingsystemrelease -%>
   dhc.gsub!(/^(send host-name.*)/, "send host-name \"#{hostname}\";")
   <% else -%>
   dhc.gsub!(/^(#?send host-name.*)/, "send host-name \"#{hostname}\";")
@@ -38,7 +38,7 @@ end
  
 puts '- Re-obtaining DHCP lease...'
  
-<% if ['15.10', '16.04', '16.10'].include? @operatingsystemrelease -%>
+<% if ['16.04', '16.10'].include? @operatingsystemrelease -%>
 # NetworkManager
 Kernel.system('/usr/sbin/service networking restart')
 <% elsif ['18.04', '18.10', '20.04'].include? @operatingsystemrelease -%>

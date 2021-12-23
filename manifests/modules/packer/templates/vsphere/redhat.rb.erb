@@ -13,7 +13,7 @@ puts '- Setting local hostname...'
 File.open('/etc/hostname', 'w') do |f|
   f.write(hostname)
 end
-<% if ['7', '8', '9', '28', '29', '30', '31', '32', '34'].include? @operatingsystemmajrelease -%>
+<% if ['7', '8', '9', '32', '34'].include? @operatingsystemmajrelease -%>
 
 # systemd-networkd
 Kernel.system("/usr/bin/hostnamectl set-hostname #{hostname}")
@@ -53,10 +53,7 @@ puts '- Re-obtaining DHCP lease...'
   <% if @operatingsystemmajrelease == '6' -%>
     File.open('/etc/dhcp/dhclient-eth0.conf', 'a') do |f|
   <% end -%>
-  <% if @operatingsystemmajrelease == '5' -%>
-    File.open('/etc/dhclient-eth0.conf', 'a') do |f|
-  <% end -%>
-  <% if (@operatingsystemmajrelease == '6') or (@operatingsystemmajrelease == '5') -%>
+  <% if @operatingsystemmajrelease == '6' -%>
       f << "\nsend host-name #{hostname};"
     end
     network = File.read('/etc/sysconfig/network')
@@ -69,7 +66,7 @@ puts '- Re-obtaining DHCP lease...'
 <% end -%>
 
 <% if @operatingsystem == 'Fedora' -%>
-  <% if ['28', '29', '30', '31', '32', '34'].include? @operatingsystemrelease -%>
+  <% if ['32', '34'].include? @operatingsystemrelease -%>
 # systemd-networkd's DHCP client uses /etc/machine-id instead of the
 # link layer address (as dhclient does) to generate a client ID.
 # /etc/machine-id will be the same on VMs cloned from the same template,
@@ -85,7 +82,7 @@ Kernel.system('/sbin/service NetworkManager restart')
 
 puts '- Cleaning up...'
 
-<% if ['28', '29', '30', '31', '34'].include? @operatingsystemrelease -%>
+<% if ['32', '34'].include? @operatingsystemrelease -%>
 # With systemd-networkd, disable the oneshot service that runs this script:
 Kernel.system('/bin/systemctl disable vsphere.bootstrap.service')
 <% else -%>
