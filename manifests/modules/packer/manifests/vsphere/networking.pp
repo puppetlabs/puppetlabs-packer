@@ -13,16 +13,6 @@ class packer::vsphere::networking(
   }
   case $facts['osfamily'] {
     debian: {
-      if $facts['operatingsystemrelease'] in ['15.10'] {
-        network::interface { 'ens32':
-          enable_dhcp   => true,
-        }
-      }
-      if ($facts['operatingsystemmajrelease'] in ['8']) {
-          network::interface { 'eth0':
-          enable_dhcp   => true,
-        }
-      }
       if ($facts['operatingsystemmajrelease'] in ['9', '16.04']) {
         network::interface { 'ens160':
           enable_dhcp   => true,

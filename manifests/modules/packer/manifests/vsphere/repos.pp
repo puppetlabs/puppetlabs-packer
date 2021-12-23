@@ -51,18 +51,6 @@ class packer::vsphere::repos(
         },
       }
 
-      if $facts['operatingsystem'] == 'Debian' and $facts['operatingsystemmajrelease'] !~  /^(7|8)/ {
-        apt::source { "${facts['lsbdistcodename']}-updates":
-          release  => $updates_release,
-          location => "${repo_mirror}/${repo_name}",
-          repos    => $repo_list,
-          include  => {
-            'src' => true,
-            'deb' => true,
-          },
-        }
-      }
-
       apt::source { "${facts['lsbdistcodename']}-security":
         release  => $security_release,
         location => "${repo_mirror}/${security_repo_name}",
@@ -169,29 +157,7 @@ class packer::vsphere::repos(
             gpgcheck => '1',
             gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
           }
-        } elsif $facts['operatingsystemmajrelease'] == '5' {
-          yumrepo { 'localmirror-os':
-            descr    => 'localmirror-os',
-            baseurl  => "${base_url}/os",
-            gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-
-          yumrepo { 'localmirror-optional':
-            descr    => 'localmirror-optional',
-            baseurl  => "${base_url}/optional",
-            gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
-
-          yumrepo { 'localmirror-extras':
-            descr    => 'localmirror-extras',
-            baseurl  => "${base_url}/extras",
-            gpgcheck => '1',
-            gpgkey   => "file:///etc/pki/rpm-gpg/${gpgkey}"
-          }
         } else {
-
           yumrepo { 'localmirror-os':
             descr    => 'localmirror-os',
             baseurl  => "${base_url}-os",

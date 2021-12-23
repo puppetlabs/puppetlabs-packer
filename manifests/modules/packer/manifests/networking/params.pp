@@ -29,22 +29,7 @@ class packer::networking::params {
           $udev_rule_gen = '/lib/udev/rules.d/75-persistent-net-generator.rules'
         }
 
-        '5.10', '5.11': {
-          $interface_script = '/etc/sysconfig/network-scripts/ifcfg-eth0'
-          $udev_rule        = '/etc/udev/rules.d/70-persistent-net.rules'
-        }
-
-        '25', '26', '27', '28': {
-          case $::provisioner {
-            'virtualbox': { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-enp0s3' }
-            'libvirt':    { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-ens4' }
-            'vmware':     { $interface_script = '/etc/sysconfig/network-scripts/ifcfg-lo' }
-            default: {}
-          }
-          $udev_rule     = undef
-          $udev_rule_gen = undef
-        }
-        '29', '30', '31', '32', '34': {
+        '32', '34': {
           $interface_script = undef
           $udev_rule        = undef
           $udev_rule_gen    = undef
