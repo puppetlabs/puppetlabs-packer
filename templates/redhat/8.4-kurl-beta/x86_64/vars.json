@@ -2,7 +2,7 @@
     "template_name"                                         : "redhat-8.4-kurl-beta-x86_64",
     "template_os"                                           : "rhel8_64Guest",
     "beakerhost"                                            : "redhat8-64",
-    "version"                                               : "0.3.3",
+    "version"                                               : "0.3.4",
     "iso_url"                                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic/iso/rhel-8.4-x86_64-dvd.iso",
     "iso_checksum"                                          : "aaf9d4b3071c16dbbda01dfe06085e5d0fdac76df323e3bbe87cce4318052247",
     "iso_checksum_type"                                     : "sha256",
