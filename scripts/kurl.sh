@@ -6,6 +6,11 @@
 
 set -e
 
+################################
+# Ensure packages are up to date
+echo " * Upgrade packages"
+sudo yum upgrade -y
+
 #############################
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
