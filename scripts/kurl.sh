@@ -19,7 +19,7 @@ curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
 tar xzf "${APP}-${CHANNEL}.tar.gz"
 rm "${APP}-${CHANNEL}.tar.gz"
 
-cat install.sh | sudo bash -s airgap preserve-selinux-config
+sudo -E bash install.sh airgap preserve-selinux-config
 
 # Stop pods and Kubelet before shutdown. The packer build fills the disk with 0s to compress the
 # image, which otherwise causes Kubelet to start erasing unused images that we still need. Other
