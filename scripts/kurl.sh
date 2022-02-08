@@ -14,6 +14,7 @@ sudo yum upgrade -y
 #############################
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
+echo " * Installing ${APP}-${CHANNEL}"
 curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
 tar xzf "${APP}-${CHANNEL}.tar.gz"
 rm "${APP}-${CHANNEL}.tar.gz"
@@ -33,11 +34,11 @@ systemctl disable kubelet
 if [ "$(pgrep -c -f /usr/bin/containerd-shim-runc-v2)" != "0" ]; then
   echo " * Clearing out any old containers"
   systemctl start containerd
-  ready_pods=($(crictl pods -q --state ready))
+  mapfile -t ready_pods < <(crictl pods -q --state ready)
   for p in "${ready_pods[@]}"; do
     crictl stopp "${p}" || true
   done
-  pods=($(crictl pods -q))
+  mapfile -t pods < <(crictl pods -q)
   for p in "${pods[@]}"; do
     crictl rmp -f "${p}" || true
   done
