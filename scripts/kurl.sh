@@ -19,10 +19,21 @@ curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
 tar xzf "${APP}-${CHANNEL}.tar.gz"
 rm "${APP}-${CHANNEL}.tar.gz"
 
-if ! sudo -E bash install.sh airgap preserve-selinux-config; then
+cat << EOF > patch.yaml
+apiVersion: cluster.kurl.sh/v1beta1
+kind: Installer
+metadata:
+  name: patch
+spec:
+  # Disable Prometheus. Not necessary for testing and reduces resource requirements.
+  prometheus:
+    version: ''
+EOF
+
+if ! sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml; then
   # (REPLATS-616) Workaround package conflict by explicitly installing kurl-local variant
   sudo yum install -y audit-libs-3.0-0.17.20191104git1c2f876.el8.1 --allowerasing
-  sudo -E bash install.sh airgap preserve-selinux-config
+  sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml
 fi
 
 # Stop pods and Kubelet before shutdown. The packer build fills the disk with 0s to compress the
