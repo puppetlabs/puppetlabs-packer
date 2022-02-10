@@ -6,14 +6,35 @@
 
 set -e
 
+################################
+# Ensure packages are up to date
+echo " * Upgrade packages"
+sudo yum upgrade -y
+
 #############################
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
+echo " * Installing ${APP}-${CHANNEL}"
 curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
 tar xzf "${APP}-${CHANNEL}.tar.gz"
 rm "${APP}-${CHANNEL}.tar.gz"
 
-cat install.sh | sudo bash -s airgap preserve-selinux-config
+cat << EOF > patch.yaml
+apiVersion: cluster.kurl.sh/v1beta1
+kind: Installer
+metadata:
+  name: patch
+spec:
+  # Disable Prometheus. Not necessary for testing and reduces resource requirements.
+  prometheus:
+    version: ''
+EOF
+
+if ! sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml; then
+  # (REPLATS-616) Workaround package conflict by explicitly installing kurl-local variant
+  sudo yum install -y audit-libs-3.0-0.17.20191104git1c2f876.el8.1 --allowerasing
+  sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml
+fi
 
 # Stop pods and Kubelet before shutdown. The packer build fills the disk with 0s to compress the
 # image, which otherwise causes Kubelet to start erasing unused images that we still need. Other
@@ -28,11 +49,11 @@ systemctl disable kubelet
 if [ "$(pgrep -c -f /usr/bin/containerd-shim-runc-v2)" != "0" ]; then
   echo " * Clearing out any old containers"
   systemctl start containerd
-  ready_pods=($(crictl pods -q --state ready))
+  mapfile -t ready_pods < <(crictl pods -q --state ready)
   for p in "${ready_pods[@]}"; do
     crictl stopp "${p}" || true
   done
-  pods=($(crictl pods -q))
+  mapfile -t pods < <(crictl pods -q)
   for p in "${pods[@]}"; do
     crictl rmp -f "${p}" || true
   done
