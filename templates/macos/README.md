@@ -73,6 +73,10 @@ reduced to the first 3 steps, and extends the wait time to 80 minutes.
 After the installation, the machine will need to be configured manually (steps
 4-7), along with the VMWare Tools and XCode setup.
 
+### 12 Monterey
+
+The macOS 12 Monterey build process is identical to that of Big Sur.
+
 ## Background
 
 Previously, the creation of packer templates for macOS involved the following steps:

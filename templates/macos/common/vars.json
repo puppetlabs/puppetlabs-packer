@@ -10,16 +10,16 @@
   "floppy_dirs"                                                 : "", 
   "puppet_aio"                                                  : "https://downloads.puppetlabs.com/mac/puppet6/10.12/x86_64/puppet-agent-latest.dmg",
   "pc_repo"                                                     : "",
-  "http_directory"                                              : "../common/files",
+  "http_directory"                                              : "../../common/files",
   "vmware_vsphere_nocm_required_modules"                        : "puppetlabs-stdlib",
   "vmware_vsphere_nocm_vmx_data_numvcpus"                       : "2",
+  "vmware_base_vmx_data_usb_controller"                         : "xhci",
   "vmware_vsphere_nocm_vmx_data_memsize"                        : "4096",  
   "vmware_vsphere_nocm_vmx_data_ethernet0_virtualDev"           : "e1000",
   
   "vmware_base_vmx_data_memsize"                                : "4096",
   "vmware_base_vmx_data_cpuid_coresPerSocket"                   : "2",
   "vmware_base_vmx_data_numvcpus"                               : "2",
-  "vmware_base_vmx_data_usb_controller"                         : "TRUE",
   "vmware_base_vm_disk_adapter_type"                            : "lsilogic",
   "vmware_base_vmx_keyboard_and_mouse_profile"                  : "macProfile",
   "vmware_base_vmx_data_ethernet0_virtualDev"                   : "e1000",
@@ -31,7 +31,7 @@
   "vmware_base_vm_smc_present"                                  : "TRUE",
   "vmware_base_vm_smc_version"                                  : "0",
   "vmware_base_vm_usb_present"                                  : "TRUE",   
-  "inject_http_seed_in_boot_command"                            : "FALSE",  
+  "inject_http_seed_in_boot_command"                            : "FALSE",
   "tools_upload_flavor"                                         : "darwin",
-  "iso_paths"                                                   : ["{{user `iso_disk`}}{{user `iso_name`}}", "{{user `iso_disk`}}{{user `tools_upload_flavor`}}.iso"],
+  "iso_paths"                                                   : "{{user `iso_disk`}}{{user `iso_name`}}"
 }
