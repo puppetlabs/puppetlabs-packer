@@ -30,7 +30,7 @@ spec:
     version: ''
 EOF
 
-sudo -E bash install.sh airgap preserve-selinux-config
+sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml
 
 # Stop pods and Kubelet before shutdown. The packer build fills the disk with 0s to compress the
 # image, which otherwise causes Kubelet to start erasing unused images that we still need. Other
