@@ -10,7 +10,7 @@ if [ "${PT_force_ip_reset}" = 'true' ]; then
   FORCE_IP_RESET=1
 fi
 # shellcheck disable=SC2154
-READY_WAIT_MINUTES="${PT_ready_wait_minutes}"
+READY_WAIT_MINUTES="${PT_ready_wait_minutes:-5}"
 
 # This is also the node name the kurl scripts expect to interact with.
 CURRENT_HOSTNAME=$(hostname | tr '[:upper:]' '[:lower:]')
