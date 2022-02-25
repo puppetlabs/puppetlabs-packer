@@ -30,11 +30,7 @@ spec:
     version: ''
 EOF
 
-if ! sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml; then
-  # (REPLATS-616) Workaround package conflict by explicitly installing kurl-local variant
-  sudo yum install -y audit-libs-3.0-0.17.20191104git1c2f876.el8.1 --allowerasing
-  sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml
-fi
+sudo -E bash install.sh airgap preserve-selinux-config installer-spec-file=patch.yaml
 
 # Stop pods and Kubelet before shutdown. The packer build fills the disk with 0s to compress the
 # image, which otherwise causes Kubelet to start erasing unused images that we still need. Other
