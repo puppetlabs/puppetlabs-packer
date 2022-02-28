@@ -163,7 +163,7 @@ function waitForPods() {
   if [ -z "${namespaces}" ]; then
     namespaces=$(kubectl get namespace -o name | sed -e 's/namespace\///')
   fi
-  completed_or_evicted_pods=$(kubectl get pods -A | grep -E 'Completed|Evicted' | awk '{ print $2 }')
+  completed_or_evicted_pods=$(kubectl get pods -A | grep -E 'Completed|Evicted|Terminating' | awk '{ print $2 }')
   code=0
   for n in ${namespaces}; do
     for p in $(kubectl get pods -o name -n "${n}" | sed -e 's/pod\///'); do
