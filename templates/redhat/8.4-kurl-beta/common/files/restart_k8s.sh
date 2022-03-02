@@ -119,7 +119,7 @@ function resetK8sIp() {
       # for kotsadm and minio won't mount because they will be tied to the
       # previous node name.
       echo " * Deleting kotsadm and minio persistent volume claims to reset node affinity"
-      waitForPods '60s' 'kube-system openebs'
+      waitForPods '120s' 'kube-system openebs'
       # Resetting kotsadm-postgres pvc is straight forward.
       kubectl delete pvc --all && kubectl delete 'pod/kotsadm-postgres-0'
       # Resetting mino is complicated. It's managed during the kurl.sh install process.
@@ -163,7 +163,7 @@ function waitForPods() {
   if [ -z "${namespaces}" ]; then
     namespaces=$(kubectl get namespace -o name | sed -e 's/namespace\///')
   fi
-  completed_or_evicted_pods=$(kubectl get pods -A | grep -E 'Completed|Evicted' | awk '{ print $2 }')
+  completed_or_evicted_pods=$(kubectl get pods -A | grep -E 'Completed|Evicted|Terminating' | awk '{ print $2 }')
   code=0
   for n in ${namespaces}; do
     for p in $(kubectl get pods -o name -n "${n}" | sed -e 's/pod\///'); do
