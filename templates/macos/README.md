@@ -1,10 +1,11 @@
+
 # puppetlabs-packer: macOS templates
 
-### Support Status
+## Support Status
 
 This repository includes OS platforms that are officially supported at Puppet and ones that are entirely maintained by the community. Packer templates include a `support_status` variable which indicates whether the template is puppet maintained vs. community maintained.
 
-### Prerequisites
+## Prerequisites
 
 Imaging for macOS has become particularly difficult after the release of 10.12.4. At this point, to build one of these templates, **you must have:**
 
@@ -13,97 +14,9 @@ Imaging for macOS has become particularly difficult after the release of 10.12.4
 
 See Background, below, for more information.
 
-### Building
+## Building
 
-#### 10.12 Sierra
-
-**Base**
-
-The 10.12 base image is the base for all other macOS builds. To build it, you will need to supply the following environment variables:
-
-- `QA_ROOT_PASSWD_PLAIN`, the common pooler VM password
-    - (The username is automatically set to `osx`)
-- `PACKER_VM_OUT_DIR`, the desired output directory for this build
-
-Example:
-
-```bash
-$ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
-    PACKER_VM_OUT_DIR="./output" \
-    packer build \
-    -var-file=./common/vars.json \
-    -var-file=./10.12/x86_64/vars.json \
-    10.12/x86_64/vmware.base.json
-```
-
-**VSphere**
-
-Once the 10.12 base build is finished, you can build and ship the 10.12 vsphere image. You will need to supply the following environment variables:
-
-- `QA_ROOT_PASSWD_PLAIN`, the common pooler VM password
-    - (The username is automatically set to `osx`)
-- `PACKER_VM_SRC_DIR`, the output directory from the 10.12 base build
-- `PACKER_VM_OUT_DIR`, the desired output directory for this build
-
-Example:
-
-```bash
-$ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
-    PACKER_VM_OUT_DIR="./output" \
-    PACKER_VM_SRC_DIR="./output" \
-    packer build \
-    -var-file=./common/vars.json \
-    -var-file=./10.12/x86_64/vars.json \
-    common/vmware.vsphere.nocm.json
-```
-
-#### 10.13 High Sierra
-
-**Base**
-
-The 10.13 base image extends the 10.12 image - **build the 10.12 base image first,** as described above.
-
-To build the 10.13 base image, you will need to supply the following environment variables:
-
-- `QA_ROOT_PASSWD_PLAIN`, the common pooler VM password
-    - (The username is automatically set to `osx`)
-- `PACKER_VM_SRC_DIR`, the output directory from the 10.12 base build
-- `PACKER_VM_OUT_DIR`, the desired output directory for this build
-
-Example:
-
-```bash
-$ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
-    PACKER_VM_OUT_DIR="./output" \
-    PACKER_VM_SRC_DIR="./output" \
-    packer build \
-    -var-file=./common/vars.json \
-    -var-file=./10.13/x86_64/vars.json \
-    10.13/x86_64/vmware.base.json
-```
-
-**VSphere**
-
-Once the 10.13 base build is finished, you can build and ship the 10.13 vsphere image. You will need to supply the following environment variables:
-
-- `QA_ROOT_PASSWD_PLAIN`, the common pooler VM password
-    - (The username is automatically set to `osx`)
-- `PACKER_VM_SRC_DIR`, the output directory from the 10.12 base build
-- `PACKER_VM_OUT_DIR`, the desired output directory for this build
-
-Example:
-
-```bash
-$ QA_ROOT_PASSWD_PLAIN="<common-pooler-password>" \
-    PACKER_VM_OUT_DIR="./output" \
-    PACKER_VM_SRC_DIR="./output" \
-    packer build \
-    -var-file=./common/vars.json \
-    -var-file=./10.13/x86_64/vars.json \
-    common/vmware.vsphere.nocm.json
-```
-
-#### 10.15 Catalina
+### 10.15 Catalina
 
 The macOS 10.15 image uses a bootable `.iso` file generated from the `Install macOS
 Catalina.app` from the App Store.
@@ -152,7 +65,7 @@ so the machine becomes reachable over SSH:
     not persist between reboots, so you might need to start it again if you
     rebooted sometime in the process)
 
-#### 11.2 Big Sur
+### 11.2 Big Sur
 
 The Big Sur follows the same process as Catalina, but the `boot_command` is
 reduced to the first 3 steps, and extends the wait time to 80 minutes.
@@ -160,20 +73,24 @@ reduced to the first 3 steps, and extends the wait time to 80 minutes.
 After the installation, the machine will need to be configured manually (steps
 4-7), along with the VMWare Tools and XCode setup.
 
-### Background
+### 12 Monterey
+
+The macOS 12 Monterey build process is identical to that of Big Sur.
+
+## Background
 
 Previously, the creation of packer templates for macOS involved the following steps:
 
 1. Download an official "Install macOS \<version\>" installer from the App Store
 2. Create a customization pkg file that:
-  - Sets up an SSH user account, and
-  - Runs a script which:
-    - enables SSH,
-    - adds the SSH user to sudoers,
-    - bypasses annoyances like Siri and iCloud setup dialogues, etc.
+    - Sets up an SSH user account, and
+    - Runs a script which:
+        - enables SSH,
+        - adds the SSH user to sudoers,
+        - bypasses annoyances like Siri and iCloud setup dialogues, etc.
 3. Use the ESD and Base System images from the official installer to build a customized autoinstaller image that:
-  - Sets appropriate values for the autoinstall process (e.g. language and target disk), and
-  - Installs the customization pkg after the regular install process completes.
+    - Sets appropriate values for the autoinstall process (e.g. language and target disk), and
+    - Installs the customization pkg after the regular install process completes.
 4. Once this autoinstaller is created, use it as the basis for the packer template, which will perform other setup tasks like installing vmware tools, adding authorized ssh keys, and setting up GUI autologin for the SSH user.
 
 Variants of this process had been used for several years by lots of community projects (for example [timsutton/osx-vm-templates](https://github.com/timsutton/osx-vm-templates)). The 10.12 ESD image referred to in our 10.12 and 10.13 templates was created this way.
