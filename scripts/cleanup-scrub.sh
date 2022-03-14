@@ -4,8 +4,8 @@ if [[ $OSTYPE == darwin* ]]; then
 # Turn off hibernation and get rid of the sleepimage
     pmset hibernatemode 0
     rm -f /var/vm/sleepimage
-    OSX_VERS=$(sw_vers -productVersion | awk -F "." '{print $2}')
-    if [ "$OSX_VERS" -lt 11 ] || $(csrutil status | grep -q disabled); then
+    MACOS_VERS=$(sw_vers -productVersion | awk -F "." '{print $1}')
+    if [ "$MACOS_VERS" -lt 11 ] || $(csrutil status | grep -q disabled); then
         launchctl unload /System/Library/LaunchDaemons/com.apple.dynamic_pager.plist
         sleep 5
     fi
