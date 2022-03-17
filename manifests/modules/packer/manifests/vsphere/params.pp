@@ -38,18 +38,8 @@ class packer::vsphere::params {
         $startup_file          = '/etc/rc.local'
         $startup_file_source   = 'rc.local'
       }
-      if $facts[os][release] in ['12.04', '14.04'] {
-        $periodic_file         = '/etc/apt/apt.conf.d/02periodic'
-      }
-      else {
-        $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
-      }
-      if $::operatingsystemrelease in ['10.04', '12.04'] {
-        $ruby_package          = [ 'ruby', 'rubygems' ]
-      }
-      else {
-        $ruby_package          = [ 'ruby', 'rubygems-integration' ]
-      }
+      $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
+      $ruby_package          = [ 'ruby', 'rubygems-integration' ]
       $repo_name             = 'ubuntu__remote'
       $repo_list             = 'main restricted universe multiverse'
       $security_repo_name    = 'ubuntu__remote'
@@ -62,17 +52,12 @@ class packer::vsphere::params {
       $startup_file_source   = 'rc.local'
       $bootstrap_file        = '/etc/vsphere-bootstrap.rb'
       $bootstrap_file_source = 'debian.rb.erb'
-      if $facts[os][release] in ['7', '8'] {
-        $periodic_file         = '/etc/apt/apt.conf.d/02periodic'
-      }
-      else {
-        $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
-      }
+      $periodic_file         = '/etc/apt/apt.conf.d/10periodic'
       $ruby_package          = [ 'ruby' ]
       $repo_name             = 'debian__remote'
       $repo_list             = 'main contrib non-free'
       $security_repo_name    = 'debian_security__remote'
-      if $facts[os][release] in ['7', '8', '9', '10'] {
+      if $facts[os][release] in ['9', '10'] {
         $security_release      = "${facts['lsbdistcodename']}/updates"
       } else {
         $security_release      = "${facts['lsbdistcodename']}-security/updates"
@@ -109,7 +94,7 @@ class packer::vsphere::params {
     }
 
     'Fedora': {
-      if $facts['operatingsystemrelease'] in ['28', '29', '30', '31', '32', '34'] {
+      if $facts['operatingsystemrelease'] in ['32', '34'] {
         $startup_file          = '/etc/systemd/system/vsphere.bootstrap.service'
         $startup_file_source   = 'vsphere.bootstrap.service'
         $startup_file_perms    = '0644'
