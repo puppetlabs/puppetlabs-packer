@@ -74,6 +74,9 @@ function resetK8sIp() {
     cp -r /etc/kubernetes-backup/pki /etc/kubernetes
     rm /etc/kubernetes/pki/{apiserver.*,etcd/peer.*}
 
+    echo " * Restoring audit.yaml configuration"
+    cp /etc/kubernetes-backup/audit.yaml /etc/kubernetes
+
     # https://github.com/weaveworks/weave/issues/3731
     echo " * Reset weave database"
     rm -f /var/lib/weave/weave-netdata.db
