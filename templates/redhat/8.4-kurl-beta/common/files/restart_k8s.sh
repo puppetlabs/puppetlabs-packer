@@ -116,7 +116,7 @@ function resetK8sIp() {
     kubectl -n kube-system delete pod -l k8s-app=kube-proxy
     echo
 
-    if ! hostnameAndNodenameMatch; then
+    if ! hostnameAndNodenameMatch || [ -n "${force}" ]; then
       # If we have changed the node name, the existing PersistentVolumeClaims
       # for kotsadm and minio won't mount because they will be tied to the
       # previous node name.
