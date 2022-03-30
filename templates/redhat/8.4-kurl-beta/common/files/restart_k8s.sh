@@ -100,14 +100,13 @@ function resetK8sIp() {
 
     echo " * Waiting for new node and deleting old node"
     kubectl get nodes --sort-by=.metadata.creationTimestamp
-    if ! hostnameAndNodenameMatch; then
-      kubectl delete node "${CONFIGURED_K8S_NODE_NAME}"
-    fi
-    kubectl wait --for condition=ready "node/$(kubectl get nodes --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[0].metadata.name}')"
-    nodes_to_delete="$(kubectl get nodes -o jsonpath='{.items[?(@.status.conditions[0].status=="Unknown")].metadata.name}')"
+    nodes_to_delete="$(kubectl get nodes -o jsonpath='{.items[?(@.metadata.name != "'${CURRENT_HOSTNAME}'")].metadata.name}')"
     if [ -n "${nodes_to_delete}" ]; then
+      echo " ** Deleting: ${nodes_to_delete}"
       kubectl delete node "${nodes_to_delete}"
     fi
+    echo " ** Waiting for: ${CURRENT_HOSTNAME}"
+    kubectl wait --for condition=ready "node/${CURRENT_HOSTNAME}"
     echo
 
     # When kube-proxy starts before kube-apiserver is ready, it fails to set up IPVS rules and then
