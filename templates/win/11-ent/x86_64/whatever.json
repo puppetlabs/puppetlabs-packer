@@ -1,0 +1,21 @@
+{
+    "vmware_vsphere_nocm_required_modules"         : null,
+    "floppy_files"                         : "",
+    "puppet_aio"                           : null,
+    "floppy_dirs"                          : "",
+    "packer_vcenter_dc" : "pix",
+    "packer_vcenter_net" : "vmpooler",
+    "packer_vcenter_folder" : "packer",
+    "packer_vcenter_cluster" : "acceptance4",
+    "packer_vcenter_username" : "eso-template@vsphere.local",
+    "packer_vcenter_host" : "vcenter-ci1.ops.puppetlabs.net",
+    "packer_vcenter_datastore" : "vmpooler_acceptance4",
+    "packer_vcenter_insecure" : "true",
+    "packer_cache" : "/srv/packer/packer_cache",
+    "packer_source_dir" : "/srv/packer/output",
+    "packer_output_dir" : ".",
+    "packer_sha" : "05be88c9d189bbefe54d3fb1046edc49",
+    "vmware_tools_iso" : "/srv/packer/iso",
+    "iso_url" : "/srv/packer/image.iso",
+    "template_suffix" : ""
+}

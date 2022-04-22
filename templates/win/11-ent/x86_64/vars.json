@@ -1,0 +1,21 @@
+{
+    "template_name"     : "win-11-ent-x86_64",
+    "beakerhost"        : "windows11ent-64",
+    "vbox_guest_os"     : "Windows81_64",
+    "vmware_guest_os"   : "windows8-64",
+    "windows_version"   : "Windows-11",
+    "vsphere_guest_os"  : "windows9_64Guest",
+    "image_name"        : "Windows 11 Enterprise",
+    "product_key"       : "NPPR9-FWDCX-D2C8J-H872K-2YT43",
+    "iso_name"          : "en_windows_11_ent_10.0.22000.318_x64.iso",
+    "iso_checksum_type" : "md5",
+    "iso_checksum"      : "05be88c9d189bbefe54d3fb1046edc49",
+    "boot_command"      : "<enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait><enter><wait>",
+
+    "CurrentVersion"    : "6.3",
+    "ProductName"       : "Windows 11 Enterprise",
+    "EditionID"         : "Enterprise",
+    "InstallationType"  : "Client",
+    "ReleaseID"         : "2004"
+}
+
