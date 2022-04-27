@@ -75,7 +75,7 @@ class packer::vsphere::repos(
       }
 
       # IMAGES-1217, for some reason the rebuild of ubuntu 18.04 was missing bionic-updates
-      if $facts['operatingsystem'] == 'Ubuntu' and $facts['operatingsystemrelease'] == '18.04' {
+      if $facts['operatingsystem'] == 'Ubuntu' and $facts['operatingsystemrelease'] in ['18.04', '20.04'] {
         apt::source { "${facts['lsbdistcodename']}-updates":
           release  => $updates_release,
           location => "${repo_mirror}/${repo_name}",
