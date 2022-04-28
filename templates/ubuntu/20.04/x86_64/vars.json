@@ -2,7 +2,7 @@
     "template_name"                         : "ubuntu-2004-x86_64",
     "template_os"                           : "ubuntu64Guest",
     "beakerhost"                            : "ubuntu2004-64",
-    "version"                               : "0.0.11",
+    "version"                               : "0.0.12",
     "iso_url"                               : "https://artifactory.delivery.puppetlabs.net/artifactory/generic__iso/iso/ubuntu-20.04-live-server-amd64.iso",
     "iso_checksum"                          : "caf3fd69c77c439f162e2ba6040e9c320c4ff0d69aad1340a514319a9264df9f",
     "iso_checksum_type"                     : "sha256",

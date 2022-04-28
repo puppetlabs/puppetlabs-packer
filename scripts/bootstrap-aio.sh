@@ -19,7 +19,6 @@ if [ -n "${PC_REPO}" ]; then
   elif [[ ${PC_REPO} == *".deb"* ]] ; then
     curl --silent "${PC_REPO}" -o $tmp_dir/pc-repo.deb
     dpkg -i $tmp_dir/pc-repo.deb
-    apt-get install -y apt
     apt-get remove -y ubuntu-advantage-tools
     apt-get update
     apt-get install -y puppet-agent
