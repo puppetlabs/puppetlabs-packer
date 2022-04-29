@@ -11,6 +11,7 @@ class packer::vsphere::updates {
   $debian_pkgs = [
     'libc6',
     'openssh-client',
+    'apt',
   ]
 
   $redhat_pkgs = [
