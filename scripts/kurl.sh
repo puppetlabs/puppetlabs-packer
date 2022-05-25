@@ -8,8 +8,11 @@ set -e
 
 ################################
 # Ensure packages are up to date
-echo " * Upgrade packages"
-sudo yum upgrade -y
+#echo " * Upgrade packages"
+#sudo yum upgrade -y
+# Can't do this right now because kURL v2022.05.19-0 doesn't have rhel 8.6
+# support, and this basically transforms the rhel-8.4 iso we start with to
+# 8.6, as far as the installer script is concerned.
 
 #############################
 # Install Kubernetes via Kurl
