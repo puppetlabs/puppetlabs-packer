@@ -18,7 +18,7 @@ set -e
 # Install Kubernetes via Kurl
 echo " * Installing Kubernetes via Kurl"
 echo " * Installing ${APP}-${CHANNEL}"
-curl -sSLO "https://k8s.kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
+curl -sSLO "https://kurl.sh/bundle/${APP}-${CHANNEL}.tar.gz"
 tar xzf "${APP}-${CHANNEL}.tar.gz"
 rm "${APP}-${CHANNEL}.tar.gz"
 
